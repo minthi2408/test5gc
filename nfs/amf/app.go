@@ -1,6 +1,10 @@
 package amf
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/urfave/cli"
+	"etri5gc/common"
+)
 
 
 type GenericNF interface {
@@ -9,14 +13,21 @@ type GenericNF interface {
 }
 
 
-type App struct {
+type AMF struct {
 	common		GenericNF
 	context		AmfContext
 	Config		Config
 }
 
+func NewAMF() *AMF {
+	return &AMF{}
+}
 
-func (app *App) Start() {
+func (nf *AMF) Initialize(c *cli.Context) error {
+}
+
+
+func (nf *AMF) Start() error {
 	logger.InitLog.Infoln("Server started")
 
 	router := logger_util.NewGinWithLogrus(logger.GinLog)
@@ -34,19 +45,19 @@ func (app *App) Start() {
 
 
 	// all routes
-	common.AddHttpRoutes(router, httpcallback.MakeRoutes(app))
-	common.AddHttpRoutes(router, oam.MakeRoutes(app))
+	common.AddHttpRoutes(router, httpcallback.MakeRoutes(nf))
+	common.AddHttpRoutes(router, oam.MakeRoutes(nf))
 	for _, serviceName := range factory.AmfConfig.Configuration.ServiceNameList {
 		switch models.ServiceName(serviceName) {
 		case models.ServiceName_NAMF_COMM:
-			common.AddHttpRoutes(router, communication.MakeRoutes(app))
+			common.AddHttpRoutes(router, communication.MakeRoutes(nf))
 		case models.ServiceName_NAMF_EVTS:
 			eventexposure.AddService(router)
-			common.AddHttpRoutes(router, eventexposure.MakeRoutes(app))
+			common.AddHttpRoutes(router, eventexposure.MakeRoutes(nf))
 		case models.ServiceName_NAMF_MT:
-			common.AddHttpRoutes(router, mt.MakeRoutes(app))
+			common.AddHttpRoutes(router, mt.MakeRoutes(nf))
 		case models.ServiceName_NAMF_LOC:
-			common.AddHttpRoutes(router, location.MakeRoutes(app))
+			common.AddHttpRoutes(router, location.MakeRoutes(nf))
 		}
 	}
 
@@ -121,4 +132,9 @@ func (app *App) Start() {
 		logger.InitLog.Fatalf("HTTP server setup failed: %+v", err)
 	}
 
+}
+
+
+func (nf *AMF) Terminate() {
+	fmt.Println("Kill it")
 }

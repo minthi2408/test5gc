@@ -38,6 +38,6 @@ func AddHttpRoutes(engine *gin.Engine, groupname string, routes Routes) *gin.Rou
 
 // IndexHandler is the index handler.
 func IndexHandler(c *gin.Context) {
-	c.String(http.StatusOK, "Hello World!")
+	c.String(http.StatusOK, "Hello from Etri5GC!")
 }
 
