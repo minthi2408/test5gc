@@ -5,7 +5,8 @@ import (
 	"os/signal"
 	"syscall"
 	"fmt"
-	"etri5gc/nfs/amf"
+	"etri5gc/nfs/amf/service"
+	"etri5gc/nfs/amf/config"
 	"github.com/urfave/cli"
 )
 
@@ -32,19 +33,29 @@ func main() {
 
 	if err := app.Run(os.Args); err != nil {
 		//log
-		return
 	}
 }
 
 
-func action(c *cli.Context) error {
-	nf := amf.NewAMF()
-	if err := nf.Initialize(c); err != nil {
+func action(c *cli.Context) err error {
+
+	//read config
+	var *cfg config.Config
+	if cfg, err = config.LoadConfig("dumpconfig.yaml"); err != nill {
+		return 
+	}
+
+	//create the AMF
+	var nf *service.AMF
+	if nf, err = service.CreateAMF(cfg); err != nil {
+		return
+	}
+
+
+	if err = nf.Start(); err != ni {
 		return err
 	}
-	if err := nf.Start(); err != ni {
-		return err
-	}
+
 	sigch := make(chan os.Signal, 1)
 	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 	go func() {
