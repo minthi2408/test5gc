@@ -1,4 +1,4 @@
-package common
+package sbi
 
 import (
 	"github.com/gin-gonic/gin"

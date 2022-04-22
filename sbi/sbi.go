@@ -1,34 +1,31 @@
-package common
+package sbi
 
 
 type SBI interface {
 	Serve() error
 }
 
-type SbiConfig interface {
-	GetBindingIP4() string
-	GetSbiPort() int
-	GetTls() (string, string)
-	GetScheme() string
-}
-
 type sbi struct {
-	config 		SbiConfig
+	config 		*SbiConfig
 	server		*http2wraper.Http2Server	
 }
+
+// interface to add routes to the gin router
 type AddRoutesFn func(*gin.Engine) error
 
-func CreateSbi(c SbiConfig, fn AddRoutesFn) SBI, error {
+//create a SBI server
+func CreateSbi(c *SbiConfig, fn AddRoutesFn) SBI, error {
 	ret := sbi{config: c}
-	if err := ret.init(c, fn); err != nil {
+	if err := ret.init(fn); err != nil {
 		return nil, err
 	}
 	return ret, nil
 }
 
-func (s sbi) init(s SbiConfig, fn AddRoutesFn) err error {
+//create gin router, add routes, then create the http server
+func (s sbi) init(fn AddRoutesFn) err error {
 
-	router := logger_util.NewGinWithLogrus(logger.GinLog)
+	router := logger_util.NewGinWithLogrus(nil)
 
 	router.Use(cors.New(cors.Config{
 		AllowMethods: []string{"GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"},
@@ -46,19 +43,18 @@ func (s sbi) init(s SbiConfig, fn AddRoutesFn) err error {
 	// add all routes
 	fn(router)	
 
-	addr := fmt.Sprintf("%s:%d", s.config.GetBindingIPv4(), s.config.GetSbiPort())
+	addr := fmt.Sprintf("%s:%d", s.config.BindingIPv4, s.config.SbiPort)
 
 	s.server, err = httpwrapper.NewHttp2Server(addr,/* amf.KeyLogPath*/"", router)
 
 	return 
 }
 
+//run the http server
 func (s *sbi) Serve() error {
-	pemPath, keyPath := s.config.GetTls()
-	serverScheme := c.GetScheme()
-	if serverScheme == "http" {
+	if s.config.Scheme == "http" {
 		return s.server.ListenAndServe()
 	}
 
-	return  s.server.ListenAndServeTLS(pemPath, keyPath)
+	return  s.server.ListenAndServeTLS(s.config.Pem, s.config.Key)
 }
