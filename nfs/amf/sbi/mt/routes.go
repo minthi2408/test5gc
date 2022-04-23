@@ -12,7 +12,7 @@ package mt
 import (
 	"net/http"
 	"strings"
-
+	"etri5gc/nfs/amf/sbi/producer"
 	"github.com/gin-gonic/gin"
 
 	"github.com/free5gc/amf/internal/logger"
@@ -23,11 +23,8 @@ const (
 	SERVICE_NAME="/namf-mt/v1"
 )
 
-type Handler struct {
-	app		amf.App	
-}
 
-func MakeRoutes(app *amf.App) (string, common.Routes) {
+func MakeRoutes(h *producer.Handler) (string, common.Routes) {
 	h := &Handler{app: app}
 
 	var routes = Routes{

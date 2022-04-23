@@ -19,6 +19,7 @@ type RanPool sync.Map
 type RanUePool sync.Map
 type EventPool sync.Map
 
+
 type AMFContext struct {
 	cfg				*config.Config
 
@@ -348,8 +349,10 @@ func (context *AMFContext) InitNFService(serivceName []string, version string) {
 func (context (AMFContext) GetConfig() *config.Config {
 	return context.cfg
 }
+
 func CreateAmfContext(cfg *config.Config) *AmfContext {
 	//TODO
 	ret := &{AmfContext}
+	ret.init()
 	return ret
 }

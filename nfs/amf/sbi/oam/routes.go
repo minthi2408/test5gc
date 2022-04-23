@@ -2,6 +2,8 @@ package oam
 
 import (
 	"net/http"
+	
+	"etri5gc/nfs/amf/sbi/producer"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -14,11 +16,8 @@ const (
 	SERVICE_NAME="/namf-oam/v1"
 )
 
-type Handler struct {
-	app		amf.App	
-}
 
-func MakeRoutes(app *amf.App) (string, common.Routes) {
+func MakeRoutes(h *producer.Handler) (string, common.Routes) {
 	h := &Handler{app: app}
 
 	var routes = Routes{
@@ -33,14 +32,14 @@ func MakeRoutes(app *amf.App) (string, common.Routes) {
 		"Registered UE Context",
 		"GET",
 		"/registered-ue-context",
-		HTTPRegisteredUEContext,
+		h.HTTPRegisteredUEContext,
 	},
 
 	{
 		"Individual Registered UE Context",
 		"GET",
 		"/registered-ue-context/:supi",
-		HTTPRegisteredUEContext,
+		h.HTTPRegisteredUEContext,
 	},
 	}
 	return SERVICE_NAME, routes

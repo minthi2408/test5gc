@@ -3,7 +3,7 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-type interface NrfInterface {
+type interface NrfConsumer {
 	Register() (string, string, error) // Register NF to the NRF
 	Deregister() error //Deregister from the NRF
 	Discover() error // query the NRF for an NF
@@ -17,7 +17,7 @@ type nrfClient struct {
 	fn		ProfileBuilderFn
 }
 
-func CreateNrfInterface(nrf_uri string, builder ProfileBuilderFn) NrfInterface {
+func NewNrfConsumer(nrf_uri string, builder ProfileBuilderFn) NrfConsumer {
 	return &nrfClient{
 		nrf:	nrf_uri,
 		fn:		builder,
