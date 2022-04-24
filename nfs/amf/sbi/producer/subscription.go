@@ -2,10 +2,10 @@ package producer
 
 import (
 	"net/http"
-	"reflect"
+//	"reflect"
 
-	"github.com/free5gc/amf/internal/context"
-	"github.com/free5gc/amf/internal/logger"
+//	"etri5gc/nfs/amf/context"
+
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
@@ -16,18 +16,20 @@ func (h *Handler) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Req
 
 	subscriptionDataReq := request.Body.(models.SubscriptionData)
 
-	if subscriptionDataRsp, locationHeader, prob := AMFStatusChangeSubscribeProcedure(subscriptionDataReq); prob!=nil {
+	if subscriptionDataRsp, locationHeader, prob := h.AMFStatusChangeSubscribeProcedure(subscriptionDataReq); prob!=nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
-	}
+	} else {
 
-	headers := http.Header{
-		"Location": {locationHeader},
+		headers := http.Header{
+			"Location": {locationHeader},
+		}
+		return httpwrapper.NewResponse(http.StatusCreated, headers, subscriptionDataRsp)
 	}
-	return httpwrapper.NewResponse(http.StatusCreated, headers, subscriptionDataRsp)
 }
 
 func (h *Handler) AMFStatusChangeSubscribeProcedure(subscriptionDataReq models.SubscriptionData) (
 	subscriptionDataRsp models.SubscriptionData, locationHeader string, problemDetails *models.ProblemDetails) {
+		/*
 	amf := h.backend.Context() 
 
 	for _, guami := range subscriptionDataReq.GuamiList {
@@ -51,6 +53,9 @@ func (h *Handler) AMFStatusChangeSubscribeProcedure(subscriptionDataReq models.S
 		}
 		return
 	}
+	*/
+
+	return
 }
 
 // TS 29.518 5.2.2.5.2
@@ -59,7 +64,7 @@ func (h *Handler) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.R
 
 	subscriptionID := request.Params["subscriptionId"]
 
-	if prob := AMFStatusChangeUnSubscribeProcedure(subscriptionID); prob != nil {
+	if prob := h.AMFStatusChangeUnSubscribeProcedure(subscriptionID); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
@@ -67,6 +72,7 @@ func (h *Handler) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.R
 }
 
 func (h *Handler) AMFStatusChangeUnSubscribeProcedure(subscriptionID string) *models.ProblemDetails {
+	/*
 	amf := h.backend.Context()
 
 	if _, ok := amf.FindAMFStatusSubscription(subscriptionID); !ok {
@@ -79,6 +85,8 @@ func (h *Handler) AMFStatusChangeUnSubscribeProcedure(subscriptionID string) *mo
 		amf.DeleteAMFStatusSubscription(subscriptionID)
 	}
 	return nil
+	*/
+	return nil
 }
 
 // TS 29.518 5.2.2.5.1.3
@@ -88,7 +96,7 @@ func (h *Handler) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Requ
 	updateSubscriptionData := request.Body.(models.SubscriptionData)
 	subscriptionID := request.Params["subscriptionId"]
 
-	if updatedSubscriptionData, prob := AMFStatusChangeSubscribeModifyProcedure(subscriptionID,
+	if updatedSubscriptionData, prob := h.AMFStatusChangeSubscribeModifyProcedure(subscriptionID,
 		updateSubscriptionData); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
@@ -98,6 +106,7 @@ func (h *Handler) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Requ
 
 func (h *Handler) AMFStatusChangeSubscribeModifyProcedure(subscriptionID string, subscriptionData models.SubscriptionData) (
 	*models.SubscriptionData, *models.ProblemDetails) {
+		/*
 	amf := h.backend.Context()
 
 	if currentSubscriptionData, ok := amfSelf.FindAMFStatusSubscription(subscriptionID); !ok {
@@ -116,4 +125,6 @@ func (h *Handler) AMFStatusChangeSubscribeModifyProcedure(subscriptionID string,
 		amf.AMFStatusSubscriptions.Store(subscriptionID, currentSubscriptionData)
 		return currentSubscriptionData, nil
 	}
+	*/
+	return nil, nil
 }

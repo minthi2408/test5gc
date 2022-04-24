@@ -10,47 +10,45 @@
 package location
 
 import (
-	"net/http"
 	"strings"
 
 	"etri5gc/nfs/amf/sbi/producer"
-
-	"github.com/gin-gonic/gin"
-
-	"github.com/free5gc/amf/internal/logger"
-	logger_util "github.com/free5gc/util/logger"
+	"etri5gc/sbi"
 )
 
 const (
 	SERVICE_NAME="/namf-loc/v1"
 )
 
+type Handler struct {
+	prod		*producer.Handler
+}
 
-func MakeRoutes(h *producer.Handler) (string, common.Routes) {
-	h := &Handler{app: app}
+func MakeRoutes(p *producer.Handler) (string, sbi.Routes) {
+	h := &Handler{
+		prod:	p,
+	}
+	var routes = sbi.Routes{
+		{
+			"Index",
+			"GET",
+			"/",
+			sbi.IndexHandler,
+		},
 
+		{
+			"ProvideLocationInfo",
+			strings.ToUpper("Post"),
+			"/:ueContextId/provide-loc-info",
+			h.HTTPProvideLocationInfo,
+		},
 
-var routes = Routes{
-	{
-		"Index",
-		"GET",
-		"/",
-		common.IndexHandler,
-	},
-
-	{
-		"ProvideLocationInfo",
-		strings.ToUpper("Post"),
-		"/:ueContextId/provide-loc-info",
-		h.HTTPProvideLocationInfo,
-	},
-
-	{
-		"ProvidePositioningInfo",
-		strings.ToUpper("Post"),
-		"/:ueContextId/provide-pos-info",
-		h.HTTPProvidePositioningInfo,
-	},
+		{
+			"ProvidePositioningInfo",
+			strings.ToUpper("Post"),
+			"/:ueContextId/provide-pos-info",
+			h.HTTPProvidePositioningInfo,
+		},
 	}
 	return SERVICE_NAME, routes
 }	

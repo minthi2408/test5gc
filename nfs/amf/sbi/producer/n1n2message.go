@@ -1,18 +1,16 @@
 package producer
 
 import (
-	"net/http"
-	"strconv"
+//	"net/http"
+//	"strconv"
 
-	"github.com/free5gc/amf/internal/context"
-	gmm_message "github.com/free5gc/amf/internal/gmm/message"
-	"github.com/free5gc/amf/internal/logger"
-	ngap_message "github.com/free5gc/amf/internal/ngap/message"
-	"github.com/free5gc/amf/internal/sbi/producer/callback"
-	"github.com/free5gc/aper"
-	"github.com/free5gc/nas/nasMessage"
-	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
+//	"etri5gc/nfs/amf/context"
+
+	//ngap_message "github.com/free5gc/amf/internal/ngap/message"
+//	"github.com/free5gc/aper"
+//	"github.com/free5gc/nas/nasMessage"
+//	"github.com/free5gc/ngap/ngapType"
+//	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -385,6 +383,7 @@ func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Re
 		return httpwrapper.NewResponse(http.StatusOK, nil, status)
 	}
 	*/
+	return nil
 }
 
 /*
@@ -478,6 +477,7 @@ func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Reque
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
 	*/
+	return nil
 }
 
 /*

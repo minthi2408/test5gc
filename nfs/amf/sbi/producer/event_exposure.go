@@ -1,12 +1,11 @@
 package producer
 
 import (
-	"net/http"
-	"strconv"
-	"time"
+//	"net/http"
+//	"strconv"
+//	"time"
 
-	"github.com/free5gc/amf/internal/context"
-	"github.com/free5gc/amf/internal/logger"
+//	"etrigc/nfs/amf/context"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
@@ -205,6 +204,7 @@ func (h *Handler) HandleDeleteAMFEventSubscription(request *httpwrapper.Request)
 		return httpwrapper.NewResponse(http.StatusOK, nil, nil)
 	}
 	*/
+	return nil
 }
 
 func (h *Handler) DeleteAMFEventSubscriptionProcedure(subscriptionID string) *models.ProblemDetails {
@@ -252,13 +252,14 @@ func (h *Handler) HandleModifyAMFEventSubscription(request *httpwrapper.Request)
 		return httpwrapper.NewResponse(http.StatusInternalServerError, nil, problemDetails)
 	}
 	*/
+	return nil
 }
 
 func (h *Handler) ModifyAMFEventSubscriptionProcedure(
-	/*
 	subscriptionID string,
 	modifySubscriptionRequest models.ModifySubscriptionRequest) (
 	*models.AmfUpdatedEventSubscription, *models.ProblemDetails) {
+		/*
 	amfSelf := context.AMF_Self()
 
 	contextSubscription, ok := amfSelf.FindEventSubscription(subscriptionID)

@@ -1,31 +1,31 @@
 package producer
 
 import (
-	"net/http"
-	"strings"
+//	"net/http"
+//	"strings"
 
-	"github.com/free5gc/amf/internal/context"
-	gmm_common "github.com/free5gc/amf/internal/gmm/common"
-	"github.com/free5gc/amf/internal/logger"
-	"github.com/free5gc/amf/internal/sbi/consumer"
-	"github.com/free5gc/openapi/models"
+//	"etri5gc/nfs/amf/context"
+//	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
 // TS 29.518 5.2.2.2.3
 func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
+	/*
 	//logger.CommLog.Infof("Handle Create UE Context Request")
 
 	createUeContextRequest := request.Body.(models.CreateUeContextRequest)
 	ueContextID := request.Params["ueContextId"]
 
-	if createUeContextResponse, err := CreateUEContextProcedure(ueContextID, createUeContextRequest) {
+	if createUeContextResponse, err := h.CreateUEContextProcedure(ueContextID, createUeContextRequest) {
 		return httpwrapper.NewResponse(int(err.Error.Status), nil, err)
 	} else {
 		return httpwrapper.NewResponse(http.StatusCreated, nil, createUeContextResponse)
 	}
+	*/
+	return nil
 }
-
+/*
 func (h *Handler) CreateUEContextProcedure(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
 	*models.CreateUeContextResponse, *models.UeContextCreateError) {
 	amf := h.backend.Context() 
@@ -123,6 +123,7 @@ func (h *Handler) CreateUEContextProcedure(ueContextID string, createUeContextRe
 	return createUeContextResponse, nil
 }
 */
+
 // TS 29.518 5.2.2.2.4
 func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	/*
@@ -137,6 +138,7 @@ func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *h
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
+	return nil
 	*/
 	return nil
 }
@@ -460,6 +462,7 @@ func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Req
 		return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
 	}
 	*/
+	return nil
 }
 
 /*

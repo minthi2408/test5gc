@@ -2,6 +2,7 @@ package sbi
 
 import (
 	"fmt"
+	"github.com/asaskevich/govalidator"
 )
 
 type Config struct {
@@ -12,7 +13,7 @@ type Config struct {
 	Tls          *Tls   `yaml:"tls,omitempty" valid:"optional"`
 }
 
-func (c *Config) validate() (bool, error) {
+func (c *Config) Validate() (bool, error) {
 	govalidator.TagMap["scheme"] = govalidator.Validator(func(str string) bool {
 		return str == "https" || str == "http"
 	})

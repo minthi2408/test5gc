@@ -1,31 +1,22 @@
 package consumer
 
 import (
-	"fmt"
-	"etri5gc/common"
+//	"fmt"
+	"etri5gc/sbi"
+	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf/config"
 )
 
-type AmfConsumer interface {
-	//all requesting methods to AMF
-	CreateUEContextRequest(ue *amf_context.AmfUe, ueContextCreateData models.UeContextCreateData)
-
-	ReleaseUEContextRequest(ue *amf_context.AmfUe, ngapCause models.NgApCause)
-	UEContextTransferRequest(ue *amf_context.AmfUe, accessType models.AccessType, transferReason models.TransferReason) (ueContextTransferRspData *models.UeContextTransferRspData, problemDetails *models.ProblemDetails, err error) 
-}
-
-type SmfConsumer interface {
-	//all requesting methods to SMF
-}
-
 type Backend interface {
-	Context() context.AmfContext
+	Context() *context.AMFContext
+	Config() *config.Config
 }
 
 type Consumer struct {
 	backend		Backend
 	amf			AmfConsumer
 	smf			SmfConsumer
-	nrf			common.NrfConsumer
+	nrf			sbi.NrfConsumer
 }
 
 
@@ -33,14 +24,13 @@ func NewConsumer(b Backend) *Consumer {
 	ret := &Consumer{backend: b}
 	
 	// create an interface to NRF
-	ret.nrf = common.NewNrfConsumer(b.Context().BuildProfile)
-	ret.amf = newAmf(b.Context)
-	ret.smf = newSmf(b.Context)
-	//TODO: Create consumers
+	ret.nrf = sbi.NewNrfConsumer(b.Config().Configuration.NrfUri, b.Context().BuildNfProfile)
+	ret.amf = newAmfConsumer(b.Context())
+	ret.smf = newSmfConsumer(b.Context())
 	return ret
 }
 
-func (c *Consumer) NRF()  {
+func (c *Consumer) NRF() sbi.NrfConsumer  {
 	return c.nrf
 }
 func (c *Consumer) AMF() AmfConsumer {

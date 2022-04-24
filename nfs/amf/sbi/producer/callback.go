@@ -1,23 +1,22 @@
 package producer
 
 import (
-	"fmt"
-	"net/http"
-	"strconv"
+//	"fmt"
+//	"net/http"
+//	"strconv"
 
-	"github.com/mohae/deepcopy"
+//	"github.com/mohae/deepcopy"
 
-	"github.com/free5gc/amf/internal/context"
-	gmm_message "github.com/free5gc/amf/internal/gmm/message"
-	"github.com/free5gc/amf/internal/logger"
-	"github.com/free5gc/amf/internal/nas"
-	ngap_message "github.com/free5gc/amf/internal/ngap/message"
-	"github.com/free5gc/amf/internal/sbi/consumer"
-	"github.com/free5gc/amf/internal/util"
-	"github.com/free5gc/nas/nasConvert"
-	"github.com/free5gc/nas/nasMessage"
-	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
+//	"etri5gc/nfs/amf/context"
+//	gmm_message "github.com/free5gc/amf/internal/gmm/message"
+//	"github.com/free5gc/amf/internal/nas"
+//	ngap_message "github.com/free5gc/amf/internal/ngap/message"
+//	"github.com/free5gc/amf/internal/sbi/consumer"
+//	"github.com/free5gc/amf/internal/util"
+//	"github.com/free5gc/nas/nasConvert"
+//	"github.com/free5gc/nas/nasMessage"
+//	"github.com/free5gc/ngap/ngapType"
+//	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -175,6 +174,7 @@ func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.R
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
 	*/
+	return nil
 }
 /*
 func AmPolicyControlUpdateNotifyUpdateProcedure(polAssoID string,
@@ -257,6 +257,7 @@ func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrappe
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
 	*/
+	return nil
 }
 
 /*

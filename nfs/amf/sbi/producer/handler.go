@@ -1,14 +1,14 @@
 package producer
 
 import (
-	"fmt"
+//	"fmt"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/sbi/producer"
+	"etri5gc/nfs/amf/sbi/consumer"
 )
 
 type Backend interface {
-	GetConsumer() consumer.Consumer
-	GetContext() context.AmfContext
+	Consumer() *consumer.Consumer
+	Context() *context.AMFContext
 }
 
 type Handler struct {
@@ -16,7 +16,7 @@ type Handler struct {
 }
 
 func NewHandler(b Backend) *Handler {
-	return &Hander{backend: b}
+	return &Handler{backend: b}
 }
 
 

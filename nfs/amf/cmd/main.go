@@ -37,11 +37,11 @@ func main() {
 }
 
 
-func action(c *cli.Context) err error {
+func action(c *cli.Context) (err error) {
 
 	//read config
-	var *cfg config.Config
-	if cfg, err = config.LoadConfig("dumpconfig.yaml"); err != nill {
+	var cfg *config.Config
+	if cfg, err = config.LoadConfig("dumpconfig.yaml"); err != nil {
 		return 
 	}
 
@@ -52,7 +52,7 @@ func action(c *cli.Context) err error {
 	}
 
 
-	if err = nf.Start(); err != ni {
+	if err = nf.Start(); err != nil {
 		return err
 	}
 

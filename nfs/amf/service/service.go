@@ -2,27 +2,34 @@ package service
 
 import (
 	"fmt"
-	"github.com/urfave/cli"
+	"github.com/gin-gonic/gin"
 	"etri5gc/sbi"
-	"etri5gc/common"
 	"etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/sbi/consumer"
 	"etri5gc/nfs/amf/sbi/producer"
+	"etri5gc/nfs/amf/sbi/communication"
+	"etri5gc/nfs/amf/sbi/httpcallback"
+	"etri5gc/nfs/amf/sbi/mt"
+	"etri5gc/nfs/amf/sbi/oam"
+	"etri5gc/nfs/amf/sbi/location"
+	"etri5gc/nfs/amf/sbi/eventexposure"
+
+	"github.com/free5gc/openapi/models"
 )
 
 type AMF struct {
 	sbi			sbi.SBI //sbi server
-	consumer	consumer.Consumer
-	producer	producer.Handler
-	context		*context.Amf // AMF contex
-	cgf			*config.Config // loaded AMF config
+	consumer	*consumer.Consumer
+	producer	*producer.Handler
+	context		*context.AMFContext // AMF contex
+	conf			*config.Config // loaded AMF config
 }
 
 
 func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf = &AMF{
-		cfg:	cfg,
+		conf:	cfg,
 	}
 
 	nf.consumer = consumer.NewConsumer(nf)
@@ -31,13 +38,17 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf.context = context.CreateAmfContext(cfg)
 
 	// create SBI server
-	nf.sbi, err = sbi.CreateSbi(cfg.Sbi, nf.makeroutes)
+	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
 
 	return
 }
 
-func (nf *AMF) Context() *context.AmfContext {
+func (nf *AMF) Context() *context.AMFContext {
 	return nf.context
+}
+
+func (nf *AMF) Config() *config.Config {
+	return nf.conf
 }
 
 func (nf *AMF) Producer() *producer.Handler {
@@ -49,26 +60,33 @@ func (nf *AMF) Consumer() *consumer.Consumer {
 }
 //add routes to the gin router
 func (nf *AMF)makeroutes(router *gin.Engine) error {
-	common.AddHttpRoutes(router, httpcallback.MakeRoutes(nf))
-	common.AddHttpRoutes(router, oam.MakeRoutes(nf))
-	for _, serviceName := range factory.AmfConfig.Configuration.ServiceNameList {
+	var gn string
+	var routes sbi.Routes
+	gn, routes = httpcallback.MakeRoutes(nf.producer)
+	sbi.AddHttpRoutes(router, gn, routes)
+	gn, routes = oam.MakeRoutes(nf.producer)
+	sbi.AddHttpRoutes(router, gn, routes)
+	for _, serviceName := range nf.conf.Configuration.ServiceNameList {
 		switch models.ServiceName(serviceName) {
 		case models.ServiceName_NAMF_COMM:
-			common.AddHttpRoutes(router, communication.MakeRoutes(nf))
+			gn, routes = communication.MakeRoutes(nf.producer)
+			sbi.AddHttpRoutes(router, gn, routes) 
 		case models.ServiceName_NAMF_EVTS:
-			eventexposure.AddService(router)
-			common.AddHttpRoutes(router, eventexposure.MakeRoutes(nf))
+			gn, routes = eventexposure.MakeRoutes(nf.producer)
+			sbi.AddHttpRoutes(router, gn, routes)
 		case models.ServiceName_NAMF_MT:
-			common.AddHttpRoutes(router, mt.MakeRoutes(nf))
+			gn, routes = mt.MakeRoutes(nf.producer)
+			sbi.AddHttpRoutes(router, gn, routes)
 		case models.ServiceName_NAMF_LOC:
-			common.AddHttpRoutes(router, location.MakeRoutes(nf))
+			gn, routes = location.MakeRoutes(nf.producer)
+			sbi.AddHttpRoutes(router, gn, routes)
 		}
 	}
 	return nil
 }
 
 func (nf *AMF) Start() error {
-	logger.InitLog.Infoln("Server started")
+	//logger.InitLog.Infoln("Server started")
 
 
 	// start ngap server
@@ -82,7 +100,7 @@ func (nf *AMF) Start() error {
 */
 	// Register to NRF
 	
-	if sid, nfid, err := nf.consumer.NRF().Register(); err != nil {
+	if _, _, err := nf.consumer.NRF().Register(); err != nil {
 		return err
 	} else {
 		//TODO: Update NF identity
@@ -90,6 +108,7 @@ func (nf *AMF) Start() error {
 
 	//start sbi server
 	nf.sbi.Serve()
+	return nil
 }
 
 

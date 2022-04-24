@@ -14,11 +14,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/free5gc/amf/internal/logger"
-	"github.com/free5gc/amf/internal/sbi/producer"
-	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/models"
-	"github.com/free5gc/util/httpwrapper"
+//	"github.com/free5gc/openapi"
+//	"github.com/free5gc/openapi/models"
+//	"github.com/free5gc/util/httpwrapper"
 )
 
 // ProvideLocationInfo - Namf_Location ProvideLocationInfo service Operation
@@ -74,6 +72,6 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 
 // ProvidePositioningInfo - Namf_Location ProvidePositioningInfo service Operation
 func (h *Handler) HTTPProvidePositioningInfo(c *gin.Context) {
-	logger.LocationLog.Warnf("Handle Provide Positioning Info is not implemented.")
+//	logger.LocationLog.Warnf("Handle Provide Positioning Info is not implemented.")
 	c.JSON(http.StatusOK, gin.H{})
 }

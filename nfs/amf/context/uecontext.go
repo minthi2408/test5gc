@@ -1,11 +1,8 @@
 package context
 
-type UeContext struct {
+type AmfUe struct {
 }
 
-
-type UePool interface {
-}
 
 
 

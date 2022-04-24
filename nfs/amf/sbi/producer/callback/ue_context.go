@@ -1,5 +1,5 @@
 package callback
-
+/*
 import (
 	"context"
 	"fmt"
@@ -36,3 +36,4 @@ func SendN2InfoNotifyN2Handover(ue *amf_context.AmfUe, releaseList []int32) erro
 	}
 	return nil
 }
+*/

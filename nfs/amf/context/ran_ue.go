@@ -5,6 +5,3 @@ type RanUe struct {
 }
 
 
-type RanUePool interface {
-}
-

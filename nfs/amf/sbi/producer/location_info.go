@@ -3,8 +3,8 @@ package producer
 import (
 	"net/http"
 
-	"github.com/free5gc/amf/internal/context"
-	"github.com/free5gc/amf/internal/logger"
+//	"etri5gc/nfs/amf/context"
+
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
@@ -15,7 +15,7 @@ func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request)
 	requestLocInfo := request.Body.(models.RequestLocInfo)
 	ueContextID := request.Params["ueContextId"]
 
-	if provideLocInfo, prob := ProvideLocationInfoProcedure(requestLocInfo, ueContextID); prob != nil {
+	if provideLocInfo, prob := h.ProvideLocationInfoProcedure(requestLocInfo, ueContextID); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, provideLocInfo)
@@ -24,6 +24,7 @@ func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request)
 
 func (h *Handler) ProvideLocationInfoProcedure(requestLocInfo models.RequestLocInfo, ueContextID string) (
 	*models.ProvideLocInfo, *models.ProblemDetails) {
+		/*
 	amf := h.backend.Context()
 
 	if ue, ok := amf.AmfUeFindByUeContextID(ueContextID); !ok {
@@ -62,4 +63,6 @@ func (h *Handler) ProvideLocationInfoProcedure(requestLocInfo models.RequestLocI
 		}
 		return provideLocInfo, nil
 	}
+	*/
+	return nil, nil
 }

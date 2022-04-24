@@ -1,23 +1,20 @@
 package callback
 
+/*
 import (
-	"context"
+	org_context "context"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
 
-	amf_context "github.com/free5gc/amf/internal/context"
-	"github.com/free5gc/amf/internal/logger"
+	"etri5gc/nfs/amf/context"
 	"github.com/free5gc/openapi/Namf_Communication"
 	"github.com/free5gc/openapi/models"
 )
 
-var HttpLog *logrus.Entry
+*/
 
-func init() {
-	HttpLog = logger.HttpLog
-}
-
+/*
 func SendN1N2TransferFailureNotification(ue *amf_context.AmfUe, cause models.N1N2MessageTransferCause) {
 	if ue.N1N2Message == nil {
 		return
@@ -193,3 +190,4 @@ func SendN2InfoNotify(ue *amf_context.AmfUe, n2class models.N2InformationClass, 
 		return true
 	})
 }
+*/

@@ -1,10 +1,8 @@
 package context
 
 
-type Ran struct {
+type AmfRan struct {
 }
 
 
-type RanPool interface {
-}
 

@@ -2,9 +2,11 @@ package config
 
 import (
 	"fmt"
+	"time"
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
 	"etri5gc/sbi"
+	"github.com/asaskevich/govalidator"
 	"github.com/free5gc/openapi/models"
 )
 
@@ -55,7 +57,7 @@ func (i *Info) validate() (bool, error) {
 type Configuration struct {
 	AmfName                         string                    `yaml:"amfName,omitempty" valid:"required, type(string)"`
 	NgapIpList                      []string                  `yaml:"ngapIpList,omitempty" valid:"required"`
-	Sbi                             *sbi.Sbi                      `yaml:"sbi,omitempty" valid:"required"`
+	Sbi                             *sbi.Config               `yaml:"sbi,omitempty" valid:"required"`
 	NetworkFeatureSupport5GS        *NetworkFeatureSupport5GS `yaml:"networkFeatureSupport5GS,omitempty" valid:"optional"`
 	ServiceNameList                 []string                  `yaml:"serviceNameList,omitempty" valid:"required"`
 	ServedGumaiList                 []models.Guami            `yaml:"servedGuamiList,omitempty" valid:"required"`
@@ -92,7 +94,7 @@ func (c *Configuration) validate() (bool, error) {
 	}
 
 	if c.Sbi != nil {
-		if _, err := c.Sbi.validate(); err != nil {
+		if _, err := c.Sbi.Validate(); err != nil {
 			return false, err
 		}
 	}
@@ -460,18 +462,19 @@ func (c *Config) GetVersion() string {
 }
 
 //Load Config from file
-func LoadConfig(cfg string) (*Config, error) {
+func LoadConfig(f string) (*Config, error) {
 	if content, err := ioutil.ReadFile(f); err != nil {
 		return nil, err
 	} else {
-		amfconf = Config{}
+
+		var amfconf Config
 
 		if err := yaml.Unmarshal(content, &amfconf); err != nil {
 			return nil, err
 		}
+		amfconf.setDefaults()
+		return &amfconf, nil
 	}
-	amfconf.setDefaults()
-	return &AmfConfig, nil
 }
 
 func (c *Config) setDefaults() {

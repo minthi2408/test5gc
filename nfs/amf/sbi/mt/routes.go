@@ -10,43 +10,46 @@
 package mt
 
 import (
-	"net/http"
 	"strings"
 	"etri5gc/nfs/amf/sbi/producer"
-	"github.com/gin-gonic/gin"
+	"etri5gc/sbi"
 
-	"github.com/free5gc/amf/internal/logger"
-	logger_util "github.com/free5gc/util/logger"
 )
 
 const (
 	SERVICE_NAME="/namf-mt/v1"
 )
 
+type Handler struct {
+	prod		*producer.Handler
+}
 
-func MakeRoutes(h *producer.Handler) (string, common.Routes) {
-	h := &Handler{app: app}
 
-	var routes = Routes{
-	{
-		"Index",
-		"GET",
-		"/",
-		common.IndexHandler,
-	},
+func MakeRoutes(p *producer.Handler) (string, sbi.Routes) {
+	h := &Handler{
+		prod: p,
+	}
+	var routes = sbi.Routes{
+		{
+			"Index",
+			"GET",
+			"/",
+			sbi.IndexHandler,
+		},
 
-	{
-		"ProvideDomainSelectionInfo",
-		strings.ToUpper("Get"),
-		"/ue-contexts/:ueContextId",
-		h.HTTPProvideDomainSelectionInfo,
-	},
+		{
+			"ProvideDomainSelectionInfo",
+			strings.ToUpper("Get"),
+			"/ue-contexts/:ueContextId",
+			h.HTTPProvideDomainSelectionInfo,
+		},
 
-	{
-		"EnableUeReachability",
-		strings.ToUpper("Post"),
-		"/ue-contexts/:ueContextId/ue-reachind",
-		h.HTTPEnableUeReachability,
-	},
+		{
+			"EnableUeReachability",
+			strings.ToUpper("Post"),
+			"/ue-contexts/:ueContextId/ue-reachind",
+			h.HTTPEnableUeReachability,
+		},
 	}
 	return SERVICE_NAME, routes
+}

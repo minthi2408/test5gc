@@ -2,10 +2,10 @@ package producer
 
 import (
 	"net/http"
-	"strconv"
+//	"strconv"
 
-	"github.com/free5gc/amf/internal/context"
-	"github.com/free5gc/amf/internal/logger"
+//	"etri5gc/nfs/amf/context"
+
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
@@ -39,7 +39,7 @@ func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *ht
 
 	supi := request.Params["supi"]
 
-	if ueContexts, prob := OAMRegisteredUEContextProcedure(supi); prob != nil {
+	if ueContexts, prob := h.OAMRegisteredUEContextProcedure(supi); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, ueContexts)
@@ -47,6 +47,7 @@ func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *ht
 }
 
 func (h *Handler) OAMRegisteredUEContextProcedure(supi string) (UEContexts, *models.ProblemDetails) {
+	/*
 	var ueContexts UEContexts
 	amf := h.backend.Context()
 
@@ -82,9 +83,11 @@ func (h *Handler) OAMRegisteredUEContextProcedure(supi string) (UEContexts, *mod
 	}
 
 	return ueContexts, nil
+	*/
+	return nil, nil
 }
 
-
+/*
 //NOTE: (by TungTQ) this method should be implemented at AmfUe class
 func buildUEContext(ue *context.AmfUe, accessType models.AccessType) *UEContext {
 	if ue.State[accessType].Is(context.Registered) {
@@ -121,3 +124,4 @@ func buildUEContext(ue *context.AmfUe, accessType models.AccessType) *UEContext 
 	}
 	return nil
 }
+*/

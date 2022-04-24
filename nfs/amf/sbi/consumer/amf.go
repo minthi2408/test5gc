@@ -1,35 +1,41 @@
 package consumer
 
 import (
-	org_context	"context"
+	//org_context	"context"
 	"etri5gc/nfs/amf/context"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/openapi/Namf_Communication"
 )
 
 type AmfConsumer interface {
 	CreateUEContextRequest(*context.AmfUe, models.UeContextCreateData) (*models.UeContextCreatedData, *models.ProblemDetails, error)
 	ReleaseUEContextRequest(*context.AmfUe, models.NgApCause) (*models.ProblemDetails, error)
 	UEContextTransferRequest(*context.AmfUe, models.AccessType, models.TransferReason) (*models.UeContextTransferRspData, *models.ProblemDetails, error)
-	RegistrationStatusUpdate(*context.AmfUe, models.UeRegStatusUpdateReqData) (bool, *models.ProblemDetails, error) {
+	RegistrationStatusUpdate(*context.AmfUe, models.UeRegStatusUpdateReqData) (bool, *models.ProblemDetails, error)
 }
 
 
 type amfConsumer struct {
-	context		*context.AmfContext
+	context		*context.AMFContext
 }
 
-func newAmfConsumer(c *context.AmfContext) AmfConsumer {
+func newAmfConsumer(c *context.AMFContext) AmfConsumer {
 	return &amfConsumer {
 		context: c,
 	}
 }
 
-func comm_client(ue *context.AmfUe) NamfCommunication.APIClient {
+func comm_client(ue *context.AmfUe) (api Namf_Communication.APIClient) {
+	/*
 	conf := Namf_Communication.NewConfiguration()
 	conf.SetBasePath(ue.TargetAmfUri)
 	return Namf_Communication.NewAPIClient(conf)
+	*/
+	return
 }
 
 func (c *amfConsumer) CreateUEContextRequest(ue *context.AmfUe, dat models.UeContextCreateData) (cdat *models.UeContextCreatedData, prob *models.ProblemDetails, err error) {
+	/*
 	client := comm_client(ue)
 
 	req := models.CreateUeContextRequest{
@@ -51,10 +57,13 @@ func (c *amfConsumer) CreateUEContextRequest(ue *context.AmfUe, dat models.UeCon
 		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
 	}
 	return
+	*/
+	return
 }
 
 func (c *amfConsumer) ReleaseUEContextRequest(ue *context.AmfUe, cause models.NgApCause) (
 	prob *models.ProblemDetails, err error) {
+		/*
 	client := comm_client(ue) 
 
 	var ueContextId string
@@ -87,12 +96,14 @@ func (c *amfConsumer) ReleaseUEContextRequest(ue *context.AmfUe, cause models.Ng
 		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
 	}
 	return prob, err
+	*/
+	return
 }
 
 func (c *amfConsumer) UEContextTransferRequest(
-	ue *amf_context.AmfUe, accessType models.AccessType, transferReason models.TransferReason) (
+	ue *context.AmfUe, accessType models.AccessType, transferReason models.TransferReason) (
 	ueContextTransferRspData *models.UeContextTransferRspData, problemDetails *models.ProblemDetails, err error) {
-	
+/*	
 	client := comm_client(ue) 
 
 	ueContextTransferReqData := models.UeContextTransferReqData{
@@ -133,11 +144,14 @@ func (c *amfConsumer) UEContextTransferRequest(
 		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
 	}
 	return ueContextTransferRspData, prob, err
+	*/
+	return
 }
 
 // This operation is called "RegistrationCompleteNotify" at TS 23.502
-func (c *amfConsumer) RegistrationStatusUpdate(ue *amf_context.AmfUe, request models.UeRegStatusUpdateReqData) (
+func (c *amfConsumer) RegistrationStatusUpdate(ue *context.AmfUe, request models.UeRegStatusUpdateReqData) (
 	regStatusTransferComplete bool, problemDetails *models.ProblemDetails, err error) {
+		/*
 	client := comm_client(ue) 
 
 	ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
@@ -155,5 +169,7 @@ func (c *amfConsumer) RegistrationStatusUpdate(ue *amf_context.AmfUe, request mo
 	} else {
 		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
 	}
+	return
+	*/
 	return
 }

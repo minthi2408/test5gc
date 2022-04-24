@@ -10,15 +10,13 @@
 package eventexposure
 
 import (
-	"net/http"
+//	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/free5gc/amf/internal/logger"
-	"github.com/free5gc/amf/internal/sbi/producer"
-	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/models"
-	"github.com/free5gc/util/httpwrapper"
+//	"github.com/free5gc/openapi"
+//	"github.com/free5gc/openapi/models"
+//	"github.com/free5gc/util/httpwrapper"
 )
 
 // CreateSubscription - Namf_EventExposure Subscribe service Operation
