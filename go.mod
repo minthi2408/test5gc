@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
-	github.com/free5gc/aper v1.0.4
 	github.com/free5gc/nas v1.0.7
 	github.com/free5gc/ngap v1.0.6
 	github.com/free5gc/openapi v1.0.4
@@ -12,14 +11,15 @@ require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
-	github.com/sirupsen/logrus v1.8.1
 	github.com/urfave/cli v1.22.7
 	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
+	github.com/aead/cmac v0.0.0-20160719120800-7af84192f0b1 // indirect
 	github.com/antonfisher/nested-logrus-formatter v1.3.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
+	github.com/free5gc/aper v1.0.4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
@@ -36,6 +36,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
+	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect

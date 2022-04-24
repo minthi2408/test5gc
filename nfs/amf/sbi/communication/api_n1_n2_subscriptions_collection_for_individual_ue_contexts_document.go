@@ -10,22 +10,21 @@
 package communication
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 func (h *Handler) HTTPN1N2MessageSubscribe(c *gin.Context) {
-	/*
 	var ueN1N2InfoSubscriptionCreateData models.UeN1N2InfoSubscriptionCreateData
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.CommLog.Errorf("Get Request Body error: %+v", err)
+	//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -44,7 +43,7 @@ func (h *Handler) HTTPN1N2MessageSubscribe(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.CommLog.Errorln(problemDetail)
+	//	logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -52,11 +51,11 @@ func (h *Handler) HTTPN1N2MessageSubscribe(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, ueN1N2InfoSubscriptionCreateData)
 	req.Params["ueContextId"] = c.Params.ByName("ueContextId")
 
-	rsp := producer.HandleN1N2MessageSubscirbeRequest(req)
+	rsp := h.prod.HandleN1N2MessageSubscirbeRequest(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CommLog.Errorln(err)
+		//logger.CommLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -66,5 +65,4 @@ func (h *Handler) HTTPN1N2MessageSubscribe(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }

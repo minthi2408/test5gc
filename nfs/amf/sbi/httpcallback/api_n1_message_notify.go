@@ -1,22 +1,21 @@
 package httpcallback
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 func (h *Handler) HTTPN1MessageNotify(c *gin.Context) {
-	/*
 	var n1MessageNotification models.N1MessageNotification
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
+	//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -35,18 +34,18 @@ func (h *Handler) HTTPN1MessageNotify(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.CallbackLog.Errorln(problemDetail)
+	//	logger.CallbackLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
 
 	req := httpwrapper.NewRequest(c.Request, n1MessageNotification)
 
-	rsp := producer.HandleN1MessageNotify(req)
+	rsp := h.prod.HandleN1MessageNotify(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CallbackLog.Errorln(err)
+//		logger.CallbackLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -56,5 +55,4 @@ func (h *Handler) HTTPN1MessageNotify(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }

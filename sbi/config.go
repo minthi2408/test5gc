@@ -31,6 +31,10 @@ func (c *Config) Validate() (bool, error) {
 	return true, nil
 }
 
+func (c *Config) GetIPv4Uri() string {
+	return fmt.Sprintf("%s://%s:%d", c.Scheme, c.RegisterIPv4, c.Port)
+}
+
 type Tls struct {
 	Pem string `yaml:"pem,omitempty" valid:"type(string),minstringlength(1),required"`
 	Key string `yaml:"key,omitempty" valid:"type(string),minstringlength(1),required"`

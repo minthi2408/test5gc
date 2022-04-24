@@ -14,14 +14,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 // ProvideLocationInfo - Namf_Location ProvideLocationInfo service Operation
 func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
-	/*
 	var requestLocInfo models.RequestLocInfo
 
 	requestBody, err := c.GetRawData()
@@ -32,7 +31,7 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 			Detail: err.Error(),
 			Cause:  "SYSTEM_FAILURE",
 		}
-		logger.LocationLog.Errorf("Get Request Body error: %+v", err)
+	//	logger.LocationLog.Errorf("Get Request Body error: %+v", err)
 		c.JSON(http.StatusInternalServerError, problemDetail)
 		return
 	}
@@ -45,7 +44,7 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.LocationLog.Errorln(problemDetail)
+	//	logger.LocationLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -53,11 +52,11 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, requestLocInfo)
 	req.Params["ueContextId"] = c.Params.ByName("ueContextId")
 
-	rsp := producer.HandleProvideLocationInfoRequest(req)
+	rsp := h.prod.HandleProvideLocationInfoRequest(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CommLog.Errorln(err)
+		//logger.CommLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -67,7 +66,6 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }
 
 // ProvidePositioningInfo - Namf_Location ProvidePositioningInfo service Operation

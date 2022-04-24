@@ -26,7 +26,6 @@ func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.R
 
 func (h *Handler) ProvideDomainSelectionInfoProcedure(ueContextID string, infoClassQuery string, supportedFeaturesQuery string) (
 	*models.UeContextInfo, *models.ProblemDetails) {
-		/*
 	amf := h.backend.Context()
 
 	if ue, ok := amf.AmfUeFindByUeContextID(ueContextID); !ok {
@@ -52,6 +51,4 @@ func (h *Handler) ProvideDomainSelectionInfoProcedure(ueContextID string, infoCl
 
 		return ueContextInfo, nil
 	}
-	*/
-	return nil, nil
 }

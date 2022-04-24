@@ -1,22 +1,21 @@
 package httpcallback
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
-	/*
 	var policyUpdate models.PolicyUpdate
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
+	//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -35,7 +34,7 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.CallbackLog.Errorln(problemDetail)
+	//	logger.CallbackLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -43,11 +42,11 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, policyUpdate)
 	req.Params["polAssoId"] = c.Params.ByName("polAssoId")
 
-	rsp := producer.HandleAmPolicyControlUpdateNotifyUpdate(req)
+	rsp := h.prod.HandleAmPolicyControlUpdateNotifyUpdate(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CallbackLog.Errorln(err)
+		//logger.CallbackLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -57,16 +56,14 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }
 
 func (h *Handler) HTTPAmPolicyControlUpdateNotifyTerminate(c *gin.Context) {
-	/*
 	var terminationNotification models.TerminationNotification
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
+		//logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -85,7 +82,7 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyTerminate(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.CallbackLog.Errorln(problemDetail)
+		//logger.CallbackLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -93,11 +90,11 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyTerminate(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, terminationNotification)
 	req.Params["polAssoId"] = c.Params.ByName("polAssoId")
 
-	rsp := producer.HandleAmPolicyControlUpdateNotifyTerminate(req)
+	rsp := h.prod.HandleAmPolicyControlUpdateNotifyTerminate(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CallbackLog.Errorln(err)
+		//logger.CallbackLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -107,5 +104,4 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyTerminate(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }

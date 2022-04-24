@@ -10,18 +10,17 @@
 package mt
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 // ProvideDomainSelectionInfo - Namf_MT Provide Domain Selection Info service Operation
 func (h *Handler) HTTPProvideDomainSelectionInfo(c *gin.Context) {
-	/*
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["ueContextId"] = c.Params.ByName("ueContextId")
 	infoClassQuery := c.Query("info-class")
@@ -29,11 +28,11 @@ func (h *Handler) HTTPProvideDomainSelectionInfo(c *gin.Context) {
 	supportedFeaturesQuery := c.Query("supported-features")
 	req.Query.Add("supported-features", supportedFeaturesQuery)
 
-	rsp := producer.HandleProvideDomainSelectionInfoRequest(req)
+	rsp := h.prod.HandleProvideDomainSelectionInfoRequest(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.MtLog.Errorln(err)
+		//logger.MtLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -43,5 +42,4 @@ func (h *Handler) HTTPProvideDomainSelectionInfo(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }

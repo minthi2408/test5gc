@@ -60,7 +60,7 @@ type Configuration struct {
 	Sbi                             *sbi.Config               `yaml:"sbi,omitempty" valid:"required"`
 	NetworkFeatureSupport5GS        *NetworkFeatureSupport5GS `yaml:"networkFeatureSupport5GS,omitempty" valid:"optional"`
 	ServiceNameList                 []string                  `yaml:"serviceNameList,omitempty" valid:"required"`
-	ServedGumaiList                 []models.Guami            `yaml:"servedGuamiList,omitempty" valid:"required"`
+	ServedGuamiList                 []models.Guami            `yaml:"servedGuamiList,omitempty" valid:"required"`
 	SupportTAIList                  []models.Tai              `yaml:"supportTaiList,omitempty" valid:"required"`
 	PlmnSupportList                 []PlmnSupportItem         `yaml:"plmnSupportList,omitempty" valid:"required"`
 	SupportDnnList                  []string                  `yaml:"supportDnnList,omitempty" valid:"required"`
@@ -119,9 +119,9 @@ func (c *Configuration) validate() (bool, error) {
 		}
 	}
 
-	if c.ServedGumaiList != nil {
+	if c.ServedGuamiList != nil {
 		var errs govalidator.Errors
-		for _, v := range c.ServedGumaiList {
+		for _, v := range c.ServedGuamiList {
 			if v.PlmnId == nil {
 				return false, fmt.Errorf("ServedGumaiList: PlmnId is nil")
 			}

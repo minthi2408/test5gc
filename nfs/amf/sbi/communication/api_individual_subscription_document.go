@@ -10,23 +10,22 @@
 package communication
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 // AMFStatusChangeSubscribeModify - Namf_Communication AMF Status Change Subscribe Modify service Operation
 func (h *Handler) HTTPAMFStatusChangeSubscribeModify(c *gin.Context) {
-	/*
 	var subscriptionData models.SubscriptionData
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.CommLog.Errorf("Get Request Body error: %+v", err)
+//		logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -45,7 +44,7 @@ func (h *Handler) HTTPAMFStatusChangeSubscribeModify(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.CommLog.Errorln(problemDetail)
+		//logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -53,11 +52,11 @@ func (h *Handler) HTTPAMFStatusChangeSubscribeModify(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, subscriptionData)
 	req.Params["subscriptionId"] = c.Params.ByName("subscriptionId")
 
-	rsp := producer.HandleAMFStatusChangeSubscribeModify(req)
+	rsp := h.prod.HandleAMFStatusChangeSubscribeModify(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CommLog.Errorln(err)
+		//logger.CommLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -67,20 +66,18 @@ func (h *Handler) HTTPAMFStatusChangeSubscribeModify(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }
 
 // AMFStatusChangeUnSubscribe - Namf_Communication AMF Status Change UnSubscribe service Operation
 func (h *Handler) HTTPAMFStatusChangeUnSubscribe(c *gin.Context) {
-	/*
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["subscriptionId"] = c.Params.ByName("subscriptionId")
 
-	rsp := producer.HandleAMFStatusChangeUnSubscribeRequest(req)
+	rsp := h.prod.HandleAMFStatusChangeUnSubscribeRequest(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.CommLog.Errorln(err)
+//		logger.CommLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -90,5 +87,4 @@ func (h *Handler) HTTPAMFStatusChangeUnSubscribe(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }

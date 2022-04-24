@@ -10,29 +10,28 @@
 package eventexposure
 
 import (
-//	"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-//	"github.com/free5gc/openapi"
-//	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/httpwrapper"
+	"github.com/free5gc/openapi"
+	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/httpwrapper"
 )
 
 // DeleteSubscription - Namf_EventExposure Unsubscribe service Operation
 func (h *Handler) HTTPDeleteSubscription(c *gin.Context) {
-	/*
 	req := httpwrapper.NewRequest(c.Request, nil)
 	req.Params["subscriptionId"] = c.Param("subscriptionId")
 
-	rsp := producer.HandleDeleteAMFEventSubscription(req)
+	rsp := h.prod.HandleDeleteAMFEventSubscription(req)
 
 	if rsp.Status == http.StatusOK {
 		c.JSON(http.StatusOK, gin.H{})
 	} else {
 		responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 		if err != nil {
-			logger.EeLog.Errorln(err)
+		//	logger.EeLog.Errorln(err)
 			problemDetails := models.ProblemDetails{
 				Status: http.StatusInternalServerError,
 				Cause:  "SYSTEM_FAILURE",
@@ -43,17 +42,15 @@ func (h *Handler) HTTPDeleteSubscription(c *gin.Context) {
 			c.Data(rsp.Status, "application/json", responseBody)
 		}
 	}
-	*/
 }
 
 // ModifySubscription - Namf_EventExposure Subscribe Modify service Operation
 func (h *Handler) HTTPModifySubscription(c *gin.Context) {
-	/*
 	var modifySubscriptionRequest models.ModifySubscriptionRequest
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-		logger.EeLog.Errorf("Get Request Body error: %+v", err)
+		//logger.EeLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -72,7 +69,7 @@ func (h *Handler) HTTPModifySubscription(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-		logger.EeLog.Errorln(problemDetail)
+		//logger.EeLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -80,11 +77,11 @@ func (h *Handler) HTTPModifySubscription(c *gin.Context) {
 	req := httpwrapper.NewRequest(c.Request, modifySubscriptionRequest)
 	req.Params["subscriptionId"] = c.Param("subscriptionId")
 
-	rsp := producer.HandleModifyAMFEventSubscription(req)
+	rsp := h.prod.HandleModifyAMFEventSubscription(req)
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-		logger.EeLog.Errorln(err)
+		//logger.EeLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",
@@ -94,5 +91,4 @@ func (h *Handler) HTTPModifySubscription(c *gin.Context) {
 	} else {
 		c.Data(rsp.Status, "application/json", responseBody)
 	}
-	*/
 }
