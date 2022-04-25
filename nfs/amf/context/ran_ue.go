@@ -80,7 +80,7 @@ func (ranUe *RanUe) Remove() error {
 		}
 	}
 	ran.amf.ruepool.Delete(ranUe.AmfUeNgapId)
-	amfUeNGAPIDGenerator.FreeID(ranUe.AmfUeNgapId)
+	ran.amf.ngapIdGen.FreeID(ranUe.AmfUeNgapId)
 	return nil
 }
 

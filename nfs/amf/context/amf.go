@@ -2,13 +2,13 @@ package context
 
 import (
 	"fmt"
-//	"math"
+	"math"
 	"net"
 	"reflect"
 	"strconv"
 	"strings"
 	"sync"
-	"time"
+//	"time"
 
 	"etri5gc/nfs/amf/config"
 
@@ -16,11 +16,17 @@ import (
 	"github.com/free5gc/util/idgenerator"
 )
 
+type IdGenerator interface {
+	Allocate() (int64, error)
+	FreeID(int64)
+}
+/*
 var (
 	tmsiGenerator                    *idgenerator.IDGenerator = nil
 	amfUeNGAPIDGenerator             *idgenerator.IDGenerator = nil
 	amfStatusSubscriptionIDGenerator *idgenerator.IDGenerator = nil
 )
+*/
 
 type AMFContext struct {
 	cfg				*config.Config
@@ -29,11 +35,15 @@ type AMFContext struct {
 	ranpool			sync.Map
 	ruepool			sync.Map
 	eventsubpool	sync.Map
-	amfsubpool		sync.Map
+	statussubpool		sync.Map
 
 	ladnpool    	map[string]*LADN // dnn as key
 
-	eventsubIdGen   *idgenerator.IDGenerator
+	eventsubIdGen   IdGenerator
+	statussubIdGen	IdGenerator
+	tmsiIdGen			IdGenerator
+	ngapIdGen		IdGenerator
+
 	
 	relcap          int64 //Relative Capacity
 	id              string
@@ -46,15 +56,6 @@ type AMFContext struct {
 }
 
 
-
-type AMFContextEventSubscription struct {
-	IsAnyUe           bool
-	IsGroupUe         bool
-	UeSupiList        []string
-	Expiry            *time.Time
-	EventSubscription models.AmfEventSubscription
-}
-
 type SecurityAlgorithm struct {
 	IntegrityOrder []uint8 // slice of security.AlgIntegrityXXX
 	CipheringOrder []uint8 // slice of security.AlgCipheringXXX
@@ -66,32 +67,32 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 	return
 }
 */
-func (context *AMFContext) TmsiAllocate() int32 {
-	tmsi, err := tmsiGenerator.Allocate()
-	if err != nil {
+func (amf *AMFContext) TmsiAllocate() int32 {
+	if tmsi, err := amf.tmsiIdGen.Allocate(); err != nil {
 		return -1
+	} else {
+		return int32(tmsi)
 	}
-	return int32(tmsi)
 }
 
-func (context *AMFContext) FreeTmsi(tmsi int64) {
-	tmsiGenerator.FreeID(tmsi)
+func (amf *AMFContext) FreeTmsi(tmsi int64) {
+	amf.tmsiIdGen.FreeID(tmsi)
 }
 
-func (context *AMFContext) AllocateAmfUeNgapID() (int64, error) {
-	return amfUeNGAPIDGenerator.Allocate()
+func (amf *AMFContext) AllocateAmfUeNgapID() (int64, error) {
+	return amf.ngapIdGen.Allocate()
 }
 
-func (context *AMFContext) AllocateGutiToUe(ue *AmfUe) {
-	servedGuami := context.cfg.Configuration.ServedGuamiList[0]
-	ue.Tmsi = context.TmsiAllocate()
+func (amf *AMFContext) AllocateGutiToUe(ue *AmfUe) {
+	servedGuami := amf.cfg.Configuration.ServedGuamiList[0]
+	ue.Tmsi = amf.TmsiAllocate()
 
 	plmnID := servedGuami.PlmnId.Mcc + servedGuami.PlmnId.Mnc
 	tmsiStr := fmt.Sprintf("%08x", ue.Tmsi)
 	ue.Guti = plmnID + servedGuami.AmfId + tmsiStr
 }
 
-func (context *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessType) {
+func (amf *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessType) {
 	// clear the previous registration area if need
 	if len(ue.RegistrationArea[anType]) > 0 {
 		ue.RegistrationArea[anType] = nil
@@ -99,7 +100,7 @@ func (context *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.Acc
 
 	// allocate a new tai list as a registration area to ue
 	// TODO: algorithm to choose TAI list
-	for _, supportTai := range context.cfg.Configuration.SupportTAIList {
+	for _, supportTai := range amf.cfg.Configuration.SupportTAIList {
 		if reflect.DeepEqual(supportTai, ue.Tai) {
 			ue.RegistrationArea[anType] = append(ue.RegistrationArea[anType], supportTai)
 			break
@@ -107,21 +108,19 @@ func (context *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.Acc
 	}
 }
 
-func (context *AMFContext) NewAMFStatusSubscription(subscriptionData models.SubscriptionData) (subscriptionID string) {
-	id, err := amfStatusSubscriptionIDGenerator.Allocate()
-	if err != nil {
+func (amf *AMFContext) NewAMFStatusSubscription(dat models.SubscriptionData) (subId string) {
+	if id, err := amf.statussubIdGen.Allocate(); err != nil {
 		//logger.ContextLog.Errorf("Allocate subscriptionID error: %+v", err)
-		return ""
+	} else {
+		subId = strconv.Itoa(int(id))
+		amf.statussubpool.Store(subId, dat)
 	}
-
-	subscriptionID = strconv.Itoa(int(id))
-	context.amfsubpool.Store(subscriptionID, subscriptionData)
 	return
 }
 
 // Return Value: (subscriptionData *models.SubScriptionData, ok bool)
 func (context *AMFContext) FindAMFStatusSubscription(subscriptionID string) (*models.SubscriptionData, bool) {
-	if value, ok := context.amfsubpool.Load(subscriptionID); ok {
+	if value, ok := context.statussubpool.Load(subscriptionID); ok {
 		subscriptionData := value.(models.SubscriptionData)
 		return &subscriptionData, ok
 	} else {
@@ -129,35 +128,15 @@ func (context *AMFContext) FindAMFStatusSubscription(subscriptionID string) (*mo
 	}
 }
 
-func (context *AMFContext) DeleteAMFStatusSubscription(subscriptionID string) {
-	context.amfsubpool.Delete(subscriptionID)
-	if id, err := strconv.ParseInt(subscriptionID, 10, 64); err != nil {
+func (amf *AMFContext) DeleteAMFStatusSubscription(subId string) {
+	amf.statussubpool.Delete(subId)
+	if id, err := strconv.ParseInt(subId, 10, 64); err != nil {
 //		logger.ContextLog.Error(err)
 	} else {
-		amfStatusSubscriptionIDGenerator.FreeID(id)
+		amf.statussubIdGen.FreeID(id)
 	}
 }
 
-func (context *AMFContext) NewEventSubscription(subscriptionID string, subscription *AMFContextEventSubscription) {
-	context.eventsubpool.Store(subscriptionID, subscription)
-}
-
-func (context *AMFContext) FindEventSubscription(subscriptionID string) (*AMFContextEventSubscription, bool) {
-	if value, ok := context.eventsubpool.Load(subscriptionID); ok {
-		return value.(*AMFContextEventSubscription), ok
-	} else {
-		return nil, false
-	}
-}
-
-func (context *AMFContext) DeleteEventSubscription(subscriptionID string) {
-	context.eventsubpool.Delete(subscriptionID)
-	if id, err := strconv.ParseInt(subscriptionID, 10, 32); err != nil {
-		//logger.ContextLog.Error(err)
-	} else {
-		context.eventsubIdGen.FreeID(id)
-	}
-}
 
 func (context *AMFContext) AddAmfUeToUePool(ue *AmfUe, supi string) {
 	if len(supi) == 0 {
@@ -169,7 +148,7 @@ func (context *AMFContext) AddAmfUeToUePool(ue *AmfUe, supi string) {
 
 func (context *AMFContext) NewAmfUe(supi string) *AmfUe {
 	ue := AmfUe{}
-	ue.init()
+	ue.init(context)
 
 	if supi != "" {
 		context.AddAmfUeToUePool(&ue, supi)
@@ -351,15 +330,20 @@ func (context *AMFContext) InitNFService(serivceName []string, version string) {
 	*/
 }
 
-func (context *AMFContext) init() {
-	//TODO
+func (amf *AMFContext) init() {
+	//create id generators
+	amf.tmsiIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.eventsubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.statussubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.ngapIdGen = idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId)
+	//TODO:
 }
 
-func (context *AMFContext) GetConfig() *config.Config {
-	return context.cfg
+func (amf *AMFContext) GetConfig() *config.Config {
+	return amf.cfg
 }
 
-func (context *AMFContext) BuildNfProfile() (id string, p models.NfProfile, err error) {
+func (amf *AMFContext) BuildNfProfile() (id string, p models.NfProfile, err error) {
 	return
 }
 
@@ -369,3 +353,5 @@ func CreateAmfContext(cfg *config.Config) *AMFContext {
 	ret.init()
 	return ret
 }
+
+

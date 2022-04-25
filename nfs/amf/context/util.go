@@ -79,3 +79,16 @@ func DetachSourceUeTargetUe(ranUe *RanUe) {
 		source.TargetUe = nil
 	}
 }
+
+func getDuration(expiry *time.Time, remainDuration *int32) bool {
+	if expiry != nil {
+		if time.Now().After(*expiry) {
+			return false
+		} else {
+			duration := time.Until(*expiry)
+			*remainDuration = int32(duration.Seconds())
+		}
+	}
+	return true
+}
+

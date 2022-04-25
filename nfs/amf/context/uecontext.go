@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"regexp"
 	"sync"
-	"time"
 
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
@@ -49,7 +48,7 @@ const (
 
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
-	servingAMF *AMFContext // never nil
+	amf *AMFContext // never nil
 
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
@@ -120,9 +119,9 @@ type AmfUe struct {
 	/* UeContextForHandover*/
 	HandoverNotifyUri string
 	/* N1N2Message */
-	N1N2MessageIDGenerator          *idgenerator.IDGenerator
+	N1N2MessageIDGenerator          IdGenerator 
 	N1N2Message                     *N1N2Message
-	N1N2MessageSubscribeIDGenerator *idgenerator.IDGenerator
+	N1N2MessageSubscribeIDGenerator IdGenerator 
 	// map[int64]models.UeN1N2InfoSubscriptionCreateData; use n1n2MessageSubscriptionID as key
 	N1N2MessageSubscription sync.Map
 	/* Pdu Sesseion context */
@@ -187,12 +186,6 @@ type AmfUe struct {
 
 }
 
-type AmfUeEventSubscription struct {
-	Timestamp         time.Time
-	AnyUe             bool
-	RemainReports     *int32
-	EventSubscription *models.AmfEventSubscription
-}
 
 type N1N2Message struct {
 	Request     models.N1N2MessageTransferRequest
@@ -235,8 +228,8 @@ type NGRANCGI struct {
 	EUTRACGI *models.Ecgi
 }
 
-func (ue *AmfUe) init() {
-	//ue.servingAMF = AMF_Self()
+func (ue *AmfUe) init(amf *AMFContext) {
+	ue.amf = amf 
 	ue.State = make(map[models.AccessType]*fsm.State)
 	ue.State[models.AccessType__3_GPP_ACCESS] = fsm.NewState(Deregistered)
 	ue.State[models.AccessType_NON_3_GPP_ACCESS] = fsm.NewState(Deregistered)
@@ -256,7 +249,7 @@ func (ue *AmfUe) init() {
 }
 
 func (ue *AmfUe) ServingAMF() *AMFContext {
-	return ue.servingAMF
+	return ue.amf
 }
 
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
@@ -276,7 +269,7 @@ func (ue *AmfUe) Remove() {
 	//		logger.ContextLog.Errorf("Remove RanUe error: %v", err)
 		}
 	}
-	tmsiGenerator.FreeID(int64(ue.Tmsi))
+	ue.amf.tmsiIdGen.FreeID(int64(ue.Tmsi))
 	if len(ue.Supi) > 0 {
 		//AMF_Self().UePool.Delete(ue.Supi)
 	}
