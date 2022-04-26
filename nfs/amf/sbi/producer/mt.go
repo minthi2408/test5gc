@@ -34,21 +34,6 @@ func (h *Handler) ProvideDomainSelectionInfoProcedure(ueContextID string, infoCl
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
 	} else {
-
-		ueContextInfo := new(models.UeContextInfo)
-
-		// TODO: Error Status 307, 403 in TS29.518 Table 6.3.3.3.3.1-3
-		anType := ue.GetAnType()
-		if anType != "" && infoClassQuery != "" {
-			ranUe := ue.RanUe[anType]
-			ueContextInfo.AccessType = anType
-			ueContextInfo.LastActTime = ranUe.LastActTime
-			ueContextInfo.RatType = ue.RatType
-			ueContextInfo.SupportedFeatures = ranUe.SupportedFeatures
-			ueContextInfo.SupportVoPS = ranUe.SupportVoPS
-			ueContextInfo.SupportVoPSn3gpp = ranUe.SupportVoPSn3gpp
-		}
-
-		return ueContextInfo, nil
+		return  ue.GetContextInfo(infoClassQuery, supportedFeaturesQuery), nil
 	}
 }

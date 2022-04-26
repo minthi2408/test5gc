@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"regexp"
 	"sync"
+	"strconv"
 
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
@@ -765,18 +766,21 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 
 // SM Context realted function
 
-func (ue *AmfUe) StoreSmContext(pduSessionID int32, smContext *SmContext) {
-	ue.SmContextList.Store(pduSessionID, smContext)
+func (ue *AmfUe) StoreSmContext(pduId int32, smContext *SmContext) {
+	ue.SmContextList.Store(pduId, smContext)
 }
 
-func (ue *AmfUe) SmContextFindByPDUSessionID(pduSessionID int32) (*SmContext, bool) {
-	if value, ok := ue.SmContextList.Load(pduSessionID); ok {
+func (ue *AmfUe) SmContextFindByPDUSessionID(pduId int32) (*SmContext, bool) {
+	if value, ok := ue.SmContextList.Load(pduId); ok {
 		return value.(*SmContext), true
 	} else {
 		return nil, false
 	}
 }
 
+func (ue *AmfUe) DeleteSmContext(pduId int32) {
+	ue.SmContextList.Delete(pduId)
+}
 
 // /sbi/producer/location
 
@@ -813,5 +817,84 @@ func (ue *AmfUe) GetLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
 
 // /sbi/producer/mt
 
+func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextInfo {
+	info := &models.UeContextInfo{}
+
+	// TODO: Error Status 307, 403 in TS29.518 Table 6.3.3.3.3.1-3
+	anType := ue.GetAnType()
+	if anType != "" && class != "" {
+		ranUe := ue.RanUe[anType]
+		info.AccessType = anType
+		info.LastActTime = ranUe.LastActTime
+		info.RatType = ue.RatType
+		info.SupportedFeatures = ranUe.SupportedFeatures
+		info.SupportVoPS = ranUe.SupportVoPS
+		info.SupportVoPSn3gpp = ranUe.SupportVoPSn3gpp
+	}
+
+	return info 
+}
 
 // /sbi/producer/
+
+
+
+//
+
+func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext,reqtype *models.RequestType) (dat models.SmContextCreateData) {
+	dat.Supi = ue.Supi
+	dat.UnauthenticatedSupi = ue.UnauthenticatedSupi
+	dat.Pei = ue.Pei
+	dat.Gpsi = ue.Gpsi
+	dat.PduSessionId = sm.PduSessionID()
+	snssai := sm.Snssai()
+	dat.SNssai = &snssai
+	dat.Dnn = sm.Dnn()
+	dat.ServingNfId = ue.amf.id
+	dat.Guami = &ue.amf.cfg.Configuration.ServedGuamiList[0]
+	dat.ServingNetwork = ue.amf.cfg.Configuration.ServedGuamiList[0].PlmnId
+	if reqtype != nil {
+		dat.RequestType = *reqtype
+	}
+	dat.N1SmMsg = new(models.RefToBinaryData)
+	dat.N1SmMsg.ContentId = "n1SmMsg"
+	dat.AnType = sm.AccessType()
+	if ue.RatType != "" {
+		dat.RatType = ue.RatType
+	}
+	// TODO: location is used in roaming scenerio
+	// if ue.Location != nil {
+	// 	dat.UeLocation = ue.Location
+	// }
+	dat.UeTimeZone = ue.TimeZone
+	dat.SmContextStatusUri = ue.amf.GetIPv4Uri() + "/namf-callback/v1/smContextStatus/" +
+		ue.Guti + "/" + strconv.Itoa(int(sm.PduSessionID()))
+
+	return dat
+}
+
+func (ue *AmfUe) BuildReleaseSmContextData(cause *CauseAll, n2SmInfoType models.N2SmInfoType, n2Info []byte) (
+	releaseData models.SmContextReleaseData) {
+	if cause != nil {
+		if cause.Cause != nil {
+			releaseData.Cause = *cause.Cause
+		}
+		if cause.NgapCause != nil {
+			releaseData.NgApCause = cause.NgapCause
+		}
+		if cause.Var5GmmCause != nil {
+			releaseData.Var5gMmCauseValue = *cause.Var5GmmCause
+		}
+	}
+	if ue.TimeZone != "" {
+		releaseData.UeTimeZone = ue.TimeZone
+	}
+	if n2Info != nil {
+		releaseData.N2SmInfoType = n2SmInfoType
+		releaseData.N2SmInfo = &models.RefToBinaryData{
+			ContentId: "n2SmInfo",
+		}
+	}
+	// TODO: other param(ueLocation...)
+	return
+}
