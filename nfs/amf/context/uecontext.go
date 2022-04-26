@@ -778,5 +778,40 @@ func (ue *AmfUe) SmContextFindByPDUSessionID(pduSessionID int32) (*SmContext, bo
 }
 
 
+// /sbi/producer/location
+
+func (ue *AmfUe) GetLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
+	anType := ue.GetAnType()
+
+	if anType == "" {
+		return nil
+	}
+
+	locinfo := new(models.ProvideLocInfo)
+
+	ranUe := ue.RanUe[anType]
+	if req.Req5gsLoc || req.ReqCurrentLoc {
+		locinfo.CurrentLoc = true
+		locinfo.Location = &ue.Location
+	}
+
+	if req.ReqRatType {
+		locinfo.RatType = ue.RatType
+	}
+
+	if req.ReqTimeZone {
+		locinfo.Timezone = ue.TimeZone
+	}
+
+	if req.SupportedFeatures != "" {
+		locinfo.SupportedFeatures = ranUe.SupportedFeatures
+	}
+	return locinfo
+
+}
 
 
+// /sbi/producer/mt
+
+
+// /sbi/producer/

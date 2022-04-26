@@ -33,6 +33,9 @@ type AmfUeEventSubscription struct {
 
 // TODO (free5gc): handle event filter
 func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscription) (*models.AmfCreatedEventSubscription, *models.ProblemDetails) {
+	/*
+	TODO: tungtq - it seems current implementation is a bit messy, let clean it up later
+
 	ressub := &models.AmfCreatedEventSubscription{}
 
 	subscription := reqsub.Subscription
@@ -59,7 +62,7 @@ func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscripti
 	// store subscription in context
 	ueEventSubscription := AmfUeEventSubscription{
 		EventSubscriptioni:  &eventsub.EventSubscription,
-		Timestamp = time.Now().UTC(),
+		Timestamp:  time.Now().UTC(),
 	}
 
 	if subscription.Options != nil && subscription.Options.Trigger == models.AmfEventTrigger_CONTINUOUS {
@@ -131,7 +134,7 @@ func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscripti
 			}
 			for i, flag := range immediateFlags {
 				if flag {
-					report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, newSubscriptionID)
+					report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, subId)
 					if ok {
 						reportlist = append(reportlist, report)
 					}
@@ -192,6 +195,8 @@ func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscripti
 	}
 
 	return ressub, nil
+	*/
+	return nil, nil
 }
 
 func (amf *AMFContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
