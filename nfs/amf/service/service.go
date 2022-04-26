@@ -100,7 +100,7 @@ func (nf *AMF) Start() error {
 */
 	// Register to NRF
 	
-	if _, _, err := nf.consumer.NRF().Register(); err != nil {
+	if _, _, err := nf.consumer.NRF().SendRegisterNFInstance(); err != nil {
 		return err
 	} else {
 		//TODO: Update NF identity

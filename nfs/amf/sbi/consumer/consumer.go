@@ -24,7 +24,7 @@ func NewConsumer(b Backend) *Consumer {
 	ret := &Consumer{backend: b}
 	
 	// create an interface to NRF
-	ret.nrf = sbi.NewNrfConsumer(b.Config().Configuration.NrfUri, b.Context().BuildNfProfile)
+	ret.nrf = sbi.NewNrfConsumer(b.Context())
 	ret.amf = newAmfConsumer(b.Context())
 	ret.smf = newSmfConsumer(b.Context())
 	return ret
