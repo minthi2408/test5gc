@@ -15,14 +15,14 @@ func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request)
 	req := request.Body.(models.RequestLocInfo)
 	ueId := request.Params["ueContextId"]
 
-	if locinfo, prob := h.ProvideLocationInfoProcedure(req, ueId); prob != nil {
+	if locinfo, prob := h.doProvideLocationInfo(req, ueId); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, locinfo)
 	}
 }
 
-func (h *Handler) ProvideLocationInfoProcedure(req models.RequestLocInfo, ueId string) (
+func (h *Handler) doProvideLocationInfo(req models.RequestLocInfo, ueId string) (
 	*models.ProvideLocInfo, *models.ProblemDetails) {
 	amf := h.backend.Context()
 

@@ -16,7 +16,7 @@ func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.R
 	infoClassQuery := request.Query.Get("info-class")
 	supportedFeaturesQuery := request.Query.Get("supported-features")
 
-	if ueContextInfo, prob := h.ProvideDomainSelectionInfoProcedure(ueContextID,
+	if ueContextInfo, prob := h.doProvideDomainSelectionInfo(ueContextID,
 		infoClassQuery, supportedFeaturesQuery); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
@@ -24,7 +24,7 @@ func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.R
 	}
 }
 
-func (h *Handler) ProvideDomainSelectionInfoProcedure(ueContextID string, infoClassQuery string, supportedFeaturesQuery string) (
+func (h *Handler) doProvideDomainSelectionInfo(ueContextID string, infoClassQuery string, supportedFeaturesQuery string) (
 	*models.UeContextInfo, *models.ProblemDetails) {
 	amf := h.backend.Context()
 

@@ -18,14 +18,14 @@ func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *ht
 	createUeContextRequest := request.Body.(models.CreateUeContextRequest)
 	ueContextID := request.Params["ueContextId"]
 
-	if createUeContextResponse, err := h.CreateUEContextProcedure(ueContextID, createUeContextRequest); err != nil {
+	if createUeContextResponse, err := h.doCreateUEContext(ueContextID, createUeContextRequest); err != nil {
 		return httpwrapper.NewResponse(int(err.Error.Status), nil, err)
 	} else {
 		return httpwrapper.NewResponse(http.StatusCreated, nil, createUeContextResponse)
 	}
 	return nil
 }
-func (h *Handler) CreateUEContextProcedure(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
+func (h *Handler) doCreateUEContext(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
 	*models.CreateUeContextResponse, *models.UeContextCreateError) {
 	amf := h.backend.Context() 
 	ueContextCreateData := createUeContextRequest.JsonData
@@ -74,7 +74,7 @@ func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *h
 	ueContextRelease := request.Body.(models.UeContextRelease)
 	ueContextID := request.Params["ueContextId"]
 
-	problemDetails := h.ReleaseUEContextProcedure(ueContextID, ueContextRelease)
+	problemDetails := h.doReleaseUEContext(ueContextID, ueContextRelease)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
@@ -83,7 +83,7 @@ func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *h
 	return nil
 }
 
-func (h *Handler) ReleaseUEContextProcedure(ueContextID string, ueContextRelease models.UeContextRelease) *models.ProblemDetails {
+func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models.UeContextRelease) *models.ProblemDetails {
 	// TODO: UE is emergency registered and the SUPI is not authenticated
 	if ueContextRelease.Supi != "" {
 		//logger.GmmLog.Warnf("Emergency registered UE is not supported.")
@@ -124,7 +124,7 @@ func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *
 	ueContextTransferRequest := request.Body.(models.UeContextTransferRequest)
 	ueContextID := request.Params["ueContextId"]
 
-	ueContextTransferResponse, problemDetails := h.UEContextTransferProcedure(ueContextID, ueContextTransferRequest)
+	ueContextTransferResponse, problemDetails := h.doUEContextTransfer(ueContextID, ueContextTransferRequest)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
@@ -132,7 +132,7 @@ func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *
 	}
 }
 
-func (h *Handler) UEContextTransferProcedure(ueContextID string, req models.UeContextTransferRequest) (
+func (h *Handler) doUEContextTransfer(ueContextID string, req models.UeContextTransferRequest) (
 	*models.UeContextTransferResponse, *models.ProblemDetails) {
 
 	amf := h.backend.Context() 
@@ -182,7 +182,7 @@ func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *http
 	assignEbiData := request.Body.(models.AssignEbiData)
 	ueContextID := request.Params["ueContextId"]
 
-	assignedEbiData, assignEbiError, problemDetails := h.AssignEbiDataProcedure(ueContextID, assignEbiData)
+	assignedEbiData, assignEbiError, problemDetails := h.doAssignEbiData(ueContextID, assignEbiData)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else if assignEbiError != nil {
@@ -191,7 +191,7 @@ func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *http
 		return httpwrapper.NewResponse(http.StatusOK, nil, assignedEbiData)
 	}
 }
-func (h *Handler) AssignEbiDataProcedure(ueContextID string, assignEbiData models.AssignEbiData) (
+func (h *Handler) doAssignEbiData(ueContextID string, assignEbiData models.AssignEbiData) (
 	*models.AssignedEbiData, *models.AssignEbiError, *models.ProblemDetails) {
 
 	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
@@ -221,7 +221,7 @@ func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Req
 	ueRegStatusUpdateReqData := request.Body.(models.UeRegStatusUpdateReqData)
 	ueContextID := request.Params["ueContextId"]
 
-	ueRegStatusUpdateRspData, problemDetails := h.RegistrationStatusUpdateProcedure(ueContextID, ueRegStatusUpdateReqData)
+	ueRegStatusUpdateRspData, problemDetails := h.doRegistrationStatusUpdate(ueContextID, ueRegStatusUpdateReqData)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
@@ -229,7 +229,7 @@ func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Req
 	}
 }
 
-func (h *Handler) RegistrationStatusUpdateProcedure(ueContextID string, ueRegStatusUpdateReqData models.UeRegStatusUpdateReqData) (
+func (h *Handler) doRegistrationStatusUpdate(ueContextID string, ueRegStatusUpdateReqData models.UeRegStatusUpdateReqData) (
 	*models.UeRegStatusUpdateRspData, *models.ProblemDetails) {
 
 	// ueContextID must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)

@@ -114,6 +114,9 @@ func (amf *AMFContext) Ladn(dnn string) (ladn *LADN, ok bool) {
 	return
 }
 
+func (amf *AMFContext) UePool() sync.Map {
+	return amf.uepool
+}
 func (amf *AMFContext) NewAMFStatusSubscription(dat models.SubscriptionData) (subId string) {
 	if id, err := amf.statussubIdGen.Allocate(); err != nil {
 		//logger.ContextLog.Errorf("Allocate subscriptionID error: %+v", err)

@@ -765,7 +765,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 	}
 }
 
-// SM Context realted function
+// SM Context related function
 
 func (ue *AmfUe) StoreSmContext(pduId int32, smContext *SmContext) {
 	ue.SmContextList.Store(pduId, smContext)

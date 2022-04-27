@@ -375,7 +375,7 @@ func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Re
 	ueContextID := request.Params["ueContextId"]
 	reqUri := request.Params["reqUri"]
 
-	status, problemDetails := h.N1N2MessageTransferStatusProcedure(ueContextID, reqUri)
+	status, problemDetails := h.doN1N2MessageTransferStatus(ueContextID, reqUri)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
@@ -383,7 +383,7 @@ func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Re
 	}
 }
 
-func (h *Handler) N1N2MessageTransferStatusProcedure(ueContextID string, reqUri string) (models.N1N2MessageTransferCause,
+func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string) (models.N1N2MessageTransferCause,
 	*models.ProblemDetails) {
 
 	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
@@ -410,7 +410,7 @@ func (h *Handler) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request
 	ueN1N2InfoSubscriptionCreateData := request.Body.(models.UeN1N2InfoSubscriptionCreateData)
 	ueContextID := request.Params["ueContextId"]
 
-	ueN1N2InfoSubscriptionCreatedData, problemDetails := h.N1N2MessageSubscribeProcedure(ueContextID,
+	ueN1N2InfoSubscriptionCreatedData, problemDetails := h.doN1N2MessageSubscribe(ueContextID,
 		&ueN1N2InfoSubscriptionCreateData)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
@@ -419,7 +419,7 @@ func (h *Handler) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request
 	}
 }
 
-func (h *Handler) N1N2MessageSubscribeProcedure(ueContextID string,
+func (h *Handler) doN1N2MessageSubscribe(ueContextID string,
 	dat *models.UeN1N2InfoSubscriptionCreateData) (
 	*models.UeN1N2InfoSubscriptionCreatedData, *models.ProblemDetails) {
 
@@ -444,7 +444,7 @@ func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Reque
 	ueContextID := request.Params["ueContextId"]
 	subscriptionID := request.Params["subscriptionId"]
 
-	problemDetails := h.N1N2MessageUnSubscribeProcedure(ueContextID, subscriptionID)
+	problemDetails := h.doN1N2MessageUnSubscribe(ueContextID, subscriptionID)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
@@ -453,7 +453,7 @@ func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Reque
 	return nil
 }
 
-func (h *Handler) N1N2MessageUnSubscribeProcedure(ueContextID string, subscriptionID string) *models.ProblemDetails {
+func (h *Handler) doN1N2MessageUnSubscribe(ueContextID string, subscriptionID string) *models.ProblemDetails {
 
 	if ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID); !ok {
 		return &models.ProblemDetails{
