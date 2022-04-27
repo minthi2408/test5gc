@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"etri5gc/sbi"
 	"etri5gc/nfs/amf/config"
+	"etri5gc/nfs/amf/ngap"
+	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/sbi/nfselect"
 	"etri5gc/nfs/amf/sbi/consumer"
@@ -24,6 +26,8 @@ type AMF struct {
 	consumer	*consumer.Consumer
 	producer	*producer.Handler
 	selector	nfselect.NfSelector
+	ngap		producer.NgapSender
+	nas			producer.NasSender
 	context		*context.AMFContext // AMF contex
 	conf			*config.Config // loaded AMF config
 }
@@ -39,6 +43,8 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg)
 	nf.selector = NewNfSelector(nf)
+	nf.nas = nas.NewNas(nf)
+	nf.ngap = ngap.NewNgap(nf)
 	// create SBI server
 	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
 	
@@ -59,6 +65,14 @@ func (nf *AMF) Producer() *producer.Handler {
 
 func (nf *AMF) Consumer() *consumer.Consumer {
 	return nf.consumer
+}
+
+func (nf *AMF) Nas() producer.NasSender {
+	return nf.nas
+}
+
+func (nf *AMF) Ngap() producer.NgapSender {
+	return nf.ngap
 }
 
 func (nf *AMF) NfSelector() nfselect.NfSelector {

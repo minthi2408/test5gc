@@ -27,7 +27,7 @@ func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *ht
 }
 func (h *Handler) doCreateUEContext(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
 	*models.CreateUeContextResponse, *models.UeContextCreateError) {
-	amf := h.backend.Context() 
+	amf := h.amf() 
 	ueContextCreateData := createUeContextRequest.JsonData
 
 	if ueContextCreateData.UeContext == nil || ueContextCreateData.TargetId == nil ||
@@ -104,7 +104,7 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 
 	//logger.CommLog.Debugf("Release UE Context NGAP cause: %+v", ueContextRelease.NgapCause)
 
-	if /*ue*/_, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID); ok {
+	if /*ue*/_, ok := h.amf().AmfUeFindByUeContextID(ueContextID); ok {
 		//TODO: tungtq - a bad design by free5gc - let move to a different place (amf context)
 		//gmm_common.RemoveAmfUe(ue)
 	} else {
@@ -135,7 +135,7 @@ func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *
 func (h *Handler) doUEContextTransfer(ueContextID string, req models.UeContextTransferRequest) (
 	*models.UeContextTransferResponse, *models.ProblemDetails) {
 
-	amf := h.backend.Context() 
+	amf := h.amf() 
 
 	if req.JsonData == nil {
 		return nil, &models.ProblemDetails{
@@ -194,7 +194,7 @@ func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *http
 func (h *Handler) doAssignEbiData(ueContextID string, assignEbiData models.AssignEbiData) (
 	*models.AssignedEbiData, *models.AssignEbiError, *models.ProblemDetails) {
 
-	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
+	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
 	if !ok {
 		problemDetails := &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -240,7 +240,7 @@ func (h *Handler) doRegistrationStatusUpdate(ueContextID string, ueRegStatusUpda
 		}
 	}
 
-	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
+	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
 	if !ok {
 		problemDetails := &models.ProblemDetails{
 			Status: http.StatusNotFound,

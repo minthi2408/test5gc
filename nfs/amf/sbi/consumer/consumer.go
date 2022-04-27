@@ -17,6 +17,7 @@ type Consumer struct {
 	amf			AmfConsumer
 	smf			SmfConsumer
 	pcf			PcfConsumer
+	callback	Callback
 	nrf			sbi.NrfConsumer
 }
 
@@ -29,6 +30,7 @@ func NewConsumer(b Backend) *Consumer {
 	ret.amf = newAmfConsumer(b.Context())
 	ret.smf = newSmfConsumer(b.Context())
 	ret.pcf = newPcfConsumer(b.Context())
+	ret.callback = newCallback(b.Context())
 	return ret
 }
 

@@ -16,7 +16,7 @@ func (h *Handler) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Req
 
 	datreq := request.Body.(models.SubscriptionData)
 
-	if datres, locheader, prob := h.backend.Context().AMFStatusChangeSubscribe(datreq); prob!=nil {
+	if datres, locheader, prob := h.amf().AMFStatusChangeSubscribe(datreq); prob!=nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 
@@ -33,7 +33,7 @@ func (h *Handler) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.R
 
 	subId := request.Params["subscriptionId"]
 
-	if prob := h.backend.Context().AMFStatusChangeUnSubscribe(subId); prob != nil {
+	if prob := h.amf().AMFStatusChangeUnSubscribe(subId); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
@@ -48,7 +48,7 @@ func (h *Handler) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Requ
 	dat := request.Body.(models.SubscriptionData)
 	subId := request.Params["subscriptionId"]
 
-	if updat, prob := h.backend.Context().AMFStatusChangeSubscribeModify(subId, dat); prob != nil {
+	if updat, prob := h.amf().AMFStatusChangeSubscribeModify(subId, dat); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusAccepted, nil, updat)

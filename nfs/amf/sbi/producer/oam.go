@@ -48,7 +48,7 @@ func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *ht
 
 func (h *Handler) doOAMRegisteredUEContext(supi string) (UEContexts, *models.ProblemDetails) {
 	var ueContexts UEContexts
-	amf := h.backend.Context()
+	amf := h.amf()
 
 	if supi != "" {
 		if ue, ok := amf.AmfUeFindBySupi(supi); ok {

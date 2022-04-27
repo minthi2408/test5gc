@@ -386,7 +386,7 @@ func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Re
 func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string) (models.N1N2MessageTransferCause,
 	*models.ProblemDetails) {
 
-	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
+	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
 	if !ok {
 		return "", &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -394,7 +394,7 @@ func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string)
 		}
 	}
 
-	resourceUri := h.backend.Context().GetIPv4Uri() + reqUri
+	resourceUri := h.amf().GetIPv4Uri() + reqUri
 	if status, ok := ue.GetN1N2MessageStatus(resourceUri); !ok {
 		return "", &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -423,7 +423,7 @@ func (h *Handler) doN1N2MessageSubscribe(ueContextID string,
 	dat *models.UeN1N2InfoSubscriptionCreateData) (
 	*models.UeN1N2InfoSubscriptionCreatedData, *models.ProblemDetails) {
 
-	ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID)
+	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
 	if !ok {
 		problemDetails := &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -455,7 +455,7 @@ func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Reque
 
 func (h *Handler) doN1N2MessageUnSubscribe(ueContextID string, subscriptionID string) *models.ProblemDetails {
 
-	if ue, ok := h.backend.Context().AmfUeFindByUeContextID(ueContextID); !ok {
+	if ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",

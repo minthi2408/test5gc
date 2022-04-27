@@ -9,17 +9,14 @@ import (
 
 	"etri5gc/nfs/amf/context"
 
-//	gmm_message "github.com/free5gc/amf/internal/gmm/message"
-//	"github.com/free5gc/amf/internal/nas"
-//	ngap_message "github.com/free5gc/amf/internal/ngap/message"
-//	"github.com/free5gc/amf/internal/sbi/consumer"
 //	"github.com/free5gc/amf/internal/util"
 //	"github.com/free5gc/nas/nasConvert"
 //	"github.com/free5gc/nas/nasMessage"
-//	"github.com/free5gc/ngap/ngapType"
+	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
+//NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
 
 func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.ProducerLog.Infoln("[AMF] Handle SmContext Status Notify")
@@ -36,7 +33,7 @@ func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *htt
 }
 
 func (h *Handler) SmContextStatusNotifyProcedure(guti string, pduId int32, notification models.SmContextStatusNotification) *models.ProblemDetails {
-	if ue, ok := h.backend.Context().AmfUeFindByGuti(guti); !ok {
+	if ue, ok := h.amf().AmfUeFindByGuti(guti); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
@@ -156,35 +153,26 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 
 
 func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
-	/*
-	logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
+	//logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
 
 	polAssoID := request.Params["polAssoId"]
 	policyUpdate := request.Body.(models.PolicyUpdate)
 
-	problemDetails := AmPolicyControlUpdateNotifyUpdateProcedure(polAssoID, policyUpdate)
-
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if prob:= h.doAmPolicyControlUpdateNotifyUpdate(polAssoID, policyUpdate); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
-	*/
-	return nil
 }
-/*
-func AmPolicyControlUpdateNotifyUpdateProcedure(polAssoID string,
-	policyUpdate models.PolicyUpdate) *models.ProblemDetails {
-	amfSelf := context.AMF_Self()
 
-	ue, ok := amfSelf.AmfUeFindByPolicyAssociationID(polAssoID)
+func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polAssoID string, policyUpdate models.PolicyUpdate) *models.ProblemDetails {
+	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polAssoID)
 	if !ok {
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polAssoID),
 		}
-		return problemDetails
 	}
 
 	ue.AmPolicyAssociation.Triggers = policyUpdate.Triggers
@@ -207,135 +195,121 @@ func AmPolicyControlUpdateNotifyUpdateProcedure(polAssoID string,
 		ue.AmPolicyAssociation.Rfsp = policyUpdate.Rfsp
 	}
 
-	if ue != nil {
-		// use go routine to write response first to ensure the order of the procedure
-		go func() {
-			// UE is CM-Connected State
-			if ue.CmConnect(models.AccessType__3_GPP_ACCESS) {
-				gmm_message.SendConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
-				// UE is CM-IDLE => paging
-			} else {
-				message, err := gmm_message.BuildConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
-				if err != nil {
-					logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
-					return
-				}
-
-				ue.ConfigurationUpdateMessage = message
-				ue.SetOnGoing(models.AccessType__3_GPP_ACCESS, &context.OnGoing{
-					Procedure: context.OnGoingProcedurePaging,
-				})
-
-				pkg, err := ngap_message.BuildPaging(ue, nil, false)
-				if err != nil {
-					logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
-					return
-				}
-				ngap_message.SendPaging(ue, pkg)
-			}
-		}()
-	}
-	return nil
-}
-*/
-// TS 29.507 4.2.4.3
-func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrapper.Request) *httpwrapper.Response {
-	/*
-	logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Request for termination of the policy association]")
-
-	polAssoID := request.Params["polAssoId"]
-	terminationNotification := request.Body.(models.TerminationNotification)
-
-	problemDetails := AmPolicyControlUpdateNotifyTerminateProcedure(polAssoID, terminationNotification)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
-	} else {
-		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
-	}
-	*/
-	return nil
-}
-
-/*
-func AmPolicyControlUpdateNotifyTerminateProcedure(polAssoID string,
-	terminationNotification models.TerminationNotification) *models.ProblemDetails {
-	amfSelf := context.AMF_Self()
-
-	ue, ok := amfSelf.AmfUeFindByPolicyAssociationID(polAssoID)
-	if !ok {
-		problemDetails := &models.ProblemDetails{
-			Status: http.StatusNotFound,
-			Cause:  "CONTEXT_NOT_FOUND",
-			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polAssoID),
-		}
-		return problemDetails
-	}
-
-	logger.CallbackLog.Infof("Cause of AM Policy termination[%+v]", terminationNotification.Cause)
-
 	// use go routine to write response first to ensure the order of the procedure
 	go func() {
-		problem, err := consumer.AMPolicyControlDelete(ue)
-		if problem != nil {
-			logger.ProducerLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
-		} else if err != nil {
-			logger.ProducerLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
+		// UE is CM-Connected State
+		if ue.CmConnect(models.AccessType__3_GPP_ACCESS) {
+			//TODO: tungtq
+			//gmm_message.SendConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
+			// UE is CM-IDLE => paging
+		} else {
+			//TODO: tungtq
+			/*
+			message, err := gmm_message.BuildConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
+			if err != nil {
+				logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
+				return
+			}
+
+			ue.ConfigurationUpdateMessage = message
+			ue.SetOnGoing(models.AccessType__3_GPP_ACCESS, &context.OnGoing{
+				Procedure: context.OnGoingProcedurePaging,
+			})
+
+			pkg, err := ngap_message.BuildPaging(ue, nil, false)
+			if err != nil {
+				logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
+				return
+			}
+			ngap_message.SendPaging(ue, pkg)
+			*/
 		}
 	}()
 	return nil
 }
-*/
+
+// TS 29.507 4.2.4.3
+func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrapper.Request) *httpwrapper.Response {
+//	logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Request for termination of the policy association]")
+
+	polAssoID := request.Params["polAssoId"]
+	terminationNotification := request.Body.(models.TerminationNotification)
+
+	if prob := h.doAmPolicyControlUpdateNotifyTerminate(polAssoID, terminationNotification); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
+	} else {
+		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
+	}
+}
+
+func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
+	terminationNotification models.TerminationNotification) *models.ProblemDetails {
+
+	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polAssoID)
+	if !ok {
+		return &models.ProblemDetails{
+			Status: http.StatusNotFound,
+			Cause:  "CONTEXT_NOT_FOUND",
+			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polAssoID),
+		}
+	}
+
+//	logger.CallbackLog.Infof("Cause of AM Policy termination[%+v]", terminationNotification.Cause)
+
+	// use go routine to write response first to ensure the order of the procedure
+	go func() {
+		problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
+		if problem != nil {
+			//logger.ProducerLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
+		} else if err != nil {
+			//logger.ProducerLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
+		}
+	}()
+	return nil
+}
 
 // TS 23.502 4.2.2.2.3 Registration with AMF re-allocation
 func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapper.Response {
-	/*
-	logger.ProducerLog.Infoln("[AMF] Handle N1 Message Notify")
+	//logger.ProducerLog.Infoln("[AMF] Handle N1 Message Notify")
 
 	n1MessageNotify := request.Body.(models.N1MessageNotify)
 
-	problemDetails := N1MessageNotifyProcedure(n1MessageNotify)
+	problemDetails := h.doN1MessageNotify(n1MessageNotify)
 	if problemDetails != nil {
 		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
-	*/
-	return nil
 }
 
-/*
-func N1MessageNotifyProcedure(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
-	logger.ProducerLog.Debugf("n1MessageNotify: %+v", n1MessageNotify)
-
-	amfSelf := context.AMF_Self()
+func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
+	//logger.ProducerLog.Debugf("n1MessageNotify: %+v", n1MessageNotify)
 
 	registrationCtxtContainer := n1MessageNotify.JsonData.RegistrationCtxtContainer
 	if registrationCtxtContainer.UeContext == nil {
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusBadRequest,
 			Cause:  "MANDATORY_IE_MISSING", // Defined in TS 29.500 5.2.7.2
 			Detail: "Missing IE [UeContext] in RegistrationCtxtContainer",
 		}
-		return problemDetails
 	}
 
-	ran, ok := amfSelf.AmfRanFindByRanID(*registrationCtxtContainer.RanNodeId)
+	ran, ok := h.amf().AmfRanFindByRanID(*registrationCtxtContainer.RanNodeId)
 	if !ok {
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusBadRequest,
 			Cause:  "MANDATORY_IE_INCORRECT",
 			Detail: fmt.Sprintf("Can not find RAN[RanId: %+v]", *registrationCtxtContainer.RanNodeId),
 		}
-		return problemDetails
 	}
 
 	go func() {
 		var amfUe *context.AmfUe
 		ueContext := registrationCtxtContainer.UeContext
 		if ueContext.Supi != "" {
-			amfUe = amfSelf.NewAmfUe(ueContext.Supi)
+			amfUe = h.amf().NewAmfUe(ueContext.Supi)
 		} else {
-			amfUe = amfSelf.NewAmfUe("")
+			amfUe = h.amf().NewAmfUe("")
 		}
 		amfUe.CopyDataFromUeContextModel(*ueContext)
 
@@ -356,9 +330,7 @@ func N1MessageNotifyProcedure(n1MessageNotify models.N1MessageNotify) *models.Pr
 		}
 
 		amfUe.AttachRanUe(ranUe)
-
-		nas.HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, n1MessageNotify.BinaryDataN1Message)
+		h.nas().HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, n1MessageNotify.BinaryDataN1Message)
 	}()
 	return nil
 }
-*/

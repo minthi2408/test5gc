@@ -127,6 +127,9 @@ func (amf *AMFContext) NewAMFStatusSubscription(dat models.SubscriptionData) (su
 	return
 }
 
+func (amf *AMFContext) GetStatusSubList() sync.Map {
+	return amf.statussubpool
+}
 
 func (amf *AMFContext) AddAmfUeToUePool(ue *AmfUe, supi string) {
 	if len(supi) == 0 {
