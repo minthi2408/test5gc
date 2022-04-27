@@ -146,6 +146,70 @@ func (amf *AMFContext) NewAmfUe(supi string) *AmfUe {
 	return &ue
 }
 
+func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateData) *AmfUe {
+	//tungtq: this procedure was written by free5gc, it looks experimential so we have to work on improvements later.
+	ue := amf.NewAmfUe(supi)
+
+	// amf.AmfRanSetByRanId(*dat.TargetId.RanNodeId)
+	// ue.N1N2Message[ueContextId] = &context.N1N2Message{}
+	// ue.N1N2Message[ueContextId].Request.JsonData = &models.N1N2MessageTransferReqData{
+	// 	N2InfoContainer: &models.N2InfoContainer{
+	// 		SmInfo: &models.N2SmInformation{
+	// 			N2InfoContent: dat.SourceToTargetData,
+	// 		},
+	// 	},
+	// }
+	ue.HandoverNotifyUri = dat.N2NotifyUri
+
+	amf.AmfRanFindByRanID(*dat.TargetId.RanNodeId)
+	supportedTAI := NewSupportedTAI()
+	supportedTAI.Tai.Tac = dat.TargetId.Tai.Tac
+	supportedTAI.Tai.PlmnId = dat.TargetId.Tai.PlmnId
+	// ue.N1N2MessageSubscribeInfo[ueContextID] = &models.UeN1N2InfoSubscriptionCreateData{
+	// 	N2NotifyCallbackUri: dat.N2NotifyUri,
+	// }
+	ue.UnauthenticatedSupi = dat.UeContext.SupiUnauthInd
+	// should be smInfo list
+
+	//for _, smInfo := range dat.PduSessionList {
+	//if smInfo.N2InfoContent.NgapIeType == "NgapIeType_HANDOVER_REQUIRED" {
+	// ue.N1N2Message[amfSelf.Uri].Request.JsonData.N2InfoContainer.SmInfo = &smInfo
+	//}
+	//}
+
+	ue.RoutingIndicator = dat.UeContext.RoutingIndicator
+
+	// optional
+	ue.UdmGroupId = dat.UeContext.UdmGroupId
+	ue.AusfGroupId = dat.UeContext.AusfGroupId
+	// dat.UeContext.HpcfId
+	ue.RatType = dat.UeContext.RestrictedRatList[0] // minItem = -1
+	// dat.UeContext.ForbiddenAreaList
+	// dat.UeContext.ServiceAreaRestriction
+	// dat.UeContext.RestrictedCoreNwTypeList
+
+	// it's not in 5.2.2.1.1 step 2a, so don't support
+	// ue.Gpsi = dat.UeContext.GpsiList
+	// ue.Pei = dat.UeContext.Pei
+	// dat.UeContext.GroupList
+	// dat.UeContext.DrxParameter
+	// dat.UeContext.SubRfsp
+	// dat.UeContext.UsedRfsp
+	// ue.UEAMBR = dat.UeContext.SubUeAmbr
+	// dat.UeContext.SmsSupport
+	// dat.UeContext.SmsfId
+	// dat.UeContext.SeafData
+	// dat.UeContext.Var5gMmCapability
+	// dat.UeContext.PcfId
+	// dat.UeContext.PcfAmPolicyUri
+	// dat.UeContext.AmPolicyReqTriggerList
+	// dat.UeContext.EventSubscriptionList
+	// dat.UeContext.MmContextList
+	// ue.CurPduSession.PduSessionId = dat.UeContext.SessionContextList.
+	// ue.TraceData = dat.UeContext.TraceData
+	return ue
+}
+
 func (amf *AMFContext) AmfUeFindByUeContextID(ueContextID string) (*AmfUe, bool) {
 	if strings.HasPrefix(ueContextID, "imsi") {
 		return amf.AmfUeFindBySupi(ueContextID)
@@ -187,6 +251,7 @@ func (amf *AMFContext) NewAmfRan(conn net.Conn) *AmfRan {
 	amf.ranpool.Store(conn, &ran)
 	return &ran
 }
+
 
 // use net.Conn to find RAN context, return *AmfRan and ok bit
 func (amf *AMFContext) AmfRanFindByConn(conn net.Conn) (*AmfRan, bool) {
@@ -342,6 +407,9 @@ func CreateAmfContext(cfg *config.Config) *AMFContext {
 	ret.init()
 	return ret
 }
+
+
+// Build AMF profile to register to NRF
 func (amf *AMFContext) BuildProfile() (*models.NfProfile, error) {
 	var err error
 	profile := models.NfProfile {

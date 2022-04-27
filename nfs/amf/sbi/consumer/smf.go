@@ -9,6 +9,11 @@ import (
 )
 
 type SmfConsumer interface {
+	SendCreateSmContextRequest(*context.AmfUe, *context.SmContext, *models.RequestType, []byte) (*models.PostSmContextsResponse, string, *models.PostSmContextsErrorResponse, *models.ProblemDetails, error)
+	SendReleaseSmContextRequest(*context.AmfUe, *context.SmContext, *context.CauseAll, models.N2SmInfoType,	[]byte) (*models.ProblemDetails, error)
+
+
+//	SendUpdateSmContextActivateUpCnxState(*context.AmfUe, *context.SmContext, models.AccessType) (*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error)
 }
 
 type smfConsumer struct {

@@ -16,6 +16,7 @@ type Consumer struct {
 	backend		Backend
 	amf			AmfConsumer
 	smf			SmfConsumer
+	pcf			PcfConsumer
 	nrf			sbi.NrfConsumer
 }
 
@@ -27,18 +28,21 @@ func NewConsumer(b Backend) *Consumer {
 	ret.nrf = sbi.NewNrfConsumer(b.Context())
 	ret.amf = newAmfConsumer(b.Context())
 	ret.smf = newSmfConsumer(b.Context())
+	ret.pcf = newPcfConsumer(b.Context())
 	return ret
 }
 
-func (c *Consumer) NRF() sbi.NrfConsumer  {
+func (c *Consumer) Nrf() sbi.NrfConsumer  {
 	return c.nrf
 }
-func (c *Consumer) AMF() AmfConsumer {
+func (c *Consumer) Amf() AmfConsumer {
 	return c.amf
 }
+func (c *Consumer) Pcf() PcfConsumer {
+	return c.pcf
+}
 
-
-func (c *Consumer) SMF() SmfConsumer {
+func (c *Consumer) Smf() SmfConsumer {
 	return c.smf
 }
 

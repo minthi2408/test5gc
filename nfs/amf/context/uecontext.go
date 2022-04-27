@@ -6,6 +6,7 @@ import (
 //	"fmt"
 	"reflect"
 	"regexp"
+	"net/http"
 	"sync"
 	"strconv"
 
@@ -897,4 +898,173 @@ func (ue *AmfUe) BuildReleaseSmContextData(cause *CauseAll, n2SmInfoType models.
 	}
 	// TODO: other param(ueLocation...)
 	return
+}
+func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferReqData,res *models.UeContextTransferResponse) *models.ProblemDetails {
+	resdat := res.JsonData
+	//if ue.GetAnType() != UeContextTransferReqData.AccessType {
+	//for _, tai := range ue.RegistrationArea[ue.GetAnType()] {
+	//if UeContextTransferReqData.PlmnId == tai.PlmnId {
+	// TODO : generate N2 signalling
+	//}
+	//}
+	//}
+	fn := func() {
+		resdat.UeContext = ue.buildContextModel()
+		clist := &resdat.UeContext.SessionContextList
+		ue.SmContextList.Range(func(key, value interface{}) bool {
+			smContext := value.(*SmContext)
+			snssai := smContext.Snssai()
+			pduSessionContext := models.PduSessionContext{
+				PduSessionId: smContext.PduSessionID(),
+				SmContextRef: smContext.SmContextRef(),
+				SNssai:       &snssai,
+				Dnn:          smContext.Dnn(),
+				AccessType:   smContext.AccessType(),
+				HsmfId:       smContext.HSmfID(),
+				VsmfId:       smContext.VSmfID(),
+				NsInstance:   smContext.NsInstance(),
+			}
+			*clist = append(*clist, pduSessionContext)
+			return true
+		})
+		resdat.UeRadioCapability = &models.N2InfoContent{
+			NgapMessageType: 0,
+			NgapIeType:      models.NgapIeType_UE_RADIO_CAPABILITY,
+			NgapData: &models.RefToBinaryData{
+				ContentId: "n2Info",
+			},
+		}
+		b := []byte(ue.UeRadioCapability)
+		copy(res.BinaryDataN2Information, b)
+
+	}
+
+	switch reqdat.Reason {
+	case models.TransferReason_INIT_REG:
+		// TODO: check integrity of the registration request included in ueContextTransferRequest
+		// TODO: handle condition of TS 29.518 5.2.2.2.1.1 step 2a case b
+		resdat.UeContext = ue.buildContextModel()
+	case models.TransferReason_MOBI_REG:
+		// TODO: check integrity of the registration request included in ueContextTransferRequest
+		fn()
+	case models.TransferReason_MOBI_REG_UE_VALIDATED:
+		fn()
+	default:
+	//	logger.ProducerLog.Warnf("Invalid Transfer Reason: %+v", UeContextTransferReqData.Reason)
+		return &models.ProblemDetails{
+			Status: http.StatusForbidden,
+			Cause:  "MANDATORY_IE_INCORRECT",
+			InvalidParams: []models.InvalidParam{
+				{
+					Param: "reason",
+				},
+			},
+		}
+	}
+	return nil
+}
+
+
+func (ue *AmfUe) buildContextModel() *models.UeContext {
+	ueContext := &models.UeContext{
+		Supi: ue.Supi,
+		SupiUnauthInd: ue.UnauthenticatedSupi,
+	}
+
+	if ue.Gpsi != "" {
+		ueContext.GpsiList = append(ueContext.GpsiList, ue.Gpsi)
+	}
+
+	if ue.Pei != "" {
+		ueContext.Pei = ue.Pei
+	}
+
+	if ue.UdmGroupId != "" {
+		ueContext.UdmGroupId = ue.UdmGroupId
+	}
+
+	if ue.AusfGroupId != "" {
+		ueContext.AusfGroupId = ue.AusfGroupId
+	}
+
+	if ue.RoutingIndicator != "" {
+		ueContext.RoutingIndicator = ue.RoutingIndicator
+	}
+
+	if ue.AccessAndMobilitySubscriptionData != nil {
+		if ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
+			ueContext.SubUeAmbr = &models.Ambr{
+				Uplink:   ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink,
+				Downlink: ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink,
+			}
+		}
+		if ue.AccessAndMobilitySubscriptionData.RfspIndex != 0 {
+			ueContext.SubRfsp = ue.AccessAndMobilitySubscriptionData.RfspIndex
+		}
+	}
+
+	if ue.PcfId != "" {
+		ueContext.PcfId = ue.PcfId
+	}
+
+	if ue.AmPolicyUri != "" {
+		ueContext.PcfAmPolicyUri = ue.AmPolicyUri
+	}
+
+	if ue.AmPolicyAssociation != nil {
+		if len(ue.AmPolicyAssociation.Triggers) > 0 {
+			ueContext.AmPolicyReqTriggerList = buildAmPolicyReqTriggers(ue.AmPolicyAssociation.Triggers)
+		}
+	}
+
+	for _, eventSub := range ue.EventSubscriptionsInfo {
+		if eventSub.EventSubscription != nil {
+			ueContext.EventSubscriptionList = append(ueContext.EventSubscriptionList, *eventSub.EventSubscription)
+		}
+	}
+
+	if ue.TraceData != nil {
+		ueContext.TraceData = ue.TraceData
+	}
+	return ueContext
+}
+
+func buildAmPolicyReqTriggers(triggers []models.RequestTrigger) (amPolicyReqTriggers []models.AmPolicyReqTrigger) {
+	for _, trigger := range triggers {
+		switch trigger {
+		case models.RequestTrigger_LOC_CH:
+			amPolicyReqTriggers = append(amPolicyReqTriggers, models.AmPolicyReqTrigger_LOCATION_CHANGE)
+		case models.RequestTrigger_PRA_CH:
+			amPolicyReqTriggers = append(amPolicyReqTriggers, models.AmPolicyReqTrigger_PRA_CHANGE)
+		case models.RequestTrigger_SERV_AREA_CH:
+			amPolicyReqTriggers = append(amPolicyReqTriggers, models.AmPolicyReqTrigger_SARI_CHANGE)
+		case models.RequestTrigger_RFSP_CH:
+			amPolicyReqTriggers = append(amPolicyReqTriggers, models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE)
+		}
+	}
+	return
+}
+
+
+func (ue *AmfUe) N1N2InfoSubscribe(dat *models.UeN1N2InfoSubscriptionCreateData) (string, *models.ProblemDetails){
+	if id, err := ue.N1N2MessageSubscribeIDGenerator.Allocate(); err != nil {
+		return "", &models.ProblemDetails{
+			Status: http.StatusInternalServerError,
+			Cause:  "SYSTEM_FAILURE",
+		}
+	} else {
+		ue.N1N2MessageSubscription.Store(id, dat)
+		return strconv.Itoa(int(id)), nil
+	}
+}
+
+func (ue *AmfUe) N1N2InfoUnsubscribe(subId string) {
+	ue.N1N2MessageSubscription.Delete(subId)
+}
+
+func (ue *AmfUe) GetN1N2MessageStatus(uri string) (models.N1N2MessageTransferCause, bool) {
+	if ue.N1N2Message == nil || ue.N1N2Message.ResourceUri != uri {
+		return "", false
+	}
+	return ue.N1N2Message.Status, true
 }

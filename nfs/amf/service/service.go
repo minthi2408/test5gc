@@ -6,6 +6,7 @@ import (
 	"etri5gc/sbi"
 	"etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf/sbi/nfselect"
 	"etri5gc/nfs/amf/sbi/consumer"
 	"etri5gc/nfs/amf/sbi/producer"
 	"etri5gc/nfs/amf/sbi/communication"
@@ -22,6 +23,7 @@ type AMF struct {
 	sbi			sbi.SBI //sbi server
 	consumer	*consumer.Consumer
 	producer	*producer.Handler
+	selector	nfselect.NfSelector
 	context		*context.AMFContext // AMF contex
 	conf			*config.Config // loaded AMF config
 }
@@ -36,10 +38,10 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf.producer = producer.NewHandler(nf)
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg)
-
+	nf.selector = NewNfSelector(nf)
 	// create SBI server
 	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
-
+	
 	return
 }
 
@@ -58,6 +60,11 @@ func (nf *AMF) Producer() *producer.Handler {
 func (nf *AMF) Consumer() *consumer.Consumer {
 	return nf.consumer
 }
+
+func (nf *AMF) NfSelector() nfselect.NfSelector {
+	return nf.selector
+}
+
 //add routes to the gin router
 func (nf *AMF)makeroutes(router *gin.Engine) error {
 	var gn string
@@ -100,7 +107,7 @@ func (nf *AMF) Start() error {
 */
 	// Register to NRF
 	
-	if _, _, err := nf.consumer.NRF().SendRegisterNFInstance(); err != nil {
+	if _, _, err := nf.consumer.Nrf().SendRegisterNFInstance(); err != nil {
 		return err
 	} else {
 		//TODO: Update NF identity

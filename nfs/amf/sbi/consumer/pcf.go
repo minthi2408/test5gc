@@ -11,6 +11,9 @@ import (
 )
 
 type PcfConsumer interface {
+	AMPolicyControlUpdate(*context.AmfUe, models.PolicyAssociationUpdateRequest) (*models.ProblemDetails, error)
+	AMPolicyControlCreate(*context.AmfUe, models.AccessType) (*models.ProblemDetails, error)
+	AMPolicyControlDelete(*context.AmfUe) (*models.ProblemDetails, error)
 }
 
 type pcfConsumer struct {
