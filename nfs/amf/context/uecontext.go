@@ -1062,9 +1062,15 @@ func (ue *AmfUe) N1N2InfoUnsubscribe(subId string) {
 	ue.N1N2MessageSubscription.Delete(subId)
 }
 
-func (ue *AmfUe) GetN1N2MessageStatus(uri string) (models.N1N2MessageTransferCause, bool) {
+
+func (ue *AmfUe) N1N2MessageUnsubscribe(subId string) {
+	ue.N1N2MessageSubscription.Delete(subId)
+}
+
+func (ue *AmfUe) N1N2MessageStatus(uri string) (models.N1N2MessageTransferCause, bool) {
 	if ue.N1N2Message == nil || ue.N1N2Message.ResourceUri != uri {
 		return "", false
 	}
 	return ue.N1N2Message.Status, true
 }
+

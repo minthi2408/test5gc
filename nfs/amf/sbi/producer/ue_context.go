@@ -87,19 +87,17 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 	// TODO: UE is emergency registered and the SUPI is not authenticated
 	if ueContextRelease.Supi != "" {
 		//logger.GmmLog.Warnf("Emergency registered UE is not supported.")
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusForbidden,
 			Cause:  "UNSPECIFIED",
 		}
-		return problemDetails
 	}
 
 	if ueContextRelease.NgapCause == nil {
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusBadRequest,
 			Cause:  "MANDATORY_IE_MISSING",
 		}
-		return problemDetails
 	}
 
 	//logger.CommLog.Debugf("Release UE Context NGAP cause: %+v", ueContextRelease.NgapCause)
@@ -108,11 +106,10 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 		//TODO: tungtq - a bad design by free5gc - let move to a different place (amf context)
 		//gmm_common.RemoveAmfUe(ue)
 	} else {
-		problemDetails := &models.ProblemDetails{
+		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
-		return problemDetails
 	}
 
 	return nil
@@ -121,18 +118,17 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.CommLog.Info("Handle UE Context Transfer Request")
 
-	ueContextTransferRequest := request.Body.(models.UeContextTransferRequest)
-	ueContextID := request.Params["ueContextId"]
+	req := request.Body.(models.UeContextTransferRequest)
+	ueId := request.Params["ueContextId"]
 
-	ueContextTransferResponse, problemDetails := h.doUEContextTransfer(ueContextID, ueContextTransferRequest)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if res, prob := h.doUEContextTransfer(ueId, req); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
-		return httpwrapper.NewResponse(http.StatusOK, nil, ueContextTransferResponse)
+		return httpwrapper.NewResponse(http.StatusOK, nil, res)
 	}
 }
 
-func (h *Handler) doUEContextTransfer(ueContextID string, req models.UeContextTransferRequest) (
+func (h *Handler) doUEContextTransfer(ueId string, req models.UeContextTransferRequest) (
 	*models.UeContextTransferResponse, *models.ProblemDetails) {
 
 	amf := h.amf() 
@@ -153,7 +149,7 @@ func (h *Handler) doUEContextTransfer(ueContextID string, req models.UeContextTr
 		}
 	}
 
-	ue, ok := amf.AmfUeFindByUeContextID(ueContextID)
+	ue, ok := amf.AmfUeFindByUeContextID(ueId)
 	if !ok {
 		return nil, &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -179,38 +175,37 @@ func (h *Handler) doUEContextTransfer(ueContextID string, req models.UeContextTr
 func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.CommLog.Info("Handle Assign Ebi Data Request")
 
-	assignEbiData := request.Body.(models.AssignEbiData)
-	ueContextID := request.Params["ueContextId"]
+	ebidat := request.Body.(models.AssignEbiData)
+	ueId := request.Params["ueContextId"]
 
-	assignedEbiData, assignEbiError, problemDetails := h.doAssignEbiData(ueContextID, assignEbiData)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if assignedEbiData, assignEbiError, prob := h.doAssignEbiData(ueId, ebidat); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else if assignEbiError != nil {
 		return httpwrapper.NewResponse(int(assignEbiError.Error.Status), nil, assignEbiError)
 	} else {
 		return httpwrapper.NewResponse(http.StatusOK, nil, assignedEbiData)
 	}
 }
-func (h *Handler) doAssignEbiData(ueContextID string, assignEbiData models.AssignEbiData) (
+
+func (h *Handler) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
 	*models.AssignedEbiData, *models.AssignEbiError, *models.ProblemDetails) {
 
-	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
-	if !ok {
-		problemDetails := &models.ProblemDetails{
+	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
+		return nil, nil, &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
-		return nil, nil, problemDetails
-	}
-
-	// TODO: AssignEbiError not used, check it!
-	if _, ok := ue.SmContextFindByPDUSessionID(assignEbiData.PduSessionId); ok {
-		var assignedEbiData *models.AssignedEbiData
-		assignedEbiData.PduSessionId = assignEbiData.PduSessionId
-		return assignedEbiData, nil, nil
 	} else {
-		//logger.ProducerLog.Errorln("ue.SmContextList is nil")
-		return nil, nil, nil
+
+		// TODO: AssignEbiError not used, check it!
+		if _, ok := ue.SmContextFindByPDUSessionID(ebidat.PduSessionId); ok {
+			var assignedEbiData models.AssignedEbiData
+			assignedEbiData.PduSessionId = ebidat.PduSessionId
+			return &assignedEbiData, nil, nil
+		} else {
+			//logger.ProducerLog.Errorln("ue.SmContextList is nil")
+			return nil, nil, nil
+		}
 	}
 }
 
@@ -218,73 +213,73 @@ func (h *Handler) doAssignEbiData(ueContextID string, assignEbiData models.Assig
 func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwrapper.Response {
 //	logger.CommLog.Info("Handle Registration Status Update Request")
 
-	ueRegStatusUpdateReqData := request.Body.(models.UeRegStatusUpdateReqData)
-	ueContextID := request.Params["ueContextId"]
+	reqdat := request.Body.(models.UeRegStatusUpdateReqData)
+	ueId := request.Params["ueContextId"]
 
-	ueRegStatusUpdateRspData, problemDetails := h.doRegistrationStatusUpdate(ueContextID, ueRegStatusUpdateReqData)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if resdat, prob := h.doRegistrationStatusUpdate(ueId, reqdat); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
-		return httpwrapper.NewResponse(http.StatusOK, nil, ueRegStatusUpdateRspData)
+		return httpwrapper.NewResponse(http.StatusOK, nil, resdat)
 	}
 }
 
-func (h *Handler) doRegistrationStatusUpdate(ueContextID string, ueRegStatusUpdateReqData models.UeRegStatusUpdateReqData) (
+func (h *Handler) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegStatusUpdateReqData) (
 	*models.UeRegStatusUpdateRspData, *models.ProblemDetails) {
 
-	// ueContextID must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)
-	if !strings.HasPrefix(ueContextID, "5g-guti") {
+	// ueId must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)
+	if !strings.HasPrefix(ueId, "5g-guti") {
 		return nil, &models.ProblemDetails{
 			Status: http.StatusForbidden,
 			Cause:  "UNSPECIFIED",
 		}
 	}
 
-	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
-	if !ok {
-		problemDetails := &models.ProblemDetails{
+	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
+		return nil, &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
-		return nil, problemDetails
-	}
-
-	ueRegStatusUpdateRspData := new(models.UeRegStatusUpdateRspData)
-
-	if ueRegStatusUpdateReqData.TransferStatus == models.UeContextTransferStatus_TRANSFERRED {
-		// remove the individual ueContext resource and release any PDU session(s)
-		for _, pduSessionId := range ueRegStatusUpdateReqData.ToReleaseSessionList {
-			cause := models.Cause_REL_DUE_TO_SLICE_NOT_AVAILABLE
-			causeAll := &context.CauseAll{
-				Cause: &cause,
-			}
-			smContext, ok := ue.SmContextFindByPDUSessionID(pduSessionId)
-			if !ok {
-				//ue.ProducerLog.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionId)
-			}
-			problem, err := h.backend.Consumer().Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
-			if problem != nil {
-				//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Failed Problem[%+v]", pduSessionId, problem)
-			} else if err != nil {
-				//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Error[%v]", pduSessionId, err.Error())
-			}
-		}
-
-		if ueRegStatusUpdateReqData.PcfReselectedInd {
-			problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
-			if problem != nil {
-		//		logger.GmmLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
-			} else if err != nil {
-		//		logger.GmmLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
-			}
-		}
-		//TODO: tungtq: it seems it is a bad idea to remove AmfUe inside gmm_comm (a bad design from free5gc)
-		//gmm_common.RemoveAmfUe(ue)
 	} else {
-		// NOT_TRANSFERRED
-		//logger.CommLog.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
-	}
 
-	ueRegStatusUpdateRspData.RegStatusTransferComplete = true
-	return ueRegStatusUpdateRspData, nil
+		resdat := new(models.UeRegStatusUpdateRspData)
+
+		if reqdat.TransferStatus == models.UeContextTransferStatus_TRANSFERRED {
+			// remove the individual ueContext resource and release any PDU session(s)
+			for _, pduSessionId := range reqdat.ToReleaseSessionList {
+				cause := models.Cause_REL_DUE_TO_SLICE_NOT_AVAILABLE
+				causeAll := &context.CauseAll{
+					Cause: &cause,
+				}
+
+				smContext, ok := ue.SmContextFindByPDUSessionID(pduSessionId)
+				if !ok {
+					//ue.ProducerLog.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionId)
+				}
+
+				problem, err := h.backend.Consumer().Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
+				if problem != nil {
+					//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Failed Problem[%+v]", pduSessionId, problem)
+				} else if err != nil {
+					//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Error[%v]", pduSessionId, err.Error())
+				}
+			}
+
+			if reqdat.PcfReselectedInd {
+				problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
+				if problem != nil {
+			//		logger.GmmLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
+				} else if err != nil {
+			//		logger.GmmLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
+				}
+			}
+			//TODO: tungtq: it seems it is a bad idea to remove AmfUe inside gmm_comm (a bad design from free5gc)
+			//gmm_common.RemoveAmfUe(ue)
+		} else {
+			// NOT_TRANSFERRED
+			//logger.CommLog.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
+		}
+
+		resdat.RegStatusTransferComplete = true
+		return resdat, nil
+	}
 }

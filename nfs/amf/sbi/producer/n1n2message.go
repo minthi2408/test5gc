@@ -395,7 +395,7 @@ func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string)
 	}
 
 	resourceUri := h.amf().GetIPv4Uri() + reqUri
-	if status, ok := ue.GetN1N2MessageStatus(resourceUri); !ok {
+	if status, ok := ue.N1N2MessageStatus(resourceUri); !ok {
 		return "", &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
@@ -407,61 +407,56 @@ func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string)
 
 // TS 29.518 5.2.2.3.3
 func (h *Handler) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	ueN1N2InfoSubscriptionCreateData := request.Body.(models.UeN1N2InfoSubscriptionCreateData)
-	ueContextID := request.Params["ueContextId"]
+	reqdat := request.Body.(models.UeN1N2InfoSubscriptionCreateData)
+	ueId := request.Params["ueContextId"]
 
-	ueN1N2InfoSubscriptionCreatedData, problemDetails := h.doN1N2MessageSubscribe(ueContextID,
-		&ueN1N2InfoSubscriptionCreateData)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if resdat, prob := h.doN1N2MessageSubscribe(ueId, &reqdat); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
-		return httpwrapper.NewResponse(http.StatusCreated, nil, ueN1N2InfoSubscriptionCreatedData)
+		return httpwrapper.NewResponse(http.StatusCreated, nil, resdat)
 	}
 }
 
-func (h *Handler) doN1N2MessageSubscribe(ueContextID string,
+func (h *Handler) doN1N2MessageSubscribe(ueId string,
 	dat *models.UeN1N2InfoSubscriptionCreateData) (
 	*models.UeN1N2InfoSubscriptionCreatedData, *models.ProblemDetails) {
 
-	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
-	if !ok {
-		problemDetails := &models.ProblemDetails{
+	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
+		return nil, &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
-		return nil, problemDetails
-	}
-	if id, prob := ue.N1N2InfoSubscribe(dat); prob != nil {
-		return nil, prob
-	} else {
-		return &models.UeN1N2InfoSubscriptionCreatedData{ N1n2NotifySubscriptionId: id}, nil
+	} else { 
+		if id, prob := ue.N1N2InfoSubscribe(dat); prob != nil {
+			return nil, prob
+		} else {
+			return &models.UeN1N2InfoSubscriptionCreatedData{ N1n2NotifySubscriptionId: id}, nil
+		}
 	}
 }
 
 func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.CommLog.Info("Handle N1N2Message Unsubscribe Request")
 
-	ueContextID := request.Params["ueContextId"]
-	subscriptionID := request.Params["subscriptionId"]
+	ueId := request.Params["ueContextId"]
+	subId := request.Params["subscriptionId"]
 
-	problemDetails := h.doN1N2MessageUnSubscribe(ueContextID, subscriptionID)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if prob := h.doN1N2MessageUnSubscribe(ueId, subId); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
-	return nil
 }
 
-func (h *Handler) doN1N2MessageUnSubscribe(ueContextID string, subscriptionID string) *models.ProblemDetails {
+func (h *Handler) doN1N2MessageUnSubscribe(ueId string, subId string) *models.ProblemDetails {
 
-	if ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID); !ok {
+	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
 	} else {
-		ue.N1N2MessageSubscription.Delete(subscriptionID)
+		ue.N1N2MessageUnsubscribe(subId)
 		return nil
 	}
 }
