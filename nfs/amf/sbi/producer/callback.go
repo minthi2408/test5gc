@@ -75,7 +75,7 @@ func (h *Handler) SmContextStatusNotifyProcedure(guti string, pduId int32, notif
 
 func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 	/*
-	TungTQ : need more time
+	TungTQ : I do not understand this procedure yet, need more time 
 
 	//ue.ProducerLog.Debugf("Resume establishing PDU Session[%d]", pduSessionID)
 	var (
@@ -150,35 +150,33 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 }
 
 
-
-
 func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
 
-	polAssoID := request.Params["polAssoId"]
-	policyUpdate := request.Body.(models.PolicyUpdate)
+	polId := request.Params["polAssoId"]
+	polUpdate := request.Body.(models.PolicyUpdate)
 
-	if prob:= h.doAmPolicyControlUpdateNotifyUpdate(polAssoID, policyUpdate); prob != nil {
+	if prob:= h.doAmPolicyControlUpdateNotifyUpdate(polId, polUpdate); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
 }
 
-func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polAssoID string, policyUpdate models.PolicyUpdate) *models.ProblemDetails {
-	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polAssoID)
+func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate models.PolicyUpdate) *models.ProblemDetails {
+	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polId)
 	if !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
-			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polAssoID),
+			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polId),
 		}
 	}
 
-	ue.AmPolicyAssociation.Triggers = policyUpdate.Triggers
+	ue.AmPolicyAssociation.Triggers = polUpdate.Triggers
 	ue.RequestTriggerLocationChange = false
 
-	for _, trigger := range policyUpdate.Triggers {
+	for _, trigger := range polUpdate.Triggers {
 		if trigger == models.RequestTrigger_LOC_CH {
 			ue.RequestTriggerLocationChange = true
 		}
@@ -187,12 +185,12 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polAssoID string, policyUp
 		//}
 	}
 
-	if policyUpdate.ServAreaRes != nil {
-		ue.AmPolicyAssociation.ServAreaRes = policyUpdate.ServAreaRes
+	if polUpdate.ServAreaRes != nil {
+		ue.AmPolicyAssociation.ServAreaRes = polUpdate.ServAreaRes
 	}
 
-	if policyUpdate.Rfsp != 0 {
-		ue.AmPolicyAssociation.Rfsp = policyUpdate.Rfsp
+	if polUpdate.Rfsp != 0 {
+		ue.AmPolicyAssociation.Rfsp = polUpdate.Rfsp
 	}
 
 	// use go routine to write response first to ensure the order of the procedure
@@ -258,9 +256,8 @@ func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 
 	// use go routine to write response first to ensure the order of the procedure
 	go func() {
-		problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
-		if problem != nil {
-			//logger.ProducerLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
+		if prob, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue); prob != nil {
+			//logger.ProducerLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", prob)
 		} else if err != nil {
 			//logger.ProducerLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
 		}
@@ -274,9 +271,8 @@ func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapp
 
 	n1MessageNotify := request.Body.(models.N1MessageNotify)
 
-	problemDetails := h.doN1MessageNotify(n1MessageNotify)
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+	if prob := h.doN1MessageNotify(n1MessageNotify); prob != nil {
+		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
@@ -303,6 +299,7 @@ func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mod
 		}
 	}
 
+	//TODO: tungtq - should move this part to the AmfContext module
 	go func() {
 		var amfUe *context.AmfUe
 		ueContext := registrationCtxtContainer.UeContext

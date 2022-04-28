@@ -65,6 +65,21 @@ func (amf *AMFContext) NfId() string {
 	return amf.id
 }
 
+func (amf *AMFContext) Name() string {
+	return amf.cfg.Configuration.AmfName
+}
+func (amf *AMFContext) RelativeCapacity() int64 {
+	return amf.relcap	
+}
+
+func (amf *AMFContext) ServedGuamiList() []models.Guami  {
+	return amf.cfg.Configuration.ServedGuamiList
+}
+
+func (amf *AMFContext) PlmnSupportList() []config.PlmnSupportItem  {
+	return amf.cfg.Configuration.PlmnSupportList
+}
+
 func (amf *AMFContext) ServedGuami() *models.Guami  {
 	return &amf.cfg.Configuration.ServedGuamiList[0]
 }
@@ -76,6 +91,9 @@ func (amf *AMFContext) TmsiAllocate() int32 {
 	}
 }
 
+func (amf *AMFContext) RegisterIPv4() string {
+	return amf.cfg.Configuration.Sbi.RegisterIPv4
+}
 func (amf *AMFContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
 }

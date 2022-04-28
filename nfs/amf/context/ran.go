@@ -39,6 +39,9 @@ func (r *AmfRan) Name() string {
 	return r.name
 }
 
+func (r *AmfRan) AnType() models.AccessType {
+	return r.atype
+}
 func (r *AmfRan) Present() int {
 	return r.present
 }

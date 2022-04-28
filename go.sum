@@ -57,6 +57,7 @@ github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.m
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/evanphx/json-patch v0.5.2/go.mod h1:ZWS5hhDbVDyob71nXKNL0+PWn6ToqBHMikGIFbs31qQ=
+github.com/free5gc/amf v1.3.0 h1:TJeIC3Md2R6sDw7tjmwYi+4p1qcT6ff8fVM+85QB+0k=
 github.com/free5gc/aper v1.0.4 h1:Ufbf5lzbXBOhSdUSaIdAhFMOjggsX4p6eWMrpzrrD60=
 github.com/free5gc/aper v1.0.4/go.mod h1:3K/m47BIPR2xhBkuHD1unp2LnArVtt3iTI4De0bCqpI=
 github.com/free5gc/nas v1.0.7 h1:c+UXWENvJgTr/QZl50SyX+ZZzUdazGHHZ9ZGtnnwG5A=
