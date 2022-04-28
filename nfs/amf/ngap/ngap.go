@@ -40,7 +40,7 @@ func NewNgap(b amf.Backend) *Ngap {
 		},
 	}
 	//create Nas
-	ret.nas = nas.NewNas(b, ret.sender)
+	ret.nas = nas.NewNas(b, &ret.sender)
 	return ret
 }
 

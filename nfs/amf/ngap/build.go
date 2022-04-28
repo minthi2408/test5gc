@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf/ngap/util"
 	"github.com/free5gc/aper"
 	"github.com/free5gc/ngap"
 	"github.com/free5gc/ngap/ngapConvert"
@@ -1097,7 +1098,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.Present = ngapType.InitialContextSetupRequestIEsPresentMobilityRestrictionList
 		ie.Value.MobilityRestrictionList = new(ngapType.MobilityRestrictionList)
 
-		mobilityRestrictionList := BuildIEMobilityRestrictionList(amfUe)
+		mobilityRestrictionList := util.BuildIEMobilityRestrictionList(amfUe)
 		ie.Value.MobilityRestrictionList = &mobilityRestrictionList
 
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)

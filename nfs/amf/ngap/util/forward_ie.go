@@ -1,4 +1,4 @@
-package ngap
+package util
 
 import (
 	"encoding/hex"
