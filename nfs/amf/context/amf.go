@@ -83,6 +83,24 @@ func (amf *AMFContext) PlmnSupportList() []config.PlmnSupportItem  {
 func (amf *AMFContext) ServedGuami() *models.Guami  {
 	return &amf.cfg.Configuration.ServedGuamiList[0]
 }
+
+func (amf *AMFContext) Ladn(dnn string) (ladn *LADN, ok bool) {
+	ladn, ok =  amf.ladnpool[dnn]
+	return
+}
+
+func (amf *AMFContext) UePool() sync.Map {
+	return amf.uepool
+}
+
+func (amf *AMFContext) T3513Cfg() *config.TimerValue {
+	return &amf.cfg.Configuration.T3513
+}
+
+func  (amf *AMFContext) AmfRanPool() sync.Map {
+	return amf.ranpool
+}
+
 func (amf *AMFContext) TmsiAllocate() int32 {
 	if tmsi, err := amf.tmsiIdGen.Allocate(); err != nil {
 		return -1
@@ -127,14 +145,6 @@ func (amf *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessT
 	}
 }
 
-func (amf *AMFContext) Ladn(dnn string) (ladn *LADN, ok bool) {
-	ladn, ok =  amf.ladnpool[dnn]
-	return
-}
-
-func (amf *AMFContext) UePool() sync.Map {
-	return amf.uepool
-}
 func (amf *AMFContext) NewAMFStatusSubscription(dat models.SubscriptionData) (subId string) {
 	if id, err := amf.statussubIdGen.Allocate(); err != nil {
 		//logger.ContextLog.Errorf("Allocate subscriptionID error: %+v", err)

@@ -12,7 +12,7 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (s *ngapSender) BuildPDUSessionResourceReleaseCommand(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) buildPDUSessionResourceReleaseCommand(ue *context.RanUe, nasPdu []byte,
 	pduSessionResourceReleasedList ngapType.PDUSessionResourceToReleaseListRelCmd) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
@@ -75,7 +75,7 @@ func (s *ngapSender) BuildPDUSessionResourceReleaseCommand(ue *context.RanUe, na
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildNGSetupResponse() ([]byte, error) {
+func (s *ngapSender) buildNGSetupResponse() ([]byte, error) {
 	amf := s.backend.Context()
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
@@ -157,7 +157,7 @@ func (s *ngapSender) BuildNGSetupResponse() ([]byte, error) {
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildNGSetupFailure(cause ngapType.Cause) ([]byte, error) {
+func (s *ngapSender) buildNGSetupFailure(cause ngapType.Cause) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentUnsuccessfulOutcome
 	pdu.UnsuccessfulOutcome = new(ngapType.UnsuccessfulOutcome)
@@ -183,7 +183,7 @@ func (s *ngapSender) BuildNGSetupFailure(cause ngapType.Cause) ([]byte, error) {
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildNGReset(
+func (s *ngapSender) buildNGReset(
 	cause ngapType.Cause, partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -235,7 +235,7 @@ func (s *ngapSender) BuildNGReset(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList,
+func (s *ngapSender) buildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -306,7 +306,7 @@ func (s *ngapSender) BuildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssoc
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) buildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 	mobilityRestrictionList *ngapType.MobilityRestrictionList) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -394,7 +394,7 @@ func (s *ngapSender) BuildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildUEContextReleaseCommand(
+func (s *ngapSender) buildUEContextReleaseCommand(
 	ue *context.RanUe, causePresent int, cause aper.Enumerated) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -471,7 +471,7 @@ func (s *ngapSender) BuildUEContextReleaseCommand(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause *ngapType.Cause,
+func (s *ngapSender) buildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause *ngapType.Cause,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -546,7 +546,7 @@ func (s *ngapSender) BuildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildUERadioCapabilityCheckRequest(ue *context.RanUe) ([]byte, error) {
+func (s *ngapSender) buildUERadioCapabilityCheckRequest(ue *context.RanUe) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
@@ -590,7 +590,7 @@ func (s *ngapSender) BuildUERadioCapabilityCheckRequest(ue *context.RanUe) ([]by
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildHandoverCancelAcknowledge(
+func (s *ngapSender) buildHandoverCancelAcknowledge(
 	ue *context.RanUe, criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentSuccessfulOutcome
@@ -647,7 +647,7 @@ func (s *ngapSender) BuildHandoverCancelAcknowledge(
 
 // nasPDU: from nas layer
 // pduSessionResourceSetupRequestList: provided by AMF, and transfer data is from SMF
-func (s *ngapSender) BuildPDUSessionResourceSetupRequest(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) buildPDUSessionResourceSetupRequest(ue *context.RanUe, nasPdu []byte,
 	pduSessionResourceSetupRequestList ngapType.PDUSessionResourceSetupListSUReq) ([]byte, error) {
 	// TODO: Ran Paging Priority (optional)
 
@@ -729,7 +729,7 @@ func (s *ngapSender) BuildPDUSessionResourceSetupRequest(ue *context.RanUe, nasP
 
 // pduSessionResourceModifyConfirmList: provided by AMF, and transfer data is return from SMF
 // pduSessionResourceFailedToModifyList: provided by AMF, and transfer data is return from SMF
-func (s *ngapSender) BuildPDUSessionResourceModifyConfirm(
+func (s *ngapSender) buildPDUSessionResourceModifyConfirm(
 	ue *context.RanUe,
 	pduSessionResourceModifyConfirmList ngapType.PDUSessionResourceModifyListModCfm,
 	pduSessionResourceFailedToModifyList ngapType.PDUSessionResourceFailedToModifyListModCfm,
@@ -804,7 +804,7 @@ func (s *ngapSender) BuildPDUSessionResourceModifyConfirm(
 }
 
 // pduSessionResourceModifyRequestList: from SMF
-func (s *ngapSender) BuildPDUSessionResourceModifyRequest(ue *context.RanUe,
+func (s *ngapSender) buildPDUSessionResourceModifyRequest(ue *context.RanUe,
 	pduSessionResourceModifyRequestList ngapType.PDUSessionResourceModifyListModReq) ([]byte, error) {
 	// TODO: Ran Paging Priority (optional)
 
@@ -859,7 +859,7 @@ func (s *ngapSender) BuildPDUSessionResourceModifyRequest(ue *context.RanUe,
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildInitialContextSetupRequest(
+func (s *ngapSender) buildInitialContextSetupRequest(
 	amfUe *context.AmfUe,
 	anType models.AccessType,
 	nasPdu []byte,
@@ -1222,7 +1222,7 @@ func (s *ngapSender) BuildInitialContextSetupRequest(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildUEContextModificationRequest(
+func (s *ngapSender) buildUEContextModificationRequest(
 	amfUe *context.AmfUe,
 	anType models.AccessType,
 	oldAmfUeNgapID *int64,
@@ -1376,7 +1376,7 @@ func (s *ngapSender) BuildUEContextModificationRequest(
 // pduSessionResourceToReleaseList: provided by amf and transfer is return from smf
 // criticalityDiagnostics = criticalityDiagonstics IE in receiver node's error indication
 // when received node can't comprehend the IE or missing IE
-func (s *ngapSender) BuildHandoverCommand(
+func (s *ngapSender) buildHandoverCommand(
 	sourceUe *context.RanUe,
 	pduSessionResourceHandoverList ngapType.PDUSessionResourceHandoverList,
 	pduSessionResourceToReleaseList ngapType.PDUSessionResourceToReleaseListHOCmd,
@@ -1485,7 +1485,7 @@ func (s *ngapSender) BuildHandoverCommand(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildHandoverPreparationFailure(sourceUe *context.RanUe, cause ngapType.Cause,
+func (s *ngapSender) buildHandoverPreparationFailure(sourceUe *context.RanUe, cause ngapType.Cause,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	// cause = initiate the Handover Cancel procedure with the appropriate value for the Cause IE.
 
@@ -1563,7 +1563,7 @@ a Nsmf_PDUSession_CreateSMContext Response(N2 SM Information (PDU Session ID, ca
 // sourceToTargetTransparentContainer is received from S-RAN
 // nsci: new security context indicator, if amfUe has updated security context,
 // set nsci to true, otherwise set to false
-func (s *ngapSender) BuildHandoverRequest(ue *context.RanUe, cause ngapType.Cause,
+func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Cause,
 	pduSessionResourceSetupListHOReq ngapType.PDUSessionResourceSetupListHOReq,
 	sourceToTargetTransparentContainer ngapType.SourceToTargetTransparentContainer, nsci bool) ([]byte, error) {
 	amf := s.backend.Context()
@@ -1783,7 +1783,7 @@ func (s *ngapSender) BuildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 // information about the expected UE behaviour. TS 23.501 5.4.6, 5.4.6.2
 // rrcInactiveTransitionReportRequest: configured by amf
 // criticalityDiagnostics: from received node when received not comprehended IE or missing IE
-func (s *ngapSender) BuildPathSwitchRequestAcknowledge(
+func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 	ue *context.RanUe,
 	pduSessionResourceSwitchedList ngapType.PDUSessionResourceSwitchedList,
 	pduSessionResourceReleasedList ngapType.PDUSessionResourceReleasedListPSAck,
@@ -1958,7 +1958,7 @@ func (s *ngapSender) BuildPathSwitchRequestAcknowledge(
 
 // pduSessionResourceReleasedList: provided by AMF, and the transfer data is from SMF
 // criticalityDiagnostics: from received node when received not comprehended IE or missing IE
-func (s *ngapSender) BuildPathSwitchRequestFailure(
+func (s *ngapSender) buildPathSwitchRequestFailure(
 	amfUeNgapId,
 	ranUeNgapId int64,
 	pduSessionResourceReleasedList *ngapType.PDUSessionResourceReleasedListPSFail,
@@ -2023,7 +2023,7 @@ func (s *ngapSender) BuildPathSwitchRequestFailure(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildDownlinkRanStatusTransfer(ue *context.RanUe,
+func (s *ngapSender) buildDownlinkRanStatusTransfer(ue *context.RanUe,
 	ranStatusTransferTransparentContainer ngapType.RANStatusTransferTransparentContainer) ([]byte, error) {
 	// ranStatusTransferTransparentContainer from Uplink Ran Configuration Transfer
 	var pdu ngapType.NGAPPDU
@@ -2263,7 +2263,7 @@ func (s *ngapSender) BuildPaging(
 // amfUeNgapID: initial AMF get it from target AMF
 // ngapMessage: initial UE Message to reroute
 // allowedNSSAI: provided by AMF, and AMF get it from NSSF (4.2.2.2.3 step 4b)
-func (s *ngapSender) BuildRerouteNasRequest(ue *context.AmfUe, anType models.AccessType, amfUeNgapID *int64,
+func (s *ngapSender) buildRerouteNasRequest(ue *context.AmfUe, anType models.AccessType, amfUeNgapID *int64,
 	ngapMessage []byte, allowedNSSAI *ngapType.AllowedNSSAI) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
@@ -2354,7 +2354,7 @@ func (s *ngapSender) BuildRerouteNasRequest(ue *context.AmfUe, anType models.Acc
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildRanConfigurationUpdateAcknowledge(
+func (s *ngapSender) buildRanConfigurationUpdateAcknowledge(
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	// criticality ->from received node when received node can't comprehend the IE or missing IE
 
@@ -2386,7 +2386,7 @@ func (s *ngapSender) BuildRanConfigurationUpdateAcknowledge(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildRanConfigurationUpdateFailure(
+func (s *ngapSender) buildRanConfigurationUpdateFailure(
 	cause ngapType.Cause, criticalityDiagnostics *ngapType.CriticalityDiagnostics) ([]byte, error) {
 	// criticality ->from received node when received node can't comprehend the IE or missing IE
 	// If the AMF cannot accept the update,
@@ -2447,7 +2447,7 @@ func (s *ngapSender) BuildRanConfigurationUpdateFailure(
 // forwarding the transaction towards the old AMF and detect that the AMF is unavailable. When
 // it detects unavailable, it marks the AMF and its associated GUAMI(s) as unavailable.
 // Defined in 23.501 5.21.2.2.2
-func (s *ngapSender) BuildAMFStatusIndication(unavailableGUAMIList ngapType.UnavailableGUAMIList) ([]byte, error) {
+func (s *ngapSender) buildAMFStatusIndication(unavailableGUAMIList ngapType.UnavailableGUAMIList) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
 	//logger.NgapLog.Trace("Build AMF Status Indication message")
@@ -2484,7 +2484,7 @@ func (s *ngapSender) BuildAMFStatusIndication(unavailableGUAMIList ngapType.Unav
 // amfTrafficLoadReductionIndication(int 1~99): indicates the percentage of the type
 // of traffic relative to the instantaneous incoming rate at the NG-RAN node, provided by AMF
 // overloadStartNSSAIList: overload slices, provide by AMF
-func (s *ngapSender) BuildOverloadStart(
+func (s *ngapSender) buildOverloadStart(
 	amfOverloadResponse *ngapType.OverloadResponse,
 	amfTrafficLoadReductionIndication int64,
 	overloadStartNSSAIList *ngapType.OverloadStartNSSAIList) ([]byte, error) {
@@ -2537,7 +2537,7 @@ func (s *ngapSender) BuildOverloadStart(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildOverloadStop() ([]byte, error) {
+func (s *ngapSender) buildOverloadStop() ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
 	pdu.InitiatingMessage = new(ngapType.InitiatingMessage)
@@ -2552,7 +2552,7 @@ func (s *ngapSender) BuildOverloadStop() ([]byte, error) {
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildDownlinkRanConfigurationTransfer(
+func (s *ngapSender) buildDownlinkRanConfigurationTransfer(
 	sONConfigurationTransfer *ngapType.SONConfigurationTransfer) ([]byte, error) {
 	// sONConfigurationTransfer = sONConfigurationTransfer from uplink Ran Configuration Transfer
 
@@ -2584,7 +2584,7 @@ func (s *ngapSender) BuildDownlinkRanConfigurationTransfer(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildDownlinkNonUEAssociatedNRPPATransport(
+func (s *ngapSender) buildDownlinkNonUEAssociatedNRPPATransport(
 	ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) ([]byte, error) {
 	// NRPPa PDU is by pass
 	// NRPPa PDU is from LMF define in 4.13.5.6
@@ -2634,12 +2634,12 @@ func (s *ngapSender) BuildDownlinkNonUEAssociatedNRPPATransport(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildTraceStart() ([]byte, error) {
+func (s *ngapSender) buildTraceStart() ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildDeactivateTrace(amfUe *context.AmfUe, anType models.AccessType) ([]byte, error) {
+func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.AccessType) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
 	ranUe, ok := amfUe.RanUe[anType]
@@ -2732,7 +2732,7 @@ func (s *ngapSender) BuildDeactivateTrace(amfUe *context.AmfUe, anType models.Ac
 // reporting mode and its related parameters (e.g. number of reporting) TS 23.501 5.4.7
 // Location Reference ID To Be Cancelled IE shall be present if
 // the Event Type IE is set to "Stop UE presence in the area of interest".
-func (s *ngapSender) BuildLocationReportingControl(
+func (s *ngapSender) buildLocationReportingControl(
 	ue *context.RanUe,
 	AOIList *ngapType.AreaOfInterestList,
 	LocationReportingReferenceIDToBeCancelled int64,
@@ -2812,7 +2812,7 @@ func (s *ngapSender) BuildLocationReportingControl(
 	return ngap.Encoder(pdu)
 }
 
-func (s *ngapSender) BuildUETNLABindingReleaseRequest(ue *context.RanUe) ([]byte, error) {
+func (s *ngapSender) buildUETNLABindingReleaseRequest(ue *context.RanUe) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
@@ -2856,7 +2856,7 @@ func (s *ngapSender) BuildUETNLABindingReleaseRequest(ue *context.RanUe) ([]byte
 }
 
 // Weight Factor associated with each of the TNL association within the AMF
-func (s *ngapSender) BuildAMFConfigurationUpdate(tNLassociationUsage ngapType.TNLAssociationUsage,
+func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TNLAssociationUsage,
 	tNLAddressWeightFactor ngapType.TNLAddressWeightFactor) ([]byte, error) {
 	amf := s.backend.Context()
 	var pdu ngapType.NGAPPDU
@@ -3025,7 +3025,7 @@ func (s *ngapSender) BuildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 
 // NRPPa PDU is a pdu from LMF to RAN defined in TS 23.502 4.13.5.5 step 3
 // NRPPa PDU is by pass
-func (s *ngapSender) BuildDownlinkUEAssociatedNRPPaTransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) ([]byte, error) {
+func (s *ngapSender) buildDownlinkUEAssociatedNRPPaTransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
 	pdu.InitiatingMessage = new(ngapType.InitiatingMessage)

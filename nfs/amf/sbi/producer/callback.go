@@ -197,30 +197,25 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 	go func() {
 		// UE is CM-Connected State
 		if ue.CmConnect(models.AccessType__3_GPP_ACCESS) {
-			//TODO: tungtq
-			//gmm_message.SendConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
+			h.nas.SendConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
 			// UE is CM-IDLE => paging
 		} else {
-			//TODO: tungtq
-			/*
-			message, err := gmm_message.BuildConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
+			message, err := h.nas.BuildConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
 			if err != nil {
-				logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
+			//	logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
 				return
 			}
-
 			ue.ConfigurationUpdateMessage = message
 			ue.SetOnGoing(models.AccessType__3_GPP_ACCESS, &context.OnGoing{
 				Procedure: context.OnGoingProcedurePaging,
 			})
 
-			pkg, err := ngap_message.BuildPaging(ue, nil, false)
+			pkg, err := h.ngap.BuildPaging(ue, nil, false)
 			if err != nil {
-				logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
+				//logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
 				return
 			}
-			ngap_message.SendPaging(ue, pkg)
-			*/
+			h.ngap.SendPaging(ue, pkg)
 		}
 	}()
 	return nil
@@ -327,7 +322,7 @@ func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mod
 		}
 
 		amfUe.AttachRanUe(ranUe)
-		h.nas().HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, n1MessageNotify.BinaryDataN1Message)
+		h.nas.HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, n1MessageNotify.BinaryDataN1Message)
 	}()
 	return nil
 }

@@ -35,6 +35,10 @@ func (r *AmfRan) Id() *models.GlobalRanNodeId {
 	return r.id
 }
 
+func (r *AmfRan) Conn() net.Conn {
+	return r.conn
+}
+
 func (r *AmfRan) Name() string {
 	return r.name
 }
@@ -49,7 +53,9 @@ func (r *AmfRan) Present() int {
 func (r *AmfRan) AccessType() models.AccessType {
 	return r.atype
 }
-
+func (r *AmfRan) SupportedTAList() []SupportedTAI {
+	return r.tailist
+}
 
 type SupportedTAI struct {
 	Tai        models.Tai

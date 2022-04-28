@@ -1,23 +1,33 @@
 package nas
 
 import (
-	"etri5gc/nfs/amf/sbi/producer"
 	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf"
+	"github.com/free5gc/nas/nasType"
+	"github.com/free5gc/openapi/models"
 )
 
-type nasSender struct {
-	backend		producer.Backend
+type Nas struct {
+	backend		amf.Backend
 }
 
-func NewNas(b producer.Backend) producer.NasSender {
-	return &nasSender{
+func NewNas(b amf.Backend) *Nas {
+	return &Nas{
 		backend:	b,
 	}
 }
 
-func (nas *nasSender) Send() {
+func (n *Nas) Send() {
 }
 
-func (nas *nasSender) HandleNAS(ranue *context.RanUe,code int64,naspdu []byte) {
+func (n *Nas) HandleNAS(ranue *context.RanUe,code int64,naspdu []byte) {
 	//TODO:
+}
+
+func (n *Nas) BuildConfigurationUpdateCommand(*context.AmfUe, models.AccessType, *nasType.NetworkSlicingIndication) ([]byte, error) {
+	return []byte{}, nil 
+}
+
+func (n *Nas) SendConfigurationUpdateCommand(*context.AmfUe, models.AccessType, *nasType.NetworkSlicingIndication) {
+
 }

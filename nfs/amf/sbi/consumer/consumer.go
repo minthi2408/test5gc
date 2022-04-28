@@ -48,3 +48,6 @@ func (c *Consumer) Smf() SmfConsumer {
 	return c.smf
 }
 
+func (c *Consumer) Callback() Callback {
+	return c.callback
+}

@@ -15,6 +15,10 @@ import (
 
 
 type Callback interface {
+	SendN2InfoNotifyN2Handover(*context.AmfUe, []int32) error
+	SendAmfStatusChangeNotify(string, []models.Guami) 
+    SendN1N2TransferFailureNotification(*context.AmfUe, models.N1N2MessageTransferCause)
+	SendN1MessageNotify(*context.AmfUe, models.N1MessageClass, []byte, *models.RegistrationContextContainer)
 }
 
 
