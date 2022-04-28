@@ -7,7 +7,7 @@ import (
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
 	"github.com/free5gc/aper"
-	"github.com/free5gc/ngap"
+	libngap "github.com/free5gc/ngap"
 	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
@@ -73,7 +73,7 @@ func (s *ngapSender) buildPDUSessionResourceReleaseCommand(ue *context.RanUe, na
 	ie.Value.PDUSessionResourceToReleaseListRelCmd = &pduSessionResourceReleasedList
 	PDUSessionResourceReleaseCommandIEs.List = append(PDUSessionResourceReleaseCommandIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildNGSetupResponse() ([]byte, error) {
@@ -155,7 +155,7 @@ func (s *ngapSender) buildNGSetupResponse() ([]byte, error) {
 
 	nGSetupResponseIEs.List = append(nGSetupResponseIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildNGSetupFailure(cause ngapType.Cause) ([]byte, error) {
@@ -181,7 +181,7 @@ func (s *ngapSender) buildNGSetupFailure(cause ngapType.Cause) ([]byte, error) {
 
 	nGSetupFailureIEs.List = append(nGSetupFailureIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildNGReset(
@@ -233,7 +233,7 @@ func (s *ngapSender) buildNGReset(
 
 	nGResetIEs.List = append(nGResetIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList,
@@ -304,7 +304,7 @@ func (s *ngapSender) buildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssoc
 		nGResetAcknowledgeIEs.List = append(nGResetAcknowledgeIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
@@ -392,7 +392,7 @@ func (s *ngapSender) buildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 	// UE Aggregate Maximum Bit Rate (optional)
 	// Allowed NSSAI (optional)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildUEContextReleaseCommand(
@@ -469,7 +469,7 @@ func (s *ngapSender) buildUEContextReleaseCommand(
 
 	ueContextReleaseCommandIEs.List = append(ueContextReleaseCommandIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause *ngapType.Cause,
@@ -544,7 +544,7 @@ func (s *ngapSender) buildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause
 		errorIndicationIEs.List = append(errorIndicationIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildUERadioCapabilityCheckRequest(ue *context.RanUe) ([]byte, error) {
@@ -588,7 +588,7 @@ func (s *ngapSender) buildUERadioCapabilityCheckRequest(ue *context.RanUe) ([]by
 	uERadioCapabilityCheckRequestIEs.List = append(uERadioCapabilityCheckRequestIEs.List, ie)
 
 	// TODO:UE Radio Capability(optional)
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildHandoverCancelAcknowledge(
@@ -643,7 +643,7 @@ func (s *ngapSender) buildHandoverCancelAcknowledge(
 		handoverCancelAcknowledgeIEs.List = append(handoverCancelAcknowledgeIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // nasPDU: from nas layer
@@ -725,7 +725,7 @@ func (s *ngapSender) buildPDUSessionResourceSetupRequest(ue *context.RanUe, nasP
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateDL.Value = ueAmbrDL
 	pDUSessionResourceSetupRequestIEs.List = append(pDUSessionResourceSetupRequestIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // pduSessionResourceModifyConfirmList: provided by AMF, and transfer data is return from SMF
@@ -801,7 +801,7 @@ func (s *ngapSender) buildPDUSessionResourceModifyConfirm(
 		pDUSessionResourceModifyConfirmIEs.List = append(pDUSessionResourceModifyConfirmIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // pduSessionResourceModifyRequestList: from SMF
@@ -857,7 +857,7 @@ func (s *ngapSender) buildPDUSessionResourceModifyRequest(ue *context.RanUe,
 	ie.Value.PDUSessionResourceModifyListModReq = &pduSessionResourceModifyRequestList
 	pDUSessionResourceModifyRequestIEs.List = append(pDUSessionResourceModifyRequestIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildInitialContextSetupRequest(
@@ -1220,7 +1220,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildUEContextModificationRequest(
@@ -1370,7 +1370,7 @@ func (s *ngapSender) buildUEContextModificationRequest(
 		uEContextModificationRequestIEs.List = append(uEContextModificationRequestIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // pduSessionResourceHandoverList: provided by amf and transfer is return from smf
@@ -1483,7 +1483,7 @@ func (s *ngapSender) buildHandoverCommand(
 		handoverCommandIEs.List = append(handoverCommandIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildHandoverPreparationFailure(sourceUe *context.RanUe, cause ngapType.Cause,
@@ -1554,7 +1554,7 @@ func (s *ngapSender) buildHandoverPreparationFailure(sourceUe *context.RanUe, ca
 		handoverPreparationFailureIEs.List = append(handoverPreparationFailureIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 /*The PGW-C+SMF (V-SMF in the case of home-routed roaming scenario only) sends
@@ -1772,7 +1772,7 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	// Mobility Restriction List(optional)
 	// Location Reporting Request Type(optional)
 	// RRC Inactive Transition Report Reques(optional)
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // pduSessionResourceSwitchedList: provided by AMF, and the transfer data is from SMF
@@ -1954,7 +1954,7 @@ func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 		pathSwitchRequestAckIEs.List = append(pathSwitchRequestAckIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // pduSessionResourceReleasedList: provided by AMF, and the transfer data is from SMF
@@ -2021,7 +2021,7 @@ func (s *ngapSender) buildPathSwitchRequestFailure(
 		pathSwitchRequestFailureIEs.List = append(pathSwitchRequestFailureIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildDownlinkRanStatusTransfer(ue *context.RanUe,
@@ -2075,7 +2075,7 @@ func (s *ngapSender) buildDownlinkRanStatusTransfer(ue *context.RanUe,
 
 	downlinkRanStatusTransferIEs.List = append(downlinkRanStatusTransferIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // anType indicate amfUe send this msg for which accessType
@@ -2256,7 +2256,7 @@ func (s *ngapSender) BuildPaging(
 		pagingIEs.List = append(pagingIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // TS 23.502 4.2.2.2.3
@@ -2352,7 +2352,7 @@ func (s *ngapSender) buildRerouteNasRequest(ue *context.AmfUe, anType models.Acc
 		rerouteNasRequestIEs.List = append(rerouteNasRequestIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildRanConfigurationUpdateAcknowledge(
@@ -2384,7 +2384,7 @@ func (s *ngapSender) buildRanConfigurationUpdateAcknowledge(
 		rANConfigurationUpdateAcknowledgeIEs.List = append(rANConfigurationUpdateAcknowledgeIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildRanConfigurationUpdateFailure(
@@ -2439,7 +2439,7 @@ func (s *ngapSender) buildRanConfigurationUpdateFailure(
 		rANConfigurationUpdateFailureIEs.List = append(rANConfigurationUpdateFailureIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // An AMF shall be able to instruct other peer CP NFs, subscribed to receive such a notification,
@@ -2477,7 +2477,7 @@ func (s *ngapSender) buildAMFStatusIndication(unavailableGUAMIList ngapType.Unav
 
 	aMFStatusIndicationIEs.List = append(aMFStatusIndicationIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // TS 23.501 5.19.5.2
@@ -2535,7 +2535,7 @@ func (s *ngapSender) buildOverloadStart(
 		overloadStartIEs.List = append(overloadStartIEs.List, ie)
 	}
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildOverloadStop() ([]byte, error) {
@@ -2550,7 +2550,7 @@ func (s *ngapSender) buildOverloadStop() ([]byte, error) {
 	initiatingMessage.Value.Present = ngapType.InitiatingMessagePresentOverloadStop
 	initiatingMessage.Value.OverloadStop = new(ngapType.OverloadStop)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildDownlinkRanConfigurationTransfer(
@@ -2582,7 +2582,7 @@ func (s *ngapSender) buildDownlinkRanConfigurationTransfer(
 
 		downlinkRANConfigurationTransferIEs.List = append(downlinkRANConfigurationTransferIEs.List, ie)
 	}
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildDownlinkNonUEAssociatedNRPPATransport(
@@ -2632,12 +2632,12 @@ func (s *ngapSender) buildDownlinkNonUEAssociatedNRPPATransport(
 	ie.Value.NRPPaPDU = &nRPPaPDU
 
 	downlinkNonUEAssociatedNRPPaTransportIEs.List = append(downlinkNonUEAssociatedNRPPaTransportIEs.List, ie)
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildTraceStart() ([]byte, error) {
 	var pdu ngapType.NGAPPDU
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.AccessType) ([]byte, error) {
@@ -2719,7 +2719,7 @@ func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.Ac
 		ie.Value.NGRANTraceID.Value = append(traceReference, trsrNgap...)
 		deactivateTraceIEs.List = append(deactivateTraceIEs.List, ie)
 	}
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // AOI List is from SMF
@@ -2810,7 +2810,7 @@ func (s *ngapSender) buildLocationReportingControl(
 
 	locationReportingControlIEs.List = append(locationReportingControlIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 func (s *ngapSender) buildUETNLABindingReleaseRequest(ue *context.RanUe) ([]byte, error) {
@@ -2853,7 +2853,7 @@ func (s *ngapSender) buildUETNLABindingReleaseRequest(ue *context.RanUe) ([]byte
 
 	uETNLABindingReleaseRequestIEs.List = append(uETNLABindingReleaseRequestIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // Weight Factor associated with each of the TNL association within the AMF
@@ -3021,7 +3021,7 @@ func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 	aMFTNLAssociationToUpdateList.List = append(aMFTNLAssociationToUpdateList.List, aMFTNLAssociationToUpdateItem)
 	aMFConfigurationUpdateIEs.List = append(aMFConfigurationUpdateIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }
 
 // NRPPa PDU is a pdu from LMF to RAN defined in TS 23.502 4.13.5.5 step 3
@@ -3092,5 +3092,5 @@ func (s *ngapSender) buildDownlinkUEAssociatedNRPPaTransport(ue *context.RanUe, 
 
 	downlinkUEAssociatedNRPPaTransportIEs.List = append(downlinkUEAssociatedNRPPaTransportIEs.List, ie)
 
-	return ngap.Encoder(pdu)
+	return libngap.Encoder(pdu)
 }

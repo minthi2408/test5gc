@@ -77,6 +77,10 @@ func (amf *AMFContext) RelativeCapacity() int64 {
 	return amf.relcap	
 }
 
+func (amf *AMFContext) SupportTaiList() []models.Tai {
+	return amf.cfg.Configuration.SupportTAIList
+}
+
 func (amf *AMFContext) ServedGuamiList() []models.Guami  {
 	return amf.cfg.Configuration.ServedGuamiList
 }

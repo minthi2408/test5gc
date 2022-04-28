@@ -43,6 +43,10 @@ func (r *AmfRan) Name() string {
 	return r.name
 }
 
+func (r *AmfRan) SetName(name string) {
+	r.name = name
+}
+
 func (r *AmfRan) AnType() models.AccessType {
 	return r.atype
 }
@@ -53,8 +57,13 @@ func (r *AmfRan) Present() int {
 func (r *AmfRan) AccessType() models.AccessType {
 	return r.atype
 }
+
 func (r *AmfRan) SupportedTAList() []SupportedTAI {
 	return r.tailist
+}
+
+func (r *AmfRan) SetSupportedTAList(l []SupportedTAI) {
+	r.tailist = l
 }
 
 type SupportedTAI struct {

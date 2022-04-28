@@ -18,9 +18,6 @@ type NgapSender interface {
 	    *ngapType.RRCInactiveTransitionReportRequest,
 	    *ngapType.CoreNetworkAssistanceInformation,
 	    *ngapType.EmergencyFallbackIndicator)
-
-
-
 }
 
 type Nas struct {

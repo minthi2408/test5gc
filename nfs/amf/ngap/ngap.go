@@ -28,6 +28,8 @@ type ngapSender struct {
 
 type ngapHandler struct {
 	backend amf.Backend
+	sender	*ngapSender
+	nas		*nas.Nas
 }
 
 func NewNgap(b amf.Backend) *Ngap {
@@ -41,6 +43,8 @@ func NewNgap(b amf.Backend) *Ngap {
 	}
 	//create Nas
 	ret.nas = nas.NewNas(b, &ret.sender)
+	ret.handler.sender = &ret.sender
+	ret.handler.nas = ret.nas
 	return ret
 }
 
