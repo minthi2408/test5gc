@@ -68,6 +68,11 @@ func (amf *AMFContext) NfId() string {
 func (amf *AMFContext) Name() string {
 	return amf.cfg.Configuration.AmfName
 }
+
+func (amf *AMFContext) NetworkName() *config.NetworkName {
+	return &amf.cfg.Configuration.NetworkName
+}
+
 func (amf *AMFContext) RelativeCapacity() int64 {
 	return amf.relcap	
 }

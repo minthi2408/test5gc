@@ -1,7 +1,8 @@
 package ngap
 
 import (
-		"etri5gc/nfs/amf/sbi/producer"
+		"etri5gc/nfs/amf"
+		"etri5gc/nfs/amf/nas"
 	)	
 /*
 type NgapSender interface {
@@ -18,18 +19,19 @@ type NgapHandler interface {
 type Ngap struct {
 	sender		ngapSender
 	handler 	ngapHandler
+	nas			*nas.Nas
 }
 
 type ngapSender struct {
-	backend		producer.Backend
+	backend		amf.Backend
 }
 
 type ngapHandler struct {
-	backend producer.Backend
+	backend amf.Backend
 }
 
-func NewNgap(b producer.Backend) *Ngap {
-	return &Ngap{
+func NewNgap(b amf.Backend) *Ngap {
+	ret := &Ngap{
 		sender: ngapSender{
 			backend: b,
 		},
@@ -37,6 +39,9 @@ func NewNgap(b producer.Backend) *Ngap {
 			backend: b,
 		},
 	}
+	//create Nas
+	ret.nas = nas.NewNas(b, ret.sender)
+	return ret
 }
 
 
@@ -46,4 +51,9 @@ func (n *Ngap) Handler() *ngapHandler {
 
 func (n *Ngap) Sender() *ngapSender {
 	return &n.sender
+}
+
+//expose Nas
+func (n *Ngap) Nas() *nas.Nas {
+	return n.nas
 }

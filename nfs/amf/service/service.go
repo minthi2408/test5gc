@@ -27,7 +27,7 @@ type AMF struct {
 	producer	*producer.Handler
 	selector	nfselect.NfSelector
 	ngap		*ngap.Ngap
-	nas			*nas.Nas
+	//nas			*nas.Nas
 	context		*context.AMFContext // AMF contex
 	conf			*config.Config // loaded AMF config
 }
@@ -42,9 +42,8 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf.context = context.CreateAmfContext(cfg)
 
 	nf.selector = NewNfSelector(nf)
-	nf.nas = nas.NewNas(nf)
 	nf.ngap = ngap.NewNgap(nf)
-	nf.producer = producer.NewHandler(nf,nf.ngap.Sender(), nf.nas)
+	nf.producer = producer.NewHandler(nf,nf.ngap.Sender(), nf.ngap.Nas())
 	nf.consumer = consumer.NewConsumer(nf)
 	// create SBI server
 	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
@@ -69,7 +68,7 @@ func (nf *AMF) Consumer() *consumer.Consumer {
 }
 
 func (nf *AMF) Nas() *nas.Nas {
-	return nf.nas
+	return nf.ngap.Nas()
 }
 
 func (nf *AMF) Ngap() *ngap.Ngap {
