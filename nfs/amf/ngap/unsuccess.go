@@ -14,7 +14,7 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (h *ngapHandler) HandleInitialContextSetupFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceFailedToSetupList *ngapType.PDUSessionResourceFailedToSetupListCxtFail
@@ -112,7 +112,7 @@ func (h *ngapHandler) HandleInitialContextSetupFailure(ran *context.AmfRan, mess
 }
 
 
-func (h *ngapHandler) HandleUEContextModificationFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var cause *ngapType.Cause
@@ -185,7 +185,7 @@ func (h *ngapHandler) HandleUEContextModificationFailure(ran *context.AmfRan, me
 	}
 }
 
-func (h *ngapHandler) HandleHandoverFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var cause *ngapType.Cause
 	var targetUe *context.RanUe
@@ -272,7 +272,7 @@ func (h *ngapHandler) HandleHandoverFailure(ran *context.AmfRan, message *ngapTy
 	h.sender.SendUEContextReleaseCommand(targetUe, context.UeContextReleaseHandover, causePresent, causeValue)
 }
 
-func (h *ngapHandler) HandleAMFconfigurationUpdateFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleAMFconfigurationUpdateFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var cause *ngapType.Cause
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 

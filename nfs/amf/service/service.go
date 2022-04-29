@@ -26,7 +26,7 @@ type AMF struct {
 	consumer	*consumer.Consumer
 	producer	*producer.Handler
 	selector	nfselect.NfSelector
-	ngap		*ngap.Ngap
+	ngap		*ngap.Server
 	//nas			*nas.Nas
 	context		*context.AMFContext // AMF contex
 	conf			*config.Config // loaded AMF config
@@ -42,7 +42,7 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf.context = context.CreateAmfContext(cfg)
 
 	nf.selector = NewNfSelector(nf)
-	nf.ngap = ngap.NewNgap(nf)
+	nf.ngap = ngap.NewServer(nf)
 	nf.producer = producer.NewHandler(nf,nf.ngap.Sender(), nf.ngap.Nas())
 	nf.consumer = consumer.NewConsumer(nf)
 	// create SBI server
@@ -71,7 +71,7 @@ func (nf *AMF) Nas() *nas.Nas {
 	return nf.ngap.Nas()
 }
 
-func (nf *AMF) Ngap() *ngap.Ngap {
+func (nf *AMF) Ngap() *ngap.Server {
 	return nf.ngap
 }
 
@@ -80,7 +80,7 @@ func (nf *AMF) NfSelector() nfselect.NfSelector {
 }
 
 //add routes to the gin router
-func (nf *AMF)makeroutes(router *gin.Engine) error {
+func (nf *AMF) makeroutes(router *gin.Engine) error {
 	var gn string
 	var routes sbi.Routes
 	gn, routes = httpcallback.MakeRoutes(nf.producer)
@@ -111,16 +111,8 @@ func (nf *AMF) Start() error {
 
 
 	// start ngap server
-/*
-	ngapHandler := ngap_service.NGAPHandler{
-		HandleMessage:      ngap.Dispatch,
-		HandleNotification: ngap.HandleSCTPNotification,
-	}
-
-	ngap_service.Run(self.NgapIpList, 38412, ngapHandler)
-*/
+	nf.ngap.Run(nf.conf.Configuration.NgapIpList, 38412)
 	// Register to NRF
-	
 	if _, _, err := nf.consumer.Nrf().SendRegisterNFInstance(); err != nil {
 		return err
 	} else {

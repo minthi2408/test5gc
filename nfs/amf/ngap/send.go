@@ -2,11 +2,17 @@ package ngap
 
 import (
 	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf"
 	//"etri5gc/nfs/amf/sbi/consumer"
 	"github.com/free5gc/aper"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
 )
+
+type ngapSender struct {
+	backend		amf.Backend
+}
+
 
 func(s *ngapSender) SendToRan(ran *context.AmfRan, packet []byte) {
 

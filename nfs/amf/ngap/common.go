@@ -120,6 +120,7 @@ func buildCriticalityDiagnosticsIEItem(ieCriticality aper.Enumerated, ieID int64
 
 	return item
 }
+
 func (h *ngapHandler) isLatestAmfUe(amfUe *context.AmfUe) bool {
 	if latestAmfUe, ok := h.backend.Context().AmfUeFindByUeContextID(amfUe.Supi); ok {
 		if amfUe == latestAmfUe {

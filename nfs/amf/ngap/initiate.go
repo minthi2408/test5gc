@@ -16,7 +16,7 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (h *ngapHandler) HandleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleNGSetupRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var globalRANNodeID *ngapType.GlobalRANNodeID
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
@@ -140,7 +140,7 @@ func (h *ngapHandler) HandleNGSetupRequest(ran *context.AmfRan, message *ngapTyp
 	}
 }
 
-func (h *ngapHandler) HandleUplinkNasTransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUplinkNasTransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var nASPDU *ngapType.NASPDU
@@ -217,7 +217,7 @@ func (h *ngapHandler) HandleUplinkNasTransport(ran *context.AmfRan, message *nga
 	h.nas.HandleNAS(ranUe, ngapType.ProcedureCodeUplinkNASTransport, nASPDU.Value)
 }
 
-func (h *ngapHandler) HandleNGReset(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleNGReset(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var cause *ngapType.Cause
 	var resetType *ngapType.ResetType
 
@@ -307,7 +307,7 @@ func (h *ngapHandler) HandleNGReset(ran *context.AmfRan, message *ngapType.NGAPP
 }
 
 
-func (h *ngapHandler) HandleLocationReportingFailureIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleLocationReportingFailureIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var ranUe *context.RanUe
@@ -363,7 +363,7 @@ func (h *ngapHandler) HandleLocationReportingFailureIndication(ran *context.AmfR
 	//TODO: tqtung - it seems free5gc have not implement the handling of this event
 }
 
-func (h *ngapHandler) HandleInitialUEMessage(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	amf := h.backend.Context() 
 
 	var rANUENGAPID *ngapType.RANUENGAPID
@@ -530,7 +530,7 @@ func (h *ngapHandler) HandleInitialUEMessage(ran *context.AmfRan, message *ngapT
 	h.nas.HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, nASPDU.Value)
 }
 
-func (h *ngapHandler) HandlePDUSessionResourceNotify(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceNotifyList *ngapType.PDUSessionResourceNotifyList
@@ -715,7 +715,7 @@ func (h *ngapHandler) HandlePDUSessionResourceNotify(ran *context.AmfRan, messag
 	}
 }
 
-func (h *ngapHandler) HandlePDUSessionResourceModifyIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pduSessionResourceModifyIndicationList *ngapType.PDUSessionResourceModifyListModInd
@@ -847,7 +847,7 @@ func (h *ngapHandler) HandlePDUSessionResourceModifyIndication(ran *context.AmfR
 		pduSessionResourceFailedToModifyListModCfm, nil)
 }
 
-func (h *ngapHandler) HandleUEContextReleaseRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceList *ngapType.PDUSessionResourceListCxtRelReq
@@ -971,7 +971,7 @@ func (h *ngapHandler) HandleUEContextReleaseRequest(ran *context.AmfRan, message
 	h.sender.SendUEContextReleaseCommand(ranUe, context.UeContextN2NormalRelease, causeGroup, causeValue)
 }
 
-func (h *ngapHandler) HandleRRCInactiveTransitionReport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleRRCInactiveTransitionReport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var rRCState *ngapType.RRCState
@@ -1042,7 +1042,7 @@ func (h *ngapHandler) HandleRRCInactiveTransitionReport(ran *context.AmfRan, mes
 	}
 }
 
-func (h *ngapHandler) HandleHandoverNotify(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverNotify(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
@@ -1136,7 +1136,7 @@ func (h *ngapHandler) HandleHandoverNotify(ran *context.AmfRan, message *ngapTyp
 }
 
 // TS 23.502 4.9.1
-func (h *ngapHandler) HandlePathSwitchRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var sourceAMFUENGAPID *ngapType.AMFUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
@@ -1320,7 +1320,7 @@ func (h *ngapHandler) HandlePathSwitchRequest(ran *context.AmfRan, message *ngap
 	}
 }
 
-func (h *ngapHandler) HandleHandoverRequired(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var handoverType *ngapType.HandoverType
@@ -1509,7 +1509,7 @@ func (h *ngapHandler) HandleHandoverRequired(ran *context.AmfRan, message *ngapT
 }
 
 
-func (h *ngapHandler) HandleHandoverCancel(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var cause *ngapType.Cause
@@ -1608,7 +1608,7 @@ func (h *ngapHandler) HandleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 }
 
 
-func (h *ngapHandler) HandleUplinkRanStatusTransfer(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUplinkRanStatusTransfer(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var rANStatusTransferTransparentContainer *ngapType.RANStatusTransferTransparentContainer
@@ -1665,7 +1665,7 @@ func (h *ngapHandler) HandleUplinkRanStatusTransfer(ran *context.AmfRan, message
 	// TODO: send to T-AMF using N1N2MessageTransfer (R16)
 }
 
-func (h *ngapHandler) HandleNasNonDeliveryIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleNasNonDeliveryIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var nASPDU *ngapType.NASPDU
@@ -1725,7 +1725,7 @@ func (h *ngapHandler) HandleNasNonDeliveryIndication(ran *context.AmfRan, messag
 	h.nas.HandleNAS(ranUe, ngapType.ProcedureCodeNASNonDeliveryIndication, nASPDU.Value)
 }
 
-func (h *ngapHandler) HandleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleRanConfigurationUpdate(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	/*
 	var rANNodeName *ngapType.RANNodeName
 	var supportedTAList *ngapType.SupportedTAList
@@ -1834,7 +1834,7 @@ func (h *ngapHandler) HandleRanConfigurationUpdate(ran *context.AmfRan, message 
 }
 
 
-func (h *ngapHandler) HandleUplinkRanConfigurationTransfer(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUplinkRanConfigurationTransfer(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var sONConfigurationTransferUL *ngapType.SONConfigurationTransfer
 
 	initiatingMessage := message.InitiatingMessage
@@ -1875,7 +1875,7 @@ func (h *ngapHandler) HandleUplinkRanConfigurationTransfer(ran *context.AmfRan, 
 	}
 }
 
-func (h *ngapHandler) HandleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var routingID *ngapType.RoutingID
@@ -1939,7 +1939,7 @@ func (h *ngapHandler) HandleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan
 	// TODO: Forward NRPPaPDU to LMF
 }
 
-func (h *ngapHandler) HandleUplinkNonUEAssociatedNRPPATransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUplinkNonUEAssociatedNRPPATransport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var routingID *ngapType.RoutingID
 	var nRPPaPDU *ngapType.NRPPaPDU
 
@@ -1983,7 +1983,7 @@ func (h *ngapHandler) HandleUplinkNonUEAssociatedNRPPATransport(ran *context.Amf
 	// TODO: Forward NRPPaPDU to LMF
 }
 
-func (h *ngapHandler) HandleLocationReport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleLocationReport(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
@@ -2084,7 +2084,7 @@ func (h *ngapHandler) HandleLocationReport(ran *context.AmfRan, message *ngapTyp
 	}
 }
 
-func (h *ngapHandler) HandleUERadioCapabilityInfoIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUERadioCapabilityInfoIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 
@@ -2171,7 +2171,7 @@ func (h *ngapHandler) HandleUERadioCapabilityInfoIndication(ran *context.AmfRan,
 	// send its most up to date UE Radio Capability information to the RAN in the N2 REQUEST message.
 }
 
-func (h *ngapHandler) HandleErrorIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleErrorIndication(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var cause *ngapType.Cause
@@ -2229,7 +2229,7 @@ func (h *ngapHandler) HandleErrorIndication(ran *context.AmfRan, message *ngapTy
 	// TODO: handle error based on cause/criticalityDiagnostics
 }
 
-func (h *ngapHandler) HandleCellTrafficTrace(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleCellTrafficTrace(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var nGRANTraceID *ngapType.NGRANTraceID

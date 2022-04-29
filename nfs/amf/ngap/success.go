@@ -14,7 +14,7 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (h *ngapHandler) HandleUERadioCapabilityCheckResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var iMSVoiceSupportIndicator *ngapType.IMSVoiceSupportIndicator
@@ -79,7 +79,7 @@ func (h *ngapHandler) HandleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 }
 
 
-func (h *ngapHandler) HandleNGResetAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var uEAssociatedLogicalNGConnectionList *ngapType.UEAssociatedLogicalNGConnectionList
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
@@ -123,7 +123,7 @@ func (h *ngapHandler) HandleNGResetAcknowledge(ran *context.AmfRan, message *nga
 	}
 }
 
-func (h *ngapHandler) HandleUEContextReleaseComplete(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
@@ -315,7 +315,7 @@ func (h *ngapHandler) HandleUEContextReleaseComplete(ran *context.AmfRan, messag
 	}
 }
 
-func (h *ngapHandler) HandlePDUSessionResourceReleaseResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceReleasedList *ngapType.PDUSessionResourceReleasedListRelRes
@@ -413,7 +413,7 @@ func (h *ngapHandler) HandlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 }
 
 
-func (h *ngapHandler) HandlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListSURes
@@ -531,7 +531,7 @@ func (h *ngapHandler) HandlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 	}
 }
 
-func (h *ngapHandler) HandlePDUSessionResourceModifyResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pduSessionResourceModifyResponseList *ngapType.PDUSessionResourceModifyListModRes
@@ -657,7 +657,7 @@ func (h *ngapHandler) HandlePDUSessionResourceModifyResponse(ran *context.AmfRan
 }
 
 
-func (h *ngapHandler) HandleInitialContextSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListCxtRes
@@ -783,7 +783,7 @@ func (h *ngapHandler) HandleInitialContextSetupResponse(ran *context.AmfRan, mes
 	}
 }
 
-func (h *ngapHandler) HandleUEContextModificationResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var rRCState *ngapType.RRCState
@@ -868,7 +868,7 @@ func (h *ngapHandler) HandleUEContextModificationResponse(ran *context.AmfRan, m
 	}
 }
 
-func (h *ngapHandler) HandleHandoverRequestAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceAdmittedList *ngapType.PDUSessionResourceAdmittedList
@@ -1028,7 +1028,7 @@ func (h *ngapHandler) HandleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 	}
 }
 
-func (h *ngapHandler) HandleAMFconfigurationUpdateAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleAMFconfigurationUpdateAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
 	var aMFTNLAssociationSetupList *ngapType.AMFTNLAssociationSetupList
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 	var aMFTNLAssociationFailedToSetupList *ngapType.TNLAssociationList
