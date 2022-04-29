@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"time"
+	"strconv"
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
 	"etri5gc/sbi"
@@ -12,9 +13,8 @@ import (
 
 const (
 	AMF_EXPECTED_CONFIG_VERSION = "1.0.3"
-	AMF_DEFAULT_IPV4            = "127.0.0.18"
-	AMF_DEFAULT_PORT            = "8000"
-	AMF_DEFAULT_PORT_INT        = 8000
+	AMF_DEFAULT_IPV4            = "127.0.0.1"
+	AMF_DEFAULT_PORT            = 8001
 	AMF_DEFAULT_NRFURI          = "https://127.0.0.10:8000"
 )
 
@@ -472,12 +472,58 @@ func LoadConfig(f string) (*Config, error) {
 		if err := yaml.Unmarshal(content, &amfconf); err != nil {
 			return nil, err
 		}
-		amfconf.setDefaults()
-		return &amfconf, nil
+		if err := amfconf.setDefaults(); err != nil {
+			return nil, err
+		} else {
+			return &amfconf, nil
+		}
 	}
 }
 
-func (c *Config) setDefaults() {
-	//TODO: set default values for missing attributes
+func (c *Config) setDefaults() error {
+	conf := c.Configuration
+	if len(conf.AmfName) == 0 {
+		conf.AmfName = "amf"
+	}
+
+	if len(conf.NgapIpList) == 0 {
+		conf.NgapIpList = []string{"127.0.0.1"} // default localhost
+	}
+	
+	if conf.Sbi == nil {
+		conf.Sbi = &sbi.DefaultConfig
+	} else {
+		sbi := conf.Sbi
+		if len(sbi.Scheme) ==0 {
+			sbi.Scheme = "http"
+		}
+
+		if len(sbi.RegisterIPv4) == 0 {
+			sbi.RegisterIPv4 = AMF_DEFAULT_IPV4 // default localhost
+		}
+		if sbi.Port == 0 {
+			sbi.Port = AMF_DEFAULT_PORT  // default port
+		}
+		if len(sbi.BindingIPv4) == 0 {
+			sbi.BindingIPv4 = AMF_DEFAULT_IPV4
+		}
+	}
+	if len(conf.NrfUri) == 0 {
+		conf.NrfUri = AMF_DEFAULT_NRFURI
+	}
+	var err error
+	for _, tai := range conf.SupportTAIList {
+		if tai.Tac, err = convertTACConfigToModels(tai.Tac); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
+func convertTACConfigToModels(intString string) (string, error) {
+	if tmp, err := strconv.ParseUint(intString, 10, 32); err != nil {
+		return "", err
+	} else {
+		return fmt.Sprintf("%06x", tmp), nil
+	}
+}

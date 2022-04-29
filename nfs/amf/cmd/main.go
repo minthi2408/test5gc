@@ -8,6 +8,7 @@ import (
 	"etri5gc/nfs/amf/service"
 	"etri5gc/nfs/amf/config"
 	"github.com/urfave/cli"
+	log "github.com/sirupsen/logrus"
 )
 
 var flags = []cli.Flag{
@@ -38,21 +39,24 @@ func main() {
 
 
 func action(c *cli.Context) (err error) {
-
+	log.SetLevel(log.InfoLevel)
 	//read config
 	var cfg *config.Config
 	if cfg, err = config.LoadConfig("dumpconfig.yaml"); err != nil {
-		return 
+		log.Errorf("Fail to parse AMF configuration", err)
+		return
 	}
 
 	//create the AMF
 	var nf *service.AMF
 	if nf, err = service.CreateAMF(cfg); err != nil {
+		log.Errorf("Fail to create AMF", err)
 		return
 	}
 
 
 	if err = nf.Start(); err != nil {
+		log.Errorf("Fail to start AMF", err)
 		return err
 	}
 

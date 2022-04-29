@@ -9,6 +9,7 @@ import (
 
 	"github.com/mohae/deepcopy"
 	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/nas/security"
 )
 
 func CompareUserLocation(loc1 models.UserLocation, loc2 models.UserLocation) bool {
@@ -129,7 +130,6 @@ func PlmnIdStringToModels(plmnId string) (plmnID models.PlmnId) {
 func TACConfigToModels(intString string) (hexString string) {
 	tmp, err := strconv.ParseUint(intString, 10, 32)
 	if err != nil {
-		//logger.UtilLog.Errorf("ParseUint error: %+v", err)
 	}
 	hexString = fmt.Sprintf("%06x", tmp)
 	return
@@ -146,3 +146,38 @@ func getDuration(expiry *time.Time, remainDuration *int32) bool {
 	return true
 }
 
+func getIntAlgOrder(integrityOrder []string) (intOrder []uint8) {
+	for _, intAlg := range integrityOrder {
+		switch intAlg {
+		case "NIA0":
+			intOrder = append(intOrder, security.AlgIntegrity128NIA0)
+		case "NIA1":
+			intOrder = append(intOrder, security.AlgIntegrity128NIA1)
+		case "NIA2":
+			intOrder = append(intOrder, security.AlgIntegrity128NIA2)
+		case "NIA3":
+			intOrder = append(intOrder, security.AlgIntegrity128NIA3)
+		default:
+			//logger.UtilLog.Errorf("Unsupported algorithm: %s", intAlg)
+		}
+	}
+	return
+}
+
+func getEncAlgOrder(cipheringOrder []string) (encOrder []uint8) {
+	for _, encAlg := range cipheringOrder {
+		switch encAlg {
+		case "NEA0":
+			encOrder = append(encOrder, security.AlgCiphering128NEA0)
+		case "NEA1":
+			encOrder = append(encOrder, security.AlgCiphering128NEA1)
+		case "NEA2":
+			encOrder = append(encOrder, security.AlgCiphering128NEA2)
+		case "NEA3":
+			encOrder = append(encOrder, security.AlgCiphering128NEA3)
+		default:
+			//logger.UtilLog.Errorf("Unsupported algorithm: %s", encAlg)
+		}
+	}
+	return
+}

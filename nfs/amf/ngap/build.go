@@ -2955,7 +2955,7 @@ func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 	aMFTNLAssociationToAddItem.AMFTNLAssociationAddress.EndpointIPAddress =
 		new(ngapType.TransportLayerAddress)
 	*aMFTNLAssociationToAddItem.AMFTNLAssociationAddress.EndpointIPAddress =
-		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address)
+		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address())
 
 	//	AMF TNL Association Usage[optional]
 	if aMFTNLAssociationToAddItem.TNLAssociationUsage != nil {
@@ -2985,7 +2985,7 @@ func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 	aMFTNLAssociationToRemoveItem.AMFTNLAssociationAddress.EndpointIPAddress =
 		new(ngapType.TransportLayerAddress)
 	*aMFTNLAssociationToRemoveItem.AMFTNLAssociationAddress.EndpointIPAddress =
-		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address)
+		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address())
 
 	aMFTNLAssociationToRemoveList.List = append(aMFTNLAssociationToRemoveList.List, aMFTNLAssociationToRemoveItem)
 	aMFConfigurationUpdateIEs.List = append(aMFConfigurationUpdateIEs.List, ie)
@@ -3006,7 +3006,7 @@ func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 	aMFTNLAssociationToUpdateItem.AMFTNLAssociationAddress.EndpointIPAddress =
 		new(ngapType.TransportLayerAddress)
 	*aMFTNLAssociationToUpdateItem.AMFTNLAssociationAddress.EndpointIPAddress =
-		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address)
+		ngapConvert.IPAddressToNgap(amf.RegisterIPv4(), amf.HttpIPv6Address())
 
 	//	TNLAssociationUsage in AMFTNLAssociationtoUpdateItem [optional]
 	if aMFTNLAssociationToUpdateItem.TNLAssociationUsage != nil {

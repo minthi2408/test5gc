@@ -22,30 +22,29 @@ type IdGenerator interface {
 }
 
 type AMFContext struct {
-	cfg				*config.Config
+	cfg					*config.Config
 
-	uepool			sync.Map
-	ranpool			sync.Map
-	ruepool			sync.Map
-	eventsubpool	sync.Map
+	uepool				sync.Map
+	ranpool				sync.Map
+	ruepool				sync.Map
+	eventsubpool		sync.Map
 	statussubpool		sync.Map
 
-	ladnpool    	map[string]*LADN // dnn as key
+	ladnpool    		map[string]*LADN // dnn as key
 
-	eventsubIdGen   IdGenerator
-	statussubIdGen	IdGenerator
-	tmsiIdGen		IdGenerator
-	ngapIdGen		IdGenerator
+	eventsubIdGen   	IdGenerator
+	statussubIdGen		IdGenerator
+	tmsiIdGen			IdGenerator
+	ngapIdGen			IdGenerator
 
 	
-	relcap          int64 //Relative Capacity
-	id              string
-	services        map[models.ServiceName]models.NfService // nfservice that amf support
+	relcap          	int64 //Relative Capacity
+	id              	string
+	services        	map[models.ServiceName]models.NfService // nfservice that amf support
 
-//	UriScheme       				models.UriScheme
-	HttpIPv6Address                 string
-	TNLWeightFactor                 int64
-	SecurityAlgorithm               SecurityAlgorithm
+	httpIPv6Address     string
+	tnlWeightFactor     int64
+	secAlgo             SecurityAlgorithm
 }
 
 
@@ -60,13 +59,88 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 	return
 }
 */
+func CreateAmfContext(cfg *config.Config) *AMFContext {
+	ret := &AMFContext{}
+	ret.init()
+	return ret
+}
+
+func (amf *AMFContext) init() {
+	//create id generators
+	amf.tmsiIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.eventsubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.statussubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
+	amf.ngapIdGen = idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId)
+	//TODO:
+
+	amf.buildNfServices()
+	sec := amf.cfg.Configuration.Security
+	if sec != nil {
+		amf.secAlgo.IntegrityOrder = getIntAlgOrder(sec.IntegrityOrder)
+		amf.secAlgo.CipheringOrder = getEncAlgOrder(sec.CipheringOrder)
+	}
+}
+
+func (amf *AMFContext) buildNfServices() {
+	version := amf.cfg.Info.Version
+	tv := strings.Split(version, ".")
+	versionUri := "v" + tv[0]
+	for index, nameString := range amf.cfg.Configuration.ServiceNameList {
+		name := models.ServiceName(nameString)
+		amf.services[name] = models.NfService {
+			ServiceInstanceId:	strconv.Itoa(index),
+			ServiceName:      	name,
+			Versions: 			&[]models.NfServiceVersion {
+									{
+										ApiFullVersion:  version,
+										ApiVersionInUri: versionUri,
+									},
+								},
+			Scheme:          	amf.UriScheme(),
+			NfServiceStatus: 	models.NfServiceStatus_REGISTERED,
+			ApiPrefix:       	amf.GetIPv4Uri(),
+			IpEndPoints: 		&[]models.IpEndPoint {
+									{
+										Ipv4Address: amf.RegisterIPv4(),
+										Transport:   models.TransportProtocol_TCP,
+										Port:        int32(amf.Port()),
+									},
+								},
+		}
+	}
+}
+
+func (amf *AMFContext) GetConfig() *config.Config {
+	return amf.cfg
+}
+
+func (amf *AMFContext) NrfUri() string {
+	return amf.cfg.Configuration.NrfUri
+}
+
 
 func (amf *AMFContext) NfId() string {
 	return amf.id
 }
 
+func (amf *AMFContext) UriScheme() models.UriScheme {
+	return models.UriScheme(amf.cfg.Configuration.Sbi.Scheme)
+}
+
 func (amf *AMFContext) Name() string {
 	return amf.cfg.Configuration.AmfName
+}
+
+func (amf *AMFContext) HttpIPv6Address() string {
+	return amf.httpIPv6Address
+}
+
+func (amf *AMFContext) TNLWeightFactor() int64 {
+	return amf.tnlWeightFactor
+}
+
+func (amf *AMFContext) SecurityAlgorithm() *SecurityAlgorithm {
+	return &amf.secAlgo
 }
 
 func (amf *AMFContext) NetworkName() *config.NetworkName {
@@ -120,6 +194,10 @@ func (amf *AMFContext) TmsiAllocate() int32 {
 
 func (amf *AMFContext) RegisterIPv4() string {
 	return amf.cfg.Configuration.Sbi.RegisterIPv4
+}
+
+func (amf *AMFContext) Port() int {
+	return amf.cfg.Configuration.Sbi.Port
 }
 func (amf *AMFContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
@@ -395,61 +473,6 @@ func (amf *AMFContext) GetIPv4Uri() string {
 	return amf.cfg.Configuration.Sbi.GetIPv4Uri()
 }
 
-func (context *AMFContext) InitNFService(serivceName []string, version string) {
-	/*
-	//TODO: tungtq
-	tmpVersion := strings.Split(version, ".")
-	versionUri := "v" + tmpVersion[0]
-	for index, nameString := range serivceName {
-		name := models.ServiceName(nameString)
-		context.NfService[name] = models.NfService{
-			ServiceInstanceId: strconv.Itoa(index),
-			ServiceName:       name,
-			Versions: &[]models.NfServiceVersion{
-				{
-					ApiFullVersion:  version,
-					ApiVersionInUri: versionUri,
-				},
-			},
-			Scheme:          context.UriScheme,
-			NfServiceStatus: models.NfServiceStatus_REGISTERED,
-			ApiPrefix:       context.GetIPv4Uri(),
-			IpEndPoints: &[]models.IpEndPoint{
-				{
-					Ipv4Address: context.RegisterIPv4,
-					Transport:   models.TransportProtocol_TCP,
-					Port:        int32(context.SBIPort),
-				},
-			},
-		}
-	}
-	*/
-}
-
-func (amf *AMFContext) init() {
-	//create id generators
-	amf.tmsiIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.eventsubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.statussubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.ngapIdGen = idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId)
-	//TODO:
-}
-
-func (amf *AMFContext) GetConfig() *config.Config {
-	return amf.cfg
-}
-
-
-func (amf *AMFContext) NrfUri() string {
-	return amf.cfg.Configuration.NrfUri
-}
-
-func CreateAmfContext(cfg *config.Config) *AMFContext {
-	//TODO
-	ret := &AMFContext{}
-	ret.init()
-	return ret
-}
 
 
 // Build AMF profile to register to NRF

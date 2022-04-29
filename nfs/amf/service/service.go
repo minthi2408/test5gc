@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"etri5gc/sbi"
 	"etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/ngap"
@@ -19,6 +18,8 @@ import (
 	"etri5gc/nfs/amf/sbi/eventexposure"
 
 	"github.com/free5gc/openapi/models"
+	"github.com/gin-gonic/gin"
+//	"github.com/sirupsen/logrus"
 )
 
 type AMF struct {
