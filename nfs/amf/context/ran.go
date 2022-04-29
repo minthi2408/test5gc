@@ -35,6 +35,10 @@ func (r *AmfRan) Id() *models.GlobalRanNodeId {
 	return r.id
 }
 
+func (r *AmfRan) RanUeList() []*RanUe {
+	return r.uelist
+}
+
 func (r *AmfRan) Conn() net.Conn {
 	return r.conn
 }
