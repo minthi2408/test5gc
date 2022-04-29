@@ -15,7 +15,7 @@ type Backend interface {
 type Consumer struct {
 	backend		Backend
 	amf			AmfConsumer
-	smf			SmfConsumer
+	smf			*smfConsumer
 	pcf			PcfConsumer
 	callback	Callback
 	nrf			sbi.NrfConsumer
@@ -44,7 +44,7 @@ func (c *Consumer) Pcf() PcfConsumer {
 	return c.pcf
 }
 
-func (c *Consumer) Smf() SmfConsumer {
+func (c *Consumer) Smf() *smfConsumer {
 	return c.smf
 }
 

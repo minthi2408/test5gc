@@ -65,6 +65,11 @@ type RanUe struct {
 	SentInitialContextSetupRequest bool
 
 }
+/*
+func (ranUe *RanUe) SetUeNgapId(v int64) {
+	ranUe.RanUeNgapId = v
+}
+*/
 
 func (ranUe *RanUe) Remove() error {
 	ran := ranUe.Ran
