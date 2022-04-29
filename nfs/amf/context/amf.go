@@ -12,9 +12,15 @@ import (
 
 	"etri5gc/nfs/amf/config"
 
+	"github.com/sirupsen/logrus"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/idgenerator"
 )
+
+var log	*logrus.Entry
+func init() {
+	log = logrus.WithFields(logrus.Fields{"mod": "context"})
+}
 
 type IdGenerator interface {
 	Allocate() (int64, error)
@@ -60,18 +66,21 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 }
 */
 func CreateAmfContext(cfg *config.Config) *AMFContext {
-	ret := &AMFContext{}
+	ret := &AMFContext{
+		cfg:			cfg,
+		tmsiIdGen:		idgenerator.NewGenerator(1, math.MaxInt32),
+		eventsubIdGen:  idgenerator.NewGenerator(1, math.MaxInt32),
+		statussubIdGen: idgenerator.NewGenerator(1, math.MaxInt32),
+		ngapIdGen:		idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId),
+		ladnpool:		make(map[string]*LADN),
+		services:		make(map[models.ServiceName]models.NfService),
+	}
 	ret.init()
 	return ret
 }
 
 func (amf *AMFContext) init() {
-	//create id generators
-	amf.tmsiIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.eventsubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.statussubIdGen = idgenerator.NewGenerator(1, math.MaxInt32)
-	amf.ngapIdGen = idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId)
-	//TODO:
+		//TODO:
 
 	amf.buildNfServices()
 	sec := amf.cfg.Configuration.Security

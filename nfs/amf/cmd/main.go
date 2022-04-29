@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"fmt"
 	"etri5gc/nfs/amf/service"
 	"etri5gc/nfs/amf/config"
 	"github.com/urfave/cli"
@@ -22,8 +21,10 @@ var flags = []cli.Flag{
 	},
 }
 
+var nf *service.AMF
+
 func main() {
-	fmt.Println("Hello world")
+	log.Println("Hello beautiful world")
 
 	app := cli.NewApp()
 	app.Name = "amf"
@@ -34,6 +35,21 @@ func main() {
 
 	if err := app.Run(os.Args); err != nil {
 		//log
+		log.Fatal("Fail to start application", err)
+	} else {
+		quit := make(chan struct{})
+		sigch := make(chan os.Signal, 1)
+		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<- sigch
+			if nf != nil {
+				nf.Terminate()
+			}
+			log.Info("Received a kill signal")
+			quit <- struct{}{}
+		}()
+		<- quit
+		log.Info("Good bye the world")
 	}
 }
 
@@ -42,13 +58,13 @@ func action(c *cli.Context) (err error) {
 	log.SetLevel(log.InfoLevel)
 	//read config
 	var cfg *config.Config
-	if cfg, err = config.LoadConfig("dumpconfig.yaml"); err != nil {
+	filename := c.String("config")
+	if cfg, err = config.LoadConfig(filename); err != nil {
 		log.Errorf("Fail to parse AMF configuration", err)
 		return
 	}
 
 	//create the AMF
-	var nf *service.AMF
 	if nf, err = service.CreateAMF(cfg); err != nil {
 		log.Errorf("Fail to create AMF", err)
 		return
@@ -59,14 +75,6 @@ func action(c *cli.Context) (err error) {
 		log.Errorf("Fail to start AMF", err)
 		return err
 	}
-
-	sigch := make(chan os.Signal, 1)
-	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<- sigch
-		nf.Terminate()
-		os.Exit(0)
-	}()
 
 	return nil
 }

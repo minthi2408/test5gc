@@ -1,7 +1,7 @@
 package sbi
 import (
 	"fmt"
-	"time"
+//	"time"
 	"strings"
 	"net/http"
 	"context"
@@ -49,7 +49,6 @@ func (c *nrfClient) disc_client() *Nnrf_NFDiscovery.APIClient {
 
 func (c *nrfClient) SendRegisterNFInstance() (
 	resouceNrfUri string, retrieveNfInstanceId string, err error) {
-		//TODO: tungtq - should move registration retrying to outer layer
 
 	// Set client and set url
 	client := c.man_client()	
@@ -59,34 +58,34 @@ func (c *nrfClient) SendRegisterNFInstance() (
 		return 
 	}
 
-	for {
-		_, res, err = client.NFInstanceIDDocumentApi.RegisterNFInstance(context.TODO(), c.nf.NfId(), *profile)
-		if err != nil || res == nil {
-			//fmt.Println(fmt.Errorf("AMF register to NRF Error[%s]", err.Error()))
-			time.Sleep(2 * time.Second)
-			continue
-		}
-		defer func() {
-			if bodyCloseErr := res.Body.Close(); bodyCloseErr != nil {
-				err = fmt.Errorf("SearchNFInstances' response body cannot close: %+w", bodyCloseErr)
-			}
-		}()
-		status := res.StatusCode
-		if status == http.StatusOK {
-			// NFUpdate
-			break
-		} else if status == http.StatusCreated {
-			// NFRegister
-			resourceUri := res.Header.Get("Location")
-			resouceNrfUri = resourceUri[:strings.Index(resourceUri, "/nnrf-nfm/")]
-			retrieveNfInstanceId = resourceUri[strings.LastIndex(resourceUri, "/")+1:]
-			break
-		} else {
-			//fmt.Println(fmt.Errorf("handler returned wrong status code %d", status))
-			//fmt.Println(fmt.Errorf("NRF return wrong status code %d", status))
-		}
+	_, res, err = client.NFInstanceIDDocumentApi.RegisterNFInstance(context.TODO(), c.nf.NfId(), *profile)
+	if err != nil {
+		return
 	}
-	return resouceNrfUri, retrieveNfInstanceId, err
+
+	if  res == nil {
+		err = fmt.Errorf("NRF response is empty")
+		return
+	}
+
+	defer func() {
+		if bodyCloseErr := res.Body.Close(); bodyCloseErr != nil {
+			err = fmt.Errorf("SearchNFInstances' response body cannot close: %+w", bodyCloseErr)
+		}
+	}()
+	status := res.StatusCode
+	if status == http.StatusOK {
+		log.Info("Profile is updated at NRF")
+		// NFUpdate
+	} else if status == http.StatusCreated {
+		// NFRegister
+		resourceUri := res.Header.Get("Location")
+		resouceNrfUri = resourceUri[:strings.Index(resourceUri, "/nnrf-nfm/")]
+		retrieveNfInstanceId = resourceUri[strings.LastIndex(resourceUri, "/")+1:]
+	} else {
+		log.Warnf("NRF return wrong status code %d", status)
+	}
+	return 
 }
 
 func (c *nrfClient) SendDeregisterNFInstance() (problemDetails *models.ProblemDetails, err error) {

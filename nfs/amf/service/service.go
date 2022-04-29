@@ -19,8 +19,13 @@ import (
 
 	"github.com/free5gc/openapi/models"
 	"github.com/gin-gonic/gin"
-//	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
+
+var log	*logrus.Entry
+func init() {
+	log = logrus.WithFields(logrus.Fields{"mod": "service"})
+}
 
 type AMF struct {
 	sbi			sbi.SBI //sbi server
@@ -80,6 +85,9 @@ func (nf *AMF) NfSelector() nfselect.NfSelector {
 	return nf.selector
 }
 
+func (nf *AMF) makeroutes1(router *gin.Engine) error {
+	return nil
+}
 //add routes to the gin router
 func (nf *AMF) makeroutes(router *gin.Engine) error {
 	var gn string
@@ -107,25 +115,43 @@ func (nf *AMF) makeroutes(router *gin.Engine) error {
 	return nil
 }
 
-func (nf *AMF) Start() error {
-	//logger.InitLog.Infoln("Server started")
-
+func (nf *AMF) Start() (err error) {
 
 	// start ngap server
+	log.Info("Starting ngap server")
 	nf.ngap.Run(nf.conf.Configuration.NgapIpList, 38412)
+
 	// Register to NRF
-	if _, _, err := nf.consumer.Nrf().SendRegisterNFInstance(); err != nil {
-		return err
-	} else {
-		//TODO: Update NF identity
+	log.Info("Registering to NRF")
+	cnt := 1
+	for cnt < 5 {
+		if sid, _, ierr := nf.consumer.Nrf().SendRegisterNFInstance(); ierr != nil {
+			log.Errorf("Fail to register with NRF (attemp #%d) %s", cnt, ierr.Error())
+			cnt++
+			err = ierr
+		} else {
+			if len(sid) > 0 {
+				log.Info("Amf is registered, need to update AMF info")
+				err = nil 
+				//TODO: Update NF identity
+			}	
+			break
+		}
+	}
+	if err != nil {
+		nf.ngap.Stop()
+		return
 	}
 
+	log.Info("Starting sbi server")
 	//start sbi server
 	nf.sbi.Serve()
-	return nil
+	return 
 }
 
 
 func (nf *AMF) Terminate() {
+	nf.ngap.Stop()
+	nf.sbi.Stop()
 	fmt.Println("Kill it")
 }
