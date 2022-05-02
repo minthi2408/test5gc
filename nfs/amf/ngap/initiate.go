@@ -258,7 +258,7 @@ func (h *ngapHandler) handleNGReset(ran *context.AmfRan, message *ngapType.NGAPP
 	switch resetType.Present {
 	case ngapType.ResetTypePresentNGInterface:
 	//	ran.Log.Trace("ResetType Present: NG Interface")
-		ran.RemoveAllUeInRan()
+		ran.RemoveAllUe()
 		h.sender.SendNGResetAcknowledge(ran, nil, nil)
 	case ngapType.ResetTypePresentPartOfNGInterface:
 	//	ran.Log.Trace("ResetType Present: Part of NG Interface")

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"time"
 	"etri5gc/sbi"
 	"etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/ngap"
@@ -122,18 +123,24 @@ func (nf *AMF) Start() (err error) {
 	nf.ngap.Run(nf.conf.Configuration.NgapIpList, 38412)
 
 	// Register to NRF
+	//TODO: probably nrf registration should be implemented in a separated go
+	//routine. The Amf is functioning only after a registration success.
+
 	log.Info("Registering to NRF")
 	cnt := 1
 	for cnt < 5 {
-		if sid, _, ierr := nf.consumer.Nrf().SendRegisterNFInstance(); ierr != nil {
+		if _, nfid, ierr := nf.consumer.Nrf().SendRegisterNFInstance(); ierr != nil {
 			log.Errorf("Fail to register with NRF (attemp #%d) %s", cnt, ierr.Error())
 			cnt++
 			err = ierr
+			timer := time.NewTimer(2*time.Second)
+			<- timer.C
 		} else {
-			if len(sid) > 0 {
+			if len(nfid) > 0 {
 				log.Info("Amf is registered, need to update AMF info")
 				err = nil 
 				//TODO: Update NF identity
+				nf.context.SetNfId(nfid)
 			}	
 			break
 		}
@@ -153,5 +160,9 @@ func (nf *AMF) Start() (err error) {
 func (nf *AMF) Terminate() {
 	nf.ngap.Stop()
 	nf.sbi.Stop()
+	if _, err := nf.consumer.Nrf().SendDeregisterNFInstance(); err != nil {
+		log.Errorf("Fail to send degistration to the Nrf: %s", err.Error())
+	}
+
 	fmt.Println("Kill it")
 }

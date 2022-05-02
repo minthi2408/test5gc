@@ -13,7 +13,7 @@ func (sender *Nas) SendDLNASTransport(ue *context.RanUe, payloadContainerType ui
 	pduSessionId int32, cause uint8, backOffTimerUint *uint8, backOffTimer uint8) {
 
 	amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send DL NAS Transport")
+	log.Info("Send DL NAS Transport")
 
 	var causePtr *uint8
 	if cause != 0 {
@@ -22,7 +22,7 @@ func (sender *Nas) SendDLNASTransport(ue *context.RanUe, payloadContainerType ui
 	nasMsg, err := sender.BuildDLNASTransport(amfUe, ue.Ran.AnType(), payloadContainerType, nasPdu,
 		uint8(pduSessionId), causePtr, backOffTimerUint, backOffTimer)
 	if err != nil {
-		//amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -37,10 +37,10 @@ func (sender *Nas) SendNotification(ue *context.RanUe, nasMsg []byte) {
 	if context.AMF_Self().T3565Cfg.Enable {
 		cfg := context.AMF_Self().T3565Cfg
 		amfUe.T3565 = context.NewTimer(cfg.ExpireTime, cfg.MaxRetryTimes, func(expireTimes int32) {
-//			amfUe.GmmLog.Warnf("T3565 expires, retransmit Notification (retry: %d)", expireTimes)
+	log.Warnf("T3565 expires, retransmit Notification (retry: %d)", expireTimes)
 			sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
 		}, func() {
-//			amfUe.GmmLog.Warnf("T3565 Expires %d times, abort notification procedure", cfg.MaxRetryTimes)
+	log.Warnf("T3565 Expires %d times, abort notification procedure", cfg.MaxRetryTimes)
 			if amfUe.OnGoing(models.AccessType__3_GPP_ACCESS).Procedure != context.OnGoingProcedureN2Handover {
 				callback.SendN1N2TransferFailureNotification(amfUe, models.N1N2MessageTransferCause_UE_NOT_RESPONDING)
 			}
@@ -53,7 +53,7 @@ func (sender *Nas) SendNotification(ue *context.RanUe, nasMsg []byte) {
 func (sender *Nas) SendIdentityRequest(ue *context.RanUe, accessType models.AccessType, typeOfIdentity uint8) {
 
 	amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send Identity Request")
+	log.Info("Send Identity Request")
 
 	nasMsg, err := sender.BuildIdentityRequest(amfUe, accessType, typeOfIdentity)
 	if err != nil {
@@ -83,16 +83,16 @@ func (sender *Nas) SendIdentityRequest(ue *context.RanUe, accessType models.Acce
 func (sender *Nas) SendAuthenticationRequest(ue *context.RanUe) {
 	
 	amfUe := ue.AmfUe
-//	amfUe.GmmLog.Infof("Send Authentication Request")
+	log.Infof("Send Authentication Request")
 
 	if amfUe.AuthenticationCtx == nil {
-//		amfUe.GmmLog.Error("Authentication Context of UE is nil")
+	log.Error("Authentication Context of UE is nil")
 		return
 	}
 
 	nasMsg, err := sender.BuildAuthenticationRequest(amfUe)
 	if err != nil {
-		//amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -102,10 +102,10 @@ func (sender *Nas) SendAuthenticationRequest(ue *context.RanUe) {
 	if context.AMF_Self().T3560Cfg.Enable {
 		cfg := context.AMF_Self().T3560Cfg
 		amfUe.T3560 = context.NewTimer(cfg.ExpireTime, cfg.MaxRetryTimes, func(expireTimes int32) {
-		//	amfUe.GmmLog.Warnf("T3560 expires, retransmit Authentication Request (retry: %d)", expireTimes)
+			log.Warnf("T3560 expires, retransmit Authentication Request (retry: %d)", expireTimes)
 			sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
 		}, func() {
-		//	amfUe.GmmLog.Warnf("T3560 Expires %d times, abort authentication procedure & ongoing 5GMM procedure",
+			log.Warnf("T3560 Expires %d times, abort authentication procedure & ongoing 5GMM procedure",
 		//		cfg.MaxRetryTimes)
 		//TODO: tungtq - bad design
 		//	gmm_common.RemoveAmfUe(amfUe)
@@ -147,7 +147,7 @@ func (sender *Nas) SendConfigurationUpdateCommand(amfUe *context.AmfUe, accessTy
 func (sender *Nas) SendAuthenticationReject(ue *context.RanUe, eapMsg string) {
 	
 	amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send Authentication Reject")
+	log.Info("Send Authentication Reject")
 
 	nasMsg, err := sender.BuildAuthenticationReject(amfUe, eapMsg)
 	if err != nil {
@@ -172,11 +172,11 @@ func (sender *Nas) SendAuthenticationResult(ue *context.RanUe, eapSuccess bool, 
 func (sender *Nas) SendServiceReject(ue *context.RanUe, pDUSessionStatus *[16]bool, cause uint8) {
 	
 	//amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send Service Reject")
+	log.Info("Send Service Reject")
 
 	nasMsg, err := sender.BuildServiceReject(pDUSessionStatus, cause)
 	if err != nil {
-	//	amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -187,11 +187,11 @@ func (sender *Nas) SendServiceReject(ue *context.RanUe, pDUSessionStatus *[16]bo
 func (sender *Nas) SendRegistrationReject(ue *context.RanUe, cause5GMM uint8, eapMessage string) {
 	
 	amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send Registration Reject")
+	log.Info("Send Registration Reject")
 
 	nasMsg, err := sender.BuildRegistrationReject(amfUe, cause5GMM, eapMessage)
 	if err != nil {
-	//	amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -206,7 +206,7 @@ func (sender *Nas) SendSecurityModeCommand(ue *context.RanUe, accessType models.
 
 	nasMsg, err := sender.BuildSecurityModeCommand(amfUe, accessType, eapSuccess, eapMessage)
 	if err != nil {
-	//	amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -265,12 +265,10 @@ func (sender *Nas) SendDeregistrationRequest(ue *context.RanUe, accessType uint8
 }
 
 func (sender *Nas) SendDeregistrationAccept(ue *context.RanUe) {
-	//amfUe := ue.AmfUe
-//	amfUe.GmmLog.Info("Send Deregistration Accept")
 
 	nasMsg, err := sender.BuildDeregistrationAccept()
 	if err != nil {
-	//	amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
@@ -285,14 +283,12 @@ func (sender *Nas) SendRegistrationAccept(
 	pduSessionResourceSetupList *ngapType.PDUSessionResourceSetupListCxtReq) {
 	
 	if amfUe.RanUe[anType] == nil {
-	//	logger.GmmLog.Error("SendRegistrationAccept: RanUe is nil")
+		log.Error("SendRegistrationAccept: RanUe is nil")
 		return
 	}
-	//amfUe.GmmLog.Info("Send Registration Accept")
 
 	nasMsg, err := sender.BuildRegistrationAccept(amfUe, anType, pDUSessionStatus, reactivationResult, errPduSessionId, errCause)
 	if err != nil {
-		//amfUe.GmmLog.Error(err.Error())
 		return
 	}
 
@@ -327,11 +323,11 @@ func (sender *Nas) SendRegistrationAccept(
 func (sender *Nas) SendStatus5GMM(ue *context.RanUe, cause uint8) {
 	
 	//amfUe := ue.AmfUe
-	//amfUe.GmmLog.Info("Send Status 5GMM")
+	log.Info("Send Status 5GMM")
 
 	nasMsg, err := sender.BuildStatus5GMM(cause)
 	if err != nil {
-	//	amfUe.GmmLog.Error(err.Error())
+		log.Error(err.Error())
 		return
 	}
 	sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)

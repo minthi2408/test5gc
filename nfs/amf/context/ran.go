@@ -31,6 +31,14 @@ type AmfRan struct {
 
 }
 
+func newAmfRan(conn net.Conn, amf *AMFContext) *AmfRan {
+	tailistcap := MaxNumOfTAI*MaxNumOfBroadcastPLMNs
+	return &AmfRan{
+		conn:		conn,
+		amf:		amf,
+		tailist:	make([]SupportedTAI,0, tailistcap),
+	}
+}
 func (r *AmfRan) Id() *models.GlobalRanNodeId {
 	return r.id
 }
@@ -80,19 +88,12 @@ func NewSupportedTAI() (tai SupportedTAI) {
 	return
 }
 
-func (ran *AmfRan) Remove() {
-	//ran.Log.Infof("Remove RAN Context[ID: %+v]", ran.RanID())
-	ran.RemoveAllUeInRan()
-	ran.amf.DeleteAmfRan(ran.conn)
-}
-
-
-func (ran *AmfRan) RemoveAllUeInRan() {
+func (ran *AmfRan) RemoveAllUe() {
 	saveRanUeList := make([]*RanUe, len(ran.uelist))
 	copy(saveRanUeList, ran.uelist)
 	for _, ranUe := range saveRanUeList {
 		if err := ranUe.Remove(); err != nil {
-		//	logger.ContextLog.Errorf("Remove RanUe error: %v", err)
+			log.Errorf("Remove RanUe error: %v", err)
 		}
 	}
 }

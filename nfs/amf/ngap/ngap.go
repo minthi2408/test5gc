@@ -68,7 +68,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, msg []byte) {
 
 	if len(msg) == 0 {
 		log.Infof("RAN close the connection.")
-		ran.Remove()
+		amf.RemoveRan(ran)
 		return
 	}
 
@@ -187,6 +187,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, msg []byte) {
 }
 
 func (h *Ngap) HandleSCTPNotification(conn net.Conn, notification sctp.Notification) {
+	amf := h.backend.Context()
 
 	log.Infof("Handle SCTP Notification[addr: %+v]", conn.RemoteAddr())
 
@@ -203,16 +204,16 @@ func (h *Ngap) HandleSCTPNotification(conn net.Conn, notification sctp.Notificat
 		switch event.State() {
 		case sctp.SCTP_COMM_LOST:
 			log.Infof("SCTP state is SCTP_COMM_LOST, close the connection")
-			ran.Remove()
+			amf.RemoveRan(ran)
 		case sctp.SCTP_SHUTDOWN_COMP:
 			log.Infof("SCTP state is SCTP_SHUTDOWN_COMP, close the connection")
-			ran.Remove()
+			amf.RemoveRan(ran)
 		default:
 			log.Warnf("SCTP state[%+v] is not handled", event.State())
 		}
 	case sctp.SCTP_SHUTDOWN_EVENT:
 		log.Infof("SCTP_SHUTDOWN_EVENT notification, close the connection")
-		ran.Remove()
+		amf.RemoveRan(ran)
 	default:
 		log.Warnf("Non handled notification type: 0x%x", notification.Type())
 	}

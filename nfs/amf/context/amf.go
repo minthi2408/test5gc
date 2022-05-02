@@ -12,6 +12,7 @@ import (
 
 	"etri5gc/nfs/amf/config"
 
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/idgenerator"
@@ -28,13 +29,12 @@ type IdGenerator interface {
 }
 
 type AMFContext struct {
-	cfg					*config.Config
-
-	uepool				sync.Map
-	ranpool				sync.Map
-	ruepool				sync.Map
-	eventsubpool		sync.Map
-	statussubpool		sync.Map
+	cfg					*config.Config //Amf configuration
+	uepool				sync.Map //list of Amf-connected Ue
+	ranpool				sync.Map //list of connected Ran
+	ruepool				sync.Map //list of contacted Ue
+	eventsubpool		sync.Map //list of event subscriptions
+	statussubpool		sync.Map //list of status subscriptions
 
 	ladnpool    		map[string]*LADN // dnn as key
 
@@ -45,7 +45,7 @@ type AMFContext struct {
 
 	
 	relcap          	int64 //Relative Capacity
-	id              	string
+	id              	string //nf identity
 	services        	map[models.ServiceName]models.NfService // nfservice that amf support
 
 	httpIPv6Address     string
@@ -65,6 +65,7 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 	return
 }
 */
+
 func CreateAmfContext(cfg *config.Config) *AMFContext {
 	ret := &AMFContext{
 		cfg:			cfg,
@@ -80,8 +81,7 @@ func CreateAmfContext(cfg *config.Config) *AMFContext {
 }
 
 func (amf *AMFContext) init() {
-		//TODO:
-
+	amf.id = uuid.New().String()
 	amf.buildNfServices()
 	sec := amf.cfg.Configuration.Security
 	if sec != nil {
@@ -127,9 +127,12 @@ func (amf *AMFContext) NrfUri() string {
 	return amf.cfg.Configuration.NrfUri
 }
 
-
 func (amf *AMFContext) NfId() string {
 	return amf.id
+}
+
+func (amf *AMFContext) SetNfId(id string) {
+	amf.id = id
 }
 
 func (amf *AMFContext) UriScheme() models.UriScheme {
@@ -208,9 +211,11 @@ func (amf *AMFContext) RegisterIPv4() string {
 func (amf *AMFContext) Port() int {
 	return amf.cfg.Configuration.Sbi.Port
 }
+/*
 func (amf *AMFContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
 }
+*/
 
 func (amf *AMFContext) AllocateAmfUeNgapID() (int64, error) {
 	return amf.ngapIdGen.Allocate()
@@ -243,7 +248,7 @@ func (amf *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessT
 
 func (amf *AMFContext) NewAMFStatusSubscription(dat models.SubscriptionData) (subId string) {
 	if id, err := amf.statussubIdGen.Allocate(); err != nil {
-		//logger.ContextLog.Errorf("Allocate subscriptionID error: %+v", err)
+		log.Errorf("Allocate subscriptionID error: %+v", err)
 	} else {
 		subId = strconv.Itoa(int(id))
 		amf.statussubpool.Store(subId, dat)
@@ -257,7 +262,7 @@ func (amf *AMFContext) GetStatusSubList() sync.Map {
 
 func (amf *AMFContext) AddAmfUeToUePool(ue *AmfUe, supi string) {
 	if len(supi) == 0 {
-	//	logger.ContextLog.Errorf("Supi is nil")
+		log.Errorf("Supi is nil")
 	}
 	ue.Supi = supi
 	amf.uepool.Store(ue.Supi, ue)
@@ -275,6 +280,14 @@ func (amf *AMFContext) NewAmfUe(supi string) *AmfUe {
 
 	return &ue
 }
+
+/*
+func (amf *AMFContext) RemoveAmfUe(ue *AmfUe) {
+	for _, ranue := range ue.RanUe {
+		amf.RemoveRanUe(ranue)
+	}
+}
+*/
 
 func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateData) *AmfUe {
 	//tungtq: this procedure was written by free5gc, it looks experimential so we have to work on improvements later.
@@ -375,13 +388,16 @@ func (amf *AMFContext) AmfUeFindByPei(pei string) (ue *AmfUe, ok bool) {
 }
 
 func (amf *AMFContext) NewAmfRan(conn net.Conn) *AmfRan {
-	ran := AmfRan{}
-	ran.tailist = make([]SupportedTAI, 0, MaxNumOfTAI*MaxNumOfBroadcastPLMNs)
-	ran.conn = conn
+	ran := newAmfRan(conn, amf)
 	amf.ranpool.Store(conn, &ran)
-	return &ran
+	return ran
 }
 
+//ran is not nil
+func (amf *AMFContext) RemoveRan(ran *AmfRan) {
+	ran.RemoveAllUe()
+	amf.ranpool.Delete(ran.conn)
+}
 
 // use net.Conn to find RAN context, return *AmfRan and ok bit
 func (amf *AMFContext) AmfRanFindByConn(conn net.Conn) (*AmfRan, bool) {
@@ -420,10 +436,6 @@ func (amf *AMFContext) AmfRanFindByRanID(ranNodeID models.GlobalRanNodeId) (*Amf
 		return true
 	})
 	return ran, ok
-}
-
-func (amf *AMFContext) DeleteAmfRan(conn net.Conn) {
-	amf.ranpool.Delete(conn)
 }
 
 func (amf *AMFContext) InSupportDnnList(targetDnn string) bool {
