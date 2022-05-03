@@ -714,13 +714,15 @@ func (s *ngapSender) buildPDUSessionResourceSetupRequest(ue *context.RanUe, nasP
 	pDUSessionResourceSetupRequestIEs.List = append(pDUSessionResourceSetupRequestIEs.List, ie)
 
 	// UE AggreateMaximum Bit Rate
+	udminfo := ue.AmfUe.GetUdmInfo()
+
 	ie = ngapType.PDUSessionResourceSetupRequestIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDUEAggregateMaximumBitRate
 	ie.Criticality.Value = ngapType.CriticalityPresentIgnore
 	ie.Value.Present = ngapType.PDUSessionResourceSetupRequestIEsPresentUEAggregateMaximumBitRate
 	ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
-	ueAmbrUL := ngapConvert.UEAmbrToInt64(ue.AmfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
-	ueAmbrDL := ngapConvert.UEAmbrToInt64(ue.AmfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
+	ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
+	ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateDL.Value = ueAmbrDL
 	pDUSessionResourceSetupRequestIEs.List = append(pDUSessionResourceSetupRequestIEs.List, ie)
@@ -957,8 +959,9 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.Present = ngapType.InitialContextSetupRequestIEsPresentUEAggregateMaximumBitRate
 		ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
 
-		ueAmbrUL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
-		ueAmbrDL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
+		udminfo := amfUe.GetUdmInfo()
+		ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
+		ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 		ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
 		ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateDL.Value = ueAmbrDL
 
@@ -1075,9 +1078,9 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	}
 
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
-
+	udminfo := amfUe.GetUdmInfo()
 	// Trace Activation (optional)
-	if amfUe.TraceData != nil {
+	if udminfo.TraceData != nil {
 		ie = ngapType.InitialContextSetupRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDTraceActivation
 		ie.Criticality.Value = ngapType.CriticalityPresentIgnore
@@ -1085,7 +1088,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.TraceActivation = new(ngapType.TraceActivation)
 		// TS 32.422 4.2.2.9
 		// TODO: AMF allocate Trace Recording Session Reference
-		traceActivation := ngapConvert.TraceDataToNgap(*amfUe.TraceData, ranUe.Trsr)
+		traceActivation := ngapConvert.TraceDataToNgap(*udminfo.TraceData, ranUe.Trsr)
 		ie.Value.TraceActivation = &traceActivation
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
@@ -1309,16 +1312,17 @@ func (s *ngapSender) buildUEContextModificationRequest(
 	}
 
 	// UE Aggregate Maximum Bit Rate (optional)
-	if amfUe.AccessAndMobilitySubscriptionData != nil &&
-		amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
+	udminfo := amfUe.GetUdmInfo()
+	if udminfo.AccessAndMobilitySubscriptionData != nil &&
+		udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
 		ie = ngapType.UEContextModificationRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDUEAggregateMaximumBitRate
 		ie.Criticality.Value = ngapType.CriticalityPresentIgnore
 		ie.Value.Present = ngapType.UEContextModificationRequestIEsPresentUEAggregateMaximumBitRate
 		ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
 
-		ueAmbrUL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
-		ueAmbrDL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
+		ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
+		ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 		ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
 		ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateDL.Value = ueAmbrDL
 
@@ -1628,8 +1632,9 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	ie.Value.Present = ngapType.HandoverRequestIEsPresentUEAggregateMaximumBitRate
 	ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
 
-	ueAmbrUL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
-	ueAmbrDL := ngapConvert.UEAmbrToInt64(amfUe.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
+	udminfo := amfUe.GetUdmInfo()
+	ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
+	ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateDL.Value = ueAmbrDL
 
@@ -2684,7 +2689,8 @@ func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.Ac
 	rANUENGAPID.Value = ranUe.RanUeNgapId
 
 	deactivateTraceIEs.List = append(deactivateTraceIEs.List, ie)
-	if amfUe.TraceData != nil {
+	udminfo := amfUe.GetUdmInfo()
+	if udminfo.TraceData != nil {
 		// NG-RAN TraceID
 		ie = ngapType.DeactivateTraceIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDNGRANTraceID
@@ -2693,7 +2699,7 @@ func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.Ac
 		ie.Value.NGRANTraceID = new(ngapType.NGRANTraceID)
 
 		// TODO:composed of the following TS:32.422
-		traceData := *amfUe.TraceData
+		traceData := *udminfo.TraceData
 		subStringSlice := strings.Split(traceData.TraceRef, "-")
 
 		if len(subStringSlice) != 2 {

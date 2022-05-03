@@ -83,11 +83,11 @@ func AppendPDUSessionResourceToReleaseListRelCmd(list *ngapType.PDUSessionResour
 func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrictionList {
 	mobilityRestrictionList := ngapType.MobilityRestrictionList{}
 	mobilityRestrictionList.ServingPLMN = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-
-	if ue.AccessAndMobilitySubscriptionData != nil && len(ue.AccessAndMobilitySubscriptionData.RatRestrictions) > 0 {
+	udminfo := ue.GetUdmInfo()
+	if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.RatRestrictions) > 0 {
 		mobilityRestrictionList.RATRestrictions = new(ngapType.RATRestrictions)
 		ratRestrictions := mobilityRestrictionList.RATRestrictions
-		for _, ratType := range ue.AccessAndMobilitySubscriptionData.RatRestrictions {
+		for _, ratType := range udminfo.AccessAndMobilitySubscriptionData.RatRestrictions {
 			item := ngapType.RATRestrictionsItem{}
 			item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
 			item.RATRestrictionInformation = ngapConvert.RATRestrictionInformationToNgap(ratType)
@@ -95,10 +95,10 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 		}
 	}
 
-	if ue.AccessAndMobilitySubscriptionData != nil && len(ue.AccessAndMobilitySubscriptionData.ForbiddenAreas) > 0 {
+	if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas) > 0 {
 		mobilityRestrictionList.ForbiddenAreaInformation = new(ngapType.ForbiddenAreaInformation)
 		forbiddenAreaInformation := mobilityRestrictionList.ForbiddenAreaInformation
-		for _, info := range ue.AccessAndMobilitySubscriptionData.ForbiddenAreas {
+		for _, info := range udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas {
 			item := ngapType.ForbiddenAreaInformationItem{}
 			item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
 			for _, tac := range info.Tacs {

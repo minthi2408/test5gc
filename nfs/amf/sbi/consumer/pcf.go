@@ -48,8 +48,9 @@ func (c *pcfConsumer) AMPolicyControlCreate(ue *context.AmfUe, anType models.Acc
 		Guami: c.amf.ServedGuami(),
 	}
 
-	if ue.AccessAndMobilitySubscriptionData != nil {
-		policyAssociationRequest.Rfsp = ue.AccessAndMobilitySubscriptionData.RfspIndex
+	udminfo := ue.GetUdmInfo()
+	if udminfo.AccessAndMobilitySubscriptionData != nil {
+		policyAssociationRequest.Rfsp = udminfo.AccessAndMobilitySubscriptionData.RfspIndex
 	}
 
 	res, httpResp, localErr := client.DefaultApi.PoliciesPost(org_context.Background(), policyAssociationRequest)

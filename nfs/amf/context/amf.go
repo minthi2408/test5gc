@@ -328,7 +328,7 @@ func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateDat
 	ue.RoutingIndicator = dat.UeContext.RoutingIndicator
 
 	// optional
-	ue.UdmGroupId = dat.UeContext.UdmGroupId
+	ue.udm.UdmGroupId = dat.UeContext.UdmGroupId
 	ue.AusfGroupId = dat.UeContext.AusfGroupId
 	// dat.UeContext.HpcfId
 	ue.RatType = dat.UeContext.RestrictedRatList[0] // minItem = -1

@@ -25,13 +25,13 @@ func newUdmConsumer(amf *context.AMFContext) *udmConsumer {
 
 func udm_sdm_client(ue *context.AmfUe) (*Nudm_SubscriberDataManagement.APIClient) {
 	conf := Nudm_SubscriberDataManagement.NewConfiguration()
-	conf.SetBasePath(ue.NudmSDMUri)
+	conf.SetBasePath(ue.GetUdmInfo().NudmSDMUri)
 	return Nudm_SubscriberDataManagement.NewAPIClient(conf)
 }
 
 func udm_ucm_client(ue *context.AmfUe) (*Nudm_UEContextManagement.APIClient) {
 	conf := Nudm_UEContextManagement.NewConfiguration()
-	conf.SetBasePath(ue.NudmSDMUri)
+	conf.SetBasePath(ue.GetUdmInfo().NudmSDMUri)
 	return Nudm_UEContextManagement.NewAPIClient(conf)
 }
 
@@ -60,7 +60,7 @@ func (c *udmConsumer) SDMGetAmData(ue *context.AmfUe) (problemDetails *models.Pr
 	data, httpResp, localErr := client.AccessAndMobilitySubscriptionDataRetrievalApi.GetAmData(
 		org_context.Background(), ue.Supi, &getAmDataParamOpt)
 	if localErr == nil {
-		ue.AccessAndMobilitySubscriptionData = &data
+		ue.GetUdmInfo().AccessAndMobilitySubscriptionData = &data
 		ue.Gpsi = data.Gpsis[0] // TODO: select GPSI
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {
@@ -85,7 +85,7 @@ func (c *udmConsumer) SDMGetSmfSelectData(ue *context.AmfUe) (problemDetails *mo
 	data, httpResp, localErr :=
 		client.SMFSelectionSubscriptionDataRetrievalApi.GetSmfSelectData(org_context.Background(), ue.Supi, &paramOpt)
 	if localErr == nil {
-		ue.SmfSelectionData = &data
+		ue.GetUdmInfo().SmfSelectionData = &data
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {
 			err = localErr
@@ -107,7 +107,7 @@ func (c *udmConsumer) SDMGetUeContextInSmfData(ue *context.AmfUe) (problemDetail
 	data, httpResp, localErr :=
 		client.UEContextInSMFDataRetrievalApi.GetUeContextInSmfData(org_context.Background(), ue.Supi, nil)
 	if localErr == nil {
-		ue.UeContextInSmfData = &data
+		ue.GetUdmInfo().UeContextInSmfData = &data
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {
 			err = localErr
@@ -152,7 +152,7 @@ func (c *udmConsumer) SDMSubscribe(ue *context.AmfUe) (problemDetails *models.Pr
 func (c *udmConsumer) SDMGetSliceSelectionSubscriptionData(ue *context.AmfUe) (problemDetails *models.ProblemDetails, err error) {
 
 	client := udm_sdm_client(ue)
-
+	udminfo := ue.GetUdmInfo()
 	paramOpt := Nudm_SubscriberDataManagement.GetNssaiParamOpts{
 		PlmnId: optional.NewInterface(openapi.MarshToJsonString(ue.PlmnId)),
 	}
@@ -167,7 +167,8 @@ func (c *udmConsumer) SDMGetSliceSelectionSubscriptionData(ue *context.AmfUe) (p
 				},
 				DefaultIndication: true,
 			}
-			ue.SubscribedNssai = append(ue.SubscribedNssai, subscribedSnssai)
+
+			udminfo.SubscribedNssai = append(udminfo.SubscribedNssai, subscribedSnssai)
 		}
 		for _, snssai := range nssai.SingleNssais {
 			subscribedSnssai := models.SubscribedSnssai{
@@ -177,7 +178,7 @@ func (c *udmConsumer) SDMGetSliceSelectionSubscriptionData(ue *context.AmfUe) (p
 				},
 				DefaultIndication: false,
 			}
-			ue.SubscribedNssai = append(ue.SubscribedNssai, subscribedSnssai)
+			udminfo.SubscribedNssai = append(udminfo.SubscribedNssai, subscribedSnssai)
 		}
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {

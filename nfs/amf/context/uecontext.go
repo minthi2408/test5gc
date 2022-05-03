@@ -48,6 +48,72 @@ const (
 	Registered              fsm.StateType = "Registered"
 )
 
+type UdmInfo struct {
+	UdmId                             string
+	NudmUECMUri                       string
+	NudmSDMUri                        string
+	ContextValid                      bool
+	Reachability                      models.UeReachability
+	SubscribedData                    models.SubscribedData
+	SmfSelectionData                  *models.SmfSelectionSubscriptionData
+	UeContextInSmfData                *models.UeContextInSmfData
+	TraceData                         *models.TraceData
+	UdmGroupId                        string
+	SubscribedNssai                   []models.SubscribedSnssai
+	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData
+
+}
+
+func (info *UdmInfo) copy(ueContext *models.UeContext) {
+	if ueContext.SubUeAmbr != nil {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		if info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
+			info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
+		}
+
+		subAmbr := info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
+		subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
+		subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
+	}
+
+	if ueContext.SubRfsp != 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
+	}
+
+	if len(ueContext.RestrictedRatList) > 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
+	}
+
+	if len(ueContext.ForbiddenAreaList) > 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
+	}
+
+	if ueContext.ServiceAreaRestriction != nil {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
+	}
+	if ueContext.TraceData != nil {
+		info.TraceData = ueContext.TraceData
+	}
+
+	if ueContext.UdmGroupId != "" {
+		info.UdmGroupId = ueContext.UdmGroupId
+	}
+
+}
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
 	amf *AMFContext // never nil
@@ -86,19 +152,9 @@ type AmfUe struct {
 	LocationChanged          bool
 	LastVisitedRegisteredTai models.Tai
 	TimeZone                 string
+
 	/* context about udm */
-	UdmId                             string
-	NudmUECMUri                       string
-	NudmSDMUri                        string
-	ContextValid                      bool
-	Reachability                      models.UeReachability
-	SubscribedData                    models.SubscribedData
-	SmfSelectionData                  *models.SmfSelectionSubscriptionData
-	UeContextInSmfData                *models.UeContextInSmfData
-	TraceData                         *models.TraceData
-	UdmGroupId                        string
-	SubscribedNssai                   []models.SubscribedSnssai
-	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData
+	udm			UdmInfo	
 	/* contex abut ausf */
 	AusfGroupId                       string
 	AusfId                            string
@@ -254,6 +310,10 @@ func (ue *AmfUe) ServingAMF() *AMFContext {
 	return ue.amf
 }
 
+func (ue *AmfUe) GetUdmInfo() *UdmInfo {
+	return &ue.udm
+}
+
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
 	if _, ok := ue.RanUe[anType]; !ok {
 		return false
@@ -329,7 +389,7 @@ func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.Access
 }
 
 func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
-	for _, sNssai := range ue.SubscribedNssai {
+	for _, sNssai := range ue.udm.SubscribedNssai {
 		if reflect.DeepEqual(*sNssai.SubscribedSnssai, targetSNssai) {
 			return true
 		}
@@ -359,7 +419,7 @@ func (ue *AmfUe) TaiListInRegistrationArea(taiList []models.Tai, accessType mode
 }
 
 func (ue *AmfUe) HasWildCardSubscribedDNN() bool {
-	for _, snssaiInfo := range ue.SmfSelectionData.SubscribedSnssaiInfos {
+	for _, snssaiInfo := range ue.udm.SmfSelectionData.SubscribedSnssaiInfos {
 		for _, dnnInfo := range snssaiInfo.DnnInfos {
 			if dnnInfo.Dnn == "*" {
 				return true
@@ -585,9 +645,6 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.Pei = ueContext.Pei
 	}
 
-	if ueContext.UdmGroupId != "" {
-		ue.UdmGroupId = ueContext.UdmGroupId
-	}
 
 	if ueContext.AusfGroupId != "" {
 		ue.AusfGroupId = ueContext.AusfGroupId
@@ -596,48 +653,8 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 	if ueContext.RoutingIndicator != "" {
 		ue.RoutingIndicator = ueContext.RoutingIndicator
 	}
-
-	if ueContext.SubUeAmbr != nil {
-		if ue.AccessAndMobilitySubscriptionData == nil {
-			ue.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		if ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
-			ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
-		}
-
-		subAmbr := ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
-		subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
-		subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
-	}
-
-	if ueContext.SubRfsp != 0 {
-		if ue.AccessAndMobilitySubscriptionData == nil {
-			ue.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		ue.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
-	}
-
-	if len(ueContext.RestrictedRatList) > 0 {
-		if ue.AccessAndMobilitySubscriptionData == nil {
-			ue.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		ue.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
-	}
-
-	if len(ueContext.ForbiddenAreaList) > 0 {
-		if ue.AccessAndMobilitySubscriptionData == nil {
-			ue.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		ue.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
-	}
-
-	if ueContext.ServiceAreaRestriction != nil {
-		if ue.AccessAndMobilitySubscriptionData == nil {
-			ue.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		ue.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
-	}
-
+	ue.udm.copy(&ueContext)
+	
 	if ueContext.SeafData != nil {
 		seafData := ueContext.SeafData
 
@@ -759,9 +776,6 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 				}
 			}
 		}
-	}
-	if ueContext.TraceData != nil {
-		ue.TraceData = ueContext.TraceData
 	}
 }
 
@@ -970,7 +984,7 @@ func (ue *AmfUe) buildContextModel() *models.UeContext {
 		Supi: ue.Supi,
 		SupiUnauthInd: ue.UnauthenticatedSupi,
 	}
-
+/*
 	if ue.Gpsi != "" {
 		ueContext.GpsiList = append(ueContext.GpsiList, ue.Gpsi)
 	}
@@ -979,7 +993,7 @@ func (ue *AmfUe) buildContextModel() *models.UeContext {
 		ueContext.Pei = ue.Pei
 	}
 
-	if ue.UdmGroupId != "" {
+	if ue.udm.UdmGroupId != "" {
 		ueContext.UdmGroupId = ue.UdmGroupId
 	}
 
@@ -1026,6 +1040,7 @@ func (ue *AmfUe) buildContextModel() *models.UeContext {
 	if ue.TraceData != nil {
 		ueContext.TraceData = ue.TraceData
 	}
+	*/
 	return ueContext
 }
 

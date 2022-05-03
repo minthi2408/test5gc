@@ -77,6 +77,8 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 
 	log.Info("Transport 5GSM Message to SMF")
 
+	udminfo := ue.GetUdmInfo()
+
 	smMessage := ulNasTransport.PayloadContainer.GetPayloadContainerContents()
 
 	if id := ulNasTransport.PduSessionID2Value; id != nil {
@@ -196,10 +198,9 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 					// if user's subscription context obtained from UDM does not contain the default DNN for the,
 					// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
 					dnn = gmm.nas.amf().SupportDnnList()[0]
-
-					if ue.SmfSelectionData != nil {
+					if udminfo.SmfSelectionData != nil {
 						snssaiStr := context.SnssaiModelsToHex(snssai)
-						if snssaiInfo, ok := ue.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
+						if snssaiInfo, ok := udminfo.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
 							for _, dnnInfo := range snssaiInfo.DnnInfos {
 								if dnnInfo.DefaultDnnIndicator {
 									dnn = dnnInfo.Dnn
@@ -240,10 +241,10 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 			case nasMessage.ULNASTransportRequestTypeModificationRequest:
 				fallthrough
 			case nasMessage.ULNASTransportRequestTypeExistingPduSession:
-				if ue.UeContextInSmfData != nil {
+				if udminfo.UeContextInSmfData != nil {
 					// TS 24.501 5.4.5.2.5 case a) 3)
 					pduSessionIDStr := fmt.Sprintf("%d", pduSessionID)
-					if ueContextInSmf, ok := ue.UeContextInSmfData.PduSessions[pduSessionIDStr]; !ok {
+					if ueContextInSmf, ok := udminfo.UeContextInSmfData.PduSessions[pduSessionIDStr]; !ok {
 						gmm.nas.SendDLNASTransport(ue.RanUe[anType], nasMessage.PayloadContainerTypeN1SMInfo,
 							smMessage, pduSessionID, nasMessage.Cause5GMMPayloadWasNotForwarded, nil, 0)
 					} else {
@@ -555,12 +556,12 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	log.Infoln("Handle InitialRegistration")
 	
 	amf := gmm.nas.amf()
-
+	udminfo := ue.GetUdmInfo()
 	// update Kgnb/Kn3iwf
 	ue.UpdateSecurityContext(anType)
 
 	// Registration with AMF re-allocation (TS 23.502 4.2.2.2.3)
-	if len(ue.SubscribedNssai) == 0 {
+	if len(udminfo.SubscribedNssai) == 0 {
 		gmm.getSubscribedNssai(ue)
 	}
 
@@ -613,7 +614,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	// N5g-eir_EquipmentIdentityCheck_Get service operation
 
 	if ue.ServingAmfChanged || ue.State[models.AccessType_NON_3_GPP_ACCESS].Is(context.Registered) ||
-		!ue.ContextValid {
+		!udminfo.ContextValid {
 		if err := gmm.communicateWithUDM(ue, anType); err != nil {
 			gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMPLMNNotAllowed, "")
 			return err
@@ -695,6 +696,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.AmfUe, anType models.AccessType) error {
 	log.Infoln("Handle MobilityAndPeriodicRegistrationUpdating")
 
+	udminfo := ue.GetUdmInfo()
 
 	if ue.RegistrationRequest.UpdateType5GS != nil {
 		if ue.RegistrationRequest.UpdateType5GS.GetNGRanRcu() == nasMessage.NGRanRadioCapabilityUpdateNeeded {
@@ -704,7 +706,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 	}
 
 	// Registration with AMF re-allocation (TS 23.502 4.2.2.2.3)
-	if len(ue.SubscribedNssai) == 0 {
+	if len(udminfo.SubscribedNssai) == 0 {
 		gmm.getSubscribedNssai(ue)
 	}
 
@@ -745,7 +747,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 	// N5g-eir_EquipmentIdentityCheck_Get service operation
 
 	if ue.ServingAmfChanged || ue.State[models.AccessType_NON_3_GPP_ACCESS].Is(context.Registered) ||
-		!ue.ContextValid {
+		!udminfo.ContextValid {
 		if err := gmm.communicateWithUDM(ue, anType); err != nil {
 			gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMPLMNNotAllowed, "")
 			return err
@@ -1057,7 +1059,7 @@ func negotiateDRXParameters(ue *context.AmfUe, requestedDRXParameters *nasType.R
 
 func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.AccessType) error {
 	log.Debugln("communicateWithUDM")
-
+	udminfo := ue.GetUdmInfo()
 	// UDM selection described in TS 23.501 6.3.8
 	// TODO: consider udm group id, Routing ID part of SUCI, GPSI or External Group ID (e.g., by the NEF)
 		
@@ -1065,9 +1067,9 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 	if err != nil {
 		return err
 	}
-	ue.UdmId = snf.NfUri()
-	ue.NudmUECMUri = snf.NfUri()
-	ue.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
+	udminfo.UdmId = snf.NfUri()
+	udminfo.NudmUECMUri = snf.NfUri()
+	udminfo.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
 
 	udmc := gmm.consumer.Udm()
 	problemDetails, err := udmc.UeCmRegistration(ue, accessType, true)
@@ -1106,19 +1108,20 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 		log.Errorf("SDM Subscribe Error[%+v]", err)
 		return fmt.Errorf("SDM Subscribe Error[%+v]", err)
 	}
-	ue.ContextValid = true
+	udminfo.ContextValid = true
 	return nil
 }
 //NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
 func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
-	if ue.NudmSDMUri == "" {
+	udminfo := ue.GetUdmInfo()
+	if udminfo.NudmSDMUri == "" {
 		snf, err := gmm.nas.backend.NfSelector().SelectUdm(ue.Supi)
 		if err != nil {
 			return err
 		}
-		ue.UdmId = snf.NfUri()
-		ue.NudmUECMUri = snf.NfUri()
-		ue.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
+		udminfo.UdmId = snf.NfUri()
+		udminfo.NudmUECMUri = snf.NfUri()
+		udminfo.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
 	}
 	problemDetails, err := gmm.consumer.Udm().SDMGetSliceSelectionSubscriptionData(ue)
 	if problemDetails != nil {
@@ -1271,7 +1274,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 	// if registration request has no requested nssai, or non of snssai in requested nssai is permitted by nssf
 	// then use ue subscribed snssai which is marked as default as allowed nssai
 	if len(ue.AllowedNssai[anType]) == 0 {
-		for _, snssai := range ue.SubscribedNssai {
+		for _, snssai := range ue.GetUdmInfo().SubscribedNssai {
 			if snssai.DefaultIndication {
 				if amf.InPlmnSupportList(*snssai.SubscribedSnssai) {
 					allowedSnssai := models.AllowedSnssai{
@@ -1289,6 +1292,7 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 	amf := gmm.nas.backend.Context()
 
 	ladnpool := amf.LadnPool()
+	udminfo := ue.GetUdmInfo()
 
 	ue.LadnInfo = nil
 	if ue.RegistrationRequest.LADNIndication != nil {
@@ -1302,7 +1306,7 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 					}
 				}
 			} else {
-				for _, snssaiInfos := range ue.SmfSelectionData.SubscribedSnssaiInfos {
+				for _, snssaiInfos := range udminfo.SmfSelectionData.SubscribedSnssaiInfos {
 					for _, dnnInfo := range snssaiInfos.DnnInfos {
 						if ladn, ok := ladnpool[dnnInfo.Dnn]; ok { // check if this dnn is a ladn
 							if ue.TaiListInRegistrationArea(ladn.TaiLists, accessType) {
@@ -1322,8 +1326,8 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 				}
 			}
 		}
-	} else if ue.SmfSelectionData != nil {
-		for _, snssaiInfos := range ue.SmfSelectionData.SubscribedSnssaiInfos {
+	} else if udminfo.SmfSelectionData != nil {
+		for _, snssaiInfos := range udminfo.SmfSelectionData.SubscribedSnssaiInfos {
 			for _, dnnInfo := range snssaiInfos.DnnInfos {
 				if dnnInfo.Dnn != "*" {
 					if ladn, ok := ladnpool[dnnInfo.Dnn]; ok {

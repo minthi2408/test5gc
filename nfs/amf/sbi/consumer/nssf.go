@@ -32,7 +32,7 @@ func (c *nssfConsumer) NSSelectionGetForRegistration(ue *context.AmfUe, requeste
 	client := nssf_nssel_client(ue.NssfUri)
 
 	sliceInfo := models.SliceInfoForRegistration{
-		SubscribedNssai: ue.SubscribedNssai,
+		SubscribedNssai: ue.GetUdmInfo().SubscribedNssai,
 	}
 
 	for _, snssai := range requestedNssai {

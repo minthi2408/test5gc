@@ -143,15 +143,16 @@ func (s *NfSelector) SearchUdmSdmInstance(ue *context.AmfUe, targetNfType, reque
 
 	// select the first UDM_SDM, TODO: select base on other info
 	var sdmUri string
+	udminfo := ue.GetUdmInfo()
 	for _, nfProfile := range resp.NfInstances {
-		ue.UdmId = nfProfile.NfInstanceId
+		udminfo.UdmId = nfProfile.NfInstanceId
 		sdmUri = searchNFServiceUri(nfProfile, models.ServiceName_NUDM_SDM, models.NfServiceStatus_REGISTERED)
 		if sdmUri != "" {
 			break
 		}
 	}
-	ue.NudmSDMUri = sdmUri
-	if ue.NudmSDMUri == "" {
+	udminfo.NudmSDMUri = sdmUri
+	if udminfo.NudmSDMUri == "" {
 		err := fmt.Errorf("AMF can not select an UDM by NRF")
 	//	logger.ConsumerLog.Errorf(err.Error())
 		return err
