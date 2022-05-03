@@ -8,7 +8,8 @@ import (
 	"etri5gc/nfs/amf/ngap"
 	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/sbi/nfselect"
+	"etri5gc/nfs/amf/nfselect"
+	nfselectinf "etri5gc/nfs/amf/sbi/nfselect"
 	"etri5gc/nfs/amf/sbi/consumer"
 	"etri5gc/nfs/amf/sbi/producer"
 	"etri5gc/nfs/amf/sbi/communication"
@@ -32,9 +33,8 @@ type AMF struct {
 	sbi			sbi.SBI //sbi server
 	consumer	*consumer.Consumer
 	producer	*producer.Handler
-	selector	nfselect.NfSelector
+	selector	*nfselect.NfSelector
 	ngap		*ngap.Server
-	//nas			*nas.Nas
 	context		*context.AMFContext // AMF contex
 	conf			*config.Config // loaded AMF config
 }
@@ -48,7 +48,7 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg)
 
-	nf.selector = NewNfSelector(nf)
+	nf.selector = nfselect.NewNfSelector(nf)
 	nf.ngap = ngap.NewServer(nf)
 	nf.producer = producer.NewHandler(nf,nf.ngap.Sender(), nf.ngap.Nas())
 	nf.consumer = consumer.NewConsumer(nf)
@@ -82,7 +82,7 @@ func (nf *AMF) Ngap() *ngap.Server {
 	return nf.ngap
 }
 
-func (nf *AMF) NfSelector() nfselect.NfSelector {
+func (nf *AMF) NfSelector() nfselectinf.NfSelector {
 	return nf.selector
 }
 

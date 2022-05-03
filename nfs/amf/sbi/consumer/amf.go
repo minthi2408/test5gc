@@ -11,19 +11,11 @@ import (
 	"github.com/free5gc/openapi/Namf_Communication"
 )
 
-type AmfConsumer interface {
-	CreateUEContextRequest(*context.AmfUe, models.UeContextCreateData) (*models.UeContextCreatedData, *models.ProblemDetails, error)
-	ReleaseUEContextRequest(*context.AmfUe, models.NgApCause) (*models.ProblemDetails, error)
-	UEContextTransferRequest(*context.AmfUe, models.AccessType, models.TransferReason) (*models.UeContextTransferRspData, *models.ProblemDetails, error)
-	RegistrationStatusUpdate(*context.AmfUe, models.UeRegStatusUpdateReqData) (bool, *models.ProblemDetails, error)
-}
-
-
 type amfConsumer struct {
 	context		*context.AMFContext
 }
 
-func newAmfConsumer(c *context.AMFContext) AmfConsumer {
+func newAmfConsumer(c *context.AMFContext) *amfConsumer {
 	return &amfConsumer {
 		context: c,
 	}

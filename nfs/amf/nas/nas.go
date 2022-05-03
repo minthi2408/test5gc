@@ -6,10 +6,10 @@ import (
 
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf"
-	"etri5gc/nfs/amf/sbi/consumer"
 	"etri5gc/nfs/amf/nas/nas_security"
 
 	"github.com/free5gc/ngap/ngapType"
+	"github.com/free5gc/aper"
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
@@ -31,6 +31,15 @@ type NgapSender interface {
 	    *ngapType.RRCInactiveTransitionReportRequest,
 	    *ngapType.CoreNetworkAssistanceInformation,
 	    *ngapType.EmergencyFallbackIndicator)
+
+	SendPDUSessionResourceReleaseCommand(*context.RanUe, []byte,ngapType.PDUSessionResourceToReleaseListRelCmd)
+	SendPDUSessionResourceModifyRequest(*context.RanUe, ngapType.PDUSessionResourceModifyListModReq)
+
+	SendPDUSessionResourceSetupRequest(*context.RanUe, []byte, ngapType.PDUSessionResourceSetupListSUReq)
+	SendRerouteNasRequest(*context.AmfUe, models.AccessType, *int64, []byte,*ngapType.AllowedNSSAI)
+	
+	SendUEContextReleaseCommand(*context.RanUe, context.RelAction, int, aper.Enumerated)
+
 }
 
 type Nas struct {
@@ -53,9 +62,6 @@ func (n *Nas) amf() *context.AMFContext {
 	return n.backend.Context()
 }
 
-func (n *Nas) callback() consumer.Callback {
-	return n.backend.Consumer().Callback()
-}
 
 func (n *Nas) Fsm() *fsm.FSM {
 	return n.sm

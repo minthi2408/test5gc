@@ -13,20 +13,20 @@ import (
 	"github.com/free5gc/openapi/Namf_Communication"
 )
 
-
+/*
 type Callback interface {
 	SendN2InfoNotifyN2Handover(*context.AmfUe, []int32) error
 	SendAmfStatusChangeNotify(string, []models.Guami) 
     SendN1N2TransferFailureNotification(*context.AmfUe, models.N1N2MessageTransferCause)
 	SendN1MessageNotify(*context.AmfUe, models.N1MessageClass, []byte, *models.RegistrationContextContainer)
 }
-
+*/
 
 type callback struct {
 	amf *context.AMFContext
 }
 
-func newCallback(c *context.AMFContext) Callback {
+func newCallback(c *context.AMFContext) *callback {
 	return &callback {
 		amf: c,
 	}

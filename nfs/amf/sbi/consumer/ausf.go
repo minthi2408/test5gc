@@ -15,15 +15,13 @@ import (
 	"github.com/free5gc/openapi/Nausf_UEAuthentication"
 )
 
-type AusfConsumer interface {
-}
 
 type ausfConsumer struct {
 	amf		*context.AMFContext
 }
 
 
-func newAusfConsumer(amf *context.AMFContext) AusfConsumer {
+func newAusfConsumer(amf *context.AMFContext) *ausfConsumer {
 	return &ausfConsumer{amf: amf}
 }
 

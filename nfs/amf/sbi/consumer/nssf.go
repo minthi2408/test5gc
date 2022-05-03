@@ -11,15 +11,12 @@ import (
 	"github.com/free5gc/openapi/Nnssf_NSSelection"
 )
 
-type NssfConsumer interface {
-}
-
 type nssfConsumer struct {
 	amf		*context.AMFContext
 }
 
 
-func newNssfConsumer(amf *context.AMFContext) NssfConsumer {
+func newNssfConsumer(amf *context.AMFContext) *nssfConsumer {
 	return &nssfConsumer{amf: amf}
 }
 

@@ -7,29 +7,7 @@ import (
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/Nsmf_PDUSession"
 )
-/*
-type SmfConsumer interface {
 
-	SendCreateSmContextRequest(*context.AmfUe, *context.SmContext, *models.RequestType, []byte) (*models.PostSmContextsResponse, string, *models.PostSmContextsErrorResponse, *models.ProblemDetails, error)
-
-	SendReleaseSmContextRequest(*context.AmfUe, *context.SmContext, *context.CauseAll, models.N2SmInfoType,	[]byte) (*models.ProblemDetails, error)
-
-	SendUpdateSmContextDeactivateUpCnxState(
-		*context.AmfUe, *context.SmContext, context.CauseAll) (
-			*models.UpdateSmContextResponse, 
-			*models.UpdateSmContextErrorResponse, 
-			*models.ProblemDetails, error) 
-
-	SendUpdateSmContextN2Info(
-		*context.AmfUe, *context.SmContext, models.N2SmInfoType, []byte) (
-			*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error)
-	
-	SendUpdateSmContextN2HandoverComplete(
-		*context.AmfUe, *context.SmContext, string, *models.Guami) (
-			*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, 
-			*models.ProblemDetails, error) 
-}
-*/
 type smfConsumer struct {
 }
 

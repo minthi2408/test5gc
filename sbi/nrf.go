@@ -14,7 +14,7 @@ import (
 type NrfConsumer interface {
 	SendRegisterNFInstance() (string, string, error) // Register NF to the NRF
 	SendDeregisterNFInstance() (*models.ProblemDetails, error)
-	SendSearchNFInstances(models.NfType, models.NfType, *Nnrf_NFDiscovery.SearchNFInstancesParamOpts) (models.SearchResult, error)
+	SendSearchNFInstances(string, models.NfType, models.NfType, *Nnrf_NFDiscovery.SearchNFInstancesParamOpts) (models.SearchResult, error)
 }
 
 type NFInterface interface {
@@ -40,9 +40,13 @@ func (c *nrfClient) man_client() *Nnrf_NFManagement.APIClient {
 
 }
 
-func (c *nrfClient) disc_client() *Nnrf_NFDiscovery.APIClient {
+func (c *nrfClient) disc_client(uri string) *Nnrf_NFDiscovery.APIClient {
 	conf := Nnrf_NFDiscovery.NewConfiguration()
-	conf.SetBasePath(c.nf.NrfUri())
+	if len(uri) > 0 {
+		conf.SetBasePath(uri)
+	} else {
+		conf.SetBasePath(c.nf.NrfUri())
+	}
 	return Nnrf_NFDiscovery.NewAPIClient(conf)
 }
 
@@ -116,10 +120,10 @@ func (c *nrfClient) SendDeregisterNFInstance() (problemDetails *models.ProblemDe
 	return
 }
 
-func (c *nrfClient) SendSearchNFInstances(targetNfType, requestNfType models.NfType,
+func (c *nrfClient) SendSearchNFInstances(nrfuri string, targetNfType, requestNfType models.NfType,
 	param *Nnrf_NFDiscovery.SearchNFInstancesParamOpts) (models.SearchResult, error) {
 	// Set client and set url
-	client := c.disc_client()
+	client := c.disc_client(nrfuri)
 
 	result, res, err := client.NFInstancesStoreApi.SearchNFInstances(context.TODO(), targetNfType, requestNfType, param)
 	if res != nil && res.StatusCode == http.StatusTemporaryRedirect {

@@ -10,15 +10,16 @@ import (
 	"github.com/free5gc/openapi/Nudm_UEContextManagement"
 )
 
+/*
 type UdmConsumer interface {
 }
-
+*/
 type udmConsumer struct {
 	amf		*context.AMFContext
 }
 
 
-func newUdmConsumer(amf *context.AMFContext) UdmConsumer {
+func newUdmConsumer(amf *context.AMFContext) *udmConsumer {
 	return &udmConsumer{amf: amf}
 }
 

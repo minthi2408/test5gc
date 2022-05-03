@@ -10,18 +10,19 @@ import (
 	"github.com/free5gc/openapi/Npcf_AMPolicy"
 )
 
+/*
 type PcfConsumer interface {
 	AMPolicyControlUpdate(*context.AmfUe, models.PolicyAssociationUpdateRequest) (*models.ProblemDetails, error)
 	AMPolicyControlCreate(*context.AmfUe, models.AccessType) (*models.ProblemDetails, error)
 	AMPolicyControlDelete(*context.AmfUe) (*models.ProblemDetails, error)
 }
-
+*/
 type pcfConsumer struct {
 	amf		*context.AMFContext
 }
 
 
-func newPcfConsumer(amf *context.AMFContext) PcfConsumer {
+func newPcfConsumer(amf *context.AMFContext) *pcfConsumer {
 	return &pcfConsumer{amf: amf}
 }
 

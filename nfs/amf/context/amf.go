@@ -131,6 +131,10 @@ func (amf *AMFContext) NfId() string {
 	return amf.id
 }
 
+func (amf *AMFContext) Locality() string {
+	return amf.cfg.Configuration.Locality
+}
+
 func (amf *AMFContext) SetNfId(id string) {
 	amf.id = id
 }
@@ -179,6 +183,9 @@ func (amf *AMFContext) ServedGuami() *models.Guami  {
 	return &amf.cfg.Configuration.ServedGuamiList[0]
 }
 
+func (amf *AMFContext) LadnPool () map[string]*LADN {
+	return amf.ladnpool
+}
 func (amf *AMFContext) Ladn(dnn string) (ladn *LADN, ok bool) {
 	ladn, ok =  amf.ladnpool[dnn]
 	return
@@ -211,11 +218,9 @@ func (amf *AMFContext) RegisterIPv4() string {
 func (amf *AMFContext) Port() int {
 	return amf.cfg.Configuration.Sbi.Port
 }
-/*
 func (amf *AMFContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
 }
-*/
 
 func (amf *AMFContext) AllocateAmfUeNgapID() (int64, error) {
 	return amf.ngapIdGen.Allocate()
@@ -436,6 +441,10 @@ func (amf *AMFContext) AmfRanFindByRanID(ranNodeID models.GlobalRanNodeId) (*Amf
 		return true
 	})
 	return ran, ok
+}
+
+func (amf *AMFContext) SupportDnnList() []string{
+	return amf.cfg.Configuration.SupportDnnList
 }
 
 func (amf *AMFContext) InSupportDnnList(targetDnn string) bool {
