@@ -128,6 +128,7 @@ func (nf *AMF) Start() (err error) {
 
 	log.Info("Registering to NRF")
 	cnt := 1
+	LOOP:
 	for cnt < 5 {
 		if _, nfid, ierr := nf.consumer.Nrf().SendRegisterNFInstance(); ierr != nil {
 			log.Errorf("Fail to register with NRF (attemp #%d) %s", cnt, ierr.Error())
@@ -142,9 +143,11 @@ func (nf *AMF) Start() (err error) {
 				//TODO: Update NF identity
 				nf.context.SetNfId(nfid)
 			}	
-			break
+			break LOOP
 		}
 	}
+
+	log.Info("Amf is registered, it is ok now")
 	if err != nil {
 		nf.ngap.Stop()
 		return

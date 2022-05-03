@@ -62,7 +62,10 @@ func (c *nrfClient) SendRegisterNFInstance() (
 		return 
 	}
 
+	log.Info("Sending a registration request")
 	_, res, err = client.NFInstanceIDDocumentApi.RegisterNFInstance(context.TODO(), c.nf.NfId(), *profile)
+
+	log.Info("get a respone")
 	if err != nil {
 		return
 	}
