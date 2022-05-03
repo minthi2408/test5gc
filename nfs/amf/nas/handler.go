@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf/nfselect"
 	"etri5gc/nfs/amf/ngap/util"
 
 	"github.com/antihax/optional"
@@ -619,39 +620,14 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 		}
 	}
 
-	/*
-	//TODO: tungtq temporarily commented
-	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
-		Supi: optional.NewString(ue.Supi),
+	//NOTE: tungtq - replace an infinite searching loop with a one-time search
+	snf, err := gmm.nas.backend.NfSelector().SelectPcf(ue.Supi, amf.Locality())
+	if err != nil {
+		return err
 	}
-	if amf.Locality() != "" {
-		param.PreferredLocality = optional.NewString(amf.Locality())
-	}
-
-	for {
-		resp, err := consumer.SendSearchNFInstances(amf.NrfUri, models.NfType_PCF, models.NfType_AMF, &param)
-		if err != nil {
-			log.Error("AMF can not select an PCF by NRF")
-		} else {
-			// select the first PCF, TODO: select base on other info
-			var pcfUri string
-			for _, nfProfile := range resp.NfInstances {
-				pcfUri = util.SearchNFServiceUri(nfProfile, models.ServiceName_NPCF_AM_POLICY_CONTROL,
-					models.NfServiceStatus_REGISTERED)
-				if pcfUri != "" {
-					ue.PcfId = nfProfile.NfInstanceId
-					break
-				}
-			}
-			if ue.PcfUri = pcfUri; ue.PcfUri == "" {
-				log.Error("AMF can not select an PCF by NRF")
-			} else {
-				break
-			}
-		}
-		time.Sleep(500 * time.Millisecond) // sleep a while when search NF Instance fail
-	}
-	*/
+	ue.PcfId = snf.NfId()
+	ue.PcfUri = snf.NfUri()
+	
 	problemDetails, err := gmm.consumer.Pcf().AMPolicyControlCreate(ue, anType)
 	if problemDetails != nil {
 		log.Errorf("AM Policy Control Create Failed Problem[%+v]", problemDetails)
@@ -719,7 +695,6 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.AmfUe, anType models.AccessType) error {
 	log.Infoln("Handle MobilityAndPeriodicRegistrationUpdating")
 
-	//amf := gmm.nas.amf()
 
 	if ue.RegistrationRequest.UpdateType5GS != nil {
 		if ue.RegistrationRequest.UpdateType5GS.GetNGRanRcu() == nasMessage.NGRanRadioCapabilityUpdateNeeded {
@@ -1085,28 +1060,15 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 
 	// UDM selection described in TS 23.501 6.3.8
 	// TODO: consider udm group id, Routing ID part of SUCI, GPSI or External Group ID (e.g., by the NEF)
-	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
-		Supi: optional.NewString(ue.Supi),
-	}
-	resp, err := gmm.consumer.Nrf().SendSearchNFInstances("", models.NfType_UDM, models.NfType_AMF, &param)
+		
+	snf, err := gmm.nas.backend.NfSelector().SelectUdm(ue.Supi)
 	if err != nil {
-		return fmt.Errorf("AMF can not select an UDM by NRF")
+		return err
 	}
+	ue.UdmId = snf.NfUri()
+	ue.NudmUECMUri = snf.NfUri()
+	ue.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
 
-	var uecmUri, sdmUri string
-	for _, nfProfile := range resp.NfInstances {
-		ue.UdmId = nfProfile.NfInstanceId
-		uecmUri = searchNFServiceUri(nfProfile, models.ServiceName_NUDM_UECM, models.NfServiceStatus_REGISTERED)
-		sdmUri = searchNFServiceUri(nfProfile, models.ServiceName_NUDM_SDM, models.NfServiceStatus_REGISTERED)
-		if uecmUri != "" && sdmUri != "" {
-			break
-		}
-	}
-	ue.NudmUECMUri = uecmUri
-	ue.NudmSDMUri = sdmUri
-	if ue.NudmUECMUri == "" || ue.NudmSDMUri == "" {
-		return fmt.Errorf("AMF can not select an UDM by NRF")
-	}
 	udmc := gmm.consumer.Udm()
 	problemDetails, err := udmc.UeCmRegistration(ue, accessType, true)
 	if problemDetails != nil {
@@ -1147,21 +1109,16 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 	ue.ContextValid = true
 	return nil
 }
-
-func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) {
+//NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
+func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
 	if ue.NudmSDMUri == "" {
-		param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
-			Supi: optional.NewString(ue.Supi),
+		snf, err := gmm.nas.backend.NfSelector().SelectUdm(ue.Supi)
+		if err != nil {
+			return err
 		}
-		for {
-			err := gmm.nas.backend.NfSelector().SearchUdmSdmInstance(ue, models.NfType_UDM, models.NfType_AMF, &param)
-			if err != nil {
-				log.Errorf("AMF can not select an Nudm_SDM Instance by NRF[Error: %+v]", err)
-				time.Sleep(2 * time.Second)
-			} else {
-				break
-			}
-		}
+		ue.UdmId = snf.NfUri()
+		ue.NudmUECMUri = snf.NfUri()
+		ue.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
 	}
 	problemDetails, err := gmm.consumer.Udm().SDMGetSliceSelectionSubscriptionData(ue)
 	if problemDetails != nil {
@@ -1169,6 +1126,7 @@ func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) {
 	} else if err != nil {
 		log.Errorf("SDM_Get Slice Selection Subscription Data Error[%+v]", err)
 	}
+	return err
 }
 
 // TS 23.502 4.2.2.2.3 Registration with AMF Re-allocation
@@ -1508,28 +1466,13 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 
 
 	// TODO: consider ausf group id, Routing ID part of SUCI
-	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{}
-	resp, err := gmm.consumer.Nrf().SendSearchNFInstances("", models.NfType_AUSF, models.NfType_AMF, &param)
-	if err != nil {
-		log.Error("AMF can not select an AUSF by NRF")
+	snf, err := gmm.nas.backend.NfSelector().SelectAusf()
+	if err!=nil {
+		log.Errorf("AMF can not select an AUSF by NRF: %s", err.Error())
 		return false, err
 	}
-
-	// select the first AUSF, TODO: select base on other info
-	var ausfUri string
-	for _, nfProfile := range resp.NfInstances {
-		ue.AusfId = nfProfile.NfInstanceId
-		ausfUri = searchNFServiceUri(nfProfile, models.ServiceName_NAUSF_AUTH, models.NfServiceStatus_REGISTERED)
-		if ausfUri != "" {
-			break
-		}
-	}
-	if ausfUri == "" {
-		err = fmt.Errorf("AMF can not select an AUSF by NRF")
-		log.Errorf(err.Error())
-		return false, err
-	}
-	ue.AusfUri = ausfUri
+	ue.AusfUri = snf.NfUri()
+	ue.AusfId = snf.NfId()
 
 	response, problemDetails, err := gmm.consumer.Ausf().SendUEAuthenticationAuthenticateRequest(ue, nil)
 	if err != nil {
@@ -2360,45 +2303,3 @@ func (gmm *GmmFsm) handleStatus5GMM(ue *context.AmfUe, anType models.AccessType,
 	return nil
 }
 
-//TungTQ: temporarily added, should be removed
-func searchNFServiceUri(nfProfile models.NfProfile, serviceName models.ServiceName,
-	nfServiceStatus models.NfServiceStatus) (nfUri string) {
-	if nfProfile.NfServices != nil {
-		for _, service := range *nfProfile.NfServices {
-			if service.ServiceName == serviceName && service.NfServiceStatus == nfServiceStatus {
-				if nfProfile.Fqdn != "" {
-					nfUri = nfProfile.Fqdn
-				} else if service.Fqdn != "" {
-					nfUri = service.Fqdn
-				} else if service.ApiPrefix != "" {
-					nfUri = service.ApiPrefix
-				} else if service.IpEndPoints != nil {
-					point := (*service.IpEndPoints)[0]
-					if point.Ipv4Address != "" {
-						nfUri = getSbiUri(service.Scheme, point.Ipv4Address, point.Port)
-					} else if len(nfProfile.Ipv4Addresses) != 0 {
-						nfUri = getSbiUri(service.Scheme, nfProfile.Ipv4Addresses[0], point.Port)
-					}
-				}
-			}
-			if nfUri != "" {
-				break
-			}
-		}
-	}
-	return
-}
-
-func getSbiUri(scheme models.UriScheme, ipv4Address string, port int32) (uri string) {
-	if port != 0 {
-		uri = fmt.Sprintf("%s://%s:%d", scheme, ipv4Address, port)
-	} else {
-		switch scheme {
-		case models.UriScheme_HTTP:
-			uri = fmt.Sprintf("%s://%s:80", scheme, ipv4Address)
-		case models.UriScheme_HTTPS:
-			uri = fmt.Sprintf("%s://%s:443", scheme, ipv4Address)
-		}
-	}
-	return
-}

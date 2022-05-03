@@ -23,13 +23,13 @@ func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-	//	ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 
 	uERadioCapabilityCheckResponse := successfulOutcome.Value.UERadioCapabilityCheckResponse
 	if uERadioCapabilityCheckResponse == nil {
-	//	ran.Log.Error("UERadioCapabilityCheckResponse is nil")
+		log.Error("UERadioCapabilityCheckResponse is nil")
 		return
 	}
 
@@ -38,38 +38,38 @@ func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-	//		ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 			if aMFUENGAPID == nil {
-	//			ran.Log.Error("AmfUeNgapID is nil")
+				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
 			rANUENGAPID = ie.Value.RANUENGAPID
-	//		ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 			if rANUENGAPID == nil {
-	//			ran.Log.Error("RanUeNgapID is nil")
+				log.Error("RanUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDIMSVoiceSupportIndicator:
 			iMSVoiceSupportIndicator = ie.Value.IMSVoiceSupportIndicator
-	//		ran.Log.Trace("Decode IE IMSVoiceSupportIndicator")
+			log.Trace("Decode IE IMSVoiceSupportIndicator")
 			if iMSVoiceSupportIndicator == nil {
-	//			ran.Log.Error("iMSVoiceSupportIndicator is nil")
+				log.Error("iMSVoiceSupportIndicator is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDCriticalityDiagnostics:
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-	//		ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 	if ranUe == nil {
-	//	ran.Log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
 
-	//ranUe.Log.Info("Handle UE Radio Capability Check Response")
+	log.Info("Handle UE Radio Capability Check Response")
 
 	// TODO: handle iMSVoiceSupportIndicator
 
@@ -85,16 +85,16 @@ func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, message *nga
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-	//	ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	nGResetAcknowledge := successfulOutcome.Value.NGResetAcknowledge
 	if nGResetAcknowledge == nil {
-	//	ran.Log.Error("NGResetAcknowledge is nil")
+		log.Error("NGResetAcknowledge is nil")
 		return
 	}
 
-	//ran.Log.Info("Handle NG Reset Acknowledge")
+	log.Info("Handle NG Reset Acknowledge")
 
 	for _, ie := range nGResetAcknowledge.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -106,14 +106,14 @@ func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, message *nga
 	}
 
 	if uEAssociatedLogicalNGConnectionList != nil {
-	//	ran.Log.Tracef("%d UE association(s) has been reset", len(uEAssociatedLogicalNGConnectionList.List))
-		for _, item := range uEAssociatedLogicalNGConnectionList.List {
+		log.Tracef("%d UE association(s) has been reset", len(uEAssociatedLogicalNGConnectionList.List))
+		for i, item := range uEAssociatedLogicalNGConnectionList.List {
 			if item.AMFUENGAPID != nil && item.RANUENGAPID != nil {
-	//			ran.Log.Tracef("%d: AmfUeNgapID[%d] RanUeNgapID[%d]", i+1, item.AMFUENGAPID.Value, item.RANUENGAPID.Value)
+				log.Tracef("%d: AmfUeNgapID[%d] RanUeNgapID[%d]", i+1, item.AMFUENGAPID.Value, item.RANUENGAPID.Value)
 			} else if item.AMFUENGAPID != nil {
-	//			ran.Log.Tracef("%d: AmfUeNgapID[%d] RanUeNgapID[-1]", i+1, item.AMFUENGAPID.Value)
+				log.Tracef("%d: AmfUeNgapID[%d] RanUeNgapID[-1]", i+1, item.AMFUENGAPID.Value)
 			} else if item.RANUENGAPID != nil {
-	//			ran.Log.Tracef("%d: AmfUeNgapID[-1] RanUeNgapID[%d]", i+1, item.RANUENGAPID.Value)
+				log.Tracef("%d: AmfUeNgapID[-1] RanUeNgapID[%d]", i+1, item.RANUENGAPID.Value)
 			}
 		}
 	}
@@ -133,12 +133,12 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	uEContextReleaseComplete := successfulOutcome.Value.UEContextReleaseComplete
 	if uEContextReleaseComplete == nil {
-//		ran.Log.Error("NGResetAcknowledge is nil")
+		log.Error("NGResetAcknowledge is nil")
 		return
 	}
 
@@ -146,39 +146,39 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 			if aMFUENGAPID == nil {
-//				ran.Log.Error("AmfUeNgapID is nil")
+				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 			if rANUENGAPID == nil {
-//				ran.Log.Error("RanUeNgapID is nil")
+				log.Error("RanUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDUserLocationInformation:
 			userLocationInformation = ie.Value.UserLocationInformation
-//			ran.Log.Trace("Decode IE UserLocationInformation")
+			log.Trace("Decode IE UserLocationInformation")
 		case ngapType.ProtocolIEIDInfoOnRecommendedCellsAndRANNodesForPaging:
 			infoOnRecommendedCellsAndRANNodesForPaging = ie.Value.InfoOnRecommendedCellsAndRANNodesForPaging
-//			ran.Log.Trace("Decode IE InfoOnRecommendedCellsAndRANNodesForPaging")
+			log.Trace("Decode IE InfoOnRecommendedCellsAndRANNodesForPaging")
 			if infoOnRecommendedCellsAndRANNodesForPaging != nil {
-//				ran.Log.Warn("IE infoOnRecommendedCellsAndRANNodesForPaging is not support")
+				log.Warn("IE infoOnRecommendedCellsAndRANNodesForPaging is not support")
 			}
 		case ngapType.ProtocolIEIDPDUSessionResourceListCxtRelCpl:
 			pDUSessionResourceList = ie.Value.PDUSessionResourceListCxtRelCpl
-//			ran.Log.Trace("Decode IE PDUSessionResourceList")
+			log.Trace("Decode IE PDUSessionResourceList")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics:
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	ranUe := h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
 	if ranUe == nil {
-//		ran.Log.Errorf("No RanUe Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+		log.Errorf("No RanUe Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
 		cause := ngapType.Cause{
 			Present: ngapType.CausePresentRadioNetwork,
 			RadioNetwork: &ngapType.CauseRadioNetwork{
@@ -189,7 +189,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 		return
 	}
 
-//	ranUe.Log.Info("Handle UE Context Release Complete")
+	log.Info("Handle UE Context Release Complete")
 
 	if userLocationInformation != nil {
 		ranUe.UpdateLocation(userLocationInformation)
@@ -200,10 +200,10 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 
 	amfUe := ranUe.AmfUe
 	if amfUe == nil {
-//		ran.Log.Infof("Release UE Context : RanUe[AmfUeNgapId: %d]", ranUe.AmfUeNgapId)
+		log.Infof("Release UE Context : RanUe[AmfUeNgapId: %d]", ranUe.AmfUeNgapId)
 		err := ranUe.Remove()
 		if err != nil {
-//			ran.Log.Errorln(err.Error())
+			log.Errorln(err.Error())
 		}
 		return
 	}
@@ -264,21 +264,21 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 		cause = *tmp
 	}
 	if amfUe.State[ran.AnType()].Is(context.Registered) {
-//		ranUe.Log.Info("Rel Ue Context in GMM-Registered")
+		log.Info("Rel Ue Context in GMM-Registered")
 		if cause.NgapCause != nil && pDUSessionResourceList != nil {
 			for _, pduSessionReourceItem := range pDUSessionResourceList.List {
 				pduSessionID := int32(pduSessionReourceItem.PDUSessionID.Value)
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
-//					ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 					// TODO: Check if doing error handling here
 					continue
 				}
 				response, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextDeactivateUpCnxState(amfUe, smContext, cause)
 				if err != nil {
-//					ran.Log.Errorf("Send Update SmContextDeactivate UpCnxState Error[%s]", err.Error())
+					log.Errorf("Send Update SmContextDeactivate UpCnxState Error[%s]", err.Error())
 				} else if response == nil {
-//					ran.Log.Errorln("Send Update SmContextDeactivate UpCnxState Error")
+					log.Errorln("Send Update SmContextDeactivate UpCnxState Error")
 				}
 			}
 		}
@@ -288,30 +288,30 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 	delete(amfUe.ReleaseCause, ran.AnType())
 	switch ranUe.ReleaseAction {
 	case context.UeContextN2NormalRelease:
-//		ranUe.Log.Infof("Release UE[%s] Context : N2 Connection Release", amfUe.Supi)
+		log.Infof("Release UE[%s] Context : N2 Connection Release", amfUe.Supi)
 		// amfUe.DetachRanUe(ran.AnType)
 		err := ranUe.Remove()
 		if err != nil {
-	//		ran.Log.Errorln(err.Error())
+			log.Errorln(err.Error())
 		}
 	case context.UeContextReleaseUeContext:
-	//	ranUe.Log.Infof("Release UE[%s] Context : Release Ue Context", amfUe.Supi)
+		log.Infof("Release UE[%s] Context : Release Ue Context", amfUe.Supi)
 	//TODO:tungtq
 	//	gmm_common.RemoveAmfUe(amfUe)
 	case context.UeContextReleaseHandover:
-//		ranUe.Log.Infof("Release UE[%s] Context : Release for Handover", amfUe.Supi)
+		log.Infof("Release UE[%s] Context : Release for Handover", amfUe.Supi)
 		// TODO: it's a workaround, need to fix it.
 		targetRanUe := h.backend.Context().RanUeFindByAmfUeNgapID(ranUe.TargetUe.AmfUeNgapId)
 
 		context.DetachSourceUeTargetUe(ranUe)
 		err := ranUe.Remove()
 		if err != nil {
-//			ran.Log.Errorln(err.Error())
+			log.Errorln(err.Error())
 		}
 		amfUe.AttachRanUe(targetRanUe)
 		// Todo: remove indirect tunnel
 	default:
-//		ran.Log.Errorf("Invalid Release Action[%d]", ranUe.ReleaseAction)
+		log.Errorf("Invalid Release Action[%d]", ranUe.ReleaseAction)
 	}
 }
 
@@ -324,12 +324,12 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	pDUSessionResourceReleaseResponse := successfulOutcome.Value.PDUSessionResourceReleaseResponse
 	if pDUSessionResourceReleaseResponse == nil {
-//		ran.Log.Error("PDUSessionResourceReleaseResponse is nil")
+		log.Error("PDUSessionResourceReleaseResponse is nil")
 		return
 	}
 
@@ -337,41 +337,41 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 			if aMFUENGAPID == nil {
-//				ran.Log.Error("AmfUeNgapID is nil")
+				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUENgapID")
+			log.Trace("Decode IE RanUENgapID")
 			if rANUENGAPID == nil {
-//				ran.Log.Error("RanUeNgapID is nil")
+				log.Error("RanUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDPDUSessionResourceReleasedListRelRes:
 			pDUSessionResourceReleasedList = ie.Value.PDUSessionResourceReleasedListRelRes
-//			ran.Log.Trace("Decode IE PDUSessionResourceReleasedList")
+			log.Trace("Decode IE PDUSessionResourceReleasedList")
 			if pDUSessionResourceReleasedList == nil {
-//				ran.Log.Error("PDUSessionResourceReleasedList is nil")
+				log.Error("PDUSessionResourceReleasedList is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDUserLocationInformation:
 			userLocationInformation = ie.Value.UserLocationInformation
-//			ran.Log.Trace("Decode IE UserLocationInformation")
+			log.Trace("Decode IE UserLocationInformation")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics:
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	ranUe := ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 	if ranUe == nil {
-//		ran.Log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
 
-//	ranUe.Log.Info("Handle PDU Session Resource Release Response")
+	log.Info("Handle PDU Session Resource Release Response")
 
 	if userLocationInformation != nil {
 		ranUe.UpdateLocation(userLocationInformation)
@@ -383,30 +383,30 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 
 	amfUe := ranUe.AmfUe
 	if amfUe == nil {
-//		ranUe.Log.Error("amfUe is nil")
+		log.Error("amfUe is nil")
 		return
 	}
 	if pDUSessionResourceReleasedList != nil {
-//		ranUe.Log.Trace("Send PDUSessionResourceReleaseResponseTransfer to SMF")
+		log.Trace("Send PDUSessionResourceReleaseResponseTransfer to SMF")
 
 		for _, item := range pDUSessionResourceReleasedList.List {
 			pduSessionID := int32(item.PDUSessionID.Value)
 			transfer := item.PDUSessionResourceReleaseResponseTransfer
 			smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 			if !ok {
-//				ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				continue
 			}
 			_, responseErr, problemDetail, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 				models.N2SmInfoType_PDU_RES_REL_RSP, transfer)
 			// TODO: error handling
 			if err != nil {
-//				ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Error: %+v", err)
+				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Error: %+v", err)
 			} else if responseErr != nil && responseErr.JsonData.Error != nil {
-//				ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Error: %+v",
-//					responseErr.JsonData.Error.Cause)
+				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Error: %+v",
+					responseErr.JsonData.Error.Cause)
 			} else if problemDetail != nil {
-//				ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Failed: %+v", problemDetail)
+				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Failed: %+v", problemDetail)
 			}
 		}
 	}
@@ -424,12 +424,12 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	pDUSessionResourceSetupResponse := successfulOutcome.Value.PDUSessionResourceSetupResponse
 	if pDUSessionResourceSetupResponse == nil {
-//		ran.Log.Error("PDUSessionResourceSetupResponse is nil")
+		log.Error("PDUSessionResourceSetupResponse is nil")
 		return
 	}
 
@@ -437,60 +437,60 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceSetupListSURes: // ignore
 			pDUSessionResourceSetupResponseList = ie.Value.PDUSessionResourceSetupListSURes
-//			ran.Log.Trace("Decode IE PDUSessionResourceSetupListSURes")
+			log.Trace("Decode IE PDUSessionResourceSetupListSURes")
 		case ngapType.ProtocolIEIDPDUSessionResourceFailedToSetupListSURes: // ignore
 			pDUSessionResourceFailedToSetupList = ie.Value.PDUSessionResourceFailedToSetupListSURes
-//			ran.Log.Trace("Decode IE PDUSessionResourceFailedToSetupListSURes")
+			log.Trace("Decode IE PDUSessionResourceFailedToSetupListSURes")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics: // optional, ignore
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	if rANUENGAPID != nil {
 		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		}
 	}
 
 	if aMFUENGAPID != nil {
 		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
 			return
 		}
 	}
 
 	if ranUe != nil {
-//		ranUe.Log.Info("Handle PDU Session Resource Setup Response")
-//		ranUe.Log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Info("Handle PDU Session Resource Setup Response")
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
 		amfUe := ranUe.AmfUe
 		if amfUe == nil {
-//			ranUe.Log.Error("amfUe is nil")
+			log.Error("amfUe is nil")
 			return
 		}
 
 		if pDUSessionResourceSetupResponseList != nil {
-//			ranUe.Log.Trace("Send PDUSessionResourceSetupResponseTransfer to SMF")
+			log.Trace("Send PDUSessionResourceSetupResponseTransfer to SMF")
 
 			for _, item := range pDUSessionResourceSetupResponseList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
 				transfer := item.PDUSessionResourceSetupResponseTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
-//					ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 					models.N2SmInfoType_PDU_RES_SETUP_RSP, transfer)
 				if err != nil {
-					//ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
+					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
 				}
 				// RAN initiated QoS Flow Mobility in subclause 5.2.2.3.7
 				// if response != nil && response.BinaryDataN2SmInformation != nil {
@@ -502,19 +502,19 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 		}
 
 		if pDUSessionResourceFailedToSetupList != nil {
-			//ranUe.Log.Trace("Send PDUSessionResourceSetupUnsuccessfulTransfer to SMF")
+			log.Trace("Send PDUSessionResourceSetupUnsuccessfulTransfer to SMF")
 
 			for _, item := range pDUSessionResourceFailedToSetupList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
 				transfer := item.PDUSessionResourceSetupUnsuccessfulTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
-			//		ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 					models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
 				if err != nil {
-					//ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
+					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 				}
 
 				// if response != nil && response.BinaryDataN2SmInformation != nil {
@@ -543,12 +543,12 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	pDUSessionResourceModifyResponse := successfulOutcome.Value.PDUSessionResourceModifyResponse
 	if pDUSessionResourceModifyResponse == nil {
-//		ran.Log.Error("PDUSessionResourceModifyResponse is nil")
+		log.Error("PDUSessionResourceModifyResponse is nil")
 		return
 	}
 
@@ -556,63 +556,63 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceModifyListModRes: // ignore
 			pduSessionResourceModifyResponseList = ie.Value.PDUSessionResourceModifyListModRes
-//			ran.Log.Trace("Decode IE PDUSessionResourceModifyListModRes")
+			log.Trace("Decode IE PDUSessionResourceModifyListModRes")
 		case ngapType.ProtocolIEIDPDUSessionResourceFailedToModifyListModRes: // ignore
 			pduSessionResourceFailedToModifyList = ie.Value.PDUSessionResourceFailedToModifyListModRes
-//			ran.Log.Trace("Decode IE PDUSessionResourceFailedToModifyListModRes")
+			log.Trace("Decode IE PDUSessionResourceFailedToModifyListModRes")
 		case ngapType.ProtocolIEIDUserLocationInformation: // optional, ignore
 			userLocationInformation = ie.Value.UserLocationInformation
-//			ran.Log.Trace("Decode IE UserLocationInformation")
+			log.Trace("Decode IE UserLocationInformation")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics: // optional, ignore
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	if rANUENGAPID != nil {
 		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		}
 	}
 
 	if aMFUENGAPID != nil {
 		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
 			return
 		}
 	}
 
 	if ranUe != nil {
-//		ranUe.Log.Info("Handle PDU Session Resource Modify Response")
-//		ranUe.Log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Info("Handle PDU Session Resource Modify Response")
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
 		amfUe := ranUe.AmfUe
 		if amfUe == nil {
-//			ranUe.Log.Error("amfUe is nil")
+			log.Error("amfUe is nil")
 			return
 		}
 
 		if pduSessionResourceModifyResponseList != nil {
-//			ranUe.Log.Trace("Send PDUSessionResourceModifyResponseTransfer to SMF")
+			log.Trace("Send PDUSessionResourceModifyResponseTransfer to SMF")
 
 			for _, item := range pduSessionResourceModifyResponseList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
 				transfer := item.PDUSessionResourceModifyResponseTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
-//					ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 					models.N2SmInfoType_PDU_RES_MOD_RSP, transfer)
 				if err != nil {
-//					ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyResponseTransfer] Error: %+v", err)
+					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyResponseTransfer] Error: %+v", err)
 				}
 				// if response != nil && response.BinaryDataN2SmInformation != nil {
 				// TODO: n2SmInfo send to RAN
@@ -623,20 +623,20 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 		}
 
 		if pduSessionResourceFailedToModifyList != nil {
-//			ranUe.Log.Trace("Send PDUSessionResourceModifyUnsuccessfulTransfer to SMF")
+			log.Trace("Send PDUSessionResourceModifyUnsuccessfulTransfer to SMF")
 
 			for _, item := range pduSessionResourceFailedToModifyList.List {
 				pduSessionID := int32(item.PDUSessionID.Value)
 				transfer := item.PDUSessionResourceModifyUnsuccessfulTransfer
 				smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 				if !ok {
-//					ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
 				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 					models.N2SmInfoType_PDU_RES_MOD_FAIL, transfer)
 				if err != nil {
-//					ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyUnsuccessfulTransfer] Error: %+v", err)
+					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyUnsuccessfulTransfer] Error: %+v", err)
 				}
 				// if response != nil && response.BinaryDataN2SmInformation != nil {
 				// TODO: n2SmInfo send to RAN
@@ -666,12 +666,12 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	initialContextSetupResponse := successfulOutcome.Value.InitialContextSetupResponse
 	if initialContextSetupResponse == nil {
-//		ran.Log.Error("InitialContextSetupResponse is nil")
+		log.Error("InitialContextSetupResponse is nil")
 		return
 	}
 
@@ -679,66 +679,66 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 			if aMFUENGAPID == nil {
-//				ran.Log.Warn("AmfUeNgapID is nil")
+				log.Warn("AmfUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 			if rANUENGAPID == nil {
-//				ran.Log.Warn("RanUeNgapID is nil")
+				log.Warn("RanUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDPDUSessionResourceSetupListCxtRes:
 			pDUSessionResourceSetupResponseList = ie.Value.PDUSessionResourceSetupListCxtRes
-//			ran.Log.Trace("Decode IE PDUSessionResourceSetupResponseList")
+			log.Trace("Decode IE PDUSessionResourceSetupResponseList")
 			if pDUSessionResourceSetupResponseList == nil {
-//				ran.Log.Warn("PDUSessionResourceSetupResponseList is nil")
+				log.Warn("PDUSessionResourceSetupResponseList is nil")
 			}
 		case ngapType.ProtocolIEIDPDUSessionResourceFailedToSetupListCxtRes:
 			pDUSessionResourceFailedToSetupList = ie.Value.PDUSessionResourceFailedToSetupListCxtRes
-//			ran.Log.Trace("Decode IE PDUSessionResourceFailedToSetupList")
+			log.Trace("Decode IE PDUSessionResourceFailedToSetupList")
 			if pDUSessionResourceFailedToSetupList == nil {
-//				ran.Log.Warn("PDUSessionResourceFailedToSetupList is nil")
+				log.Warn("PDUSessionResourceFailedToSetupList is nil")
 			}
 		case ngapType.ProtocolIEIDCriticalityDiagnostics:
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE Criticality Diagnostics")
+			log.Trace("Decode IE Criticality Diagnostics")
 			if criticalityDiagnostics == nil {
-//				ran.Log.Warn("Criticality Diagnostics is nil")
+				log.Warn("Criticality Diagnostics is nil")
 			}
 		}
 	}
 
 	ranUe := ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 	if ranUe == nil {
-//		ran.Log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
 	amfUe := ranUe.AmfUe
 	if amfUe == nil {
-//		ran.Log.Error("amfUe is nil")
+		log.Error("amfUe is nil")
 		return
 	}
 
-//	ran.Log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
-//	ranUe.Log.Info("Handle Initial Context Setup Response")
+	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Info("Handle Initial Context Setup Response")
 
 	if pDUSessionResourceSetupResponseList != nil {
-//		ranUe.Log.Trace("Send PDUSessionResourceSetupResponseTransfer to SMF")
+		log.Trace("Send PDUSessionResourceSetupResponseTransfer to SMF")
 
 		for _, item := range pDUSessionResourceSetupResponseList.List {
 			pduSessionID := int32(item.PDUSessionID.Value)
 			transfer := item.PDUSessionResourceSetupResponseTransfer
 			smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 			if !ok {
-//				ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
 			// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
 			_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 				models.N2SmInfoType_PDU_RES_SETUP_RSP, transfer)
 			if err != nil {
-//				ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
+				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
 			}
 			// RAN initiated QoS Flow Mobility in subclause 5.2.2.3.7
 			// if response != nil && response.BinaryDataN2SmInformation != nil {
@@ -750,20 +750,20 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 	}
 
 	if pDUSessionResourceFailedToSetupList != nil {
-//		ranUe.Log.Trace("Send PDUSessionResourceSetupUnsuccessfulTransfer to SMF")
+		log.Trace("Send PDUSessionResourceSetupUnsuccessfulTransfer to SMF")
 
 		for _, item := range pDUSessionResourceFailedToSetupList.List {
 			pduSessionID := int32(item.PDUSessionID.Value)
 			transfer := item.PDUSessionResourceSetupUnsuccessfulTransfer
 			smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 			if !ok {
-//				ranUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
 			// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
 			_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
 				models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
 			if err != nil {
-//				ranUe.Log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
+				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 			}
 
 			// if response != nil && response.BinaryDataN2SmInformation != nil {
@@ -795,12 +795,12 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, m
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	uEContextModificationResponse := successfulOutcome.Value.UEContextModificationResponse
 	if uEContextModificationResponse == nil {
-//		ran.Log.Error("UEContextModificationResponse is nil")
+		log.Error("UEContextModificationResponse is nil")
 		return
 	}
 
@@ -808,53 +808,53 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, m
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 			if aMFUENGAPID == nil {
-//				ran.Log.Warn("AmfUeNgapID is nil")
+				log.Warn("AmfUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 			if rANUENGAPID == nil {
-//				ran.Log.Warn("RanUeNgapID is nil")
+				log.Warn("RanUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRRCState: // optional, ignore
 			rRCState = ie.Value.RRCState
-//			ran.Log.Trace("Decode IE RRCState")
+			log.Trace("Decode IE RRCState")
 		case ngapType.ProtocolIEIDUserLocationInformation: // optional, ignore
 			userLocationInformation = ie.Value.UserLocationInformation
-//			ran.Log.Trace("Decode IE UserLocationInformation")
+			log.Trace("Decode IE UserLocationInformation")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics: // optional, ignore
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 
 	if rANUENGAPID != nil {
 		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		}
 	}
 
 	if aMFUENGAPID != nil {
 		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
 		if ranUe == nil {
-//			ran.Log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
 			return
 		}
 	}
 
 	if ranUe != nil {
-//		ranUe.Log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
-//		ranUe.Log.Info("Handle UE Context Modification Response")
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Info("Handle UE Context Modification Response")
 
 		if rRCState != nil {
 			switch rRCState.Value {
 			case ngapType.RRCStatePresentInactive:
-//				ranUe.Log.Trace("UE RRC State: Inactive")
+				log.Trace("UE RRC State: Inactive")
 			case ngapType.RRCStatePresentConnected:
-//				ranUe.Log.Trace("UE RRC State: Connected")
+				log.Trace("UE RRC State: Connected")
 			}
 		}
 
@@ -880,12 +880,12 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	handoverRequestAcknowledge := successfulOutcome.Value.HandoverRequestAcknowledge // reject
 	if handoverRequestAcknowledge == nil {
-//		ran.Log.Error("HandoverRequestAcknowledge is nil")
+		log.Error("HandoverRequestAcknowledge is nil")
 		return
 	}
 
@@ -893,32 +893,32 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
 			aMFUENGAPID = ie.Value.AMFUENGAPID
-//			ran.Log.Trace("Decode IE AmfUeNgapID")
+			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
 			rANUENGAPID = ie.Value.RANUENGAPID
-//			ran.Log.Trace("Decode IE RanUeNgapID")
+			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceAdmittedList: // ignore
 			pDUSessionResourceAdmittedList = ie.Value.PDUSessionResourceAdmittedList
-//			ran.Log.Trace("Decode IE PduSessionResourceAdmittedList")
+			log.Trace("Decode IE PduSessionResourceAdmittedList")
 		case ngapType.ProtocolIEIDPDUSessionResourceFailedToSetupListHOAck: // ignore
 			pDUSessionResourceFailedToSetupListHOAck = ie.Value.PDUSessionResourceFailedToSetupListHOAck
-//			ran.Log.Trace("Decode IE PduSessionResourceFailedToSetupListHOAck")
+			log.Trace("Decode IE PduSessionResourceFailedToSetupListHOAck")
 		case ngapType.ProtocolIEIDTargetToSourceTransparentContainer: // reject
 			targetToSourceTransparentContainer = ie.Value.TargetToSourceTransparentContainer
-//			ran.Log.Trace("Decode IE TargetToSourceTransparentContainer")
+			log.Trace("Decode IE TargetToSourceTransparentContainer")
 		case ngapType.ProtocolIEIDCriticalityDiagnostics: // ignore
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE CriticalityDiagnostics")
+			log.Trace("Decode IE CriticalityDiagnostics")
 		}
 	}
 	if targetToSourceTransparentContainer == nil {
-//		ran.Log.Error("TargetToSourceTransparentContainer is nil")
+		log.Error("TargetToSourceTransparentContainer is nil")
 		item := buildCriticalityDiagnosticsIEItem(ngapType.CriticalityPresentReject,
 			ngapType.ProtocolIEIDTargetToSourceTransparentContainer, ngapType.TypeOfErrorPresentMissing)
 		iesCriticalityDiagnostics.List = append(iesCriticalityDiagnostics.List, item)
 	}
 	if len(iesCriticalityDiagnostics.List) > 0 {
-//		ran.Log.Error("Has missing reject IE(s)")
+		log.Error("Has missing reject IE(s)")
 
 		procedureCode := ngapType.ProcedureCodeHandoverResourceAllocation
 		triggeringMessage := ngapType.TriggeringMessagePresentSuccessfulOutcome
@@ -934,21 +934,21 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 
 	targetUe := h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
 	if targetUe == nil {
-//		ran.Log.Errorf("No UE Context[AMFUENGAPID: %d]", aMFUENGAPID.Value)
+		log.Errorf("No UE Context[AMFUENGAPID: %d]", aMFUENGAPID.Value)
 		return
 	}
 
-//	targetUe.Log.Info("Handle Handover Request Acknowledge")
+	log.Info("Handle Handover Request Acknowledge")
 
 	if rANUENGAPID != nil {
 		targetUe.RanUeNgapId = rANUENGAPID.Value
 //		targetUe.UpdateLogFields()
 	}
-//	ran.Log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
+	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
 
 	amfUe := targetUe.AmfUe
 	if amfUe == nil {
-//		targetUe.Log.Error("amfUe is nil")
+		log.Error("amfUe is nil")
 		return
 	}
 
@@ -965,10 +965,10 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 				response, errResponse, problemDetails, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverPrepared(amfUe,
 					smContext, models.N2SmInfoType_HANDOVER_REQ_ACK, transfer)
 				if err != nil {
-//					targetUe.Log.Errorf("Send HandoverRequestAcknowledgeTransfer error: %v", err)
+					log.Errorf("Send HandoverRequestAcknowledgeTransfer error: %v", err)
 				}
 				if problemDetails != nil {
-//					targetUe.Log.Warnf("ProblemDetails[status: %d, Cause: %s]", problemDetails.Status, problemDetails.Cause)
+					log.Warnf("ProblemDetails[status: %d, Cause: %s]", problemDetails.Status, problemDetails.Cause)
 				}
 				if response != nil && response.BinaryDataN2SmInformation != nil {
 					handoverItem := ngapType.PDUSessionResourceHandoverItem{}
@@ -996,10 +996,10 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 				_, _, problemDetails, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverPrepared(amfUe, smContext,
 					models.N2SmInfoType_HANDOVER_RES_ALLOC_FAIL, transfer)
 				if err != nil {
-//					targetUe.Log.Errorf("Send HandoverResourceAllocationUnsuccessfulTransfer error: %v", err)
+					log.Errorf("Send HandoverResourceAllocationUnsuccessfulTransfer error: %v", err)
 				}
 				if problemDetails != nil {
-//					targetUe.Log.Warnf("ProblemDetails[status: %d, Cause: %s]", problemDetails.Status, problemDetails.Cause)
+					log.Warnf("ProblemDetails[status: %d, Cause: %s]", problemDetails.Status, problemDetails.Cause)
 				}
 			}
 		}
@@ -1008,12 +1008,12 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 	sourceUe := targetUe.SourceUe
 	if sourceUe == nil {
 		// TODO: Send Namf_Communication_CreateUEContext Response to S-AMF
-//		ran.Log.Error("handover between different Ue has not been implement yet")
+		log.Error("handover between different Ue has not been implement yet")
 	} else {
-//		ran.Log.Tracef("Source: RanUeNgapID[%d] AmfUeNgapID[%d]", sourceUe.RanUeNgapId, sourceUe.AmfUeNgapId)
-//		ran.Log.Tracef("Target: RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
+		log.Tracef("Source: RanUeNgapID[%d] AmfUeNgapID[%d]", sourceUe.RanUeNgapId, sourceUe.AmfUeNgapId)
+		log.Tracef("Target: RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
 		if len(pduSessionResourceHandoverList.List) == 0 {
-//			targetUe.Log.Info("Handle Handover Preparation Failure [HoFailure In Target5GC NgranNode Or TargetSystem]")
+			log.Info("Handle Handover Preparation Failure [HoFailure In Target5GC NgranNode Or TargetSystem]")
 			cause := &ngapType.Cause{
 				Present: ngapType.CausePresentRadioNetwork,
 				RadioNetwork: &ngapType.CauseRadioNetwork{
@@ -1035,36 +1035,36 @@ func (h *ngapHandler) handleAMFconfigurationUpdateAcknowledge(ran *context.AmfRa
 
 	successfulOutcome := message.SuccessfulOutcome
 	if successfulOutcome == nil {
-//		ran.Log.Error("SuccessfulOutcome is nil")
+		log.Error("SuccessfulOutcome is nil")
 		return
 	}
 	aMFConfigurationUpdateAcknowledge := successfulOutcome.Value.AMFConfigurationUpdateAcknowledge
 	if aMFConfigurationUpdateAcknowledge == nil {
-//		ran.Log.Error("AMFConfigurationUpdateAcknowledge is nil")
+		log.Error("AMFConfigurationUpdateAcknowledge is nil")
 		return
 	}
 
-//	ran.Log.Info("Handle AMF Configuration Update Acknowledge")
+	log.Info("Handle AMF Configuration Update Acknowledge")
 
 	for i := 0; i < len(aMFConfigurationUpdateAcknowledge.ProtocolIEs.List); i++ {
 		ie := aMFConfigurationUpdateAcknowledge.ProtocolIEs.List[i]
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFTNLAssociationSetupList:
 			aMFTNLAssociationSetupList = ie.Value.AMFTNLAssociationSetupList
-//			ran.Log.Trace("Decode IE AMFTNLAssociationSetupList")
+			log.Trace("Decode IE AMFTNLAssociationSetupList")
 			if aMFTNLAssociationSetupList == nil {
-//				ran.Log.Error("AMFTNLAssociationSetupList is nil")
+				log.Error("AMFTNLAssociationSetupList is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDCriticalityDiagnostics:
 			criticalityDiagnostics = ie.Value.CriticalityDiagnostics
-//			ran.Log.Trace("Decode IE Criticality Diagnostics")
+			log.Trace("Decode IE Criticality Diagnostics")
 
 		case ngapType.ProtocolIEIDAMFTNLAssociationFailedToSetupList:
 			aMFTNLAssociationFailedToSetupList = ie.Value.AMFTNLAssociationFailedToSetupList
-//			ran.Log.Trace("Decode IE AMFTNLAssociationFailedToSetupList")
+			log.Trace("Decode IE AMFTNLAssociationFailedToSetupList")
 			if aMFTNLAssociationFailedToSetupList == nil {
-//				ran.Log.Error("AMFTNLAssociationFailedToSetupList is nil")
+				log.Error("AMFTNLAssociationFailedToSetupList is nil")
 				return
 			}
 		}

@@ -6,6 +6,11 @@ import (
 	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
 )
 
+type SelectResult interface {
+	NfId() string
+	NfUri() string
+}
+
 type NfSelector interface {
 	AmfSelector
 	UdmSelector
@@ -17,14 +22,13 @@ type NfSelector interface {
 
 type UdmSelector interface {
 	SearchUdmSdmInstance(*context.AmfUe, models.NfType, models.NfType,*Nnrf_NFDiscovery.SearchNFInstancesParamOpts) error
-SelectUdm()
-
+	SelectUdm(string) (SelectResult, error)
 
 }
 
 
 type PcfSelector interface {
-	SelectPcf()
+	SelectPcf(string, string) (SelectResult, error)
 }
 
 type SmfSelector interface {
@@ -32,7 +36,7 @@ type SmfSelector interface {
 }
 
 type AusfSelector interface {
-	SelectAusf()
+	SelectAusf() (SelectResult, error)
 }
 
 type NssiSelector interface {

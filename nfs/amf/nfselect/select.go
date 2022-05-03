@@ -1,10 +1,12 @@
 package nfselect
 
 import (
+	"errors"
 	"fmt"
 	"time"
 	"net/url"
 	"etri5gc/nfs/amf/context"
+	selectinf "etri5gc/nfs/amf/sbi/nfselect"
 	"etri5gc/nfs/amf/sbi/consumer"
 	"etri5gc/nfs/amf"
 
@@ -21,6 +23,28 @@ func init() {
 	log = logrus.WithFields(logrus.Fields{"mod": "selector"})
 }
 
+type GenericNf struct {
+	id	string
+	uri	string
+}
+
+type UdmNf struct {
+	*GenericNf
+	sdmuri string
+}
+
+func (nf *GenericNf) NfId() string {
+	return nf.id
+}
+
+func (nf *GenericNf) NfUri() string {
+	return nf.uri
+}
+
+func (nf *UdmNf) SdmUri() string {
+	return nf.sdmuri
+}
+
 type NfSelector struct {
 	nf			amf.Backend
 	consumer	*consumer.Consumer
@@ -35,14 +59,76 @@ func NewNfSelector(b amf.Backend) *NfSelector {
 }
 
 
-func (s *NfSelector) SelectUdm() {
+func (s *NfSelector) SelectUdm(supi string) (selectinf.SelectResult, error) {
+	result := &UdmNf{}
+	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
+		Supi: optional.NewString(supi),
+	}
+	resp, err := s.consumer.Nrf().SendSearchNFInstances("", models.NfType_UDM, models.NfType_AMF, &param)
+	if err != nil {
+		return nil, err
+	}
+
+	var uecmUri, sdmUri string
+	for _, nfProfile := range resp.NfInstances {
+		result.id = nfProfile.NfInstanceId
+		uecmUri = searchNFServiceUri(nfProfile, models.ServiceName_NUDM_UECM, models.NfServiceStatus_REGISTERED)
+		sdmUri = searchNFServiceUri(nfProfile, models.ServiceName_NUDM_SDM, models.NfServiceStatus_REGISTERED)
+		if uecmUri != "" && sdmUri != "" {
+			result.uri = uecmUri
+			result.sdmuri = sdmUri
+			return result, nil
+		}
+	}
+	return nil, fmt.Errorf("AMF can not select an UDM by NRF")
 }
 
-func (s *NfSelector) SelectPcf() {
+func (s *NfSelector) SelectPcf(supi string, locality string) (selectinf.SelectResult, error){
+	result := &GenericNf{}
+	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
+		Supi: optional.NewString(supi),
+	}
+	if len(locality) > 0 {
+		param.PreferredLocality = optional.NewString(locality)
+	}
+
+	if resp, err := s.consumer.Nrf().SendSearchNFInstances("", models.NfType_PCF, models.NfType_AMF, &param); err != nil {
+		return nil, err
+	} else {
+		// select the first PCF, TODO: select base on other info
+		var pcfUri string
+		for _, nfProfile := range resp.NfInstances {
+			pcfUri = searchNFServiceUri(nfProfile, models.ServiceName_NPCF_AM_POLICY_CONTROL,
+				models.NfServiceStatus_REGISTERED)
+			if pcfUri != "" {
+				result.id = nfProfile.NfInstanceId
+				result.uri = pcfUri
+				return result, nil
+			}
+		}
+		return nil, errors.New("No PCF is found")
+	}
 }
 
-func (s *NfSelector) SelectAusf() {
+func (s *NfSelector) SelectAusf() (selectinf.SelectResult, error) {
+	result := &GenericNf{}
+	param := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{}
+	if resp, err := s.consumer.Nrf().SendSearchNFInstances("", models.NfType_AUSF, models.NfType_AMF, &param); err != nil {
+		return nil, err
+	} else {
+		// select the first AUSF, TODO: select base on other info
+		var ausfUri string
+		for _, nfProfile := range resp.NfInstances {
+			if ausfUri = searchNFServiceUri(nfProfile, models.ServiceName_NAUSF_AUTH, models.NfServiceStatus_REGISTERED); ausfUri != "" {
+				result.id = nfProfile.NfInstanceId
+				result.uri =  ausfUri
+				return result, nil
+			}
+		}
+		return nil, errors.New("No ausf is found")
+	}
 }
+
 
 func (s *NfSelector) SelectNssi() {
 }
