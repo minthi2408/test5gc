@@ -185,7 +185,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 				if ulNasTransport.SNSSAI != nil {
 					snssai = nasConvert.SnssaiToModels(ulNasTransport.SNSSAI)
 				} else {
-					if allowedNssai, ok := ue.AllowedNssai[anType]; ok {
+					if allowedNssai, ok := ue.GetNssfInfo().AllowedNssai[anType]; ok {
 						snssai = *allowedNssai[0].AllowedSnssai
 					} else {
 						return errors.New("Ue doesn't have allowedNssai")
@@ -626,8 +626,9 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	if err != nil {
 		return err
 	}
-	ue.PcfId = snf.NfId()
-	ue.PcfUri = snf.NfUri()
+	pcfinfo := ue.GetPcfInfo()
+	pcfinfo.PcfId = snf.NfId()
+	pcfinfo.PcfUri = snf.NfUri()
 	
 	problemDetails, err := gmm.consumer.Pcf().AMPolicyControlCreate(ue, anType)
 	if problemDetails != nil {
@@ -638,8 +639,8 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 
 	// Service Area Restriction are applicable only to 3GPP access
 	if anType == models.AccessType__3_GPP_ACCESS {
-		if ue.AmPolicyAssociation != nil && ue.AmPolicyAssociation.ServAreaRes != nil {
-			servAreaRes := ue.AmPolicyAssociation.ServAreaRes
+		if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
+			servAreaRes := pcfinfo.AmPolicyAssociation.ServAreaRes
 			if servAreaRes.RestrictionType == models.RestrictionType_ALLOWED_AREAS {
 				numOfallowedTAs := 0
 				for _, area := range servAreaRes.Areas {
@@ -697,6 +698,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 	log.Infoln("Handle MobilityAndPeriodicRegistrationUpdating")
 
 	udminfo := ue.GetUdmInfo()
+	pcfinfo := ue.GetPcfInfo()
 
 	if ue.RegistrationRequest.UpdateType5GS != nil {
 		if ue.RegistrationRequest.UpdateType5GS.GetNGRanRcu() == nasMessage.NGRanRadioCapabilityUpdateNeeded {
@@ -765,12 +767,12 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		allowReEstablishPduSession := true
 
 		// determines that the UE is in non-allowed area or is not in allowed area
-		if ue.AmPolicyAssociation != nil && ue.AmPolicyAssociation.ServAreaRes != nil {
-			switch ue.AmPolicyAssociation.ServAreaRes.RestrictionType {
+		if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
+			switch pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType {
 			case models.RestrictionType_ALLOWED_AREAS:
-				allowReEstablishPduSession = context.TacInAreas(ue.Tai.Tac, ue.AmPolicyAssociation.ServAreaRes.Areas)
+				allowReEstablishPduSession = context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 			case models.RestrictionType_NOT_ALLOWED_AREAS:
-				allowReEstablishPduSession = !context.TacInAreas(ue.Tai.Tac, ue.AmPolicyAssociation.ServAreaRes.Areas)
+				allowReEstablishPduSession = !context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 			}
 		}
 
@@ -951,7 +953,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		}
 	}
 
-	if ue.LocationChanged && ue.RequestTriggerLocationChange {
+	if ue.LocationChanged && ue.GetPcfInfo().RequestTriggerLocationChange {
 		updateReq := models.PolicyAssociationUpdateRequest{}
 		updateReq.Triggers = append(updateReq.Triggers, models.RequestTrigger_LOC_CH)
 		updateReq.UserLoc = &ue.Location
@@ -1135,6 +1137,7 @@ func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
 // TS 23.502 4.2.2.2.3 Registration with AMF Re-allocation
 func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
 	amf := gmm.nas.backend.Context()
+	nssfinfo := ue.GetNssfInfo()
 
 	if ue.RegistrationRequest.RequestedNSSAI != nil {
 		requestedNssai, err := nasConvert.RequestedNssaiToModels(ue.RegistrationRequest.RequestedNSSAI)
@@ -1155,7 +1158,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 					MappedHomeSnssai: requestedSnssai.HomeSnssai,
 				}
 				if !ue.InAllowedNssai(*allowedSnssai.AllowedSnssai, anType) {
-					ue.AllowedNssai[anType] = append(ue.AllowedNssai[anType], allowedSnssai)
+					nssfinfo.AllowedNssai[anType] = append(nssfinfo.AllowedNssai[anType], allowedSnssai)
 				}
 			} else {
 				needSliceSelection = true
@@ -1164,7 +1167,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 		}
 
 		if needSliceSelection {
-			if ue.NssfUri == "" {
+			if nssfinfo.NssfUri == "" {
 				for {
 					err := gmm.nas.backend.NfSelector().SearchNssfNSSelectionInstance(ue, models.NfType_NSSF, models.NfType_AMF, nil)
 					if err != nil {
@@ -1201,8 +1204,8 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 
 			// Step 6
 			searchTargetAmfQueryParam := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{}
-			if ue.NetworkSliceInfo != nil {
-				netwotkSliceInfo := ue.NetworkSliceInfo
+			if nssfinfo.NetworkSliceInfo != nil {
+				netwotkSliceInfo := nssfinfo.NetworkSliceInfo
 				if netwotkSliceInfo.TargetAmfSet != "" {
 					// TS 29.531
 					// TargetAmfSet format: ^[0-9]{3}-[0-9]{2-3}-[A-Fa-f0-9]{2}-[0-3][A-Fa-f0-9]{2}$
@@ -1248,15 +1251,15 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 					UeContextRequest: ue.RanUe[anType].UeContextRequest,
 					AnN2IPv4Addr:     ue.RanUe[anType].Ran.Conn().RemoteAddr().String(),
 					AllowedNssai: &models.AllowedNssai{
-						AllowedSnssaiList: ue.AllowedNssai[anType],
+						AllowedSnssaiList: nssfinfo.AllowedNssai[anType],
 						AccessType:        anType,
 					},
 				}
-				if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) > 0 {
-					registerContext.RejectedNssaiInPlmn = ue.NetworkSliceInfo.RejectedNssaiInPlmn
+				if len(nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn) > 0 {
+					registerContext.RejectedNssaiInPlmn = nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn
 				}
-				if len(ue.NetworkSliceInfo.RejectedNssaiInTa) > 0 {
-					registerContext.RejectedNssaiInTa = ue.NetworkSliceInfo.RejectedNssaiInTa
+				if len(nssfinfo.NetworkSliceInfo.RejectedNssaiInTa) > 0 {
+					registerContext.RejectedNssaiInTa = nssfinfo.NetworkSliceInfo.RejectedNssaiInTa
 				}
 
 				var n1Message bytes.Buffer
@@ -1264,7 +1267,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 				gmm.consumer.Callback().SendN1MessageNotifyAtAMFReAllocation(ue, n1Message.Bytes(), &registerContext)
 			} else {
 				// Condition (B) Step 7: initial AMF can not find Target AMF via NRF -> Send Reroute NAS Request to RAN
-				allowedNssaiNgap := ngapConvert.AllowedNssaiToNgap(ue.AllowedNssai[anType])
+				allowedNssaiNgap := ngapConvert.AllowedNssaiToNgap(nssfinfo.AllowedNssai[anType])
 				gmm.nas.ngap.SendRerouteNasRequest(ue, anType, nil, ue.RanUe[anType].InitialUEMessage, &allowedNssaiNgap)
 			}
 			return nil
@@ -1273,14 +1276,14 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 
 	// if registration request has no requested nssai, or non of snssai in requested nssai is permitted by nssf
 	// then use ue subscribed snssai which is marked as default as allowed nssai
-	if len(ue.AllowedNssai[anType]) == 0 {
+	if len(nssfinfo.AllowedNssai[anType]) == 0 {
 		for _, snssai := range ue.GetUdmInfo().SubscribedNssai {
 			if snssai.DefaultIndication {
 				if amf.InPlmnSupportList(*snssai.SubscribedSnssai) {
 					allowedSnssai := models.AllowedSnssai{
 						AllowedSnssai: snssai.SubscribedSnssai,
 					}
-					ue.AllowedNssai[anType] = append(ue.AllowedNssai[anType], allowedSnssai)
+					nssfinfo.AllowedNssai[anType] = append(nssfinfo.AllowedNssai[anType], allowedSnssai)
 				}
 			}
 		}
@@ -1510,6 +1513,8 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 		ue.T3565.Stop()
 		ue.T3565 = nil // clear the timer
 	}
+
+	pcfinfo := ue.GetPcfInfo()
 
 	// Set No ongoing
 	if procedure := ue.OnGoing(anType).Procedure; procedure == context.OnGoingProcedurePaging {
@@ -1771,7 +1776,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 			}
 		}
 		// downlink signaling
-		if ue.ConfigurationUpdateMessage != nil {
+		if pcfinfo.ConfigurationUpdateMessage != nil {
 			err := gmm.sendServiceAccept(ue, anType, ctxList, suList,
 				acceptPduSessionPsi, reactivationResult, errPduSessionId, errCause)
 			if err != nil {
@@ -1779,18 +1784,18 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 			}
 			mobilityRestrictionList := util.BuildIEMobilityRestrictionList(ue)
 			gmm.nas.ngap.SendDownlinkNasTransport(ue.RanUe[models.AccessType__3_GPP_ACCESS],
-				ue.ConfigurationUpdateMessage, &mobilityRestrictionList)
-			ue.ConfigurationUpdateMessage = nil
+				pcfinfo.ConfigurationUpdateMessage, &mobilityRestrictionList)
+			pcfinfo.ConfigurationUpdateMessage = nil
 		}
 	case nasMessage.ServiceTypeData:
 		if anType == models.AccessType__3_GPP_ACCESS {
-			if ue.AmPolicyAssociation != nil && ue.AmPolicyAssociation.ServAreaRes != nil {
+			if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 				var accept bool
-				switch ue.AmPolicyAssociation.ServAreaRes.RestrictionType {
+				switch pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType {
 				case models.RestrictionType_ALLOWED_AREAS:
-					accept = context.TacInAreas(ue.Tai.Tac, ue.AmPolicyAssociation.ServAreaRes.Areas)
+					accept = context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 				case models.RestrictionType_NOT_ALLOWED_AREAS:
-					accept = !context.TacInAreas(ue.Tai.Tac, ue.AmPolicyAssociation.ServAreaRes.Areas)
+					accept = !context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 				}
 
 				if !accept {
@@ -2190,7 +2195,7 @@ func (gmm *GmmFsm) handleDeregistrationRequest(ue *context.AmfUe, anType models.
 		return true
 	})
 
-	if ue.AmPolicyAssociation != nil {
+	if ue.GetPcfInfo().AmPolicyAssociation != nil {
 		terminateAmPolicyAssocaition := true
 		switch anType {
 		case models.AccessType__3_GPP_ACCESS:

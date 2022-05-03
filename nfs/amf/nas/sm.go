@@ -455,7 +455,7 @@ func (gmm *GmmFsm) ContextSetup(state *fsm.State, event fsm.EventType, args fsm.
 		log.Debugln(event)
 		amfUe := args[ArgAmfUe].(*context.AmfUe)
 		accessType := args[ArgAccessType].(models.AccessType)
-		if amfUe.UeCmRegistered {
+		if amfUe.GetNssfInfo().UeCmRegistered {
 			problemDetails, err := gmm.consumer.Udm().UeCmDeregistration(amfUe, accessType)
 			if problemDetails != nil {
 				if problemDetails.Cause != "CONTEXT_NOT_FOUND" {

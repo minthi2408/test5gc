@@ -515,21 +515,21 @@ func (builder *Nas) BuildRegistrationAccept(
 		registrationAccept.TAIList.SetLen(uint8(len(taiListNas)))
 		registrationAccept.TAIList.SetPartialTrackingAreaIdentityList(taiListNas)
 	}
-
-	if len(ue.AllowedNssai[anType]) > 0 {
+	nssfinfo := ue.GetNssfInfo()
+	if len(nssfinfo.AllowedNssai[anType]) > 0 {
 		registrationAccept.AllowedNSSAI = nasType.NewAllowedNSSAI(nasMessage.RegistrationAcceptAllowedNSSAIType)
 		var buf []uint8
-		for _, allowedSnssai := range ue.AllowedNssai[anType] {
+		for _, allowedSnssai := range nssfinfo.AllowedNssai[anType] {
 			buf = append(buf, nasConvert.SnssaiToNas(*allowedSnssai.AllowedSnssai)...)
 		}
 		registrationAccept.AllowedNSSAI.SetLen(uint8(len(buf)))
 		registrationAccept.AllowedNSSAI.SetSNSSAIValue(buf)
 	}
 
-	if ue.NetworkSliceInfo != nil {
-		if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 || len(ue.NetworkSliceInfo.RejectedNssaiInTa) != 0 {
+	if nssfinfo.NetworkSliceInfo != nil {
+		if len(nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 || len(nssfinfo.NetworkSliceInfo.RejectedNssaiInTa) != 0 {
 			rejectedNssaiNas := nasConvert.RejectedNssaiToNas(
-				ue.NetworkSliceInfo.RejectedNssaiInPlmn, ue.NetworkSliceInfo.RejectedNssaiInTa)
+				nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn, nssfinfo.NetworkSliceInfo.RejectedNssaiInTa)
 			registrationAccept.RejectedNSSAI = &rejectedNssaiNas
 			registrationAccept.RejectedNSSAI.SetIei(nasMessage.RegistrationAcceptRejectedNSSAIType)
 		}
@@ -538,7 +538,7 @@ func (builder *Nas) BuildRegistrationAccept(
 	if includeConfiguredNssaiCheck(ue) {
 		registrationAccept.ConfiguredNSSAI = nasType.NewConfiguredNSSAI(nasMessage.RegistrationAcceptConfiguredNSSAIType)
 		var buf []uint8
-		for _, snssai := range ue.ConfiguredNssai {
+		for _, snssai := range nssfinfo.ConfiguredNssai {
 			buf = append(buf, nasConvert.SnssaiToNas(*snssai.ConfiguredSnssai)...)
 		}
 		registrationAccept.ConfiguredNSSAI.SetLen(uint8(len(buf)))
@@ -596,18 +596,18 @@ func (builder *Nas) BuildRegistrationAccept(
 		registrationAccept.LADNInformation.SetLADND(buf)
 	}
 
-	if ue.NetworkSlicingSubscriptionChanged {
+	if nssfinfo.NetworkSlicingSubscriptionChanged {
 		registrationAccept.NetworkSlicingIndication =
 			nasType.NewNetworkSlicingIndication(nasMessage.RegistrationAcceptNetworkSlicingIndicationType)
 		registrationAccept.NetworkSlicingIndication.SetNSSCI(1)
 		registrationAccept.NetworkSlicingIndication.SetDCNI(0)
-		ue.NetworkSlicingSubscriptionChanged = false // reset the value
+		nssfinfo.NetworkSlicingSubscriptionChanged = false // reset the value
 	}
-
-	if anType == models.AccessType__3_GPP_ACCESS && ue.AmPolicyAssociation != nil &&
-		ue.AmPolicyAssociation.ServAreaRes != nil {
+	pcfinfo := ue.GetPcfInfo()
+	if anType == models.AccessType__3_GPP_ACCESS && pcfinfo.AmPolicyAssociation != nil &&
+		pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		registrationAccept.ServiceAreaList = nasType.NewServiceAreaList(nasMessage.RegistrationAcceptServiceAreaListType)
-		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *ue.AmPolicyAssociation.ServAreaRes)
+		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *pcfinfo.AmPolicyAssociation.ServAreaRes)
 		registrationAccept.ServiceAreaList.SetLen(uint8(len(partialServiceAreaList)))
 		registrationAccept.ServiceAreaList.SetPartialServiceAreaList(partialServiceAreaList)
 	}
@@ -647,7 +647,8 @@ func (builder *Nas) BuildRegistrationAccept(
 }
 
 func includeConfiguredNssaiCheck(ue *context.AmfUe) bool {
-	if len(ue.ConfiguredNssai) == 0 {
+	nssfinfo := ue.GetNssfInfo()
+	if len(nssfinfo.ConfiguredNssai) == 0 {
 		return false
 	}
 
@@ -655,7 +656,7 @@ func includeConfiguredNssaiCheck(ue *context.AmfUe) bool {
 	if registrationRequest.RequestedNSSAI == nil {
 		return true
 	}
-	if ue.NetworkSliceInfo != nil && len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 {
+	if nssfinfo.NetworkSliceInfo != nil && len(nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 {
 		return true
 	}
 	if registrationRequest.NetworkSlicingIndication != nil && registrationRequest.NetworkSlicingIndication.GetDCNI() == 1 {
@@ -716,44 +717,45 @@ func (builder *Nas) BuildConfigurationUpdateCommand(ue *context.AmfUe, anType mo
 		configurationUpdateCommand.TAIList.SetLen(uint8(len(taiListNas)))
 		configurationUpdateCommand.TAIList.SetPartialTrackingAreaIdentityList(taiListNas)
 	}
-
-	if len(ue.AllowedNssai[anType]) > 0 {
+	nssfinfo := ue.GetNssfInfo()
+	if len(nssfinfo.AllowedNssai[anType]) > 0 {
 		configurationUpdateCommand.AllowedNSSAI =
 			nasType.NewAllowedNSSAI(nasMessage.ConfigurationUpdateCommandAllowedNSSAIType)
 		var buf []uint8
-		for _, allowedSnssai := range ue.AllowedNssai[anType] {
+		for _, allowedSnssai := range nssfinfo.AllowedNssai[anType] {
 			buf = append(buf, nasConvert.SnssaiToNas(*allowedSnssai.AllowedSnssai)...)
 		}
 		configurationUpdateCommand.AllowedNSSAI.SetLen(uint8(len(buf)))
 		configurationUpdateCommand.AllowedNSSAI.SetSNSSAIValue(buf)
 	}
 
-	if len(ue.ConfiguredNssai) > 0 {
+	if len(nssfinfo.ConfiguredNssai) > 0 {
 		configurationUpdateCommand.ConfiguredNSSAI =
 			nasType.NewConfiguredNSSAI(nasMessage.ConfigurationUpdateCommandConfiguredNSSAIType)
 		var buf []uint8
-		for _, snssai := range ue.ConfiguredNssai {
+		for _, snssai := range nssfinfo.ConfiguredNssai {
 			buf = append(buf, nasConvert.SnssaiToNas(*snssai.ConfiguredSnssai)...)
 		}
 		configurationUpdateCommand.ConfiguredNSSAI.SetLen(uint8(len(buf)))
 		configurationUpdateCommand.ConfiguredNSSAI.SetSNSSAIValue(buf)
 	}
 
-	if ue.NetworkSliceInfo != nil {
-		if len(ue.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 || len(ue.NetworkSliceInfo.RejectedNssaiInTa) != 0 {
+	if nssfinfo.NetworkSliceInfo != nil {
+		if len(nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn) != 0 || len(nssfinfo.NetworkSliceInfo.RejectedNssaiInTa) != 0 {
 			rejectedNssaiNas := nasConvert.RejectedNssaiToNas(
-				ue.NetworkSliceInfo.RejectedNssaiInPlmn, ue.NetworkSliceInfo.RejectedNssaiInTa)
+				nssfinfo.NetworkSliceInfo.RejectedNssaiInPlmn, nssfinfo.NetworkSliceInfo.RejectedNssaiInTa)
 			configurationUpdateCommand.RejectedNSSAI = &rejectedNssaiNas
 			configurationUpdateCommand.RejectedNSSAI.SetIei(nasMessage.ConfigurationUpdateCommandRejectedNSSAIType)
 		}
 	}
 
 	// TODO: UniversalTimeAndLocalTimeZone
-	if anType == models.AccessType__3_GPP_ACCESS && ue.AmPolicyAssociation != nil &&
-		ue.AmPolicyAssociation.ServAreaRes != nil {
+	pcfinfo := ue.GetPcfInfo()
+	if anType == models.AccessType__3_GPP_ACCESS && pcfinfo.AmPolicyAssociation != nil &&
+		pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		configurationUpdateCommand.ServiceAreaList =
 			nasType.NewServiceAreaList(nasMessage.ConfigurationUpdateCommandServiceAreaListType)
-		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *ue.AmPolicyAssociation.ServAreaRes)
+		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *pcfinfo.AmPolicyAssociation.ServAreaRes)
 		configurationUpdateCommand.ServiceAreaList.SetLen(uint8(len(partialServiceAreaList)))
 		configurationUpdateCommand.ServiceAreaList.SetPartialServiceAreaList(partialServiceAreaList)
 	}

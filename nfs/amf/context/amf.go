@@ -482,7 +482,7 @@ func (amf *AMFContext) AmfUeFindByGuti(guti string) (ue *AmfUe, ok bool) {
 func (amf *AMFContext) AmfUeFindByPolicyAssociationID(polAssoId string) (ue *AmfUe, ok bool) {
 	amf.uepool.Range(func(key, value interface{}) bool {
 		candidate := value.(*AmfUe)
-		if ok = (candidate.PolicyAssociationId == polAssoId); ok {
+		if ok = (candidate.pcf.PolicyAssociationId == polAssoId); ok {
 			ue = candidate
 			return false
 		}

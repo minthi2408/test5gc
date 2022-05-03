@@ -28,8 +28,8 @@ func nssf_nssel_client(uri string) (*Nnssf_NSSelection.APIClient) {
 
 func (c *nssfConsumer) NSSelectionGetForRegistration(ue *context.AmfUe, requestedNssai []models.MappingOfSnssai) (
 	*models.ProblemDetails, error) {
-
-	client := nssf_nssel_client(ue.NssfUri)
+	nssfinfo := ue.GetNssfInfo()
+	client := nssf_nssel_client(nssfinfo.NssfUri)
 
 	sliceInfo := models.SliceInfoForRegistration{
 		SubscribedNssai: ue.GetUdmInfo().SubscribedNssai,
@@ -53,11 +53,11 @@ func (c *nssfConsumer) NSSelectionGetForRegistration(ue *context.AmfUe, requeste
 	res, httpResp, localErr := client.NetworkSliceInformationDocumentApi.NSSelectionGet(org_context.Background(),
 		models.NfType_AMF, c.amf.NfId(), &paramOpt)
 	if localErr == nil {
-		ue.NetworkSliceInfo = &res
+		nssfinfo.NetworkSliceInfo = &res
 		for _, allowedNssai := range res.AllowedNssaiList {
-			ue.AllowedNssai[allowedNssai.AccessType] = allowedNssai.AllowedSnssaiList
+			nssfinfo.AllowedNssai[allowedNssai.AccessType] = allowedNssai.AllowedSnssaiList
 		}
-		ue.ConfiguredNssai = res.ConfiguredNssai
+		nssfinfo.ConfiguredNssai = res.ConfiguredNssai
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {
 			err := localErr
@@ -75,7 +75,7 @@ func (c *nssfConsumer) NSSelectionGetForRegistration(ue *context.AmfUe, requeste
 func (c *nssfConsumer) NSSelectionGetForPduSession(ue *context.AmfUe, snssai models.Snssai) (
 	*models.AuthorizedNetworkSliceInfo, *models.ProblemDetails, error) {
 
-	client := nssf_nssel_client(ue.NssfUri)
+	client := nssf_nssel_client(ue.GetNssfInfo().NssfUri)
 
 	sliceInfoForPduSession := models.SliceInfoForPduSession{
 		SNssai:            &snssai,

@@ -114,15 +114,15 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 			forbiddenAreaInformation.List = append(forbiddenAreaInformation.List, item)
 		}
 	}
-
-	if ue.AmPolicyAssociation.ServAreaRes != nil {
+	pcfinfo := ue.GetPcfInfo()
+	if pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		mobilityRestrictionList.ServiceAreaInformation = new(ngapType.ServiceAreaInformation)
 		serviceAreaInformation := mobilityRestrictionList.ServiceAreaInformation
 
 		item := ngapType.ServiceAreaInformationItem{}
 		item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
 		var tacList []ngapType.TAC
-		for _, area := range ue.AmPolicyAssociation.ServAreaRes.Areas {
+		for _, area := range pcfinfo.AmPolicyAssociation.ServAreaRes.Areas {
 			for _, tac := range area.Tacs {
 				tacBytes, err := hex.DecodeString(tac)
 				if err != nil {
@@ -134,7 +134,7 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 				tacList = append(tacList, tacNgap)
 			}
 		}
-		if ue.AmPolicyAssociation.ServAreaRes.RestrictionType == models.RestrictionType_ALLOWED_AREAS {
+		if pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType == models.RestrictionType_ALLOWED_AREAS {
 			item.AllowedTACs = new(ngapType.AllowedTACs)
 			item.AllowedTACs.List = append(item.AllowedTACs.List, tacList...)
 		} else {

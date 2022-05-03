@@ -172,13 +172,13 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polId),
 		}
 	}
-
-	ue.AmPolicyAssociation.Triggers = polUpdate.Triggers
-	ue.RequestTriggerLocationChange = false
+	pcfinfo := ue.GetPcfInfo()
+	pcfinfo.AmPolicyAssociation.Triggers = polUpdate.Triggers
+	pcfinfo.RequestTriggerLocationChange = false
 
 	for _, trigger := range polUpdate.Triggers {
 		if trigger == models.RequestTrigger_LOC_CH {
-			ue.RequestTriggerLocationChange = true
+			pcfinfo.RequestTriggerLocationChange = true
 		}
 		//if trigger == models.RequestTrigger_PRA_CH {
 		// TODO: Presence Reporting Area handling (TS 23.503 6.1.2.5, TS 23.501 5.6.11)
@@ -186,11 +186,11 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 	}
 
 	if polUpdate.ServAreaRes != nil {
-		ue.AmPolicyAssociation.ServAreaRes = polUpdate.ServAreaRes
+		pcfinfo.AmPolicyAssociation.ServAreaRes = polUpdate.ServAreaRes
 	}
 
 	if polUpdate.Rfsp != 0 {
-		ue.AmPolicyAssociation.Rfsp = polUpdate.Rfsp
+		pcfinfo.AmPolicyAssociation.Rfsp = polUpdate.Rfsp
 	}
 
 	// use go routine to write response first to ensure the order of the procedure
@@ -205,7 +205,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 			//	logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
 				return
 			}
-			ue.ConfigurationUpdateMessage = message
+			pcfinfo.ConfigurationUpdateMessage = message
 			ue.SetOnGoing(models.AccessType__3_GPP_ACCESS, &context.OnGoing{
 				Procedure: context.OnGoingProcedurePaging,
 			})
@@ -314,11 +314,11 @@ func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mod
 
 		if registrationCtxtContainer.AllowedNssai != nil {
 			allowedNssai := registrationCtxtContainer.AllowedNssai
-			amfUe.AllowedNssai[allowedNssai.AccessType] = allowedNssai.AllowedSnssaiList
+			amfUe.GetNssfInfo().AllowedNssai[allowedNssai.AccessType] = allowedNssai.AllowedSnssaiList
 		}
 
 		if len(registrationCtxtContainer.ConfiguredNssai) > 0 {
-			amfUe.ConfiguredNssai = registrationCtxtContainer.ConfiguredNssai
+			amfUe.GetNssfInfo().ConfiguredNssai = registrationCtxtContainer.ConfiguredNssai
 		}
 
 		amfUe.AttachRanUe(ranUe)

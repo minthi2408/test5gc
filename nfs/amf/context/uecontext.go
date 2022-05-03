@@ -114,6 +114,62 @@ func (info *UdmInfo) copy(ueContext *models.UeContext) {
 	}
 
 }
+
+type PcfInfo struct {
+	PcfId                        string
+	PcfUri                       string
+	PolicyAssociationId          string
+	AmPolicyUri                  string
+	AmPolicyAssociation          *models.PolicyAssociation
+	RequestTriggerLocationChange bool // true if AmPolicyAssociation.Trigger contains RequestTrigger_LOC_CH
+	ConfigurationUpdateMessage   []byte
+
+}
+
+func (info *PcfInfo) copy(ueContext *models.UeContext) {
+	if ueContext.PcfId != "" {
+		info.PcfId = ueContext.PcfId
+	}
+
+	if ueContext.PcfAmPolicyUri != "" {
+		info.AmPolicyUri = ueContext.PcfAmPolicyUri
+	}
+
+	if len(ueContext.AmPolicyReqTriggerList) > 0 {
+		if info.AmPolicyAssociation == nil {
+			info.AmPolicyAssociation = new(models.PolicyAssociation)
+		}
+		for _, trigger := range ueContext.AmPolicyReqTriggerList {
+			switch trigger {
+			case models.AmPolicyReqTrigger_LOCATION_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
+			case models.AmPolicyReqTrigger_PRA_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
+			case models.AmPolicyReqTrigger_SARI_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
+			case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
+			}
+		}
+	}
+}
+
+type NssfInfo struct {
+	NssfId                            string
+	NssfUri                           string
+	NetworkSliceInfo                  *models.AuthorizedNetworkSliceInfo
+	AllowedNssai                      map[models.AccessType][]models.AllowedSnssai
+	ConfiguredNssai                   []models.ConfiguredSnssai
+	NetworkSlicingSubscriptionChanged bool
+	SdmSubscriptionId                 string
+	UeCmRegistered                    bool
+
+}
+
+func (info *NssfInfo) copy(ueContext *models.UeContext) {
+}
+
+
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
 	amf *AMFContext // never nil
@@ -166,14 +222,9 @@ type AmfUe struct {
 	ABBA                              []uint8
 	Kseaf                             string
 	Kamf                              string
+
 	/* context about PCF */
-	PcfId                        string
-	PcfUri                       string
-	PolicyAssociationId          string
-	AmPolicyUri                  string
-	AmPolicyAssociation          *models.PolicyAssociation
-	RequestTriggerLocationChange bool // true if AmPolicyAssociation.Trigger contains RequestTrigger_LOC_CH
-	ConfigurationUpdateMessage   []byte
+	pcf		PcfInfo	
 	/* UeContextForHandover*/
 	HandoverNotifyUri string
 	/* N1N2Message */
@@ -213,15 +264,9 @@ type AmfUe struct {
 	/* Registration Area */
 	RegistrationArea map[models.AccessType][]models.Tai
 	LadnInfo         []LADN
+
 	/* Network Slicing related context and Nssf */
-	NssfId                            string
-	NssfUri                           string
-	NetworkSliceInfo                  *models.AuthorizedNetworkSliceInfo
-	AllowedNssai                      map[models.AccessType][]models.AllowedSnssai
-	ConfiguredNssai                   []models.ConfiguredSnssai
-	NetworkSlicingSubscriptionChanged bool
-	SdmSubscriptionId                 string
-	UeCmRegistered                    bool
+	nssf	NssfInfo		
 	/* T3513(Paging) */
 	T3513 *Timer // for paging
 	/* T3565(Notification) */
@@ -295,7 +340,7 @@ func (ue *AmfUe) init(amf *AMFContext) {
 	ue.EventSubscriptionsInfo = make(map[string]*AmfUeEventSubscription)
 	ue.RanUe = make(map[models.AccessType]*RanUe)
 	ue.RegistrationArea = make(map[models.AccessType][]models.Tai)
-	ue.AllowedNssai = make(map[models.AccessType][]models.AllowedSnssai)
+	ue.nssf.AllowedNssai = make(map[models.AccessType][]models.AllowedSnssai)
 	ue.N1N2MessageIDGenerator = idgenerator.NewGenerator(1, 2147483647)
 	ue.N1N2MessageSubscribeIDGenerator = idgenerator.NewGenerator(1, 2147483647)
 	ue.onGoing = make(map[models.AccessType]*OnGoing)
@@ -312,6 +357,14 @@ func (ue *AmfUe) ServingAMF() *AMFContext {
 
 func (ue *AmfUe) GetUdmInfo() *UdmInfo {
 	return &ue.udm
+}
+
+func (ue *AmfUe) GetPcfInfo() *PcfInfo {
+	return &ue.pcf
+}
+
+func (ue *AmfUe) GetNssfInfo() *NssfInfo {
+	return &ue.nssf
 }
 
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
@@ -380,7 +433,7 @@ func (ue *AmfUe) GetCmInfo() (cmInfos []models.CmInfo) {
 }
 
 func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.AccessType) bool {
-	for _, allowedSnssai := range ue.AllowedNssai[anType] {
+	for _, allowedSnssai := range ue.nssf.AllowedNssai[anType] {
 		if reflect.DeepEqual(*allowedSnssai.AllowedSnssai, targetSNssai) {
 			return true
 		}
@@ -398,7 +451,7 @@ func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
 }
 
 func (ue *AmfUe) GetNsiInformationFromSnssai(anType models.AccessType, snssai models.Snssai) *models.NsiInformation {
-	for _, allowedSnssai := range ue.AllowedNssai[anType] {
+	for _, allowedSnssai := range ue.nssf.AllowedNssai[anType] {
 		if reflect.DeepEqual(*allowedSnssai.AllowedSnssai, snssai) {
 			// TODO: select NsiInformation based on operator policy
 			if len(allowedSnssai.NsiInformationList) != 0 {
@@ -631,8 +684,8 @@ func (ue *AmfUe) OnGoing(anType models.AccessType) OnGoing {
 }
 
 func (ue *AmfUe) RemoveAmPolicyAssociation() {
-	ue.AmPolicyAssociation = nil
-	ue.PolicyAssociationId = ""
+	ue.pcf.AmPolicyAssociation = nil
+	ue.pcf.PolicyAssociationId = ""
 }
 
 func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
@@ -673,32 +726,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.NCC = uint8(seafData.Ncc)
 	}
 
-	if ueContext.PcfId != "" {
-		ue.PcfId = ueContext.PcfId
-	}
-
-	if ueContext.PcfAmPolicyUri != "" {
-		ue.AmPolicyUri = ueContext.PcfAmPolicyUri
-	}
-
-	if len(ueContext.AmPolicyReqTriggerList) > 0 {
-		if ue.AmPolicyAssociation == nil {
-			ue.AmPolicyAssociation = new(models.PolicyAssociation)
-		}
-		for _, trigger := range ueContext.AmPolicyReqTriggerList {
-			switch trigger {
-			case models.AmPolicyReqTrigger_LOCATION_CHANGE:
-				ue.AmPolicyAssociation.Triggers = append(ue.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
-			case models.AmPolicyReqTrigger_PRA_CHANGE:
-				ue.AmPolicyAssociation.Triggers = append(ue.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
-			case models.AmPolicyReqTrigger_SARI_CHANGE:
-				ue.AmPolicyAssociation.Triggers = append(ue.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
-			case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
-				ue.AmPolicyAssociation.Triggers = append(ue.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
-			}
-		}
-	}
-
+	ue.pcf.copy(&ueContext)
 	if len(ueContext.SessionContextList) > 0 {
 		for _, pduSessionContext := range ueContext.SessionContextList {
 			smContext := SmContext{
@@ -772,7 +800,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 					allowedSnssai := models.AllowedSnssai{
 						AllowedSnssai: &snssai,
 					}
-					ue.AllowedNssai[mmContext.AccessType] = append(ue.AllowedNssai[mmContext.AccessType], allowedSnssai)
+					ue.nssf.AllowedNssai[mmContext.AccessType] = append(ue.nssf.AllowedNssai[mmContext.AccessType], allowedSnssai)
 				}
 			}
 		}

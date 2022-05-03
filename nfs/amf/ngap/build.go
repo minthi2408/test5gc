@@ -1017,7 +1017,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 
 	allowedNSSAI := ie.Value.AllowedNSSAI
 
-	for _, allowedSnssai := range amfUe.AllowedNssai[anType] {
+	for _, allowedSnssai := range amfUe.GetNssfInfo().AllowedNssai[anType] {
 		allowedNSSAIItem := ngapType.AllowedNSSAIItem{}
 		ngapSnssai := ngapConvert.SNssaiToNgap(*allowedSnssai.AllowedSnssai)
 		allowedNSSAIItem.SNSSAI = ngapSnssai
@@ -1121,16 +1121,16 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.UERadioCapability.Value = uecapa
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
-
+	pcfinfo := amfUe.GetPcfInfo()
 	// Index to RAT/Frequency Selection Priority (optional)
-	if amfUe.AmPolicyAssociation != nil && amfUe.AmPolicyAssociation.Rfsp != 0 {
+	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
 		ie = ngapType.InitialContextSetupRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDIndexToRFSP
 		ie.Criticality.Value = ngapType.CriticalityPresentIgnore
 		ie.Value.Present = ngapType.InitialContextSetupRequestIEsPresentIndexToRFSP
 		ie.Value.IndexToRFSP = new(ngapType.IndexToRFSP)
 
-		ie.Value.IndexToRFSP.Value = int64(amfUe.AmPolicyAssociation.Rfsp)
+		ie.Value.IndexToRFSP.Value = int64(pcfinfo.AmPolicyAssociation.Rfsp)
 
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
@@ -1299,14 +1299,15 @@ func (s *ngapSender) buildUEContextModificationRequest(
 	// Security Key (optional)
 
 	// Index to RAT/Frequency Selection Priority (optional)
-	if amfUe.AmPolicyAssociation != nil && amfUe.AmPolicyAssociation.Rfsp != 0 {
+	pcfinfo := amfUe.GetPcfInfo()
+	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
 		ie = ngapType.UEContextModificationRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDIndexToRFSP
 		ie.Criticality.Value = ngapType.CriticalityPresentIgnore
 		ie.Value.Present = ngapType.UEContextModificationRequestIEsPresentIndexToRFSP
 		ie.Value.IndexToRFSP = new(ngapType.IndexToRFSP)
 
-		ie.Value.IndexToRFSP.Value = int64(amfUe.AmPolicyAssociation.Rfsp)
+		ie.Value.IndexToRFSP.Value = int64(pcfinfo.AmPolicyAssociation.Rfsp)
 
 		uEContextModificationRequestIEs.List = append(uEContextModificationRequestIEs.List, ie)
 	}

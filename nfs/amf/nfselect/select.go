@@ -161,7 +161,7 @@ func (s *NfSelector) SearchUdmSdmInstance(ue *context.AmfUe, targetNfType, reque
 }
 func (s *NfSelector) SearchNssfNSSelectionInstance(ue *context.AmfUe, targetNfType, requestNfType models.NfType,
 	param *Nnrf_NFDiscovery.SearchNFInstancesParamOpts) error {
-
+	nssfinfo := ue.GetNssfInfo()
 	nrf := s.consumer.Nrf()
 
 	resp, localErr := nrf.SendSearchNFInstances("", targetNfType, requestNfType, param)
@@ -172,14 +172,14 @@ func (s *NfSelector) SearchNssfNSSelectionInstance(ue *context.AmfUe, targetNfTy
 	// select the first NSSF, TODO: select base on other info
 	var nssfUri string
 	for _, nfProfile := range resp.NfInstances {
-		ue.NssfId = nfProfile.NfInstanceId
+		nssfinfo.NssfId = nfProfile.NfInstanceId
 		nssfUri = searchNFServiceUri(nfProfile, models.ServiceName_NNSSF_NSSELECTION, models.NfServiceStatus_REGISTERED)
 		if nssfUri != "" {
 			break
 		}
 	}
-	ue.NssfUri = nssfUri
-	if ue.NssfUri == "" {
+	nssfinfo.NssfUri = nssfUri
+	if nssfinfo.NssfUri == "" {
 		return fmt.Errorf("AMF can not select an NSSF by NRF")
 	}
 	return nil
@@ -220,7 +220,7 @@ func (s *NfSelector) SelectSmf(	ue *context.AmfUe,	anType models.AccessType, pdu
 
 	nsiInformation := ue.GetNsiInformationFromSnssai(anType, snssai)
 	if nsiInformation == nil {
-		if ue.NssfUri == "" {
+		if ue.GetNssfInfo().NssfUri == "" {
 			// TODO: Set a timeout of NSSF Selection or will starvation here
 			for {
 				if err := s.SearchNssfNSSelectionInstance(ue, models.NfType_NSSF,

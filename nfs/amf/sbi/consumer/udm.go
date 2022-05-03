@@ -134,7 +134,7 @@ func (c *udmConsumer) SDMSubscribe(ue *context.AmfUe) (problemDetails *models.Pr
 	resSubscription, httpResp, localErr := client.SubscriptionCreationApi.Subscribe(
 		org_context.Background(), ue.Supi, sdmSubscription)
 	if localErr == nil {
-		ue.SdmSubscriptionId = resSubscription.SubscriptionId
+		ue.GetNssfInfo().SdmSubscriptionId = resSubscription.SubscriptionId
 		return
 	} else if httpResp != nil {
 		if httpResp.Status != localErr.Error() {
@@ -196,7 +196,7 @@ func (c *udmConsumer) SDMGetSliceSelectionSubscriptionData(ue *context.AmfUe) (p
 func (c *udmConsumer) SDMUnsubscribe(ue *context.AmfUe) (problemDetails *models.ProblemDetails, err error) {
 	client := udm_sdm_client(ue)
 
-	httpResp, localErr := client.SubscriptionDeletionApi.Unsubscribe(org_context.Background(), ue.Supi, ue.SdmSubscriptionId)
+	httpResp, localErr := client.SubscriptionDeletionApi.Unsubscribe(org_context.Background(), ue.Supi, ue.GetNssfInfo().SdmSubscriptionId)
 	if localErr == nil {
 		return
 	} else if httpResp != nil {
@@ -233,7 +233,7 @@ func (c *udmConsumer) UeCmRegistration(ue *context.AmfUe, accessType models.Acce
 		_, httpResp, localErr := client.AMFRegistrationFor3GPPAccessApi.Registration(org_context.Background(),
 			ue.Supi, registrationData)
 		if localErr == nil {
-			ue.UeCmRegistered = true
+			ue.GetNssfInfo().UeCmRegistered = true
 			return nil, nil
 		} else if httpResp != nil {
 			if httpResp.Status != localErr.Error() {
@@ -254,7 +254,7 @@ func (c *udmConsumer) UeCmRegistration(ue *context.AmfUe, accessType models.Acce
 		_, httpResp, localErr :=
 			client.AMFRegistrationForNon3GPPAccessApi.Register(org_context.Background(), ue.Supi, registrationData)
 		if localErr == nil {
-			ue.UeCmRegistered = true
+			ue.GetNssfInfo().UeCmRegistered = true
 			return nil, nil
 		} else if httpResp != nil {
 			if httpResp.Status != localErr.Error() {
