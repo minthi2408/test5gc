@@ -279,9 +279,10 @@ func (gmm *GmmFsm) Authentication(state *fsm.State, event fsm.EventType, args fs
 		// clear authentication related data at exit
 		amfUe := args[ArgAmfUe].(*context.AmfUe)
 		log.Debugln(event)
-		amfUe.AuthenticationCtx = nil
-		amfUe.AuthFailureCauseSynchFailureTimes = 0
-		amfUe.IdentityRequestSendTimes = 0
+		ausfinfo := amfUe.GetAusfInfo()
+		ausfinfo.AuthenticationCtx = nil
+		ausfinfo.AuthFailureCauseSynchFailureTimes = 0
+		ausfinfo.IdentityRequestSendTimes = 0
 	default:
 		log.Errorf("Unknown event [%+v]", event)
 	}

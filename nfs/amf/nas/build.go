@@ -111,21 +111,23 @@ func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error
 	m.GmmMessage = nasproto.NewGmmMessage()
 	m.GmmHeader.SetMessageType(nasproto.MsgTypeAuthenticationRequest)
 
+	ausfinfo := ue.GetAusfInfo()
+
 	authenticationRequest := nasMessage.NewAuthenticationRequest(0)
 	authenticationRequest.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
 	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(nasproto.SecurityHeaderTypePlainNas)
 	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
 	authenticationRequest.AuthenticationRequestMessageIdentity.SetMessageType(nasproto.MsgTypeAuthenticationRequest)
 	authenticationRequest.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.NgKsi)
-	authenticationRequest.ABBA.SetLen(uint8(len(ue.ABBA)))
-	authenticationRequest.ABBA.SetABBAContents(ue.ABBA)
+	authenticationRequest.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
+	authenticationRequest.ABBA.SetABBAContents(ausfinfo.ABBA)
 
-	switch ue.AuthenticationCtx.AuthType {
+	switch ausfinfo.AuthenticationCtx.AuthType {
 	case models.AuthType__5_G_AKA:
 		var tmpArray [16]byte
 		var av5gAka models.Av5gAka
 
-		if err := mapstructure.Decode(ue.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
+		if err := mapstructure.Decode(ausfinfo.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
 			log.Error("Var5gAuthData Convert Type Error")
 			return nil, err
 		}
@@ -149,7 +151,7 @@ func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error
 		copy(tmpArray[:], autn[0:16])
 		authenticationRequest.AuthenticationParameterAUTN.SetAUTN(tmpArray)
 	case models.AuthType_EAP_AKA_PRIME:
-		eapMsg := ue.AuthenticationCtx.Var5gAuthData.(string)
+		eapMsg := ausfinfo.AuthenticationCtx.Var5gAuthData.(string)
 		rawEapMsg, err := base64.StdEncoding.DecodeString(eapMsg)
 		if err != nil {
 			return nil, err
@@ -247,11 +249,11 @@ func (builder *Nas) BuildAuthenticationResult(ue *context.AmfUe, eapSuccess bool
 	}
 	authenticationResult.EAPMessage.SetLen(uint16(len(rawEapMsg)))
 	authenticationResult.EAPMessage.SetEAPMessage(rawEapMsg)
-
+	ausfinfo := ue.GetAusfInfo()
 	if eapSuccess {
 		authenticationResult.ABBA = nasType.NewABBA(nasMessage.AuthenticationResultABBAType)
-		authenticationResult.ABBA.SetLen(uint8(len(ue.ABBA)))
-		authenticationResult.ABBA.SetABBAContents(ue.ABBA)
+		authenticationResult.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
+		authenticationResult.ABBA.SetABBAContents(ausfinfo.ABBA)
 	}
 
 	m.GmmMessage.AuthenticationResult = authenticationResult
@@ -377,9 +379,10 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 		securityModeCommand.EAPMessage.SetEAPMessage(rawEapMsg)
 
 		if eapSuccess {
+			ausfinfo := ue.GetAusfInfo()
 			securityModeCommand.ABBA = nasType.NewABBA(nasMessage.SecurityModeCommandABBAType)
-			securityModeCommand.ABBA.SetLen(uint8(len(ue.ABBA)))
-			securityModeCommand.ABBA.SetABBAContents(ue.ABBA)
+			securityModeCommand.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
+			securityModeCommand.ABBA.SetABBAContents(ausfinfo.ABBA)
 		}
 	}
 

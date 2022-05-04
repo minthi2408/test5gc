@@ -85,7 +85,7 @@ func (sender *Nas) SendAuthenticationRequest(ue *context.RanUe) {
 	amfUe := ue.AmfUe
 	log.Infof("Send Authentication Request")
 
-	if amfUe.AuthenticationCtx == nil {
+	if amfUe.GetAusfInfo().AuthenticationCtx == nil {
 	log.Error("Authentication Context of UE is nil")
 		return
 	}

@@ -1457,6 +1457,7 @@ func (gmm *GmmFsm) handleConfigurationUpdateComplete(ue *context.AmfUe,
 func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.AccessType) (bool, error) {
 	log.Info("Authentication procedure")
 
+	ausfinfo := ue.GetAusfInfo()
 	// Check whether UE has SUCI and SUPI
 	if IdentityVerification(ue) {
 		log.Debugln("UE has SUCI / SUPI")
@@ -1466,7 +1467,7 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 		}
 	} else {
 		// Request UE's SUCI by sending identity request
-		ue.IdentityRequestSendTimes++
+		ausfinfo.IdentityRequestSendTimes++
 		gmm.nas.SendIdentityRequest(ue.RanUe[accessType], accessType, nasMessage.MobileIdentity5GSTypeSuci)
 		return false, nil
 	}
@@ -1478,8 +1479,8 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 		log.Errorf("AMF can not select an AUSF by NRF: %s", err.Error())
 		return false, err
 	}
-	ue.AusfUri = snf.NfUri()
-	ue.AusfId = snf.NfId()
+	ausfinfo.AusfUri = snf.NfUri()
+	ausfinfo.AusfId = snf.NfId()
 
 	response, problemDetails, err := gmm.consumer.Ausf().SendUEAuthenticationAuthenticateRequest(ue, nil)
 	if err != nil {
@@ -1489,8 +1490,8 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 		log.Errorf("Nausf_UEAU Authenticate Request Failed: %+v", problemDetails)
 		return false, nil
 	}
-	ue.AuthenticationCtx = response
-	ue.ABBA = []uint8{0x00, 0x00} // set ABBA value as described at TS 33.501 Annex A.7.1
+	ausfinfo.AuthenticationCtx = response
+	ausfinfo.ABBA = []uint8{0x00, 0x00} // set ABBA value as described at TS 33.501 Annex A.7.1
 
 	gmm.nas.SendAuthenticationRequest(ue.RanUe[accessType])
 	return false, nil
@@ -1866,14 +1867,15 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 		ue.T3560 = nil // clear the timer
 	}
 
-	if ue.AuthenticationCtx == nil {
+	ausfinfo := ue.GetAusfInfo()
+	if ausfinfo.AuthenticationCtx == nil {
 		return fmt.Errorf("Ue Authentication Context is nil")
 	}
 
-	switch ue.AuthenticationCtx.AuthType {
+	switch ausfinfo.AuthenticationCtx.AuthType {
 	case models.AuthType__5_G_AKA:
 		var av5gAka models.Av5gAka
-		if err := mapstructure.Decode(ue.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
+		if err := mapstructure.Decode(ausfinfo.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
 			return fmt.Errorf("Var5gAuthData Convert Type Error")
 		}
 		resStar := authenticationResponse.AuthenticationResponseParameter.GetRES()
@@ -1891,8 +1893,8 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 		if hResStar != av5gAka.HxresStar {
 			log.Errorf("HRES* Validation Failure (received: %s, expected: %s)", hResStar, av5gAka.HxresStar)
 
-			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ue.IdentityRequestSendTimes == 0 {
-				ue.IdentityRequestSendTimes++
+			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ausfinfo.IdentityRequestSendTimes == 0 {
+				ausfinfo.IdentityRequestSendTimes++
 				gmm.nas.SendIdentityRequest(ue.RanUe[accessType], accessType, nasMessage.MobileIdentity5GSTypeSuci)
 				return nil
 			} else {
@@ -1914,10 +1916,10 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 		switch response.AuthResult {
 		case models.AuthResult_SUCCESS:
 			ue.UnauthenticatedSupi = false
-			ue.Kseaf = response.Kseaf
+			ausfinfo.Kseaf = response.Kseaf
 			ue.Supi = response.Supi
 			ue.DerivateKamf()
-			log.Debugln("ue.DerivateKamf()", ue.Kamf)
+			log.Debugln("ue.DerivateKamf()", ausfinfo.Kamf)
 			return gmm.sm.SendEvent(ue.State[accessType], AuthSuccessEvent, fsm.ArgsType{
 				ArgAmfUe:      ue,
 				ArgAccessType: accessType,
@@ -1925,8 +1927,8 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 				ArgEAPMessage: "",
 			})
 		case models.AuthResult_FAILURE:
-			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ue.IdentityRequestSendTimes == 0 {
-				ue.IdentityRequestSendTimes++
+			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ausfinfo.IdentityRequestSendTimes == 0 {
+				ausfinfo.IdentityRequestSendTimes++
 				gmm.nas.SendIdentityRequest(ue.RanUe[accessType], accessType, nasMessage.MobileIdentity5GSTypeSuci)
 				return nil
 			} else {
@@ -1949,7 +1951,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 		switch response.AuthResult {
 		case models.AuthResult_SUCCESS:
 			ue.UnauthenticatedSupi = false
-			ue.Kseaf = response.KSeaf
+			ausfinfo.Kseaf = response.KSeaf
 			ue.Supi = response.Supi
 			ue.DerivateKamf()
 			// TODO: select enc/int algorithm based on ue security capability & amf's policy,
@@ -1961,8 +1963,8 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 				ArgEAPMessage: response.EapPayload,
 			})
 		case models.AuthResult_FAILURE:
-			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ue.IdentityRequestSendTimes == 0 {
-				ue.IdentityRequestSendTimes++
+			if ue.IdentityTypeUsedForRegistration == nasMessage.MobileIdentity5GSType5gGuti && ausfinfo.IdentityRequestSendTimes == 0 {
+				ausfinfo.IdentityRequestSendTimes++
 				gmm.nas.SendAuthenticationResult(ue.RanUe[accessType], false, response.EapPayload)
 				gmm.nas.SendIdentityRequest(ue.RanUe[accessType], accessType, nasMessage.MobileIdentity5GSTypeSuci)
 				return nil
@@ -1974,9 +1976,9 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 				})
 			}
 		case models.AuthResult_ONGOING:
-			ue.AuthenticationCtx.Var5gAuthData = response.EapPayload
+			ausfinfo.AuthenticationCtx.Var5gAuthData = response.EapPayload
 			if _, exists := response.Links["eap-session"]; exists {
-				ue.AuthenticationCtx.Links = response.Links
+				ausfinfo.AuthenticationCtx.Links = response.Links
 			}
 			gmm.nas.SendAuthenticationRequest(ue.RanUe[accessType])
 		}
@@ -1998,6 +2000,8 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 	authenticationFailure *nasMessage.AuthenticationFailure) error {
 	log.Info("Handle Authentication Failure")
 
+	ausfinfo := ue.GetAusfInfo()
+
 	if ue.T3560 != nil {
 		ue.T3560.Stop()
 		ue.T3560 = nil // clear the timer
@@ -2005,7 +2009,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 
 	cause5GMM := authenticationFailure.Cause5GMM.GetCauseValue()
 
-	if ue.AuthenticationCtx.AuthType == models.AuthType__5_G_AKA {
+	if ausfinfo.AuthenticationCtx.AuthType == models.AuthType__5_G_AKA {
 		switch cause5GMM {
 		case nasMessage.Cause5GMMMACFailure:
 			log.Warnln("Authentication Failure Cause: Mac Failure")
@@ -2017,7 +2021,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 			return gmm.sm.SendEvent(ue.State[anType], AuthFailEvent, fsm.ArgsType{ArgAmfUe: ue, ArgAccessType: anType})
 		case nasMessage.Cause5GMMngKSIAlreadyInUse:
 			log.Warnln("Authentication Failure Cause: NgKSI Already In Use")
-			ue.AuthFailureCauseSynchFailureTimes = 0
+			ausfinfo.AuthFailureCauseSynchFailureTimes = 0
 			log.Warnln("Select new NgKsi")
 			// select new ngksi
 			if ue.NgKsi.Ksi < 6 { // ksi is range from 0 to 6
@@ -2029,8 +2033,8 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 		case nasMessage.Cause5GMMSynchFailure: // TS 24.501 5.4.1.3.7 case f
 			log.Warn("Authentication Failure 5GMM Cause: Synch Failure")
 
-			ue.AuthFailureCauseSynchFailureTimes++
-			if ue.AuthFailureCauseSynchFailureTimes >= 2 {
+			ausfinfo.AuthFailureCauseSynchFailureTimes++
+			if ausfinfo.AuthFailureCauseSynchFailureTimes >= 2 {
 				log.Warnf("2 consecutive Synch Failure, terminate authentication procedure")
 				gmm.nas.SendAuthenticationReject(ue.RanUe[anType], "")
 				return gmm.sm.SendEvent(ue.State[anType], AuthFailEvent, fsm.ArgsType{ArgAmfUe: ue, ArgAccessType: anType})
@@ -2042,7 +2046,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 			}
 
 			var av5gAka models.Av5gAka
-			if err := mapstructure.Decode(ue.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
+			if err := mapstructure.Decode(ausfinfo.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
 				log.Error("Var5gAuthData Convert Type Error")
 				return err
 			}
@@ -2055,12 +2059,12 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 				log.Errorf("Nausf_UEAU Authenticate Request Error[Problem Detail: %+v]", problemDetails)
 				return nil
 			}
-			ue.AuthenticationCtx = response
-			ue.ABBA = []uint8{0x00, 0x00}
+			ausfinfo.AuthenticationCtx = response
+			ausfinfo.ABBA = []uint8{0x00, 0x00}
 
 			gmm.nas.SendAuthenticationRequest(ue.RanUe[anType])
 		}
-	} else if ue.AuthenticationCtx.AuthType == models.AuthType_EAP_AKA_PRIME {
+	} else if ausfinfo.AuthenticationCtx.AuthType == models.AuthType_EAP_AKA_PRIME {
 		switch cause5GMM {
 		case nasMessage.Cause5GMMngKSIAlreadyInUse:
 			log.Warn("Authentication Failure 5GMM Cause: NgKSI Already In Use")

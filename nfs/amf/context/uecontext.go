@@ -166,13 +166,40 @@ type NssfInfo struct {
 
 }
 
-func (info *NssfInfo) copy(ueContext *models.UeContext) {
-}
+//func (info *NssfInfo) copy(ueContext *models.UeContext) {
+//}
 
+type AusfInfo struct {
+	AusfGroupId                       string
+	AusfId                            string
+	AusfUri                           string
+	RoutingIndicator                  string
+	AuthenticationCtx                 *models.UeAuthenticationCtx
+	AuthFailureCauseSynchFailureTimes int
+	IdentityRequestSendTimes          int
+	ABBA                              []uint8
+	Kseaf                             string
+	Kamf                              string
+
+}
 
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
 	amf *AMFContext // never nil
+
+	/* context about udm */
+	udm			UdmInfo	
+
+	/* context about PCF */
+	pcf		PcfInfo	
+
+	/* contex about ausf */
+	ausf	AusfInfo
+
+	/* Network Slicing related context and Nssf */
+	nssf	NssfInfo		
+
+	
 
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
@@ -209,22 +236,6 @@ type AmfUe struct {
 	LastVisitedRegisteredTai models.Tai
 	TimeZone                 string
 
-	/* context about udm */
-	udm			UdmInfo	
-	/* contex abut ausf */
-	AusfGroupId                       string
-	AusfId                            string
-	AusfUri                           string
-	RoutingIndicator                  string
-	AuthenticationCtx                 *models.UeAuthenticationCtx
-	AuthFailureCauseSynchFailureTimes int
-	IdentityRequestSendTimes          int
-	ABBA                              []uint8
-	Kseaf                             string
-	Kamf                              string
-
-	/* context about PCF */
-	pcf		PcfInfo	
 	/* UeContextForHandover*/
 	HandoverNotifyUri string
 	/* N1N2Message */
@@ -265,8 +276,6 @@ type AmfUe struct {
 	RegistrationArea map[models.AccessType][]models.Tai
 	LadnInfo         []LADN
 
-	/* Network Slicing related context and Nssf */
-	nssf	NssfInfo		
 	/* T3513(Paging) */
 	T3513 *Timer // for paging
 	/* T3565(Notification) */
@@ -365,6 +374,10 @@ func (ue *AmfUe) GetPcfInfo() *PcfInfo {
 
 func (ue *AmfUe) GetNssfInfo() *NssfInfo {
 	return &ue.nssf
+}
+
+func (ue *AmfUe) GetAusfInfo() *AusfInfo {
+	return &ue.ausf
 }
 
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
@@ -501,10 +514,10 @@ func (ue *AmfUe) DerivateKamf() {
 
 	P0 := []byte(groups[1])
 	L0 := ueauth.KDFLen(P0)
-	P1 := ue.ABBA
+	P1 := ue.ausf.ABBA
 	L1 := ueauth.KDFLen(P1)
 
-	KseafDecode, err := hex.DecodeString(ue.Kseaf)
+	KseafDecode, err := hex.DecodeString(ue.ausf.Kseaf)
 	if err != nil {
 	//	logger.ContextLog.Error(err)
 		return
@@ -514,7 +527,7 @@ func (ue *AmfUe) DerivateKamf() {
 	//	logger.ContextLog.Error(err)
 		return
 	}
-	ue.Kamf = hex.EncodeToString(KamfBytes)
+	ue.ausf.Kamf = hex.EncodeToString(KamfBytes)
 }
 
 // Algorithm key Derivation function defined in TS 33.501 Annex A.9
@@ -525,7 +538,7 @@ func (ue *AmfUe) DerivateAlgKey() {
 	P1 := []byte{ue.CipheringAlg}
 	L1 := ueauth.KDFLen(P1)
 
-	KamfBytes, err := hex.DecodeString(ue.Kamf)
+	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
 	if err != nil {
 		//logger.ContextLog.Error(err)
 		return
@@ -563,7 +576,7 @@ func (ue *AmfUe) DerivateAnKey(anType models.AccessType) {
 	P1 := []byte{accessType}
 	L1 := ueauth.KDFLen(P1)
 
-	KamfBytes, err := hex.DecodeString(ue.Kamf)
+	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
 	if err != nil {
 		//logger.ContextLog.Error(err)
 		return
@@ -586,7 +599,7 @@ func (ue *AmfUe) DerivateNH(syncInput []byte) {
 	P0 := syncInput
 	L0 := ueauth.KDFLen(P0)
 
-	KamfBytes, err := hex.DecodeString(ue.Kamf)
+	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
 	if err != nil {
 		//logger.ContextLog.Error(err)
 		return
@@ -659,8 +672,8 @@ func (ue *AmfUe) ClearRegistrationRequestData(accessType models.AccessType) {
 	ue.RegistrationRequest = nil
 	ue.RegistrationType5GS = 0
 	ue.IdentityTypeUsedForRegistration = 0
-	ue.AuthFailureCauseSynchFailureTimes = 0
-	ue.IdentityRequestSendTimes = 0
+	ue.ausf.AuthFailureCauseSynchFailureTimes = 0
+	ue.ausf.IdentityRequestSendTimes = 0
 	ue.ServingAmfChanged = false
 	ue.RegistrationAcceptForNon3GPPAccess = nil
 	if ranUe := ue.RanUe[accessType]; ranUe != nil {
@@ -700,11 +713,11 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 
 
 	if ueContext.AusfGroupId != "" {
-		ue.AusfGroupId = ueContext.AusfGroupId
+		ue.ausf.AusfGroupId = ueContext.AusfGroupId
 	}
 
 	if ueContext.RoutingIndicator != "" {
-		ue.RoutingIndicator = ueContext.RoutingIndicator
+		ue.ausf.RoutingIndicator = ueContext.RoutingIndicator
 	}
 	ue.udm.copy(&ueContext)
 	
@@ -714,7 +727,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.NgKsi = *seafData.NgKsi
 		if seafData.KeyAmf != nil {
 			if seafData.KeyAmf.KeyType == models.KeyAmfType_KAMF {
-				ue.Kamf = seafData.KeyAmf.KeyVal
+				ue.ausf.Kamf = seafData.KeyAmf.KeyVal
 			}
 		}
 		if nh, err := hex.DecodeString(seafData.Nh); err != nil {
