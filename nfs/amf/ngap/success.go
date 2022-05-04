@@ -198,7 +198,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 		printCriticalityDiagnostics(ran, criticalityDiagnostics)
 	}
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Infof("Release UE Context : RanUe[AmfUeNgapId: %d]", ranUe.AmfUeNgapId)
 		err := ranUe.Remove()
@@ -286,7 +286,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 
 	// Remove UE N2 Connection
 	delete(amfUe.ReleaseCause, ran.AnType())
-	switch ranUe.ReleaseAction {
+	switch ranUe.ReleaseAction() {
 	case context.UeContextN2NormalRelease:
 		log.Infof("Release UE[%s] Context : N2 Connection Release", amfUe.Supi)
 		// amfUe.DetachRanUe(ran.AnType)
@@ -301,7 +301,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 	case context.UeContextReleaseHandover:
 		log.Infof("Release UE[%s] Context : Release for Handover", amfUe.Supi)
 		// TODO: it's a workaround, need to fix it.
-		targetRanUe := h.backend.Context().RanUeFindByAmfUeNgapID(ranUe.TargetUe.AmfUeNgapId())
+		targetRanUe := h.backend.Context().RanUeFindByAmfUeNgapID(ranUe.GetHandoverInfo().TargetUe.AmfUeNgapId())
 
 		context.DetachSourceUeTargetUe(ranUe)
 		err := ranUe.Remove()
@@ -311,7 +311,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 		amfUe.AttachRanUe(targetRanUe)
 		// Todo: remove indirect tunnel
 	default:
-		log.Errorf("Invalid Release Action[%d]", ranUe.ReleaseAction)
+		log.Errorf("Invalid Release Action[%d]", ranUe.ReleaseAction())
 	}
 }
 
@@ -381,7 +381,7 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 		printCriticalityDiagnostics(ran, criticalityDiagnostics)
 	}
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
 		return
@@ -471,7 +471,7 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 	if ranUe != nil {
 		log.Info("Handle PDU Session Resource Setup Response")
 		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
-		amfUe := ranUe.AmfUe
+		amfUe := ranUe.AmfUe()
 		if amfUe == nil {
 			log.Error("amfUe is nil")
 			return
@@ -593,7 +593,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 	if ranUe != nil {
 		log.Info("Handle PDU Session Resource Modify Response")
 		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
-		amfUe := ranUe.AmfUe
+		amfUe := ranUe.AmfUe()
 		if amfUe == nil {
 			log.Error("amfUe is nil")
 			return
@@ -715,7 +715,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
 		return
@@ -774,7 +774,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 		}
 	}
 
-	if ranUe.Ran.AnType() == models.AccessType_NON_3_GPP_ACCESS {
+	if ranUe.Ran().AnType() == models.AccessType_NON_3_GPP_ACCESS {
 		h.sender.SendDownlinkNasTransport(ranUe, amfUe.RegistrationAcceptForNon3GPPAccess, nil)
 	}
 
@@ -946,7 +946,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 	}
 	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
 
-	amfUe := targetUe.AmfUe
+	amfUe := targetUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
 		return
@@ -975,7 +975,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 					handoverItem.PDUSessionID = item.PDUSessionID
 					handoverItem.HandoverCommandTransfer = response.BinaryDataN2SmInformation
 					pduSessionResourceHandoverList.List = append(pduSessionResourceHandoverList.List, handoverItem)
-					targetUe.SuccessPduSessionId = append(targetUe.SuccessPduSessionId, pduSessionId)
+					targetUe.GetHandoverInfo().SuccessPduSessionId = append(targetUe.GetHandoverInfo().SuccessPduSessionId, pduSessionId)
 				}
 				if errResponse != nil && errResponse.BinaryDataN2SmInformation != nil {
 					releaseItem := ngapType.PDUSessionResourceToReleaseItemHOCmd{}
@@ -1005,7 +1005,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 		}
 	}
 
-	sourceUe := targetUe.SourceUe
+	sourceUe := targetUe.GetHandoverInfo().SourceUe
 	if sourceUe == nil {
 		// TODO: Send Namf_Communication_CreateUEContext Response to S-AMF
 		log.Error("handover between different Ue has not been implement yet")

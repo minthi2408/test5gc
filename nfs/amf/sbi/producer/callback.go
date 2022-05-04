@@ -309,7 +309,7 @@ func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mod
 
 		ranUe.SetLocation(*registrationCtxtContainer.UserLocation)
 		amfUe.GetLocInfo().Location = *registrationCtxtContainer.UserLocation
-		ranUe.UeContextRequest = registrationCtxtContainer.UeContextRequest
+		ranUe.SetUeContextRequest(registrationCtxtContainer.UeContextRequest)
 		ranUe.OldAmfName = registrationCtxtContainer.InitialAmfName
 
 		if registrationCtxtContainer.AllowedNssai != nil {

@@ -438,13 +438,13 @@ func (ue *AmfUe) DetachRanUe(anType models.AccessType) {
 }
 
 func (ue *AmfUe) AttachRanUe(ranUe *RanUe) {
-	if oldRanUe := ue.RanUe[ranUe.Ran.atype]; oldRanUe != nil {
+	if oldRanUe := ue.RanUe[ranUe.ran.atype]; oldRanUe != nil {
 		//oldRanUe.Log.Infof("Implicit Deregistration - RanUeNgapID[%d]", oldRanUe.RanUeNgapId)
 		oldRanUe.DetachAmfUe()
 		// TODO: stop Implicit Deregistration timer
 	}
-	ue.RanUe[ranUe.Ran.atype] = ranUe
-	ranUe.AmfUe = ue
+	ue.RanUe[ranUe.ran.atype] = ranUe
+	ranUe.amfUe = ue
 }
 
 func (ue *AmfUe) GetAnType() models.AccessType {
@@ -707,7 +707,7 @@ func (ue *AmfUe) ClearRegistrationRequestData(accessType models.AccessType) {
 	ue.ServingAmfChanged = false
 	ue.RegistrationAcceptForNon3GPPAccess = nil
 	if ranUe := ue.RanUe[accessType]; ranUe != nil {
-		ranUe.UeContextRequest = false
+		ranUe.ueContextRequest = false
 	}
 	ue.RetransmissionOfInitialNASMsg = false
 	if onGoing := ue.onGoing[accessType]; onGoing != nil {

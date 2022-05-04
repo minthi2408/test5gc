@@ -32,7 +32,7 @@ func(s *ngapSender) SendToRan(ran *context.AmfRan, packet []byte) {
 }
 
 func(s *ngapSender) SendToRanUe(ue *context.RanUe, packet []byte) {
-	s.SendToRan(ue.Ran, packet)
+	s.SendToRan(ue.Ran(), packet)
 }
 
 func (s *ngapSender) NasSendToRan(ue *context.AmfUe, accessType models.AccessType, packet []byte) {
@@ -141,9 +141,9 @@ func(s *ngapSender) SendUEContextReleaseCommand(ue *context.RanUe, action contex
 	//	ue.Log.Errorf("Build UEContextReleaseCommand failed : %s", err.Error())
 		return
 	}
-	ue.ReleaseAction = action
+	ue.SetReleaseAction(action)
 	if ue.AmfUe != nil && ue.Ran != nil {
-		ue.AmfUe.ReleaseCause[ue.Ran.AnType()] = &context.CauseAll{
+		ue.AmfUe().ReleaseCause[ue.Ran().AnType()] = &context.CauseAll{
 			NgapCause: &models.NgApCause{
 				Group: int32(causePresent),
 				Value: int32(cause),
@@ -291,7 +291,7 @@ func(s *ngapSender) SendInitialContextSetupRequest(
 	//	amfUe.RanUe[anType].Log.Errorf("Build InitialContextSetupRequest failed : %s", err.Error())
 		return
 	}
-	amfUe.RanUe[anType].UeContextRequest = false
+	amfUe.RanUe[anType].SetUeContextRequest(false)
 	amfUe.RanUe[anType].SentInitialContextSetupRequest = true
 	s.NasSendToRan(amfUe, anType, pkt)
 }
@@ -368,12 +368,12 @@ func(s *ngapSender) SendHandoverPreparationFailure(sourceUe *context.RanUe, caus
 
 	//sourceUe.Log.Info("Send Handover Preparation Failure")
 
-	amfUe := sourceUe.AmfUe
+	amfUe := sourceUe.AmfUe()
 	if amfUe == nil {
 	//	sourceUe.Log.Error("amfUe is nil")
 		return
 	}
-	amfUe.SetOnGoing(sourceUe.Ran.AnType(), &context.OnGoing{
+	amfUe.SetOnGoing(sourceUe.Ran().AnType(), &context.OnGoing{
 		Procedure: context.OnGoingProcedureNothing,
 	})
 	pkt, err := s.buildHandoverPreparationFailure(sourceUe, cause, criticalityDiagnostics)
@@ -411,7 +411,7 @@ func(s *ngapSender) SendHandoverRequest(sourceUe *context.RanUe, targetRan *cont
 		return
 	}
 
-	if sourceUe.TargetUe != nil {
+	if sourceUe.GetHandoverInfo().TargetUe != nil {
 		//sourceUe.Log.Error("Handover Required Duplicated")
 		return
 	}

@@ -80,7 +80,7 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, mess
 
 	log.Info("Handle Initial Context Setup Failure")
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
 		return
@@ -243,12 +243,12 @@ func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, message *ngapTy
 
 	log.Info("Handle Handover Failure")
 
-	sourceUe := targetUe.SourceUe
+	sourceUe := targetUe.GetHandoverInfo().SourceUe
 	if sourceUe == nil {
 		// TODO: handle N2 Handover between AMF
 		log.Error("N2 Handover between AMF has not been implemented yet")
 	} else {
-		amfUe := targetUe.AmfUe
+		amfUe := targetUe.AmfUe()
 		if amfUe != nil {
 			amfUe.SmContextList.Range(func(key, value interface{}) bool {
 				pduSessionID := key.(int32)

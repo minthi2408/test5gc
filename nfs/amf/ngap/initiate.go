@@ -490,7 +490,7 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 			}
 		}
 	} else {
-		ranUe.AmfUe.AttachRanUe(ranUe)
+		ranUe.AmfUe().AttachRanUe(ranUe)
 	}
 
 	if userLocationInformation != nil {
@@ -504,10 +504,10 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 
 	if uEContextRequest != nil {
 		log.Debug("Trigger initial Context Setup procedure")
-		ranUe.UeContextRequest = true
+		ranUe.SetUeContextRequest(true)
 		// TODO: Trigger Initial Context Setup procedure
 	} else {
-		ranUe.UeContextRequest = false
+		ranUe.SetUeContextRequest(false)
 	}
 
 	// TS 23.502 4.2.2.2.3 step 6a Nnrf_NFDiscovery_Request (NF type, AMF Set)
@@ -592,7 +592,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, messag
 
 	log.Info("Handle PDU Session Resource Notify")
 		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
 		return
@@ -810,7 +810,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 	log.Info("Handle PDU Session Resource Modify Indication")
 	log.Tracef("UE Context AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("AmfUe is nil")
 		return
@@ -914,7 +914,7 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, message
 		causeGroup, causeValue = printAndGetCause(ran, cause)
 	}
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe != nil {
 		if !h.isLatestAmfUe(amfUe) {
 			amfUe.DetachRanUe(ran.AnType())
@@ -1104,19 +1104,19 @@ func (h *ngapHandler) handleHandoverNotify(ran *context.AmfRan, message *ngapTyp
 	if userLocationInformation != nil {
 		targetUe.UpdateLocation(userLocationInformation)
 	}
-	amfUe := targetUe.AmfUe
+	amfUe := targetUe.AmfUe()
 	if amfUe == nil {
 	log.Error("AmfUe is nil")
 		return
 	}
-	sourceUe := targetUe.SourceUe
+	sourceUe := targetUe.GetHandoverInfo().SourceUe
 	if sourceUe == nil {
 		// TODO: Send to S-AMF
 		// Desciibed in (23.502 4.9.1.3.3) [conditional] 6a.Namf_Communication_N2InfoNotify.
 	log.Error("N2 Handover between AMF has not been implemented yet")
 	} else {
 //		targetUe.Log.Info("Handle Handover notification Finshed ")
-		for _, pduSessionid := range targetUe.SuccessPduSessionId {
+		for _, pduSessionid := range targetUe.GetHandoverInfo().SuccessPduSessionId {
 			smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionid)
 			if !ok {
 //				sourceUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionid)
@@ -1206,7 +1206,7 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, message *ngap
 	log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
 	log.Info("Handle Path Switch Request")
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("AmfUe is nil")
 		h.sender.SendPathSwitchRequestFailure(ran, sourceAMFUENGAPID.Value, rANUENGAPID.Value, nil, nil)
@@ -1432,7 +1432,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, message *ngapT
 
 //	sourceUe.Log.Info("Handle HandoverRequired")
 
-	amfUe := sourceUe.AmfUe
+	amfUe := sourceUe.AmfUe()
 	if amfUe == nil {
 		log.Error("Cannot find amfUE from sourceUE")
 		return
@@ -1442,7 +1442,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, message *ngapT
 		log.Errorf("targetID type[%d] is not supported", targetID.Present)
 		return
 	}
-	amfUe.SetOnGoing(sourceUe.Ran.AnType(), &context.OnGoing{
+	amfUe.SetOnGoing(sourceUe.Ran().AnType(), &context.OnGoing{
 		Procedure: context.OnGoingProcedureN2Handover,
 	})
 	if !amfUe.SecurityContextIsValid() {
@@ -1467,7 +1467,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, message *ngapT
 		// Described in (23.502 4.9.1.3.2) step 3.Namf_Communication_CreateUEContext Request
 	} else {
 		// Handover in same AMF
-		sourceUe.HandOverType.Value = handoverType.Value
+		sourceUe.GetHandoverInfo().HandOverType.Value = handoverType.Value
 		tai := ngapConvert.TaiToModels(targetID.TargetRANNodeID.SelectedTAI)
 		targetId := models.NgRanTargetId{
 			RanNodeId: &targetRanNodeId,
@@ -1578,14 +1578,14 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 	if cause != nil {
 		causePresent, causeValue = printAndGetCause(ran, cause)
 	}
-	targetUe := sourceUe.TargetUe
+	targetUe := sourceUe.GetHandoverInfo().TargetUe
 	if targetUe == nil {
 		// Described in (23.502 4.11.1.2.3) step 2
 		// Todo : send to T-AMF invoke Namf_UeContextReleaseRequest(targetUe)
 		log.Error("N2 Handover between AMF has not been implemented yet")
 	} else {
 		log.Tracef("Target : RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
-		amfUe := sourceUe.AmfUe
+		amfUe := sourceUe.AmfUe()
 		if amfUe != nil {
 			amfUe.SmContextList.Range(func(key, value interface{}) bool {
 				//pduSessionID := key.(int32)
@@ -2147,7 +2147,7 @@ func (h *ngapHandler) handleUERadioCapabilityInfoIndication(ran *context.AmfRan,
 	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
 	log.Info("Handle UE Radio Capability Info Indication")
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Errorln("amfUe is nil")
 		return

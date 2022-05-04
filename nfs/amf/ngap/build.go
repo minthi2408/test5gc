@@ -375,7 +375,7 @@ func (s *ngapSender) buildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 
 	// RAN Paging Priority (optional)
 	// Mobility Restriction List (optional)
-	if ue.Ran.AnType() == models.AccessType__3_GPP_ACCESS && mobilityRestrictionList != nil {
+	if ue.Ran().AnType() == models.AccessType__3_GPP_ACCESS && mobilityRestrictionList != nil {
 		amfUe := ue.AmfUe
 		if amfUe == nil {
 			return nil, fmt.Errorf("amfUe is nil")
@@ -714,7 +714,7 @@ func (s *ngapSender) buildPDUSessionResourceSetupRequest(ue *context.RanUe, nasP
 	pDUSessionResourceSetupRequestIEs.List = append(pDUSessionResourceSetupRequestIEs.List, ie)
 
 	// UE AggreateMaximum Bit Rate
-	udminfo := ue.AmfUe.GetUdmInfo()
+	udminfo := ue.AmfUe().GetUdmInfo()
 
 	ie = ngapType.PDUSessionResourceSetupRequestIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDUEAggregateMaximumBitRate
@@ -1071,7 +1071,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	ie.Value.SecurityKey = new(ngapType.SecurityKey)
 
 	securityKey := ie.Value.SecurityKey
-	switch ranUe.Ran.AnType() {
+	switch ranUe.Ran().AnType() {
 	case models.AccessType__3_GPP_ACCESS:
 		securityKey.Value = ngapConvert.ByteToBitString(secinfo.Kgnb, 256)
 	case models.AccessType_NON_3_GPP_ACCESS:
@@ -1434,7 +1434,7 @@ func (s *ngapSender) buildHandoverCommand(
 	ie.Value.HandoverType = new(ngapType.HandoverType)
 
 	handoverType := ie.Value.HandoverType
-	handoverType.Value = sourceUe.HandOverType.Value
+	handoverType.Value = sourceUe.GetHandoverInfo().HandOverType.Value
 
 	handoverCommandIEs.List = append(handoverCommandIEs.List, ie)
 
@@ -1574,7 +1574,7 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	pduSessionResourceSetupListHOReq ngapType.PDUSessionResourceSetupListHOReq,
 	sourceToTargetTransparentContainer ngapType.SourceToTargetTransparentContainer, nsci bool) ([]byte, error) {
 	amf := s.backend.Context()
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	if amfUe == nil {
 		return nil, fmt.Errorf("AmfUe is nil")
 	}
@@ -1614,7 +1614,7 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	ie.Value.HandoverType = new(ngapType.HandoverType)
 
 	handoverType := ie.Value.HandoverType
-	handoverType.Value = ue.HandOverType.Value
+	handoverType.Value = ue.GetHandoverInfo().HandOverType.Value
 
 	handoverRequestIEs.List = append(handoverRequestIEs.List, ie)
 
@@ -1848,7 +1848,7 @@ func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 	ie.Value.Present = ngapType.PathSwitchRequestAcknowledgeIEsPresentUESecurityCapabilities
 	ie.Value.UESecurityCapabilities = new(ngapType.UESecurityCapabilities)
 
-	secinfo := ue.AmfUe.GetSecInfo()
+	secinfo := ue.AmfUe().GetSecInfo()
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
 	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7

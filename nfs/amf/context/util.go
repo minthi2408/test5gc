@@ -59,29 +59,29 @@ func AttachSourceUeTargetUe(sourceUe, targetUe *RanUe) {
 		return
 	}
 	
-	amfUe := sourceUe.AmfUe
+	amfUe := sourceUe.amfUe
 	if amfUe == nil {
 		return
 	}
-	targetUe.AmfUe = amfUe
-	targetUe.SourceUe = sourceUe
-	sourceUe.TargetUe = targetUe
+	targetUe.amfUe = amfUe
+	targetUe.handover.SourceUe = sourceUe
+	sourceUe.handover.TargetUe = targetUe
 }
 
 func DetachSourceUeTargetUe(ranUe *RanUe) {
 	if ranUe == nil {
 		return
 	}
-	if ranUe.TargetUe != nil {
-		targetUe := ranUe.TargetUe
+	if ranUe.handover.TargetUe != nil {
+		targetUe := ranUe.handover.TargetUe
 
-		ranUe.TargetUe = nil
-		targetUe.SourceUe = nil
-	} else if ranUe.SourceUe != nil {
-		source := ranUe.SourceUe
+		ranUe.handover.TargetUe = nil
+		targetUe.handover.SourceUe = nil
+	} else if ranUe.handover.SourceUe != nil {
+		source := ranUe.handover.SourceUe
 
-		ranUe.SourceUe = nil
-		source.TargetUe = nil
+		ranUe.handover.SourceUe = nil
+		source.handover.TargetUe = nil
 	}
 }
 

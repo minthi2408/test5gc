@@ -12,14 +12,14 @@ import (
 func (sender *Nas) SendDLNASTransport(ue *context.RanUe, payloadContainerType uint8, nasPdu []byte,
 	pduSessionId int32, cause uint8, backOffTimerUint *uint8, backOffTimer uint8) {
 
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	log.Info("Send DL NAS Transport")
 
 	var causePtr *uint8
 	if cause != 0 {
 		causePtr = &cause
 	}
-	nasMsg, err := sender.BuildDLNASTransport(amfUe, ue.Ran.AnType(), payloadContainerType, nasPdu,
+	nasMsg, err := sender.BuildDLNASTransport(amfUe, ue.Ran().AnType(), payloadContainerType, nasPdu,
 		uint8(pduSessionId), causePtr, backOffTimerUint, backOffTimer)
 	if err != nil {
 		log.Error(err.Error())
@@ -52,7 +52,7 @@ func (sender *Nas) SendNotification(ue *context.RanUe, nasMsg []byte) {
 
 func (sender *Nas) SendIdentityRequest(ue *context.RanUe, accessType models.AccessType, typeOfIdentity uint8) {
 
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	log.Info("Send Identity Request")
 
 	nasMsg, err := sender.BuildIdentityRequest(amfUe, accessType, typeOfIdentity)
@@ -82,7 +82,7 @@ func (sender *Nas) SendIdentityRequest(ue *context.RanUe, accessType models.Acce
 
 func (sender *Nas) SendAuthenticationRequest(ue *context.RanUe) {
 	
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	log.Infof("Send Authentication Request")
 
 	if amfUe.GetAusfInfo().AuthenticationCtx == nil {
@@ -117,7 +117,7 @@ func (sender *Nas) SendAuthenticationRequest(ue *context.RanUe) {
 func (sender *Nas) SendServiceAccept(ue *context.RanUe, anType models.AccessType, pDUSessionStatus *[16]bool,
 	reactivationResult *[16]bool, errPduSessionId, errCause []uint8) {
 	
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	//amfUe.GmmLog.Info("Send Service Accept")
 
 	nasMsg, err := sender.BuildServiceAccept(amfUe, anType, pDUSessionStatus, reactivationResult,
@@ -146,7 +146,7 @@ func (sender *Nas) SendConfigurationUpdateCommand(amfUe *context.AmfUe, accessTy
 
 func (sender *Nas) SendAuthenticationReject(ue *context.RanUe, eapMsg string) {
 	
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	log.Info("Send Authentication Reject")
 
 	nasMsg, err := sender.BuildAuthenticationReject(amfUe, eapMsg)
@@ -158,7 +158,7 @@ func (sender *Nas) SendAuthenticationReject(ue *context.RanUe, eapMsg string) {
 }
 
 func (sender *Nas) SendAuthenticationResult(ue *context.RanUe, eapSuccess bool, eapMsg string) {
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	//amfUe.GmmLog.Info("Send Authentication Result")
 
 	nasMsg, err := sender.BuildAuthenticationResult(amfUe, eapSuccess, eapMsg)
@@ -186,7 +186,7 @@ func (sender *Nas) SendServiceReject(ue *context.RanUe, pDUSessionStatus *[16]bo
 // eapMessage: if the REGISTRATION REJECT message is used to convey EAP-failure message
 func (sender *Nas) SendRegistrationReject(ue *context.RanUe, cause5GMM uint8, eapMessage string) {
 	
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	log.Info("Send Registration Reject")
 
 	nasMsg, err := sender.BuildRegistrationReject(amfUe, cause5GMM, eapMessage)
@@ -201,7 +201,7 @@ func (sender *Nas) SendRegistrationReject(ue *context.RanUe, cause5GMM uint8, ea
 // eapMessage: only used when authType is EAP-AKA', set the value to "" if authType is not EAP-AKA'
 func (sender *Nas) SendSecurityModeCommand(ue *context.RanUe, accessType models.AccessType, eapSuccess bool, eapMessage string) {
 	
-	amfUe := ue.AmfUe
+	amfUe := ue.AmfUe()
 	//amfUe.GmmLog.Info("Send Security Mode Command")
 
 	nasMsg, err := sender.BuildSecurityModeCommand(amfUe, accessType, eapSuccess, eapMessage)
@@ -292,7 +292,7 @@ func (sender *Nas) SendRegistrationAccept(
 		return
 	}
 
-	if amfUe.RanUe[anType].UeContextRequest {
+	if amfUe.RanUe[anType].UeContextRequest() {
 		sender.ngap.SendInitialContextSetupRequest(amfUe, anType, nasMsg, pduSessionResourceSetupList, nil, nil, nil)
 	} else {
 		sender.ngap.SendDownlinkNasTransport(amfUe.RanUe[models.AccessType__3_GPP_ACCESS], nasMsg, nil)

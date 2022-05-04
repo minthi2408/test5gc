@@ -81,18 +81,18 @@ func (n *Nas) HandleNAS(ue *context.RanUe, code int64, naspdu []byte) {
 	}
 	*/
 
-	if ue.AmfUe == nil {
-		ue.AmfUe = n.backend.Context().NewAmfUe("")
-		ue.AmfUe.AttachRanUe(ue)
+	if ue.AmfUe() == nil {
+		newAmfUe := n.backend.Context().NewAmfUe("")
+		newAmfUe.AttachRanUe(ue)
 	}
 
-	msg, err := nas_security.Decode(ue.AmfUe, ue.Ran.AnType(), naspdu)
+	msg, err := nas_security.Decode(ue.AmfUe(), ue.Ran().AnType(), naspdu)
 	if err != nil {
 		log.Errorln(err)
 		return
 	}
 
-	if err := n.dispatch(ue.AmfUe, ue.Ran.AnType(), code, msg); err != nil {
+	if err := n.dispatch(ue.AmfUe(), ue.Ran().AnType(), code, msg); err != nil {
 		log.Errorf("Handle NAS Error: %v", err)
 	}
 

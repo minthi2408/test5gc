@@ -815,7 +815,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 								log.Errorf("Update SmContext Error[%v]", err.Error())
 							}
 						} else {
-							if ue.RanUe[anType].UeContextRequest {
+							if ue.RanUe[anType].UeContextRequest() {
 								util.AppendPDUSessionResourceSetupListCxtReq(&ctxList, pduSessionId,
 									smContext.Snssai(), response.BinaryDataN1SmMessage, response.BinaryDataN2SmInformation)
 							} else {
@@ -981,7 +981,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 	// TODO: GUTI reassignment if need (based on operator poilcy)
 	// TODO: T3512/Non3GPP de-registration timer reassignment if need (based on operator policy)
 
-	if ue.RanUe[anType].UeContextRequest {
+	if ue.RanUe[anType].UeContextRequest() {
 		// update Kgnb/Kn3iwf
 		ue.UpdateSecurityContext(anType)
 
@@ -1246,12 +1246,12 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 					UeContext:        &ueContext,
 					AnType:           anType,
 					AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId()),
-					RanNodeId:        ue.RanUe[anType].Ran.Id(),
+					RanNodeId:        ue.RanUe[anType].Ran().Id(),
 					InitialAmfName:   amf.Name(),
 					UserLocation:     &ue.GetLocInfo().Location,
 					RrcEstCause:      ue.RanUe[anType].RRCEstablishmentCause,
-					UeContextRequest: ue.RanUe[anType].UeContextRequest,
-					AnN2IPv4Addr:     ue.RanUe[anType].Ran.Conn().RemoteAddr().String(),
+					UeContextRequest: ue.RanUe[anType].UeContextRequest(),
+					AnN2IPv4Addr:     ue.RanUe[anType].Ran().Conn().RemoteAddr().String(),
 					AllowedNssai: &models.AllowedNssai{
 						AllowedSnssaiList: nssfinfo.AllowedNssai[anType],
 						AccessType:        anType,
@@ -1637,7 +1637,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 						}
 					}
 					errCause = append(errCause, cause)
-				} else if ue.RanUe[anType].UeContextRequest {
+				} else if ue.RanUe[anType].UeContextRequest() {
 					util.AppendPDUSessionResourceSetupListCxtReq(&ctxList,
 						pduSessionID, smContext.Snssai(), nil, response.BinaryDataN2SmInformation)
 				} else {
@@ -1740,7 +1740,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 							smContext.SetAccessType(models.AccessType__3_GPP_ACCESS)
 							if response.BinaryDataN2SmInformation != nil &&
 								response.JsonData.N2SmInfoType == models.N2SmInfoType_PDU_RES_SETUP_REQ {
-								if ue.RanUe[anType].UeContextRequest {
+								if ue.RanUe[anType].UeContextRequest() {
 									util.AppendPDUSessionResourceSetupListCxtReq(&ctxList,
 										requestData.PduSessionId, smContext.Snssai(), nil, response.BinaryDataN2SmInformation)
 								} else {
@@ -1766,7 +1766,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 						return err
 					}
 				}
-				if ue.RanUe[anType].UeContextRequest {
+				if ue.RanUe[anType].UeContextRequest() {
 					util.AppendPDUSessionResourceSetupListCxtReq(&ctxList, smInfo.PduSessionId, *smInfo.SNssai, nasPdu, n2Info)
 				} else {
 					util.AppendPDUSessionResourceSetupListSUReq(&suList, smInfo.PduSessionId, *smInfo.SNssai,
@@ -1832,7 +1832,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 func (gmm *GmmFsm) sendServiceAccept(ue *context.AmfUe, anType models.AccessType, ctxList ngapType.PDUSessionResourceSetupListCxtReq,
 	suList ngapType.PDUSessionResourceSetupListSUReq, pDUSessionStatus *[16]bool,
 	reactivationResult *[16]bool, errPduSessionId, errCause []uint8) error {
-	if ue.RanUe[anType].UeContextRequest {
+	if ue.RanUe[anType].UeContextRequest() {
 		// update Kgnb/Kn3iwf
 		ue.UpdateSecurityContext(anType)
 

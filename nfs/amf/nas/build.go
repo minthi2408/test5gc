@@ -437,7 +437,7 @@ func (builder *Nas) BuildDeregistrationRequest(ue *context.RanUe, accessType uin
 		} else if accessType == 0x02 {
 			anType = models.AccessType_NON_3_GPP_ACCESS
 		}
-		return nas_security.Encode(ue.AmfUe, m, anType)
+		return nas_security.Encode(ue.AmfUe(), m, anType)
 	}
 	return m.PlainNasEncode()
 }

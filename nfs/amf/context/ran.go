@@ -138,7 +138,7 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 		ranUe := &RanUe{
 			amfUeNgapId: amfUeNgapID,
 			ranUeNgapId: ranUeNgapID,
-			Ran: ran,
+			ran: ran,
 		}
 
 		ran.uelist = append(ran.uelist, ranUe)
