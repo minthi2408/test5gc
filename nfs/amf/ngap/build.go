@@ -1027,6 +1027,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 
 	// UE Security Capabilities
+	secinfo := amfUe.GetSecInfo()
 	ie = ngapType.InitialContextSetupRequestIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDUESecurityCapabilities
 	ie.Criticality.Value = ngapType.CriticalityPresentReject
@@ -1036,17 +1037,17 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
 
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA1_128_5G() << 7
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA2_128_5G() << 6
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA3_128_5G() << 5
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA2_128_5G() << 6
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA3_128_5G() << 5
 	ueSecurityCapabilities.NRencryptionAlgorithms.Value =
 		ngapConvert.ByteToBitString(nrEncryptionAlgorighm, 16)
 
 	nrIntegrityAlgorithm := []byte{0x00, 0x00}
 
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA1_128_5G() << 7
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA2_128_5G() << 6
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA3_128_5G() << 5
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA1_128_5G() << 7
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA2_128_5G() << 6
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA3_128_5G() << 5
 
 	ueSecurityCapabilities.NRintegrityProtectionAlgorithms.Value =
 		ngapConvert.ByteToBitString(nrIntegrityAlgorithm, 16)
@@ -1072,9 +1073,9 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	securityKey := ie.Value.SecurityKey
 	switch ranUe.Ran.AnType() {
 	case models.AccessType__3_GPP_ACCESS:
-		securityKey.Value = ngapConvert.ByteToBitString(amfUe.Kgnb, 256)
+		securityKey.Value = ngapConvert.ByteToBitString(secinfo.Kgnb, 256)
 	case models.AccessType_NON_3_GPP_ACCESS:
-		securityKey.Value = ngapConvert.ByteToBitString(amfUe.Kn3iwf, 256)
+		securityKey.Value = ngapConvert.ByteToBitString(secinfo.Kn3iwf, 256)
 	}
 
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
@@ -1650,16 +1651,18 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 
+	secinfo := amfUe.GetSecInfo()
+
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA1_128_5G() << 7
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA2_128_5G() << 6
-	nrEncryptionAlgorighm[0] |= amfUe.UESecurityCapability.GetEA3_128_5G() << 5
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA2_128_5G() << 6
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA3_128_5G() << 5
 	ueSecurityCapabilities.NRencryptionAlgorithms.Value = ngapConvert.ByteToBitString(nrEncryptionAlgorighm, 16)
 
 	nrIntegrityAlgorithm := []byte{0x00, 0x00}
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA1_128_5G() << 7
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA2_128_5G() << 6
-	nrIntegrityAlgorithm[0] |= amfUe.UESecurityCapability.GetIA3_128_5G() << 5
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA1_128_5G() << 7
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA2_128_5G() << 6
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA3_128_5G() << 5
 	ueSecurityCapabilities.NRintegrityProtectionAlgorithms.Value =
 		ngapConvert.ByteToBitString(nrIntegrityAlgorithm, 16)
 
@@ -1682,8 +1685,8 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	ie.Value.SecurityContext = new(ngapType.SecurityContext)
 
 	securityContext := ie.Value.SecurityContext
-	securityContext.NextHopChainingCount.Value = int64(ue.AmfUe.NCC)
-	securityContext.NextHopNH.Value = ngapConvert.HexToBitString(hex.EncodeToString(ue.AmfUe.NH), 256)
+	securityContext.NextHopChainingCount.Value = int64(secinfo.NCC)
+	securityContext.NextHopNH.Value = ngapConvert.HexToBitString(hex.EncodeToString(secinfo.NH), 256)
 
 	handoverRequestIEs.List = append(handoverRequestIEs.List, ie)
 
@@ -1845,17 +1848,18 @@ func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 	ie.Value.Present = ngapType.PathSwitchRequestAcknowledgeIEsPresentUESecurityCapabilities
 	ie.Value.UESecurityCapabilities = new(ngapType.UESecurityCapabilities)
 
+	secinfo := ue.AmfUe.GetSecInfo()
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
-	nrEncryptionAlgorighm[0] |= ue.AmfUe.UESecurityCapability.GetEA1_128_5G() << 7
-	nrEncryptionAlgorighm[0] |= ue.AmfUe.UESecurityCapability.GetEA2_128_5G() << 6
-	nrEncryptionAlgorighm[0] |= ue.AmfUe.UESecurityCapability.GetEA3_128_5G() << 5
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA2_128_5G() << 6
+	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA3_128_5G() << 5
 	ueSecurityCapabilities.NRencryptionAlgorithms.Value = ngapConvert.ByteToBitString(nrEncryptionAlgorighm, 16)
 
 	nrIntegrityAlgorithm := []byte{0x00, 0x00}
-	nrIntegrityAlgorithm[0] |= ue.AmfUe.UESecurityCapability.GetIA1_128_5G() << 7
-	nrIntegrityAlgorithm[0] |= ue.AmfUe.UESecurityCapability.GetIA2_128_5G() << 6
-	nrIntegrityAlgorithm[0] |= ue.AmfUe.UESecurityCapability.GetIA3_128_5G() << 5
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA1_128_5G() << 7
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA2_128_5G() << 6
+	nrIntegrityAlgorithm[0] |= secinfo.UESecurityCapability.GetIA3_128_5G() << 5
 	ueSecurityCapabilities.NRintegrityProtectionAlgorithms.Value =
 		ngapConvert.ByteToBitString(nrIntegrityAlgorithm, 16)
 
@@ -1878,8 +1882,8 @@ func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 	ie.Value.SecurityContext = new(ngapType.SecurityContext)
 
 	securityContext := ie.Value.SecurityContext
-	securityContext.NextHopChainingCount.Value = int64(ue.AmfUe.NCC)
-	securityContext.NextHopNH.Value = ngapConvert.HexToBitString(hex.EncodeToString(ue.AmfUe.NH), 256)
+	securityContext.NextHopChainingCount.Value = int64(secinfo.NCC)
+	securityContext.NextHopNH.Value = ngapConvert.HexToBitString(hex.EncodeToString(secinfo.NH), 256)
 
 	pathSwitchRequestAckIEs.List = append(pathSwitchRequestAckIEs.List, ie)
 

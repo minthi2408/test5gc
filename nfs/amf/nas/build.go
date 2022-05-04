@@ -87,7 +87,7 @@ func (builder *Nas) BuildIdentityRequest(ue *context.AmfUe, accessType models.Ac
 	m.GmmMessage = nasproto.NewGmmMessage()
 	m.GmmHeader.SetMessageType(nasproto.MsgTypeIdentityRequest)
 
-	if ue.SecurityContextAvailable {
+	if ue.GetSecInfo().SecurityContextAvailable {
 		m.SecurityHeader = nasproto.SecurityHeader{
 			ProtocolDiscriminator: nasMessage.Epd5GSMobilityManagementMessage,
 			SecurityHeaderType:    nasproto.SecurityHeaderTypeIntegrityProtectedAndCiphered,
@@ -118,7 +118,7 @@ func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error
 	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(nasproto.SecurityHeaderTypePlainNas)
 	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
 	authenticationRequest.AuthenticationRequestMessageIdentity.SetMessageType(nasproto.MsgTypeAuthenticationRequest)
-	authenticationRequest.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.NgKsi)
+	authenticationRequest.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.GetSecInfo().NgKsi)
 	authenticationRequest.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
 	authenticationRequest.ABBA.SetABBAContents(ausfinfo.ABBA)
 
@@ -242,7 +242,7 @@ func (builder *Nas) BuildAuthenticationResult(ue *context.AmfUe, eapSuccess bool
 	authenticationResult.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(nasproto.SecurityHeaderTypePlainNas)
 	authenticationResult.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
 	authenticationResult.AuthenticationResultMessageIdentity.SetMessageType(nasproto.MsgTypeAuthenticationResult)
-	authenticationResult.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.NgKsi)
+	authenticationResult.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.GetSecInfo().NgKsi)
 	rawEapMsg, err := base64.StdEncoding.DecodeString(eapMsg)
 	if err != nil {
 		return nil, err
@@ -330,6 +330,7 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 		ProtocolDiscriminator: nasMessage.Epd5GSMobilityManagementMessage,
 		SecurityHeaderType:    nasproto.SecurityHeaderTypeIntegrityProtectedWithNew5gNasSecurityContext,
 	}
+	secinfo := ue.GetSecInfo()
 
 	securityModeCommand := nasMessage.NewSecurityModeCommand(0)
 	securityModeCommand.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
@@ -337,13 +338,13 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 	securityModeCommand.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
 	securityModeCommand.SecurityModeCommandMessageIdentity.SetMessageType(nasproto.MsgTypeSecurityModeCommand)
 
-	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfCipheringAlgorithm(ue.CipheringAlg)
-	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfIntegrityProtectionAlgorithm(ue.IntegrityAlg)
+	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfCipheringAlgorithm(secinfo.CipheringAlg)
+	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfIntegrityProtectionAlgorithm(secinfo.IntegrityAlg)
 
-	securityModeCommand.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.NgKsi)
+	securityModeCommand.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(secinfo.NgKsi)
 
-	securityModeCommand.ReplayedUESecurityCapabilities.SetLen(ue.UESecurityCapability.GetLen())
-	securityModeCommand.ReplayedUESecurityCapabilities.Buffer = ue.UESecurityCapability.Buffer
+	securityModeCommand.ReplayedUESecurityCapabilities.SetLen(secinfo.UESecurityCapability.GetLen())
+	securityModeCommand.ReplayedUESecurityCapabilities.Buffer = secinfo.UESecurityCapability.Buffer
 
 	if ue.Pei != "" {
 		securityModeCommand.IMEISVRequest = nasType.NewIMEISVRequest(nasMessage.SecurityModeCommandIMEISVRequestType)
@@ -386,11 +387,11 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 		}
 	}
 
-	ue.SecurityContextAvailable = true
+	secinfo.SecurityContextAvailable = true
 	m.GmmMessage.SecurityModeCommand = securityModeCommand
 	payload, err := nas_security.Encode(ue, m, accessType)
 	if err != nil {
-		ue.SecurityContextAvailable = false
+		secinfo.SecurityContextAvailable = false
 		return nil, err
 	} else {
 		return payload, nil
