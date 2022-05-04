@@ -13,7 +13,7 @@ import (
 
 // TS 29.518 5.2.2.2.3
 func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.CommLog.Infof("Handle Create UE Context Request")
+	log.Infof("Handle Create UE Context Request")
 
 	createUeContextRequest := request.Body.(models.CreateUeContextRequest)
 	ueContextID := request.Params["ueContextId"]
@@ -69,7 +69,7 @@ func (h *Handler) doCreateUEContext(ueContextID string, createUeContextRequest m
 
 // TS 29.518 5.2.2.2.4
 func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.CommLog.Info("Handle Release UE Context Request")
+	log.Info("Handle Release UE Context Request")
 
 	ueContextRelease := request.Body.(models.UeContextRelease)
 	ueContextID := request.Params["ueContextId"]
@@ -86,7 +86,7 @@ func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *h
 func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models.UeContextRelease) *models.ProblemDetails {
 	// TODO: UE is emergency registered and the SUPI is not authenticated
 	if ueContextRelease.Supi != "" {
-		//logger.GmmLog.Warnf("Emergency registered UE is not supported.")
+		log.Warnf("Emergency registered UE is not supported.")
 		return &models.ProblemDetails{
 			Status: http.StatusForbidden,
 			Cause:  "UNSPECIFIED",
@@ -100,7 +100,7 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 		}
 	}
 
-	//logger.CommLog.Debugf("Release UE Context NGAP cause: %+v", ueContextRelease.NgapCause)
+	log.Debugf("Release UE Context NGAP cause: %+v", ueContextRelease.NgapCause)
 
 	if /*ue*/_, ok := h.amf().AmfUeFindByUeContextID(ueContextID); ok {
 		//TODO: tungtq - a bad design by free5gc - let move to a different place (amf context)
@@ -116,7 +116,7 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 }
 // TS 29.518 5.2.2.2.1
 func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.CommLog.Info("Handle UE Context Transfer Request")
+	log.Info("Handle UE Context Transfer Request")
 
 	req := request.Body.(models.UeContextTransferRequest)
 	ueId := request.Params["ueContextId"]
@@ -173,7 +173,7 @@ func (h *Handler) doUEContextTransfer(ueId string, req models.UeContextTransferR
 
 // TS 29.518 5.2.2.6
 func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.CommLog.Info("Handle Assign Ebi Data Request")
+	log.Info("Handle Assign Ebi Data Request")
 
 	ebidat := request.Body.(models.AssignEbiData)
 	ueId := request.Params["ueContextId"]
@@ -203,7 +203,7 @@ func (h *Handler) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
 			assignedEbiData.PduSessionId = ebidat.PduSessionId
 			return &assignedEbiData, nil, nil
 		} else {
-			//logger.ProducerLog.Errorln("ue.SmContextList is nil")
+			log.Errorln("ue.SmContextList is nil")
 			return nil, nil, nil
 		}
 	}
@@ -211,7 +211,7 @@ func (h *Handler) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
 
 // TS 29.518 5.2.2.2.2
 func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwrapper.Response {
-//	logger.CommLog.Info("Handle Registration Status Update Request")
+	log.Info("Handle Registration Status Update Request")
 
 	reqdat := request.Body.(models.UeRegStatusUpdateReqData)
 	ueId := request.Params["ueContextId"]
@@ -253,30 +253,30 @@ func (h *Handler) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegSta
 
 				smContext, ok := ue.SmContextFindByPDUSessionID(pduSessionId)
 				if !ok {
-					//ue.ProducerLog.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionId)
+					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionId)
 				}
 
 				problem, err := h.backend.Consumer().Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
 				if problem != nil {
-					//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Failed Problem[%+v]", pduSessionId, problem)
+					log.Errorf("Release SmContext[pduSessionId: %d] Failed Problem[%+v]", pduSessionId, problem)
 				} else if err != nil {
-					//logger.GmmLog.Errorf("Release SmContext[pduSessionId: %d] Error[%v]", pduSessionId, err.Error())
+					log.Errorf("Release SmContext[pduSessionId: %d] Error[%v]", pduSessionId, err.Error())
 				}
 			}
 
 			if reqdat.PcfReselectedInd {
 				problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
 				if problem != nil {
-			//		logger.GmmLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
+					log.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
 				} else if err != nil {
-			//		logger.GmmLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
+					log.Errorf("AM Policy Control Delete Error[%v]", err.Error())
 				}
 			}
 			//TODO: tungtq: it seems it is a bad idea to remove AmfUe inside gmm_comm (a bad design from free5gc)
 			//gmm_common.RemoveAmfUe(ue)
 		} else {
 			// NOT_TRANSFERRED
-			//logger.CommLog.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
+			log.Debug("[AMF] RegistrationStatusUpdate: NOT_TRANSFERRED")
 		}
 
 		resdat.RegStatusTransferComplete = true

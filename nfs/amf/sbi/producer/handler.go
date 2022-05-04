@@ -8,7 +8,13 @@ import (
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/openapi/models"
+	"github.com/sirupsen/logrus"
 )
+
+var log	*logrus.Entry
+func init() {
+	log = logrus.WithFields(logrus.Fields{"mod": "sbi.producer"})
+}
 
 type NasHandler interface {
 	HandleNAS(*context.RanUe, int64, []byte)

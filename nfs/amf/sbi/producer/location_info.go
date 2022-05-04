@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.ProducerLog.Info("Handle Provide Location Info Request")
+	log.Info("Handle Provide Location Info Request")
 
 	req := request.Body.(models.RequestLocInfo)
 	ueId := request.Params["ueContextId"]

@@ -35,7 +35,7 @@ type UEContext struct {
 type UEContexts []UEContext
 
 func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.ProducerLog.Infof("[OAM] Handle Registered UE Context")
+	log.Infof("[OAM] Handle Registered UE Context")
 
 	supi := request.Params["supi"]
 
@@ -85,7 +85,8 @@ func (h *Handler) doOAMRegisteredUEContext(supi string) (UEContexts, *models.Pro
 	return ueContexts, nil
 }
 
-//NOTE: (by TungTQ) this method should be implemented at AmfUe class
+//NOTE: (by TungTQ) should this method be implemented at AmfUe class?
+// may be not because UEContext is defined here
 func buildUEContext(ue *context.AmfUe, accessType models.AccessType) *UEContext {
 	if ue.State[accessType].Is(context.Registered) {
 		locinfo := ue.GetLocInfo()

@@ -19,7 +19,7 @@ import (
 //NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
 
 func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.ProducerLog.Infoln("[AMF] Handle SmContext Status Notify")
+	log.Infoln("[AMF] Handle SmContext Status Notify")
 
 	guti := request.Params["guti"]
 	pduIdStr := request.Params["pduSessionId"]
@@ -58,8 +58,8 @@ func (h *Handler) SmContextStatusNotifyProcedure(guti string, pduId int32, notif
 				}
 			}
 
-			//ue.ProducerLog.Debugf("Release PDU Session[%d] (Cause: %s)", pduSessionID,
-			//	smContextStatusNotification.StatusInfo.Cause)
+			log.Debugf("Release PDU Session[%d] (Cause: %s)", pduId,
+				notification.StatusInfo.Cause)
 
 			if smContext.PduSessionIDDuplicated() {
 				smContext.SetDuplicatedPduSessionID(false)
@@ -151,7 +151,7 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 
 
 func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
+	log.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
 
 	polId := request.Params["polAssoId"]
 	polUpdate := request.Body.(models.PolicyUpdate)
@@ -202,7 +202,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 		} else {
 			message, err := h.nas.BuildConfigurationUpdateCommand(ue, models.AccessType__3_GPP_ACCESS, nil)
 			if err != nil {
-			//	logger.GmmLog.Errorf("Build Configuration Update Command Failed : %s", err.Error())
+				log.Errorf("Build Configuration Update Command Failed : %s", err.Error())
 				return
 			}
 			pcfinfo.ConfigurationUpdateMessage = message
@@ -212,7 +212,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 
 			pkg, err := h.ngap.BuildPaging(ue, nil, false)
 			if err != nil {
-				//logger.NgapLog.Errorf("Build Paging failed : %s", err.Error())
+				log.Errorf("Build Paging failed : %s", err.Error())
 				return
 			}
 			h.ngap.SendPaging(ue, pkg)
@@ -223,7 +223,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 
 // TS 29.507 4.2.4.3
 func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrapper.Request) *httpwrapper.Response {
-//	logger.ProducerLog.Infoln("Handle AM Policy Control Update Notify [Request for termination of the policy association]")
+	log.Infoln("Handle AM Policy Control Update Notify [Request for termination of the policy association]")
 
 	polAssoID := request.Params["polAssoId"]
 	terminationNotification := request.Body.(models.TerminationNotification)
@@ -247,14 +247,14 @@ func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 		}
 	}
 
-//	logger.CallbackLog.Infof("Cause of AM Policy termination[%+v]", terminationNotification.Cause)
+	log.Infof("Cause of AM Policy termination[%+v]", terminationNotification.Cause)
 
 	// use go routine to write response first to ensure the order of the procedure
 	go func() {
 		if prob, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue); prob != nil {
-			//logger.ProducerLog.Errorf("AM Policy Control Delete Failed Problem[%+v]", prob)
+			log.Errorf("AM Policy Control Delete Failed Problem[%+v]", prob)
 		} else if err != nil {
-			//logger.ProducerLog.Errorf("AM Policy Control Delete Error[%v]", err.Error())
+			log.Errorf("AM Policy Control Delete Error[%v]", err.Error())
 		}
 	}()
 	return nil
@@ -262,7 +262,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 
 // TS 23.502 4.2.2.2.3 Registration with AMF re-allocation
 func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.ProducerLog.Infoln("[AMF] Handle N1 Message Notify")
+	log.Infoln("[AMF] Handle N1 Message Notify")
 
 	n1MessageNotify := request.Body.(models.N1MessageNotify)
 
@@ -274,7 +274,7 @@ func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapp
 }
 
 func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
-	//logger.ProducerLog.Debugf("n1MessageNotify: %+v", n1MessageNotify)
+	log.Debugf("n1MessageNotify: %+v", n1MessageNotify)
 
 	registrationCtxtContainer := n1MessageNotify.JsonData.RegistrationCtxtContainer
 	if registrationCtxtContainer.UeContext == nil {

@@ -894,7 +894,7 @@ func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo
 	}
 
 	if req.SupportedFeatures != "" {
-		locinfo.SupportedFeatures = ranUe.SupportedFeatures
+		locinfo.SupportedFeatures = ranUe.supportedFeatures
 	}
 	return locinfo
 
@@ -911,11 +911,11 @@ func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextI
 	if anType != "" && class != "" {
 		ranUe := ue.RanUe[anType]
 		info.AccessType = anType
-		info.LastActTime = ranUe.LastActTime
 		info.RatType = ue.loc.RatType
-		info.SupportedFeatures = ranUe.SupportedFeatures
-		info.SupportVoPS = ranUe.SupportVoPS
-		info.SupportVoPSn3gpp = ranUe.SupportVoPSn3gpp
+		info.LastActTime = ranUe.lastActTime
+		info.SupportedFeatures = ranUe.supportedFeatures
+		info.SupportVoPS = ranUe.supportVoPS
+		info.SupportVoPSn3gpp = ranUe.supportVoPSn3gpp
 	}
 
 	return info 

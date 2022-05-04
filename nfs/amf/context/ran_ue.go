@@ -44,10 +44,10 @@ type RanUe struct {
 	location models.UserLocation
 
 	/* context about udm */
-	SupportVoPSn3gpp  bool
-	SupportVoPS       bool
-	SupportedFeatures string
-	LastActTime       *time.Time
+	supportVoPSn3gpp  bool
+	supportVoPS       bool
+	supportedFeatures string
+	lastActTime       *time.Time
 
 	/* Related Context*/
 	amfUe *AmfUe
@@ -59,6 +59,7 @@ type RanUe struct {
 	trsr string
 	/* Ue Context Release Action */
 	relAct 	RelAction
+
 	/* context used for AMF Re-allocation procedure */
 	OldAmfName            string
 	InitialUEMessage      []byte

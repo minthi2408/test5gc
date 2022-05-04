@@ -31,7 +31,7 @@ func (h *Handler) HandleCreateAMFEventSubscription(request *httpwrapper.Request)
 }
 
 func (h *Handler) HandleDeleteAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.EeLog.Infoln("Handle Delete AMF Event Subscription")
+	log.Infoln("Handle Delete AMF Event Subscription")
 
 	subId := request.Params["subscriptionId"]
 
@@ -43,7 +43,7 @@ func (h *Handler) HandleDeleteAMFEventSubscription(request *httpwrapper.Request)
 }
 
 func (h *Handler) HandleModifyAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.EeLog.Infoln("Handle Modify AMF Event Subscription")
+	log.Infoln("Handle Modify AMF Event Subscription")
 
 	subId := request.Params["subscriptionId"]
 	modreq := request.Body.(models.ModifySubscriptionRequest)

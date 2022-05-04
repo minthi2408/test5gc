@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
-	//logger.MtLog.Info("Handle Provide Domain Selection Info Request")
+	log.Info("Handle Provide Domain Selection Info Request")
 
 	ueContextID := request.Params["ueContextId"]
 	infoClassQuery := request.Query.Get("info-class")
