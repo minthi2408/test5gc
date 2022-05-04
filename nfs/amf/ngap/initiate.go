@@ -275,7 +275,7 @@ func (h *ngapHandler) handleNGReset(ran *context.AmfRan, message *ngapType.NGAPP
 			if ueAssociatedLogicalNGConnectionItem.AMFUENGAPID != nil {
 		log.Tracef("AmfUeNgapID[%d]", ueAssociatedLogicalNGConnectionItem.AMFUENGAPID.Value)
 				for _, ue := range ran.RanUeList() {
-					if ue.AmfUeNgapId == ueAssociatedLogicalNGConnectionItem.AMFUENGAPID.Value {
+					if ue.AmfUeNgapId() == ueAssociatedLogicalNGConnectionItem.AMFUENGAPID.Value {
 						ranUe = ue
 						break
 					}
@@ -1234,7 +1234,7 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, message *ngap
 	}
 
 	if rANUENGAPID != nil {
-		ranUe.RanUeNgapId = rANUENGAPID.Value
+		ranUe.SetRanUeNgapId(rANUENGAPID.Value)
 	}
 
 	ranUe.UpdateLocation(userLocationInformation)
@@ -1568,7 +1568,7 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 
 //	sourceUe.Log.Info("Handle Handover Cancel")
 
-	if sourceUe.AmfUeNgapId != aMFUENGAPID.Value {
+	if sourceUe.AmfUeNgapId() != aMFUENGAPID.Value {
 	log.Warnf("Conflict AMF_UE_NGAP_ID : %d != %d", sourceUe.AmfUeNgapId, aMFUENGAPID.Value)
 	}
 	log.Tracef("Source: RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", sourceUe.RanUeNgapId, sourceUe.AmfUeNgapId)
@@ -1936,7 +1936,7 @@ func (h *ngapHandler) handleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan
 	log.Tracef("RanUeNgapId[%d] AmfUeNgapId[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
 	log.Info("Handle Uplink UE Associated NRPPA Transpor")
 
-	ranUe.RoutingID = hex.EncodeToString(routingID.Value)
+	ranUe.SetRoutingId(hex.EncodeToString(routingID.Value))
 
 	// TODO: Forward NRPPaPDU to LMF
 }
@@ -2316,9 +2316,9 @@ func (h *ngapHandler) handleCellTrafficTrace(ran *context.AmfRan, message *ngapT
 
 	log.Debugf("UE: AmfUeNgapID[%d], RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
 
-	ranUe.Trsr = hex.EncodeToString(nGRANTraceID.Value[6:])
+	ranUe.SetTrsr(hex.EncodeToString(nGRANTraceID.Value[6:]))
 
-	log.Tracef("TRSR[%s]", ranUe.Trsr)
+	log.Tracef("TRSR[%s]", ranUe.Trsr())
 
 	switch nGRANCGI.Present {
 	case ngapType.NGRANCGIPresentNRCGI:

@@ -26,8 +26,8 @@ const (
 
 type RanUe struct {
 	/* UE identity*/
-	RanUeNgapId int64
-	AmfUeNgapId int64
+	ranUeNgapId int64
+	amfUeNgapId int64
 
 	/* HandOver Info*/
 	HandOverType        ngapType.HandoverType
@@ -36,8 +36,8 @@ type RanUe struct {
 	TargetUe            *RanUe
 
 	/* UserLocation*/
-	Tai      models.Tai
-	Location models.UserLocation
+	tai      models.Tai
+	location models.UserLocation
 
 	/* context about udm */
 	SupportVoPSn3gpp  bool
@@ -50,9 +50,9 @@ type RanUe struct {
 	Ran   *AmfRan
 
 	/* Routing ID */
-	RoutingID string
+	routingId string
 	/* Trace Recording Session Reference */
-	Trsr string
+	trsr string
 	/* Ue Context Release Action */
 	ReleaseAction RelAction
 	/* context used for AMF Re-allocation procedure */
@@ -71,6 +71,46 @@ func (ranUe *RanUe) SetUeNgapId(v int64) {
 }
 */
 
+
+func (ranUe *RanUe) RanUeNgapId() int64 {
+	return ranUe.ranUeNgapId
+}
+
+func (ranUe *RanUe) SetRanUeNgapId(id int64) {
+	ranUe.ranUeNgapId = id
+}
+func (ranUe *RanUe) AmfUeNgapId() int64 {
+	return ranUe.amfUeNgapId
+}
+
+func (ranUe *RanUe) AmfRanUeNgapId(id int64) {
+	ranUe.amfUeNgapId = id
+}
+
+func (ranUe *RanUe) RoutingId() string {
+	return ranUe.routingId
+}
+func (ranUe *RanUe) SetRoutingId(id string) {
+	ranUe.routingId = id
+}
+
+func (ranUe *RanUe) Location() models.UserLocation {
+	return ranUe.location
+}
+
+func (ranUe *RanUe) SetLocation(loc models.UserLocation) {
+	ranUe.location = loc
+}
+func (ranUe *RanUe) Tai() models.Tai {
+	return ranUe.tai
+}
+
+func (ranUe *RanUe) Trsr() string {
+	return ranUe.trsr
+}
+func (ranUe *RanUe) SetTrsr(s string) {
+	ranUe.trsr = s
+}
 func (ranUe *RanUe) Remove() error {
 	ran := ranUe.Ran
 	if ranUe.AmfUe != nil {
@@ -84,8 +124,8 @@ func (ranUe *RanUe) Remove() error {
 			break
 		}
 	}
-	ran.amf.ruepool.Delete(ranUe.AmfUeNgapId)
-	ran.amf.ngapIdGen.FreeID(ranUe.AmfUeNgapId)
+	ran.amf.ruepool.Delete(ranUe.amfUeNgapId)
+	ran.amf.ngapIdGen.FreeID(ranUe.amfUeNgapId)
 	return nil
 }
 
@@ -114,7 +154,7 @@ func (ranUe *RanUe) SwitchToRan(newRan *AmfRan, ranUeNgapId int64) error {
 
 	// switch to newRan
 	ranUe.Ran = newRan
-	ranUe.RanUeNgapId = ranUeNgapId
+	ranUe.ranUeNgapId = ranUeNgapId
 
 
 //	logger.ContextLog.Infof("RanUe[RanUeNgapID: %d] Switch to new Ran[Name: %s]", ranUe.RanUeNgapId, ranUe.Ran.Name)
@@ -131,85 +171,85 @@ func (ranUe *RanUe) UpdateLocation(userLocationInformation *ngapType.UserLocatio
 	switch userLocationInformation.Present {
 	case ngapType.UserLocationInformationPresentUserLocationInformationEUTRA:
 		locationInfoEUTRA := userLocationInformation.UserLocationInformationEUTRA
-		if ranUe.Location.EutraLocation == nil {
-			ranUe.Location.EutraLocation = new(models.EutraLocation)
+		if ranUe.location.EutraLocation == nil {
+			ranUe.location.EutraLocation = new(models.EutraLocation)
 		}
 
 		tAI := locationInfoEUTRA.TAI
 		plmnID := ngapConvert.PlmnIdToModels(tAI.PLMNIdentity)
 		tac := hex.EncodeToString(tAI.TAC.Value)
 
-		if ranUe.Location.EutraLocation.Tai == nil {
-			ranUe.Location.EutraLocation.Tai = new(models.Tai)
+		if ranUe.location.EutraLocation.Tai == nil {
+			ranUe.location.EutraLocation.Tai = new(models.Tai)
 		}
-		ranUe.Location.EutraLocation.Tai.PlmnId = &plmnID
-		ranUe.Location.EutraLocation.Tai.Tac = tac
-		ranUe.Tai = *ranUe.Location.EutraLocation.Tai
+		ranUe.location.EutraLocation.Tai.PlmnId = &plmnID
+		ranUe.location.EutraLocation.Tai.Tac = tac
+		ranUe.tai = *ranUe.location.EutraLocation.Tai
 
 		eUTRACGI := locationInfoEUTRA.EUTRACGI
 		ePlmnID := ngapConvert.PlmnIdToModels(eUTRACGI.PLMNIdentity)
 		eutraCellID := ngapConvert.BitStringToHex(&eUTRACGI.EUTRACellIdentity.Value)
 
-		if ranUe.Location.EutraLocation.Ecgi == nil {
-			ranUe.Location.EutraLocation.Ecgi = new(models.Ecgi)
+		if ranUe.location.EutraLocation.Ecgi == nil {
+			ranUe.location.EutraLocation.Ecgi = new(models.Ecgi)
 		}
-		ranUe.Location.EutraLocation.Ecgi.PlmnId = &ePlmnID
-		ranUe.Location.EutraLocation.Ecgi.EutraCellId = eutraCellID
-		ranUe.Location.EutraLocation.UeLocationTimestamp = &curTime
+		ranUe.location.EutraLocation.Ecgi.PlmnId = &ePlmnID
+		ranUe.location.EutraLocation.Ecgi.EutraCellId = eutraCellID
+		ranUe.location.EutraLocation.UeLocationTimestamp = &curTime
 		if locationInfoEUTRA.TimeStamp != nil {
-			ranUe.Location.EutraLocation.AgeOfLocationInformation = ngapConvert.TimeStampToInt32(
+			ranUe.location.EutraLocation.AgeOfLocationInformation = ngapConvert.TimeStampToInt32(
 				locationInfoEUTRA.TimeStamp.Value)
 		}
 		if ranUe.AmfUe != nil {
 			//TODO: tungtq - create a update location method for AmfRan.loc
 			//ranUe.AmfUe.updateloc(ranUe)
-			if ranUe.AmfUe.loc.Tai != ranUe.Tai {
+			if ranUe.AmfUe.loc.Tai != ranUe.tai {
 				ranUe.AmfUe.loc.LocationChanged = true
 			}
-			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
+			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.location).(models.UserLocation)
 			ranUe.AmfUe.loc.Tai = deepcopy.Copy(*ranUe.AmfUe.loc.Location.EutraLocation.Tai).(models.Tai)
 		}
 	case ngapType.UserLocationInformationPresentUserLocationInformationNR:
 		locationInfoNR := userLocationInformation.UserLocationInformationNR
-		if ranUe.Location.NrLocation == nil {
-			ranUe.Location.NrLocation = new(models.NrLocation)
+		if ranUe.location.NrLocation == nil {
+			ranUe.location.NrLocation = new(models.NrLocation)
 		}
 
 		tAI := locationInfoNR.TAI
 		plmnID := ngapConvert.PlmnIdToModels(tAI.PLMNIdentity)
 		tac := hex.EncodeToString(tAI.TAC.Value)
 
-		if ranUe.Location.NrLocation.Tai == nil {
-			ranUe.Location.NrLocation.Tai = new(models.Tai)
+		if ranUe.location.NrLocation.Tai == nil {
+			ranUe.location.NrLocation.Tai = new(models.Tai)
 		}
-		ranUe.Location.NrLocation.Tai.PlmnId = &plmnID
-		ranUe.Location.NrLocation.Tai.Tac = tac
-		ranUe.Tai = deepcopy.Copy(*ranUe.Location.NrLocation.Tai).(models.Tai)
+		ranUe.location.NrLocation.Tai.PlmnId = &plmnID
+		ranUe.location.NrLocation.Tai.Tac = tac
+		ranUe.tai = deepcopy.Copy(*ranUe.location.NrLocation.Tai).(models.Tai)
 
 		nRCGI := locationInfoNR.NRCGI
 		nRPlmnID := ngapConvert.PlmnIdToModels(nRCGI.PLMNIdentity)
 		nRCellID := ngapConvert.BitStringToHex(&nRCGI.NRCellIdentity.Value)
 
-		if ranUe.Location.NrLocation.Ncgi == nil {
-			ranUe.Location.NrLocation.Ncgi = new(models.Ncgi)
+		if ranUe.location.NrLocation.Ncgi == nil {
+			ranUe.location.NrLocation.Ncgi = new(models.Ncgi)
 		}
-		ranUe.Location.NrLocation.Ncgi.PlmnId = &nRPlmnID
-		ranUe.Location.NrLocation.Ncgi.NrCellId = nRCellID
-		ranUe.Location.NrLocation.UeLocationTimestamp = &curTime
+		ranUe.location.NrLocation.Ncgi.PlmnId = &nRPlmnID
+		ranUe.location.NrLocation.Ncgi.NrCellId = nRCellID
+		ranUe.location.NrLocation.UeLocationTimestamp = &curTime
 		if locationInfoNR.TimeStamp != nil {
-			ranUe.Location.NrLocation.AgeOfLocationInformation = ngapConvert.TimeStampToInt32(locationInfoNR.TimeStamp.Value)
+			ranUe.location.NrLocation.AgeOfLocationInformation = ngapConvert.TimeStampToInt32(locationInfoNR.TimeStamp.Value)
 		}
 		if ranUe.AmfUe != nil {
-			if ranUe.AmfUe.loc.Tai != ranUe.Tai {
+			if ranUe.AmfUe.loc.Tai != ranUe.tai {
 				ranUe.AmfUe.loc.LocationChanged = true
 			}
-			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
+			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.location).(models.UserLocation)
 			ranUe.AmfUe.loc.Tai = deepcopy.Copy(*ranUe.AmfUe.loc.Location.NrLocation.Tai).(models.Tai)
 		}
 	case ngapType.UserLocationInformationPresentUserLocationInformationN3IWF:
 		locationInfoN3IWF := userLocationInformation.UserLocationInformationN3IWF
-		if ranUe.Location.N3gaLocation == nil {
-			ranUe.Location.N3gaLocation = new(models.N3gaLocation)
+		if ranUe.location.N3gaLocation == nil {
+			ranUe.location.N3gaLocation = new(models.N3gaLocation)
 		}
 
 		ip := locationInfoN3IWF.IPAddress
@@ -217,20 +257,20 @@ func (ranUe *RanUe) UpdateLocation(userLocationInformation *ngapType.UserLocatio
 
 		ipv4Addr, ipv6Addr := ngapConvert.IPAddressToString(ip)
 
-		ranUe.Location.N3gaLocation.UeIpv4Addr = ipv4Addr
-		ranUe.Location.N3gaLocation.UeIpv6Addr = ipv6Addr
-		ranUe.Location.N3gaLocation.PortNumber = ngapConvert.PortNumberToInt(port)
+		ranUe.location.N3gaLocation.UeIpv4Addr = ipv4Addr
+		ranUe.location.N3gaLocation.UeIpv6Addr = ipv6Addr
+		ranUe.location.N3gaLocation.PortNumber = ngapConvert.PortNumberToInt(port)
 		// N3GPP TAI is operator-specific
 		// TODO: define N3GPP TAI
-		ranUe.Location.N3gaLocation.N3gppTai = &models.Tai{
+		ranUe.location.N3gaLocation.N3gppTai = &models.Tai{
 			PlmnId: amf.cfg.Configuration.SupportTAIList[0].PlmnId,
 			Tac:    amf.cfg.Configuration.SupportTAIList[0].Tac,
 		}
-		ranUe.Tai = deepcopy.Copy(*ranUe.Location.N3gaLocation.N3gppTai).(models.Tai)
+		ranUe.tai = deepcopy.Copy(*ranUe.location.N3gaLocation.N3gppTai).(models.Tai)
 
 		if ranUe.AmfUe != nil {
-			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
-			ranUe.AmfUe.loc.Tai = *ranUe.Location.N3gaLocation.N3gppTai
+			ranUe.AmfUe.loc.Location = deepcopy.Copy(ranUe.location).(models.UserLocation)
+			ranUe.AmfUe.loc.Tai = *ranUe.location.N3gaLocation.N3gppTai
 		}
 	case ngapType.UserLocationInformationPresentNothing:
 	}

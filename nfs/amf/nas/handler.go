@@ -493,8 +493,8 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 
 	// Copy UserLocation from ranUe
 	ueloc := ue.GetLocInfo()
-	ueloc.Location = ue.RanUe[anType].Location
-	ueloc.Tai = ue.RanUe[anType].Tai
+	ueloc.Location = ue.RanUe[anType].Location()
+	ueloc.Tai = ue.RanUe[anType].Tai()
 
 	// Check TAI
 	if !context.InTaiList(ueloc.Tai, gmm.nas.amf().SupportTaiList()) {
@@ -1245,7 +1245,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 				registerContext := models.RegistrationContextContainer{
 					UeContext:        &ueContext,
 					AnType:           anType,
-					AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId),
+					AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId()),
 					RanNodeId:        ue.RanUe[anType].Ran.Id(),
 					InitialAmfName:   amf.Name(),
 					UserLocation:     &ue.GetLocInfo().Location,

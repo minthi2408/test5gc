@@ -100,7 +100,7 @@ func (ran *AmfRan) RemoveAllUe() {
 
 func (ran *AmfRan) RanUeFindByRanUeNgapID(ranUeNgapID int64) *RanUe {
 	for _, ranUe := range ran.uelist {
-		if ranUe.RanUeNgapId == ranUeNgapID {
+		if ranUe.ranUeNgapId == ranUeNgapID {
 			return ranUe
 		}
 	}
@@ -136,13 +136,13 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 		return nil, fmt.Errorf("Allocate AMF UE NGAP ID error: %+v", err)
 	} else {
 		ranUe := &RanUe{
-			AmfUeNgapId: amfUeNgapID,
-			RanUeNgapId: ranUeNgapID,
+			amfUeNgapId: amfUeNgapID,
+			ranUeNgapId: ranUeNgapID,
 			Ran: ran,
 		}
 
 		ran.uelist = append(ran.uelist, ranUe)
-		ran.amf.ruepool.Store(ranUe.AmfUeNgapId, ranUe)
+		ran.amf.ruepool.Store(ranUe.amfUeNgapId, ranUe)
 		return ranUe, nil
 	}
 }

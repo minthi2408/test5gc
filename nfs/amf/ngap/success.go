@@ -301,7 +301,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 	case context.UeContextReleaseHandover:
 		log.Infof("Release UE[%s] Context : Release for Handover", amfUe.Supi)
 		// TODO: it's a workaround, need to fix it.
-		targetRanUe := h.backend.Context().RanUeFindByAmfUeNgapID(ranUe.TargetUe.AmfUeNgapId)
+		targetRanUe := h.backend.Context().RanUeFindByAmfUeNgapID(ranUe.TargetUe.AmfUeNgapId())
 
 		context.DetachSourceUeTargetUe(ranUe)
 		err := ranUe.Remove()
@@ -941,7 +941,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 	log.Info("Handle Handover Request Acknowledge")
 
 	if rANUENGAPID != nil {
-		targetUe.RanUeNgapId = rANUENGAPID.Value
+		targetUe.SetRanUeNgapId(rANUENGAPID.Value)
 //		targetUe.UpdateLogFields()
 	}
 	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
