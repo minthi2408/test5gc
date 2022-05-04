@@ -79,14 +79,14 @@ func (c *smfConsumer) SendUpdateSmContextActivateUpCnxState(
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	updateData.UpCnxState = models.UpCnxState_ACTIVATING
-	if !context.CompareUserLocation(ue.Location, sm.UserLocation()) {
-		updateData.UeLocation = &ue.Location
+	if !context.CompareUserLocation(ue.GetLocInfo().Location, sm.UserLocation()) {
+		updateData.UeLocation = &ue.GetLocInfo().Location
 	}
 	if sm.AccessType() != accessType {
 		updateData.AnType = sm.AccessType()
 	}
 	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.Tai, ladn.TaiLists) {
+		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
 			updateData.PresenceInLadn = models.PresenceState_IN_AREA
 		}
 	}
@@ -98,7 +98,7 @@ func (c *smfConsumer) SendUpdateSmContextDeactivateUpCnxState(ue *context.AmfUe,
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	updateData.UpCnxState = models.UpCnxState_DEACTIVATED
-	updateData.UeLocation = &ue.Location
+	updateData.UeLocation = &ue.GetLocInfo().Location
 	if cause.Cause != nil {
 		updateData.Cause = *cause.Cause
 	}
@@ -126,7 +126,7 @@ func (c *smfConsumer) SendUpdateSmContextN2Info(
 	updateData.N2SmInfoType = n2SmType
 	updateData.N2SmInfo = new(models.RefToBinaryData)
 	updateData.N2SmInfo.ContentId = "N2SmInfo"
-	updateData.UeLocation = &ue.Location
+	updateData.UeLocation = &ue.GetLocInfo().Location
 	return c.SendUpdateSmContextRequest(sm, updateData, nil, N2SmInfo)
 }
 
@@ -140,9 +140,9 @@ func (c *smfConsumer) SendUpdateSmContextXnHandover(
 		updateData.N2SmInfo.ContentId = "N2SmInfo"
 	}
 	updateData.ToBeSwitched = true
-	updateData.UeLocation = &ue.Location
+	updateData.UeLocation = &ue.GetLocInfo().Location
 	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.Tai, ladn.TaiLists) {
+		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
 			updateData.PresenceInLadn = models.PresenceState_IN_AREA
 		} else {
 			updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
@@ -209,7 +209,7 @@ func (c *smfConsumer) SendUpdateSmContextN2HandoverComplete(
 		updateData.Guami = guami
 	}
 	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.Tai, ladn.TaiLists) {
+		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
 			updateData.PresenceInLadn = models.PresenceState_IN_AREA
 		} else {
 			updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
@@ -256,11 +256,11 @@ func (c *smfConsumer) SendUpdateSmContextHandoverBetweenAMF(
 	updateData.Guami = guami
 	if activate {
 		updateData.UpCnxState = models.UpCnxState_ACTIVATING
-		if !context.CompareUserLocation(ue.Location, sm.UserLocation()) {
-			updateData.UeLocation = &ue.Location
+		if !context.CompareUserLocation(ue.GetLocInfo().Location, sm.UserLocation()) {
+			updateData.UeLocation = &ue.GetLocInfo().Location
 		}
 		if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-			if context.InTaiList(ue.Tai, ladn.TaiLists) {
+			if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
 				updateData.PresenceInLadn = models.PresenceState_IN_AREA
 			}
 		}

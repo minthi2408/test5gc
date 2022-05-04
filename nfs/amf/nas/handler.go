@@ -134,7 +134,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 					gmm.nas.SendDLNASTransport(ue.RanUe[anType], nasMessage.PayloadContainerTypeN1SMInfo,
 						smMessage, pduSessionID, nasMessage.Cause5GMMPayloadWasNotForwarded, nil, 0)
 				} else if response != nil {
-					smContext.SetUserLocation(ue.Location)
+					smContext.SetUserLocation(ue.GetLocInfo().Location)
 					responseData := response.JsonData
 					n2Info := response.BinaryDataN2SmInformation
 					if n2Info != nil {
@@ -232,7 +232,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 							errResponse.BinaryDataN1SmMessage, pduSessionID, 0, nil, 0)
 					} else {
 						newSmContext.SetSmContextRef(smContextRef)
-						newSmContext.SetUserLocation(deepcopy.Copy(ue.Location).(models.UserLocation))
+						newSmContext.SetUserLocation(deepcopy.Copy(ue.GetLocInfo().Location).(models.UserLocation))
 						ue.StoreSmContext(pduSessionID, newSmContext)
 						log.Infof("create smContext[pduSessionID: %d] Success", pduSessionID)
 						// TODO: handle response(response N2SmInfo to RAN if exists)
@@ -284,8 +284,8 @@ func (gmm *GmmFsm) forward5GSMMessageToSMF(
 	}
 	smContextUpdateData.Pei = ue.Pei
 	smContextUpdateData.Gpsi = ue.Gpsi
-	if !context.CompareUserLocation(ue.Location, smContext.UserLocation()) {
-		smContextUpdateData.UeLocation = &ue.Location
+	if !context.CompareUserLocation(ue.GetLocInfo().Location, smContext.UserLocation()) {
+		smContextUpdateData.UeLocation = &ue.GetLocInfo().Location
 	}
 
 	if accessType != smContext.AccessType() {
@@ -314,7 +314,7 @@ func (gmm *GmmFsm) forward5GSMMessageToSMF(
 	} else if response != nil {
 		// update SmContext in AMF
 		smContext.SetAccessType(accessType)
-		smContext.SetUserLocation(ue.Location)
+		smContext.SetUserLocation(ue.GetLocInfo().Location)
 
 		responseData := response.JsonData
 		var n1Msg []byte
@@ -492,11 +492,12 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 	}
 
 	// Copy UserLocation from ranUe
-	ue.Location = ue.RanUe[anType].Location
-	ue.Tai = ue.RanUe[anType].Tai
+	ueloc := ue.GetLocInfo()
+	ueloc.Location = ue.RanUe[anType].Location
+	ueloc.Tai = ue.RanUe[anType].Tai
 
 	// Check TAI
-	if !context.InTaiList(ue.Tai, gmm.nas.amf().SupportTaiList()) {
+	if !context.InTaiList(ueloc.Tai, gmm.nas.amf().SupportTaiList()) {
 		gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMTrackingAreaNotAllowed, "")
 		return fmt.Errorf("Registration Reject[Tracking area not allowed]")
 	}
@@ -700,6 +701,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 
 	udminfo := ue.GetUdmInfo()
 	pcfinfo := ue.GetPcfInfo()
+	ueloc	:= ue.GetLocInfo()
 
 	if ue.RegistrationRequest.UpdateType5GS != nil {
 		if ue.RegistrationRequest.UpdateType5GS.GetNGRanRcu() == nasMessage.NGRanRadioCapabilityUpdateNeeded {
@@ -761,7 +763,6 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 	var errPduSessionId, errCause []uint8
 	ctxList := ngapType.PDUSessionResourceSetupListCxtReq{}
 	suList := ngapType.PDUSessionResourceSetupListSUReq{}
-
 	if ue.RegistrationRequest.UplinkDataStatus != nil {
 		uplinkDataPsi := nasConvert.PSIToBooleanArray(ue.RegistrationRequest.UplinkDataStatus.Buffer)
 		reactivationResult = new([16]bool)
@@ -771,9 +772,9 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 			switch pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType {
 			case models.RestrictionType_ALLOWED_AREAS:
-				allowReEstablishPduSession = context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
+				allowReEstablishPduSession = context.TacInAreas(ueloc.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 			case models.RestrictionType_NOT_ALLOWED_AREAS:
-				allowReEstablishPduSession = !context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
+				allowReEstablishPduSession = !context.TacInAreas(ueloc.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 			}
 		}
 
@@ -924,7 +925,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 						}
 						errCause = append(errCause, cause)
 					} else {
-						smContext.SetUserLocation(deepcopy.Copy(ue.Location).(models.UserLocation))
+						smContext.SetUserLocation(deepcopy.Copy(ueloc.Location).(models.UserLocation))
 						smContext.SetAccessType(models.AccessType__3_GPP_ACCESS)
 						if response.BinaryDataN2SmInformation != nil &&
 							response.JsonData.N2SmInfoType == models.N2SmInfoType_PDU_RES_SETUP_REQ {
@@ -954,17 +955,17 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		}
 	}
 
-	if ue.LocationChanged && ue.GetPcfInfo().RequestTriggerLocationChange {
+	if ueloc.LocationChanged && ue.GetPcfInfo().RequestTriggerLocationChange {
 		updateReq := models.PolicyAssociationUpdateRequest{}
 		updateReq.Triggers = append(updateReq.Triggers, models.RequestTrigger_LOC_CH)
-		updateReq.UserLoc = &ue.Location
+		updateReq.UserLoc = &ueloc.Location
 		problemDetails, err := gmm.consumer.Pcf().AMPolicyControlUpdate(ue, updateReq)
 		if problemDetails != nil {
 			log.Errorf("AM Policy Control Update Failed Problem[%+v]", problemDetails)
 		} else if err != nil {
 			log.Errorf("AM Policy Control Update Error[%v]", err)
 		}
-		ue.LocationChanged = false
+		ueloc.LocationChanged = false
 	}
 
 	// TODO (step 18 optional):
@@ -1031,8 +1032,8 @@ func storeLastVisitedRegisteredTAI(ue *context.AmfUe, lastVisitedRegisteredTAI *
 			Tac: tac,
 		}
 
-		ue.LastVisitedRegisteredTai = tai
-		log.Debugf("Ue Last Visited Registered Tai; %v", ue.LastVisitedRegisteredTai)
+		ue.GetLocInfo().LastVisitedRegisteredTai = tai
+		log.Debugf("Ue Last Visited Registered Tai; %v", ue.GetLocInfo().LastVisitedRegisteredTai)
 	}
 }
 
@@ -1247,7 +1248,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 					AnN2ApId:         int32(ue.RanUe[anType].RanUeNgapId),
 					RanNodeId:        ue.RanUe[anType].Ran.Id(),
 					InitialAmfName:   amf.Name(),
-					UserLocation:     &ue.Location,
+					UserLocation:     &ue.GetLocInfo().Location,
 					RrcEstCause:      ue.RanUe[anType].RRCEstablishmentCause,
 					UeContextRequest: ue.RanUe[anType].UeContextRequest,
 					AnN2IPv4Addr:     ue.RanUe[anType].Ran.Conn().RemoteAddr().String(),
@@ -1735,7 +1736,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 							}
 							errCause = append(errCause, cause)
 						} else {
-							smContext.SetUserLocation(deepcopy.Copy(ue.Location).(models.UserLocation))
+							smContext.SetUserLocation(deepcopy.Copy(ue.GetLocInfo().Location).(models.UserLocation))
 							smContext.SetAccessType(models.AccessType__3_GPP_ACCESS)
 							if response.BinaryDataN2SmInformation != nil &&
 								response.JsonData.N2SmInfoType == models.N2SmInfoType_PDU_RES_SETUP_REQ {
@@ -1796,9 +1797,9 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 				var accept bool
 				switch pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType {
 				case models.RestrictionType_ALLOWED_AREAS:
-					accept = context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
+					accept = context.TacInAreas(ue.GetLocInfo().Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 				case models.RestrictionType_NOT_ALLOWED_AREAS:
-					accept = !context.TacInAreas(ue.Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
+					accept = !context.TacInAreas(ue.GetLocInfo().Tai.Tac, pcfinfo.AmPolicyAssociation.ServAreaRes.Areas)
 				}
 
 				if !accept {

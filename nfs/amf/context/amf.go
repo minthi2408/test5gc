@@ -244,7 +244,7 @@ func (amf *AMFContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessT
 	// allocate a new tai list as a registration area to ue
 	// TODO: algorithm to choose TAI list
 	for _, supportTai := range amf.cfg.Configuration.SupportTAIList {
-		if reflect.DeepEqual(supportTai, ue.Tai) {
+		if reflect.DeepEqual(supportTai, ue.loc.Tai) {
 			ue.RegistrationArea[anType] = append(ue.RegistrationArea[anType], supportTai)
 			break
 		}
@@ -331,7 +331,7 @@ func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateDat
 	ue.udm.UdmGroupId = dat.UeContext.UdmGroupId
 	ue.ausf.AusfGroupId = dat.UeContext.AusfGroupId
 	// dat.UeContext.HpcfId
-	ue.RatType = dat.UeContext.RestrictedRatList[0] // minItem = -1
+	ue.loc.RatType = dat.UeContext.RestrictedRatList[0] // minItem = -1
 	// dat.UeContext.ForbiddenAreaList
 	// dat.UeContext.ServiceAreaRestriction
 	// dat.UeContext.RestrictedCoreNwTypeList

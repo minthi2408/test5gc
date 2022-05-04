@@ -308,7 +308,7 @@ func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mod
 		ranUe := ran.RanUeFindByRanUeNgapID(int64(registrationCtxtContainer.AnN2ApId))
 
 		ranUe.Location = *registrationCtxtContainer.UserLocation
-		amfUe.Location = *registrationCtxtContainer.UserLocation
+		amfUe.GetLocInfo().Location = *registrationCtxtContainer.UserLocation
 		ranUe.UeContextRequest = registrationCtxtContainer.UeContextRequest
 		ranUe.OldAmfName = registrationCtxtContainer.InitialAmfName
 

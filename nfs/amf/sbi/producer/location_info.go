@@ -27,7 +27,7 @@ func (h *Handler) doProvideLocationInfo(req models.RequestLocInfo, ueId string) 
 	amf := h.amf()
 
 	if ue, ok := amf.AmfUeFindByUeContextID(ueId); ok {
-		if locinfo := ue.GetLocInfo(&req); locinfo != nil {
+		if locinfo := ue.BuildLocInfo(&req); locinfo != nil {
 			return locinfo, nil
 		} 
 	}

@@ -776,17 +776,17 @@ func (builder *Nas) BuildConfigurationUpdateCommand(ue *context.AmfUe, anType mo
 		configurationUpdateCommand.ShortNameForNetwork = &shortNetworkName
 		configurationUpdateCommand.ShortNameForNetwork.SetIei(nasMessage.ConfigurationUpdateCommandShortNameForNetworkType)
 	}
-
-	if ue.TimeZone != "" {
-		localTimeZone := nasConvert.LocalTimeZoneToNas(ue.TimeZone)
+	ueloc := ue.GetLocInfo()
+	if ueloc.TimeZone != "" {
+		localTimeZone := nasConvert.LocalTimeZoneToNas(ueloc.TimeZone)
 		localTimeZone.SetIei(nasMessage.ConfigurationUpdateCommandLocalTimeZoneType)
 		configurationUpdateCommand.LocalTimeZone =
 			nasType.NewLocalTimeZone(nasMessage.ConfigurationUpdateCommandLocalTimeZoneType)
 		configurationUpdateCommand.LocalTimeZone = &localTimeZone
 	}
 
-	if ue.TimeZone != "" {
-		daylightSavingTime := nasConvert.DaylightSavingTimeToNas(ue.TimeZone)
+	if ueloc.TimeZone != "" {
+		daylightSavingTime := nasConvert.DaylightSavingTimeToNas(ueloc.TimeZone)
 		daylightSavingTime.SetIei(nasMessage.ConfigurationUpdateCommandNetworkDaylightSavingTimeType)
 		configurationUpdateCommand.NetworkDaylightSavingTime =
 			nasType.NewNetworkDaylightSavingTime(nasMessage.ConfigurationUpdateCommandNetworkDaylightSavingTimeType)

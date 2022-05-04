@@ -88,13 +88,14 @@ func (h *Handler) doOAMRegisteredUEContext(supi string) (UEContexts, *models.Pro
 //NOTE: (by TungTQ) this method should be implemented at AmfUe class
 func buildUEContext(ue *context.AmfUe, accessType models.AccessType) *UEContext {
 	if ue.State[accessType].Is(context.Registered) {
+		locinfo := ue.GetLocInfo()
 		ueContext := &UEContext{
 			AccessType: models.AccessType__3_GPP_ACCESS,
 			Supi:       ue.Supi,
 			Guti:       ue.Guti,
-			Mcc:        ue.Tai.PlmnId.Mcc,
-			Mnc:        ue.Tai.PlmnId.Mnc,
-			Tac:        ue.Tai.Tac,
+			Mcc:        locinfo.Tai.PlmnId.Mcc,
+			Mnc:        locinfo.Tai.PlmnId.Mnc,
+			Tac:        locinfo.Tai.Tac,
 		}
 
 		ue.SmContextList.Range(func(key, value interface{}) bool {

@@ -10,6 +10,7 @@ import (
 	"sync"
 	"strconv"
 
+//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/nas/security"
@@ -204,6 +205,23 @@ func (s *SecContext) isValid() bool {
 	return s.SecurityContextAvailable && s.NgKsi.Ksi != nasMessage.NasKeySetIdentifierNoKeyIsAvailable && !s.MacFailed
 }
 
+type LocInfo struct {
+	RatType                  models.RatType
+	Location                 models.UserLocation
+	Tai                      models.Tai
+	LocationChanged          bool
+	LastVisitedRegisteredTai models.Tai
+	TimeZone                 string
+}
+/*
+func (ue *AmfUe) updateLoc(ranUe *RanUe) {
+	if ue.loc.Tai != ranUe.Tai {
+		ue.loc.LocationChanged = true
+	}
+	ue.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
+	ue.loc.Tai = deepcopy.Copy(*ue.loc.Location.NrLocation.Tai).(models.Tai)
+}
+*/
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
 	amf *AMFContext // never nil
@@ -251,13 +269,8 @@ type AmfUe struct {
 	/* Ue Identity*/
 	EventSubscriptionsInfo map[string]*AmfUeEventSubscription
 	/* User Location*/
-	RatType                  models.RatType
-	Location                 models.UserLocation
-	Tai                      models.Tai
-	LocationChanged          bool
-	LastVisitedRegisteredTai models.Tai
-	TimeZone                 string
-
+	loc					LocInfo
+	
 	/* UeContextForHandover*/
 	HandoverNotifyUri string
 	/* N1N2Message */
@@ -390,6 +403,11 @@ func (ue *AmfUe) GetAusfInfo() *AusfInfo {
 
 func (ue *AmfUe) GetSecInfo() *SecContext {
 	return &ue.seccon
+}
+
+
+func (ue *AmfUe) GetLocInfo() *LocInfo {
+	return &ue.loc
 }
 
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
@@ -852,7 +870,7 @@ func (ue *AmfUe) DeleteSmContext(pduId int32) {
 
 // /sbi/producer/location
 
-func (ue *AmfUe) GetLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
+func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
 	anType := ue.GetAnType()
 
 	if anType == "" {
@@ -864,15 +882,15 @@ func (ue *AmfUe) GetLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
 	ranUe := ue.RanUe[anType]
 	if req.Req5gsLoc || req.ReqCurrentLoc {
 		locinfo.CurrentLoc = true
-		locinfo.Location = &ue.Location
+		locinfo.Location = &ue.loc.Location
 	}
 
 	if req.ReqRatType {
-		locinfo.RatType = ue.RatType
+		locinfo.RatType = ue.loc.RatType
 	}
 
 	if req.ReqTimeZone {
-		locinfo.Timezone = ue.TimeZone
+		locinfo.Timezone = ue.loc.TimeZone
 	}
 
 	if req.SupportedFeatures != "" {
@@ -894,7 +912,7 @@ func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextI
 		ranUe := ue.RanUe[anType]
 		info.AccessType = anType
 		info.LastActTime = ranUe.LastActTime
-		info.RatType = ue.RatType
+		info.RatType = ue.loc.RatType
 		info.SupportedFeatures = ranUe.SupportedFeatures
 		info.SupportVoPS = ranUe.SupportVoPS
 		info.SupportVoPSn3gpp = ranUe.SupportVoPSn3gpp
@@ -927,14 +945,14 @@ func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext,reqtype *models.RequestT
 	dat.N1SmMsg = new(models.RefToBinaryData)
 	dat.N1SmMsg.ContentId = "n1SmMsg"
 	dat.AnType = sm.AccessType()
-	if ue.RatType != "" {
-		dat.RatType = ue.RatType
+	if ue.loc.RatType != "" {
+		dat.RatType = ue.loc.RatType
 	}
 	// TODO: location is used in roaming scenerio
 	// if ue.Location != nil {
 	// 	dat.UeLocation = ue.Location
 	// }
-	dat.UeTimeZone = ue.TimeZone
+	dat.UeTimeZone = ue.loc.TimeZone
 	dat.SmContextStatusUri = ue.amf.GetIPv4Uri() + "/namf-callback/v1/smContextStatus/" +
 		ue.Guti + "/" + strconv.Itoa(int(sm.PduSessionID()))
 
@@ -954,8 +972,8 @@ func (ue *AmfUe) BuildReleaseSmContextData(cause *CauseAll, n2SmInfoType models.
 			releaseData.Var5gMmCauseValue = *cause.Var5GmmCause
 		}
 	}
-	if ue.TimeZone != "" {
-		releaseData.UeTimeZone = ue.TimeZone
+	if ue.loc.TimeZone != "" {
+		releaseData.UeTimeZone = ue.loc.TimeZone
 	}
 	if n2Info != nil {
 		releaseData.N2SmInfoType = n2SmInfoType

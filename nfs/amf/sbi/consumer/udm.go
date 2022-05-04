@@ -225,7 +225,7 @@ func (c *udmConsumer) UeCmRegistration(ue *context.AmfUe, accessType models.Acce
 			AmfInstanceId:          c.amf.NfId(),
 			InitialRegistrationInd: initialRegistrationInd,
 			Guami:                  c.amf.ServedGuami(),
-			RatType:                ue.RatType,
+			RatType:                ue.GetLocInfo().RatType,
 			// TODO: not support Homogenous Support of IMS Voice over PS Sessions this stage
 			ImsVoPs: models.ImsVoPs_HOMOGENEOUS_NON_SUPPORT,
 		}
@@ -248,7 +248,7 @@ func (c *udmConsumer) UeCmRegistration(ue *context.AmfUe, accessType models.Acce
 		registrationData := models.AmfNon3GppAccessRegistration{
 			AmfInstanceId: c.amf.NfId(),
 			Guami:         c.amf.ServedGuami(),
-			RatType:       ue.RatType,
+			RatType:       ue.GetLocInfo().RatType,
 		}
 
 		_, httpResp, localErr :=
