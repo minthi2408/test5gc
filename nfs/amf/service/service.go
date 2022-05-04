@@ -31,11 +31,11 @@ func init() {
 
 type AMF struct {
 	sbi			sbi.SBI //sbi server
-	consumer	*consumer.Consumer
-	producer	*producer.Handler
-	selector	*nfselect.NfSelector
-	ngap		*ngap.Server
-	context		*context.AMFContext // AMF contex
+	consumer	*consumer.Consumer //sbi consumer interacting with other NFs
+	producer	*producer.Handler //handling Sbi requests received at the server
+	selector	*nfselect.NfSelector //Nf selection implementation
+	ngap		*ngap.Server //ngap server handling Ran connections and ngap messages
+	context		*context.AMFContext // AMF context
 	conf			*config.Config // loaded AMF config
 }
 
@@ -48,9 +48,13 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg)
 
+	//create network function selector
 	nf.selector = nfselect.NewNfSelector(nf)
+	//create ngap server
 	nf.ngap = ngap.NewServer(nf)
+	//create sbi producer
 	nf.producer = producer.NewHandler(nf,nf.ngap.Sender(), nf.ngap.Nas())
+	//create sbi consumer
 	nf.consumer = consumer.NewConsumer(nf)
 	// create SBI server
 	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
@@ -86,9 +90,6 @@ func (nf *AMF) NfSelector() nfselectinf.NfSelector {
 	return nf.selector
 }
 
-func (nf *AMF) makeroutes1(router *gin.Engine) error {
-	return nil
-}
 //add routes to the gin router
 func (nf *AMF) makeroutes(router *gin.Engine) error {
 	var gn string
@@ -161,8 +162,12 @@ func (nf *AMF) Start() (err error) {
 
 
 func (nf *AMF) Terminate() {
+	//TODO: notify Ran of connection termination?
+	//stop ngap server
 	nf.ngap.Stop()
+	//stop sbi server
 	nf.sbi.Stop()
+
 	if _, err := nf.consumer.Nrf().SendDeregisterNFInstance(); err != nil {
 		log.Errorf("Fail to send degistration to the Nrf: %s", err.Error())
 	}
