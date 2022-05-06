@@ -14,19 +14,12 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, initialContextSetupFailure *ngapType.InitialContextSetupFailure) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceFailedToSetupList *ngapType.PDUSessionResourceFailedToSetupListCxtFail
 	var cause *ngapType.Cause
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	unsuccessfulOutcome := message.UnsuccessfulOutcome
-	initialContextSetupFailure := unsuccessfulOutcome.Value.InitialContextSetupFailure
-	if initialContextSetupFailure == nil {
-		log.Error("InitialContextSetupFailure is nil")
-		return
-	}
 
 	for _, ie := range initialContextSetupFailure.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -108,20 +101,13 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, mess
 }
 
 
-func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, uEContextModificationFailure *ngapType.UEContextModificationFailure) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var cause *ngapType.Cause
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
 	var ranUe *context.RanUe
-
-	unsuccessfulOutcome := message.UnsuccessfulOutcome
-	uEContextModificationFailure := unsuccessfulOutcome.Value.UEContextModificationFailure
-	if uEContextModificationFailure == nil {
-		log.Error("UEContextModificationFailure is nil")
-		return
-	}
 
 	for _, ie := range uEContextModificationFailure.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -177,23 +163,11 @@ func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, me
 	}
 }
 
-func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, handoverFailure *ngapType.HandoverFailure) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var cause *ngapType.Cause
 	var targetUe *context.RanUe
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	unsuccessfulOutcome := message.UnsuccessfulOutcome // reject
-	if unsuccessfulOutcome == nil {
-		log.Error("Unsuccessful Message is nil")
-		return
-	}
-
-	handoverFailure := unsuccessfulOutcome.Value.HandoverFailure
-	if handoverFailure == nil {
-		log.Error("HandoverFailure is nil")
-		return
-	}
 
 	for _, ie := range handoverFailure.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -264,21 +238,9 @@ func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, message *ngapTy
 	h.sender.SendUEContextReleaseCommand(targetUe, context.UeContextReleaseHandover, causePresent, causeValue)
 }
 
-func (h *ngapHandler) handleAMFconfigurationUpdateFailure(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleAMFconfigurationUpdateFailure(ran *context.AmfRan, AMFconfigurationUpdateFailure *ngapType.AMFConfigurationUpdateFailure) {
 	var cause *ngapType.Cause
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	unsuccessfulOutcome := message.UnsuccessfulOutcome
-	if unsuccessfulOutcome == nil {
-		log.Error("Unsuccessful Message is nil")
-		return
-	}
-
-	AMFconfigurationUpdateFailure := unsuccessfulOutcome.Value.AMFConfigurationUpdateFailure
-	if AMFconfigurationUpdateFailure == nil {
-		log.Error("AMFConfigurationUpdateFailure is nil")
-		return
-	}
 
 	log.Info("Handle AMF Confioguration Update Failure")
 

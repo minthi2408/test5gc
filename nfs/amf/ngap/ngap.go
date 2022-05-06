@@ -212,23 +212,50 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 		}
 		switch sMsg.ProcedureCode.Value {
 		case ngapType.ProcedureCodeNGReset:
-		//	h.handler.handleNGResetAcknowledge(ran, pdu)
+			if sMsg.Value.NGResetAcknowledge != nil {
+				h.handler.handleNGResetAcknowledge(ran, sMsg.Value.NGResetAcknowledge)
+				return
+			}
 		case ngapType.ProcedureCodeUEContextRelease:
-		//	h.handler.handleUEContextReleaseComplete(ran, pdu)
+			if sMsg.Value.UEContextReleaseComplete != nil {
+				h.handler.handleUEContextReleaseComplete(ran, sMsg.Value.UEContextReleaseComplete)
+				return
+			}
 		case ngapType.ProcedureCodePDUSessionResourceRelease:
-		//	h.handler.handlePDUSessionResourceReleaseResponse(ran, pdu)
+			if sMsg.Value.PDUSessionResourceReleaseResponse != nil {
+				h.handler.handlePDUSessionResourceReleaseResponse(ran, sMsg.Value.PDUSessionResourceReleaseResponse)
+				return
+			}
 		case ngapType.ProcedureCodeUERadioCapabilityCheck:
-		//	h.handler.handleUERadioCapabilityCheckResponse(ran, pdu)
+			if sMsg.Value.UERadioCapabilityCheckResponse != nil {
+				h.handler.handleUERadioCapabilityCheckResponse(ran, sMsg.Value.UERadioCapabilityCheckResponse)
+				return
+			}
 		case ngapType.ProcedureCodeAMFConfigurationUpdate:
-		//	h.handler.handleAMFconfigurationUpdateAcknowledge(ran, pdu)
+			if sMsg.Value.AMFConfigurationUpdateAcknowledge != nil {
+				h.handler.handleAMFconfigurationUpdateAcknowledge(ran, sMsg.Value.AMFConfigurationUpdateAcknowledge)
+				return
+			}
 		case ngapType.ProcedureCodeInitialContextSetup:
-		//	h.handler.handleInitialContextSetupResponse(ran, pdu)
+			if sMsg.Value.InitialContextSetupResponse != nil {
+				h.handler.handleInitialContextSetupResponse(ran, sMsg.Value.InitialContextSetupResponse)
+				return
+			}
 		case ngapType.ProcedureCodeUEContextModification:
-		//	h.handler.handleUEContextModificationResponse(ran, pdu)
+			if sMsg.Value.UEContextModificationResponse != nil {
+				h.handler.handleUEContextModificationResponse(ran, sMsg.Value.UEContextModificationResponse)
+				return
+			}
 		case ngapType.ProcedureCodePDUSessionResourceSetup:
-		//	h.handler.handlePDUSessionResourceSetupResponse(ran, pdu)
+			if sMsg.Value.PDUSessionResourceSetupResponse != nil {
+				h.handler.handlePDUSessionResourceSetupResponse(ran, sMsg.Value.PDUSessionResourceSetupResponse)
+				return
+			}
 		case ngapType.ProcedureCodePDUSessionResourceModify:
-		//	h.handler.handlePDUSessionResourceModifyResponse(ran, pdu)
+			if sMsg.Value.PDUSessionResourceModifyResponse != nil {
+				h.handler.handlePDUSessionResourceModifyResponse(ran, sMsg.Value.PDUSessionResourceModifyResponse)
+				return
+			}
 		case ngapType.ProcedureCodeHandoverResourceAllocation:
 			if content := sMsg.Value.HandoverRequestAcknowledge; content != nil {
 				h.handler.handleHandoverRequestAcknowledge(ran, content)
@@ -245,13 +272,25 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 		}
 		switch uMsg.ProcedureCode.Value {
 		case ngapType.ProcedureCodeAMFConfigurationUpdate:
-		//	h.handler.handleAMFconfigurationUpdateFailure(ran, pdu)
+			if uMsg.Value.AMFConfigurationUpdateFailure != nil {
+				h.handler.handleAMFconfigurationUpdateFailure(ran, uMsg.Value.AMFConfigurationUpdateFailure)
+				return
+			}
 		case ngapType.ProcedureCodeInitialContextSetup:
-		//	h.handler.handleInitialContextSetupFailure(ran, pdu)
+			if uMsg.Value.InitialContextSetupFailure != nil {
+				h.handler.handleInitialContextSetupFailure(ran, uMsg.Value.InitialContextSetupFailure)
+				return
+			}
 		case ngapType.ProcedureCodeUEContextModification:
-		//	h.handler.handleUEContextModificationFailure(ran, pdu)
+			if uMsg.Value.UEContextModificationFailure != nil {
+				h.handler.handleUEContextModificationFailure(ran, uMsg.Value.UEContextModificationFailure)
+				return
+			}
 		case ngapType.ProcedureCodeHandoverResourceAllocation:
-		//	h.handler.handleHandoverFailure(ran, pdu)
+			if uMsg.Value.HandoverFailure != nil {
+				h.handler.handleHandoverFailure(ran, uMsg.Value.HandoverFailure)
+				return
+			}
 		default:
 			log.Warnf("Not implemented(choice:%d, procedureCode:%d)\n", ngapmsg.Present, uMsg.ProcedureCode.Value)
 		}

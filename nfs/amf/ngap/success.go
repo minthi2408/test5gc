@@ -14,20 +14,12 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, uERadioCapabilityCheckResponse *ngapType.UERadioCapabilityCheckResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var iMSVoiceSupportIndicator *ngapType.IMSVoiceSupportIndicator
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 	var ranUe *context.RanUe
-
-	successfulOutcome := message.SuccessfulOutcome
-
-	uERadioCapabilityCheckResponse := successfulOutcome.Value.UERadioCapabilityCheckResponse
-	if uERadioCapabilityCheckResponse == nil {
-		log.Error("UERadioCapabilityCheckResponse is nil")
-		return
-	}
 
 	for i := 0; i < len(uERadioCapabilityCheckResponse.ProtocolIEs.List); i++ {
 		ie := uERadioCapabilityCheckResponse.ProtocolIEs.List[i]
@@ -75,16 +67,9 @@ func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 }
 
 
-func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, nGResetAcknowledge *ngapType.NGResetAcknowledge) {
 	var uEAssociatedLogicalNGConnectionList *ngapType.UEAssociatedLogicalNGConnectionList
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	successfulOutcome := message.SuccessfulOutcome
-	nGResetAcknowledge := successfulOutcome.Value.NGResetAcknowledge
-	if nGResetAcknowledge == nil {
-		log.Error("NGResetAcknowledge is nil")
-		return
-	}
 
 	log.Info("Handle NG Reset Acknowledge")
 
@@ -115,20 +100,13 @@ func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, message *nga
 	}
 }
 
-func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uEContextReleaseComplete *ngapType.UEContextReleaseComplete) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
 	var infoOnRecommendedCellsAndRANNodesForPaging *ngapType.InfoOnRecommendedCellsAndRANNodesForPaging
 	var pDUSessionResourceList *ngapType.PDUSessionResourceListCxtRelCpl
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	successfulOutcome := message.SuccessfulOutcome
-	uEContextReleaseComplete := successfulOutcome.Value.UEContextReleaseComplete
-	if uEContextReleaseComplete == nil {
-		log.Error("NGResetAcknowledge is nil")
-		return
-	}
 
 	for _, ie := range uEContextReleaseComplete.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -303,19 +281,12 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, messag
 	}
 }
 
-func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRan, pDUSessionResourceReleaseResponse *ngapType.PDUSessionResourceReleaseResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceReleasedList *ngapType.PDUSessionResourceReleasedListRelRes
 	var userLocationInformation *ngapType.UserLocationInformation
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	successfulOutcome := message.SuccessfulOutcome
-	pDUSessionResourceReleaseResponse := successfulOutcome.Value.PDUSessionResourceReleaseResponse
-	if pDUSessionResourceReleaseResponse == nil {
-		log.Error("PDUSessionResourceReleaseResponse is nil")
-		return
-	}
 
 	for _, ie := range pDUSessionResourceReleaseResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -397,7 +368,7 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 }
 
 
-func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan, pDUSessionResourceSetupResponse *ngapType.PDUSessionResourceSetupResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListSURes
@@ -405,13 +376,6 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
 	var ranUe *context.RanUe
-
-	successfulOutcome := message.SuccessfulOutcome
-	pDUSessionResourceSetupResponse := successfulOutcome.Value.PDUSessionResourceSetupResponse
-	if pDUSessionResourceSetupResponse == nil {
-		log.Error("PDUSessionResourceSetupResponse is nil")
-		return
-	}
 
 	for _, ie := range pDUSessionResourceSetupResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -511,7 +475,7 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 	}
 }
 
-func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan, pDUSessionResourceModifyResponse *ngapType.PDUSessionResourceModifyResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pduSessionResourceModifyResponseList *ngapType.PDUSessionResourceModifyListModRes
@@ -520,13 +484,6 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
 	var ranUe *context.RanUe
-
-	successfulOutcome := message.SuccessfulOutcome
-	pDUSessionResourceModifyResponse := successfulOutcome.Value.PDUSessionResourceModifyResponse
-	if pDUSessionResourceModifyResponse == nil {
-		log.Error("PDUSessionResourceModifyResponse is nil")
-		return
-	}
 
 	for _, ie := range pDUSessionResourceModifyResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -633,19 +590,12 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 }
 
 
-func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, initialContextSetupResponse *ngapType.InitialContextSetupResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListCxtRes
 	var pDUSessionResourceFailedToSetupList *ngapType.PDUSessionResourceFailedToSetupListCxtRes
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
-
-	successfulOutcome := message.SuccessfulOutcome
-	initialContextSetupResponse := successfulOutcome.Value.InitialContextSetupResponse
-	if initialContextSetupResponse == nil {
-		log.Error("InitialContextSetupResponse is nil")
-		return
-	}
 
 	for _, ie := range initialContextSetupResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -755,7 +705,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 	}
 }
 
-func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, uEContextModificationResponse *ngapType.UEContextModificationResponse) {
 	var aMFUENGAPID *ngapType.AMFUENGAPID
 	var rANUENGAPID *ngapType.RANUENGAPID
 	var rRCState *ngapType.RRCState
@@ -763,14 +713,6 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, m
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
 	var ranUe *context.RanUe
-
-
-	successfulOutcome := message.SuccessfulOutcome
-	uEContextModificationResponse := successfulOutcome.Value.UEContextModificationResponse
-	if uEContextModificationResponse == nil {
-		log.Error("UEContextModificationResponse is nil")
-		return
-	}
 
 	for _, ie := range uEContextModificationResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -993,17 +935,11 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, /*me
 	}
 }
 
-func (h *ngapHandler) handleAMFconfigurationUpdateAcknowledge(ran *context.AmfRan, message *ngapType.NGAPPDU) {
+func (h *ngapHandler) handleAMFconfigurationUpdateAcknowledge(ran *context.AmfRan, aMFConfigurationUpdateAcknowledge *ngapType.AMFConfigurationUpdateAcknowledge) {
 	var aMFTNLAssociationSetupList *ngapType.AMFTNLAssociationSetupList
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 	var aMFTNLAssociationFailedToSetupList *ngapType.TNLAssociationList
 
-	successfulOutcome := message.SuccessfulOutcome
-	aMFConfigurationUpdateAcknowledge := successfulOutcome.Value.AMFConfigurationUpdateAcknowledge
-	if aMFConfigurationUpdateAcknowledge == nil {
-		log.Error("AMFConfigurationUpdateAcknowledge is nil")
-		return
-	}
 
 	log.Info("Handle AMF Configuration Update Acknowledge")
 
