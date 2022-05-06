@@ -161,7 +161,8 @@ func (h *Ngap) HandleMessage(conn net.Conn, msg []byte) {
 		case ngapType.ProcedureCodePDUSessionResourceModify:
 			h.handler.handlePDUSessionResourceModifyResponse(ran, pdu)
 		case ngapType.ProcedureCodeHandoverResourceAllocation:
-			h.handler.handleHandoverRequestAcknowledge(ran, pdu)
+			msg := successfulOutcome.Value.HandoverRequestAcknowledge
+			h.handler.handleHandoverRequestAcknowledge(ran, msg)
 		default:
 			log.Warnf("Not implemented(choice:%d, procedureCode:%d)\n", pdu.Present, successfulOutcome.ProcedureCode.Value)
 		}

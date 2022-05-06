@@ -25,10 +25,6 @@ func (h *ngapHandler) handleNGSetupRequest(ran *context.AmfRan, message *ngapTyp
 	var cause ngapType.Cause
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 
 	nGSetupRequest := initiatingMessage.Value.NGSetupRequest
 	if nGSetupRequest == nil {
@@ -147,10 +143,6 @@ func (h *ngapHandler) handleUplinkNasTransport(ran *context.AmfRan, message *nga
 	var userLocationInformation *ngapType.UserLocationInformation
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 
 	uplinkNasTransport := initiatingMessage.Value.UplinkNASTransport
 	if uplinkNasTransport == nil {
@@ -222,10 +214,6 @@ func (h *ngapHandler) handleNGReset(ran *context.AmfRan, message *ngapType.NGAPP
 	var resetType *ngapType.ResetType
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	nGReset := initiatingMessage.Value.NGReset
 	if nGReset == nil {
 		log.Error("NGReset is nil")
@@ -315,10 +303,6 @@ func (h *ngapHandler) handleLocationReportingFailureIndication(ran *context.AmfR
 	var cause *ngapType.Cause
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	locationReportingFailureIndication := initiatingMessage.Value.LocationReportingFailureIndication
 	if locationReportingFailureIndication == nil {
 		log.Error("LocationReportingFailureIndication is nil")
@@ -378,10 +362,6 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 	var iesCriticalityDiagnostics ngapType.CriticalityDiagnosticsIEList
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	initialUEMessage := initiatingMessage.Value.InitialUEMessage
 	if initialUEMessage == nil {
 		log.Error("InitialUEMessage is nil")
@@ -978,10 +958,6 @@ func (h *ngapHandler) handleRRCInactiveTransitionReport(ran *context.AmfRan, mes
 	var userLocationInformation *ngapType.UserLocationInformation
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 
 	rRCInactiveTransitionReport := initiatingMessage.Value.RRCInactiveTransitionReport
 	if rRCInactiveTransitionReport == nil {
@@ -1048,10 +1024,6 @@ func (h *ngapHandler) handleHandoverNotify(ran *context.AmfRan, message *ngapTyp
 	var userLocationInformation *ngapType.UserLocationInformation
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	HandoverNotify := initiatingMessage.Value.HandoverNotify
 	if HandoverNotify == nil {
 		log.Error("HandoverNotify is nil")
@@ -1332,10 +1304,6 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, message *ngapT
 	var iesCriticalityDiagnostics ngapType.CriticalityDiagnosticsIEList
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	HandoverRequired := initiatingMessage.Value.HandoverRequired
 	if HandoverRequired == nil {
 		log.Error("HandoverRequired is nil")
@@ -1516,10 +1484,6 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 	var cause *ngapType.Cause
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	HandoverCancel := initiatingMessage.Value.HandoverCancel
 	if HandoverCancel == nil {
 		log.Error("Handover Cancel is nil")
@@ -1736,10 +1700,6 @@ func (h *ngapHandler) handleRanConfigurationUpdate(ran *context.AmfRan, message 
 	var cause ngapType.Cause
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-	log.Error("Initiating Message is nil")
-		return
-	}
 	rANConfigurationUpdate := initiatingMessage.Value.RANConfigurationUpdate
 	if rANConfigurationUpdate == nil {
 	log.Error("RAN Configuration is nil")
@@ -1946,10 +1906,6 @@ func (h *ngapHandler) handleUplinkNonUEAssociatedNRPPATransport(ran *context.Amf
 	var nRPPaPDU *ngapType.NRPPaPDU
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 	uplinkNonUEAssociatedNRPPATransport := initiatingMessage.Value.UplinkNonUEAssociatedNRPPaTransport
 	if uplinkNonUEAssociatedNRPPATransport == nil {
 		log.Error("Uplink Non UE Associated NRPPA Transport is nil")
@@ -2094,10 +2050,6 @@ func (h *ngapHandler) handleUERadioCapabilityInfoIndication(ran *context.AmfRan,
 	var uERadioCapabilityForPaging *ngapType.UERadioCapabilityForPaging
 
 	initiatingMessage := message.InitiatingMessage
-	if initiatingMessage == nil {
-		log.Error("Initiating Message is nil")
-		return
-	}
 
 	uERadioCapabilityInfoIndication := initiatingMessage.Value.UERadioCapabilityInfoIndication
 	if uERadioCapabilityInfoIndication == nil {

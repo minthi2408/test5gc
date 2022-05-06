@@ -22,10 +22,6 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, mess
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
 	unsuccessfulOutcome := message.UnsuccessfulOutcome
-	if unsuccessfulOutcome == nil {
-		log.Error("UnsuccessfulOutcome is nil")
-		return
-	}
 	initialContextSetupFailure := unsuccessfulOutcome.Value.InitialContextSetupFailure
 	if initialContextSetupFailure == nil {
 		log.Error("InitialContextSetupFailure is nil")
@@ -121,10 +117,6 @@ func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, me
 	var ranUe *context.RanUe
 
 	unsuccessfulOutcome := message.UnsuccessfulOutcome
-	if unsuccessfulOutcome == nil {
-		log.Error("UnsuccessfulOutcome is nil")
-		return
-	}
 	uEContextModificationFailure := unsuccessfulOutcome.Value.UEContextModificationFailure
 	if uEContextModificationFailure == nil {
 		log.Error("UEContextModificationFailure is nil")
