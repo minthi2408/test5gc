@@ -172,7 +172,7 @@ func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, me
 	}
 
 	if ranUe != nil {
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 		log.Info("Handle UE Context Modification Failure")
 	}
 

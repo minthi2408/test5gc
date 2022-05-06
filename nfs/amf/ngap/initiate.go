@@ -197,7 +197,7 @@ func (h *ngapHandler) handleUplinkNasTransport(ran *context.AmfRan, message *nga
 		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		err := ranUe.Remove()
 		if err != nil {
@@ -208,7 +208,7 @@ func (h *ngapHandler) handleUplinkNasTransport(ran *context.AmfRan, message *nga
 		return
 	}
 
-	log.Infof("Uplink NAS Transport (RAN UE NGAP ID: %d)", ranUe.RanUeNgapId)
+	log.Infof("Uplink NAS Transport (RAN UE NGAP ID: %d)", ranUe.RanUeNgapId())
 
 	if userLocationInformation != nil {
 		ranUe.UpdateLocation(userLocationInformation)
@@ -449,7 +449,7 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 	}
 
 	ranUe := ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
-	if ranUe != nil && ranUe.AmfUe == nil {
+	if ranUe != nil && ranUe.AmfUe() == nil {
 		err := ranUe.Remove()
 		if err != nil {
 			log.Errorln(err.Error())
@@ -462,7 +462,7 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 		if err != nil {
 			log.Errorf("NewRanUe Error: %+v", err)
 		}
-		log.Debugf("New RanUe [RanUeNgapID: %d]", ranUe.RanUeNgapId)
+		log.Debugf("New RanUe [RanUeNgapID: %d]", ranUe.RanUeNgapId())
 
 		if fiveGSTMSI != nil {
 			log.Debug("Receive 5G-S-TMSI")
@@ -485,7 +485,7 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, message *ngapT
 				log.Warnf("Unknown UE [GUTI: %s]", guti)
 			} else {
 				log.Tracef("find AmfUe [GUTI: %s]", guti)
-				log.Debugf("AmfUe Attach RanUe [RanUeNgapID: %d]", ranUe.RanUeNgapId)
+				log.Debugf("AmfUe Attach RanUe [RanUeNgapID: %d]", ranUe.RanUeNgapId())
 				amfUe.AttachRanUe(ranUe)
 			}
 		}
@@ -591,7 +591,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, messag
 	}
 
 	log.Info("Handle PDU Session Resource Notify")
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
@@ -808,7 +808,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 	}
 
 	log.Info("Handle PDU Session Resource Modify Indication")
-	log.Tracef("UE Context AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+	log.Tracef("UE Context AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 
 	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
@@ -905,7 +905,7 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, message
 		return
 	}
 
-	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 	log.Info("Handle UE Context Release Request")
 
 	causeGroup := ngapType.CausePresentRadioNetwork
@@ -934,19 +934,19 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, message
 			},
 		}
 		if amfUe.State[ran.AnType()].Is(context.Registered) {
-				log.Info("Ue Context in GMM-Registered")
+			log.Info("Ue Context in GMM-Registered")
 			if pDUSessionResourceList != nil {
 				for _, pduSessionReourceItem := range pDUSessionResourceList.List {
 					pduSessionID := int32(pduSessionReourceItem.PDUSessionID.Value)
 					smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionID)
 					if !ok {
-				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
+						log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 						// TODO: Check if doing error handling here
 						continue
 					}
 					response, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextDeactivateUpCnxState(amfUe, smContext, causeAll)
 					if err != nil {
-				log.Errorf("Send Update SmContextDeactivate UpCnxState Error[%s]", err.Error())
+						log.Errorf("Send Update SmContextDeactivate UpCnxState Error[%s]", err.Error())
 					} else if response == nil {
 						log.Errorln("Send Update SmContextDeactivate UpCnxState Error")
 					}
@@ -1027,7 +1027,7 @@ func (h *ngapHandler) handleRRCInactiveTransitionReport(ran *context.AmfRan, mes
 	if ranUe == nil {
 		log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 	} else {
-		log.Tracef("RANUENGAPID[%d] AMFUENGAPID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+		log.Tracef("RANUENGAPID[%d] AMFUENGAPID[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 		log.Info("Handle RRC Inactive Transition Report")
 
 		if rRCState != nil {
@@ -1203,7 +1203,7 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, message *ngap
 		return
 	}
 
-	log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+	log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 	log.Info("Handle Path Switch Request")
 
 	amfUe := ranUe.AmfUe()
@@ -1569,9 +1569,9 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 //	sourceUe.Log.Info("Handle Handover Cancel")
 
 	if sourceUe.AmfUeNgapId() != aMFUENGAPID.Value {
-	log.Warnf("Conflict AMF_UE_NGAP_ID : %d != %d", sourceUe.AmfUeNgapId, aMFUENGAPID.Value)
+	log.Warnf("Conflict AMF_UE_NGAP_ID : %d != %d", sourceUe.AmfUeNgapId(), aMFUENGAPID.Value)
 	}
-	log.Tracef("Source: RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", sourceUe.RanUeNgapId, sourceUe.AmfUeNgapId)
+	log.Tracef("Source: RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", sourceUe.RanUeNgapId(), sourceUe.AmfUeNgapId())
 
 	causePresent := ngapType.CausePresentRadioNetwork
 	causeValue := ngapType.CauseRadioNetworkPresentHoFailureInTarget5GCNgranNodeOrTargetSystem
@@ -1584,7 +1584,7 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, message *ngapTyp
 		// Todo : send to T-AMF invoke Namf_UeContextReleaseRequest(targetUe)
 		log.Error("N2 Handover between AMF has not been implemented yet")
 	} else {
-		log.Tracef("Target : RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
+		log.Tracef("Target : RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", targetUe.RanUeNgapId(), targetUe.AmfUeNgapId())
 		amfUe := sourceUe.AmfUe()
 		if amfUe != nil {
 			amfUe.SmContextList.Range(func(key, value interface{}) bool {
@@ -1655,10 +1655,10 @@ func (h *ngapHandler) handleUplinkRanStatusTransfer(ran *context.AmfRan, message
 		return
 	}
 
-	log.Tracef("UE Context AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+	log.Tracef("UE Context AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 	log.Info("Handle Uplink Ran Status Transfer")
 
-	amfUe := ranUe.AmfUe
+	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("AmfUe is nil")
 		return
@@ -1718,7 +1718,7 @@ func (h *ngapHandler) handleNasNonDeliveryIndication(ran *context.AmfRan, messag
 		return
 	}
 
-	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 	log.Info("Handle Nas Non Delivery Indication")
 
 	printAndGetCause(ran, cause)
@@ -1933,7 +1933,7 @@ func (h *ngapHandler) handleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan
 		return
 	}
 
-	log.Tracef("RanUeNgapId[%d] AmfUeNgapId[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Tracef("RanUeNgapId[%d] AmfUeNgapId[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 	log.Info("Handle Uplink UE Associated NRPPA Transpor")
 
 	ranUe.SetRoutingId(hex.EncodeToString(routingID.Value))
@@ -2144,7 +2144,7 @@ func (h *ngapHandler) handleUERadioCapabilityInfoIndication(ran *context.AmfRan,
 		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
 		return
 	}
-	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 	log.Info("Handle UE Radio Capability Info Indication")
 
 	amfUe := ranUe.AmfUe()
@@ -2314,7 +2314,7 @@ func (h *ngapHandler) handleCellTrafficTrace(ran *context.AmfRan, message *ngapT
 		}
 	}
 
-	log.Debugf("UE: AmfUeNgapID[%d], RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+	log.Debugf("UE: AmfUeNgapID[%d], RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 
 	ranUe.SetTrsr(hex.EncodeToString(nGRANTraceID.Value[6:]))
 

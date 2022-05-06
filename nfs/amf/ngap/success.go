@@ -470,7 +470,7 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 
 	if ranUe != nil {
 		log.Info("Handle PDU Session Resource Setup Response")
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 		amfUe := ranUe.AmfUe()
 		if amfUe == nil {
 			log.Error("amfUe is nil")
@@ -592,7 +592,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 
 	if ranUe != nil {
 		log.Info("Handle PDU Session Resource Modify Response")
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 		amfUe := ranUe.AmfUe()
 		if amfUe == nil {
 			log.Error("amfUe is nil")
@@ -721,7 +721,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, mes
 		return
 	}
 
-	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId, ranUe.AmfUeNgapId)
+	log.Tracef("RanUeNgapID[%d] AmfUeNgapID[%d]", ranUe.RanUeNgapId(), ranUe.AmfUeNgapId())
 	log.Info("Handle Initial Context Setup Response")
 
 	if pDUSessionResourceSetupResponseList != nil {
@@ -846,7 +846,7 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, m
 	}
 
 	if ranUe != nil {
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId, ranUe.RanUeNgapId)
+		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 		log.Info("Handle UE Context Modification Response")
 
 		if rRCState != nil {
@@ -944,7 +944,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 		targetUe.SetRanUeNgapId(rANUENGAPID.Value)
 //		targetUe.UpdateLogFields()
 	}
-	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
+	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId(), targetUe.AmfUeNgapId())
 
 	amfUe := targetUe.AmfUe()
 	if amfUe == nil {
@@ -1010,8 +1010,8 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, mess
 		// TODO: Send Namf_Communication_CreateUEContext Response to S-AMF
 		log.Error("handover between different Ue has not been implement yet")
 	} else {
-		log.Tracef("Source: RanUeNgapID[%d] AmfUeNgapID[%d]", sourceUe.RanUeNgapId, sourceUe.AmfUeNgapId)
-		log.Tracef("Target: RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId, targetUe.AmfUeNgapId)
+		log.Tracef("Source: RanUeNgapID[%d] AmfUeNgapID[%d]", sourceUe.RanUeNgapId(), sourceUe.AmfUeNgapId())
+		log.Tracef("Target: RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId(), targetUe.AmfUeNgapId())
 		if len(pduSessionResourceHandoverList.List) == 0 {
 			log.Info("Handle Handover Preparation Failure [HoFailure In Target5GC NgranNode Or TargetSystem]")
 			cause := &ngapType.Cause{
