@@ -25,6 +25,7 @@ func (h *ngapHandler) handleNGSetupRequest(ran *context.AmfRan, nGSetupRequest *
 	var cause ngapType.Cause
 
 	log.Info("Handle NG Setup request")
+
 	for i := 0; i < len(nGSetupRequest.ProtocolIEs.List); i++ {
 		ie := nGSetupRequest.ProtocolIEs.List[i]
 		switch ie.Id.Value {
@@ -66,7 +67,7 @@ func (h *ngapHandler) handleNGSetupRequest(ran *context.AmfRan, nGSetupRequest *
 	if pagingDRX != nil {
 		log.Tracef("PagingDRX[%d]", pagingDRX.Value)
 	}
-
+	//NOTE: here, free5gc implementation is not clean, we may need to clean it up
 	tailist := []context.SupportedTAI{}
 
 	for i := 0; i < len(supportedTAList.List); i++ {

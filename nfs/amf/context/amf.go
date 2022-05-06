@@ -310,9 +310,13 @@ func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateDat
 	ue.HandoverNotifyUri = dat.N2NotifyUri
 
 	amf.AmfRanFindByRanID(*dat.TargetId.RanNodeId)
+
+	/*TungTQ comment - supportedTAI is not used, redundant?
 	supportedTAI := NewSupportedTAI()
 	supportedTAI.Tai.Tac = dat.TargetId.Tai.Tac
 	supportedTAI.Tai.PlmnId = dat.TargetId.Tai.PlmnId
+	*/
+
 	// ue.N1N2MessageSubscribeInfo[ueContextID] = &models.UeN1N2InfoSubscriptionCreateData{
 	// 	N2NotifyCallbackUri: dat.N2NotifyUri,
 	// }
@@ -492,7 +496,7 @@ func (amf *AMFContext) AmfUeFindByPolicyAssociationID(polAssoId string) (ue *Amf
 }
 
 func (amf *AMFContext) RanUeFindByAmfUeNgapID(amfUeNgapID int64) *RanUe {
-	if value, ok := amf.ranpool.Load(amfUeNgapID); ok {
+	if value, ok := amf.ruepool.Load(amfUeNgapID); ok {
 		return value.(*RanUe)
 	} else {
 		return nil

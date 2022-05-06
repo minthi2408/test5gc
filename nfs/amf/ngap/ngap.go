@@ -63,6 +63,8 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 	ran, ok := amf.AmfRanFindByConn(conn)
 	if !ok {
 		log.Infof("Create a new NG connection for: %s", conn.RemoteAddr().String())
+		//TungTQ note: should we not add a new ran to the amfcontext. Only add
+		//it after handling of a Setup request message
 		ran = amf.NewAmfRan(conn)
 	}
 
@@ -78,6 +80,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 		return
 	}
 
+	warning := false
 	switch ngapmsg.Present {
 	case ngapType.NGAPPDUPresentInitiatingMessage:
 		iMsg := ngapmsg.InitiatingMessage
@@ -203,6 +206,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 			}
 		default:
 			log.Warnf("Not implemented(choice:%d, procedureCode:%d)\n", ngapmsg.Present, iMsg.ProcedureCode.Value)
+			warning = true
 		}
 	case ngapType.NGAPPDUPresentSuccessfulOutcome:
 		sMsg := ngapmsg.SuccessfulOutcome
@@ -263,6 +267,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 			}
 		default:
 			log.Warnf("Not implemented(choice:%d, procedureCode:%d)\n", ngapmsg.Present, sMsg.ProcedureCode.Value)
+			warning = true
 		}
 	case ngapType.NGAPPDUPresentUnsuccessfulOutcome:
 		uMsg := ngapmsg.UnsuccessfulOutcome
@@ -293,7 +298,11 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 			}
 		default:
 			log.Warnf("Not implemented(choice:%d, procedureCode:%d)\n", ngapmsg.Present, uMsg.ProcedureCode.Value)
+			warning = true
 		}
+	}
+	if !warning {
+		//TODO: message has no content to process, fire an error message
 	}
 }
 
