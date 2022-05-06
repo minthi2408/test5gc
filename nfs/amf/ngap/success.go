@@ -15,8 +15,8 @@ import (
 )
 
 func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, uERadioCapabilityCheckResponse *ngapType.UERadioCapabilityCheckResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var iMSVoiceSupportIndicator *ngapType.IMSVoiceSupportIndicator
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 	var ranUe *context.RanUe
@@ -25,16 +25,16 @@ func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 		ie := uERadioCapabilityCheckResponse.ProtocolIEs.List[i]
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
-			if aMFUENGAPID == nil {
+			if amf_ngapid == nil {
 				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
-			if rANUENGAPID == nil {
+			if ran_ngapid == nil {
 				log.Error("RanUeNgapID is nil")
 				return
 			}
@@ -51,9 +51,9 @@ func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, 
 		}
 	}
 
-	ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 	if ranUe == nil {
-		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		return
 	}
 
@@ -101,8 +101,8 @@ func (h *ngapHandler) handleNGResetAcknowledge(ran *context.AmfRan, nGResetAckno
 }
 
 func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uEContextReleaseComplete *ngapType.UEContextReleaseComplete) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var userLocationInformation *ngapType.UserLocationInformation
 	var infoOnRecommendedCellsAndRANNodesForPaging *ngapType.InfoOnRecommendedCellsAndRANNodesForPaging
 	var pDUSessionResourceList *ngapType.PDUSessionResourceListCxtRelCpl
@@ -111,16 +111,16 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uECont
 	for _, ie := range uEContextReleaseComplete.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
-			if aMFUENGAPID == nil {
+			if amf_ngapid == nil {
 				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
-			if rANUENGAPID == nil {
+			if ran_ngapid == nil {
 				log.Error("RanUeNgapID is nil")
 				return
 			}
@@ -142,16 +142,16 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uECont
 		}
 	}
 
-	ranUe := h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
+	ranUe := h.backend.Context().RanUeFindByAmfUeNgapID(amf_ngapid.Value)
 	if ranUe == nil {
-		log.Errorf("No RanUe Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+		log.Errorf("No RanUe Context[AmfUeNgapID: %d]", amf_ngapid.Value)
 		cause := ngapType.Cause{
 			Present: ngapType.CausePresentRadioNetwork,
 			RadioNetwork: &ngapType.CauseRadioNetwork{
 				Value: ngapType.CauseRadioNetworkPresentUnknownLocalUENGAPID,
 			},
 		}
-		h.sender.SendErrorIndication(ran, aMFUENGAPID, rANUENGAPID, &cause, nil)
+		h.sender.SendErrorIndication(ran, amf_ngapid, ran_ngapid, &cause, nil)
 		return
 	}
 
@@ -166,7 +166,7 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uECont
 
 	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
-		log.Infof("Release UE Context : RanUe[AmfUeNgapId: %d]", ranUe.AmfUeNgapId)
+		log.Infof("Release UE Context : RanUe[AmfUeNgapId: %d]", ranUe.AmfUeNgapId())
 		err := ranUe.Remove()
 		if err != nil {
 			log.Errorln(err.Error())
@@ -282,8 +282,8 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uECont
 }
 
 func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRan, pDUSessionResourceReleaseResponse *ngapType.PDUSessionResourceReleaseResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var pDUSessionResourceReleasedList *ngapType.PDUSessionResourceReleasedListRelRes
 	var userLocationInformation *ngapType.UserLocationInformation
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
@@ -291,16 +291,16 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 	for _, ie := range pDUSessionResourceReleaseResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
-			if aMFUENGAPID == nil {
+			if amf_ngapid == nil {
 				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUENgapID")
-			if rANUENGAPID == nil {
+			if ran_ngapid == nil {
 				log.Error("RanUeNgapID is nil")
 				return
 			}
@@ -320,9 +320,9 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 		}
 	}
 
-	ranUe := ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	ranUe := ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 	if ranUe == nil {
-		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		return
 	}
 
@@ -369,8 +369,8 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 
 
 func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan, pDUSessionResourceSetupResponse *ngapType.PDUSessionResourceSetupResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListSURes
 	var pDUSessionResourceFailedToSetupList *ngapType.PDUSessionResourceFailedToSetupListSURes
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
@@ -380,10 +380,10 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 	for _, ie := range pDUSessionResourceSetupResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceSetupListSURes: // ignore
 			pDUSessionResourceSetupResponseList = ie.Value.PDUSessionResourceSetupListSURes
@@ -397,17 +397,17 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 		}
 	}
 
-	if rANUENGAPID != nil {
-		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	if ran_ngapid != nil {
+		ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		}
 	}
 
-	if aMFUENGAPID != nil {
-		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
+	if amf_ngapid != nil {
+		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(amf_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", amf_ngapid.Value)
 			return
 		}
 	}
@@ -476,8 +476,8 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 }
 
 func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan, pDUSessionResourceModifyResponse *ngapType.PDUSessionResourceModifyResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var pduSessionResourceModifyResponseList *ngapType.PDUSessionResourceModifyListModRes
 	var pduSessionResourceFailedToModifyList *ngapType.PDUSessionResourceFailedToModifyListModRes
 	var userLocationInformation *ngapType.UserLocationInformation
@@ -488,10 +488,10 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 	for _, ie := range pDUSessionResourceModifyResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceModifyListModRes: // ignore
 			pduSessionResourceModifyResponseList = ie.Value.PDUSessionResourceModifyListModRes
@@ -508,17 +508,17 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 		}
 	}
 
-	if rANUENGAPID != nil {
-		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	if ran_ngapid != nil {
+		ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		}
 	}
 
-	if aMFUENGAPID != nil {
-		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
+	if amf_ngapid != nil {
+		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(amf_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", amf_ngapid.Value)
 			return
 		}
 	}
@@ -591,8 +591,8 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 
 
 func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, initialContextSetupResponse *ngapType.InitialContextSetupResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var pDUSessionResourceSetupResponseList *ngapType.PDUSessionResourceSetupListCxtRes
 	var pDUSessionResourceFailedToSetupList *ngapType.PDUSessionResourceFailedToSetupListCxtRes
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
@@ -600,15 +600,15 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 	for _, ie := range initialContextSetupResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
-			if aMFUENGAPID == nil {
+			if amf_ngapid == nil {
 				log.Warn("AmfUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID:
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
-			if rANUENGAPID == nil {
+			if ran_ngapid == nil {
 				log.Warn("RanUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDPDUSessionResourceSetupListCxtRes:
@@ -632,9 +632,9 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 		}
 	}
 
-	ranUe := ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	ranUe := ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 	if ranUe == nil {
-		log.Errorf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		return
 	}
 	amfUe := ranUe.AmfUe()
@@ -706,8 +706,8 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 }
 
 func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, uEContextModificationResponse *ngapType.UEContextModificationResponse) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var rRCState *ngapType.RRCState
 	var userLocationInformation *ngapType.UserLocationInformation
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
@@ -717,15 +717,15 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, u
 	for _, ie := range uEContextModificationResponse.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
-			if aMFUENGAPID == nil {
+			if amf_ngapid == nil {
 				log.Warn("AmfUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
-			if rANUENGAPID == nil {
+			if ran_ngapid == nil {
 				log.Warn("RanUeNgapID is nil")
 			}
 		case ngapType.ProtocolIEIDRRCState: // optional, ignore
@@ -740,17 +740,17 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, u
 		}
 	}
 
-	if rANUENGAPID != nil {
-		ranUe = ran.RanUeFindByRanUeNgapID(rANUENGAPID.Value)
+	if ran_ngapid != nil {
+		ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[RanUeNgapID: %d]", rANUENGAPID.Value)
+			log.Warnf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		}
 	}
 
-	if aMFUENGAPID != nil {
-		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
+	if amf_ngapid != nil {
+		ranUe = h.backend.Context().RanUeFindByAmfUeNgapID(amf_ngapid.Value)
 		if ranUe == nil {
-			log.Warnf("No UE Context[AmfUeNgapID: %d]", aMFUENGAPID.Value)
+			log.Warnf("No UE Context[AmfUeNgapID: %d]", amf_ngapid.Value)
 			return
 		}
 	}
@@ -779,8 +779,8 @@ func (h *ngapHandler) handleUEContextModificationResponse(ran *context.AmfRan, u
 }
 
 func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, /*message *ngapType.NGAPPDU*/ handoverRequestAcknowledge *ngapType.HandoverRequestAcknowledge) {
-	var aMFUENGAPID *ngapType.AMFUENGAPID
-	var rANUENGAPID *ngapType.RANUENGAPID
+	var amf_ngapid *ngapType.AMFUENGAPID
+	var ran_ngapid *ngapType.RANUENGAPID
 	var pDUSessionResourceAdmittedList *ngapType.PDUSessionResourceAdmittedList
 	var pDUSessionResourceFailedToSetupListHOAck *ngapType.PDUSessionResourceFailedToSetupListHOAck
 	var targetToSourceTransparentContainer *ngapType.TargetToSourceTransparentContainer
@@ -799,10 +799,10 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, /*me
 	for _, ie := range handoverRequestAcknowledge.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // ignore
-			aMFUENGAPID = ie.Value.AMFUENGAPID
+			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
 		case ngapType.ProtocolIEIDRANUENGAPID: // ignore
-			rANUENGAPID = ie.Value.RANUENGAPID
+			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
 		case ngapType.ProtocolIEIDPDUSessionResourceAdmittedList: // ignore
 			pDUSessionResourceAdmittedList = ie.Value.PDUSessionResourceAdmittedList
@@ -832,23 +832,23 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan, /*me
 		procedureCriticality := ngapType.CriticalityPresentReject
 		criticalityDiagnostics := buildCriticalityDiagnostics(&procedureCode, &triggeringMessage,
 			&procedureCriticality, &iesCriticalityDiagnostics)
-		h.sender.SendErrorIndication(ran, aMFUENGAPID, rANUENGAPID, nil, &criticalityDiagnostics)
+		h.sender.SendErrorIndication(ran, amf_ngapid, ran_ngapid, nil, &criticalityDiagnostics)
 	}
 
 	if criticalityDiagnostics != nil {
 		printCriticalityDiagnostics(ran, criticalityDiagnostics)
 	}
 
-	targetUe := h.backend.Context().RanUeFindByAmfUeNgapID(aMFUENGAPID.Value)
+	targetUe := h.backend.Context().RanUeFindByAmfUeNgapID(amf_ngapid.Value)
 	if targetUe == nil {
-		log.Errorf("No UE Context[AMFUENGAPID: %d]", aMFUENGAPID.Value)
+		log.Errorf("No UE Context[AMFUENGAPID: %d]", amf_ngapid.Value)
 		return
 	}
 
 	log.Info("Handle Handover Request Acknowledge")
 
-	if rANUENGAPID != nil {
-		targetUe.SetRanUeNgapId(rANUENGAPID.Value)
+	if ran_ngapid != nil {
+		targetUe.SetRanUeNgapId(ran_ngapid.Value)
 //		targetUe.UpdateLogFields()
 	}
 	log.Debugf("Target Ue RanUeNgapID[%d] AmfUeNgapID[%d]", targetUe.RanUeNgapId(), targetUe.AmfUeNgapId())

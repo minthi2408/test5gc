@@ -188,7 +188,7 @@ func (s *ngapSender) buildNGReset(
 	cause ngapType.Cause, partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList) ([]byte, error) {
 	var pdu ngapType.NGAPPDU
 
-	//logger.NgapLog.Trace("Build NG Reset message")
+	//log.Trace("Build NG Reset message")
 
 	pdu.Present = ngapType.NGAPPDUPresentInitiatingMessage
 	pdu.InitiatingMessage = new(ngapType.InitiatingMessage)
@@ -263,9 +263,9 @@ func (s *ngapSender) buildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssoc
 
 		uEAssociatedLogicalNGConnectionList := ie.Value.UEAssociatedLogicalNGConnectionList
 
-		for _, item := range partOfNGInterface.List {
+		for i, item := range partOfNGInterface.List {
 			if item.AMFUENGAPID == nil && item.RANUENGAPID == nil {
-				//logger.NgapLog.Warn("[Build NG Reset Ack] No AmfUeNgapID & RanUeNgapID")
+				log.Warn("[Build NG Reset Ack] No AmfUeNgapID & RanUeNgapID")
 				continue
 			}
 
@@ -274,14 +274,14 @@ func (s *ngapSender) buildNGResetAcknowledge(partOfNGInterface *ngapType.UEAssoc
 			if item.AMFUENGAPID != nil {
 				uEAssociatedLogicalNGConnectionItem.AMFUENGAPID = new(ngapType.AMFUENGAPID)
 				uEAssociatedLogicalNGConnectionItem.AMFUENGAPID = item.AMFUENGAPID
-				//logger.NgapLog.Tracef(
-					//"[Build NG Reset Ack] (pair %d) AmfUeNgapID[%d]", i, uEAssociatedLogicalNGConnectionItem.AMFUENGAPID)
+				log.Tracef(
+					"[Build NG Reset Ack] (pair %d) AmfUeNgapID[%d]", i, uEAssociatedLogicalNGConnectionItem.AMFUENGAPID)
 			}
 			if item.RANUENGAPID != nil {
 				uEAssociatedLogicalNGConnectionItem.RANUENGAPID = new(ngapType.RANUENGAPID)
 				uEAssociatedLogicalNGConnectionItem.RANUENGAPID = item.RANUENGAPID
-				//logger.NgapLog.Tracef(
-					//"[Build NG Reset Ack] (pair %d) RanUeNgapID[%d]", i, uEAssociatedLogicalNGConnectionItem.RANUENGAPID)
+				log.Tracef(
+					"[Build NG Reset Ack] (pair %d) RanUeNgapID[%d]", i, uEAssociatedLogicalNGConnectionItem.RANUENGAPID)
 			}
 
 			uEAssociatedLogicalNGConnectionList.List =
@@ -490,8 +490,7 @@ func (s *ngapSender) buildErrorIndication(amfUeNgapId, ranUeNgapId *int64, cause
 	errorIndicationIEs := &errorIndication.ProtocolIEs
 
 	if cause == nil && criticalityDiagnostics == nil {
-		//logger.NgapLog.Error(
-			//"[Build Error Indication] shall contain at least either the Cause or the Criticality Diagnostics")
+		log.Error("[Build Error Indication] shall contain at least either the Cause or the Criticality Diagnostics")
 	}
 
 	if amfUeNgapId != nil {
