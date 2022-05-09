@@ -1347,9 +1347,6 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 }
 
 func (gmm *GmmFsm) handleIdentityResponse(ue *context.AmfUe, identityResponse *nasMessage.IdentityResponse) error {
-	if ue == nil {
-		return fmt.Errorf("AmfUe is nil")
-	}
 
 	log.Info("Handle Identity Response")
 	secinfo := ue.GetSecInfo()
@@ -1501,10 +1498,6 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 // TS 24501 5.6.1
 func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessType,
 	serviceRequest *nasMessage.ServiceRequest) error {
-	
-	if ue == nil {
-		return fmt.Errorf("AmfUe is nil")
-	}
 
 	log.Info("Handle Service Request")
 	secinfo := ue.GetSecInfo()

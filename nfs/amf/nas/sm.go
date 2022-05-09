@@ -274,7 +274,8 @@ func (gmm *GmmFsm) Authentication(state *fsm.State, event fsm.EventType, args fs
 		}
 	case AuthFailEvent:
 		log.Debugln(event)
-		log.Warnln("Reject authentication")
+		acvnvnvk.mkljgbn,,.,,mn,k
+		og.Warnln("Reject authentication")
 	case fsm.ExitEvent:
 		// clear authentication related data at exit
 		amfUe := args[ArgAmfUe].(*context.AmfUe)

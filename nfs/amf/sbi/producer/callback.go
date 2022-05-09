@@ -25,14 +25,14 @@ func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *htt
 	pduIdStr := request.Params["pduSessionId"]
 	if pduId, err := strconv.Atoi(pduIdStr); err == nil {
 		notification := request.Body.(models.SmContextStatusNotification)
-	 	if prob:= h.SmContextStatusNotifyProcedure(guti, int32(pduId), notification); prob != nil {
+	 	if prob:= h.doSmContextStatusNotify(guti, int32(pduId), notification); prob != nil {
 			return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 		}
 	}
 	return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 }
 
-func (h *Handler) SmContextStatusNotifyProcedure(guti string, pduId int32, notification models.SmContextStatusNotification) *models.ProblemDetails {
+func (h *Handler) doSmContextStatusNotify(guti string, pduId int32, notification models.SmContextStatusNotification) *models.ProblemDetails {
 	if ue, ok := h.amf().AmfUeFindByGuti(guti); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -210,6 +210,8 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 				Procedure: context.OnGoingProcedurePaging,
 			})
 
+			//NOTE: tungtq - why not send paging directly without calling
+			//BuildPaging?
 			pkg, err := h.ngap.BuildPaging(ue, nil, false)
 			if err != nil {
 				log.Errorf("Build Paging failed : %s", err.Error())
@@ -250,6 +252,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 	log.Infof("Cause of AM Policy termination[%+v]", terminationNotification.Cause)
 
 	// use go routine to write response first to ensure the order of the procedure
+	//NOTE: tungtq - need a worker pool
 	go func() {
 		if prob, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue); prob != nil {
 			log.Errorf("AM Policy Control Delete Failed Problem[%+v]", prob)
