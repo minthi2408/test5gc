@@ -298,7 +298,7 @@ type AmfUe struct {
 	LadnInfo         []LADN
 
 	/* T3513(Paging) */
-	t3513 *Timer // for paging
+	T3513 *Timer // for paging
 	/* T3565(Notification) */
 	T3565 *Timer // for NAS Notification
 	/* T3560 (for authentication request/security mode command retransmission) */
