@@ -1,5 +1,11 @@
 package fabric
 
+type HttpServer interface {
+}
+
+type RegistryManager interface {
+}
+
 type httpAgent struct {
 	forwarder Forwarder
 	tm        TelemetryManager
@@ -16,5 +22,5 @@ func (agent *httpAgent) Send(Request, NfContext) (Response, error) {
 }
 
 func (agent *httpAgent) Register(service Service) error {
-	return nil, nil
+	return nil
 }
