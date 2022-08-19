@@ -1,27 +1,20 @@
 package fabric
 
-//represent a service agent for an NF
-type ServiceAgent interface {
-	Start()
+type httpAgent struct {
+	forwarder Forwarder
+	tm        TelemetryManager
+	cm        ConnectionManager
+	rm        RegistryManager
+	server    HttpServer
 }
 
-/*
-type Registration interface {
-	Beat() error //send an hearbeat
-	Register() error //register the underlying service
+func (agent *httpAgent) Terminate() {
 }
 
-
-type Discovery interface {
-	Search(ServiceQuery) (ServiceProfiles, error)
+func (agent *httpAgent) Send(Request, NfContext) (Response, error) {
+	return nil, nil
 }
 
-
-//definition of a service query
-type ServiceQuery map[string]string
-
-//load balancer select one of the service instances
-type LoadBalancer interface {
-	Select(ServiceProfiles) ServiceProfile
+func (agent *httpAgent) Register(service Service) error {
+	return nil, nil
 }
-*/
