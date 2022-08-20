@@ -34,7 +34,7 @@ type UEContext struct {
 
 type UEContexts []UEContext
 
-func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infof("[OAM] Handle Registered UE Context")
 
 	supi := request.Params["supi"]
@@ -46,7 +46,7 @@ func (h *Handler) HandleOAMRegisteredUEContext(request *httpwrapper.Request) *ht
 	}
 }
 
-func (h *Handler) doOAMRegisteredUEContext(supi string) (UEContexts, *models.ProblemDetails) {
+func (h *Producer) doOAMRegisteredUEContext(supi string) (UEContexts, *models.ProblemDetails) {
 	var ueContexts UEContexts
 	amf := h.amf()
 

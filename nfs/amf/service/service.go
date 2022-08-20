@@ -7,21 +7,15 @@ import (
 	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/nfselect"
 	"etri5gc/nfs/amf/ngap"
-	"etri5gc/nfs/amf/sbi/communication"
-	"etri5gc/nfs/amf/sbi/consumer"
-	"etri5gc/nfs/amf/sbi/eventexposure"
-	"etri5gc/nfs/amf/sbi/httpcallback"
-	"etri5gc/nfs/amf/sbi/location"
-	"etri5gc/nfs/amf/sbi/mt"
-	nfselectinf "etri5gc/nfs/amf/sbi/nfselect"
-	"etri5gc/nfs/amf/sbi/oam"
-	"etri5gc/nfs/amf/sbi/producer"
-	"etri5gc/sbi"
-	"fmt"
-	"time"
+	 nfselectinf "etri5gc/nfs/amf/sbi/nfselect"
 
-	"github.com/free5gc/openapi/models"
-	"github.com/gin-gonic/gin"
+	"etri5gc/nfs/amf/sbi/producer"
+	"etri5gc/nfs/amf/sbi/consumer"
+	"fmt"
+	//"time"
+
+//	"github.com/free5gc/openapi/models"
+//	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -32,9 +26,8 @@ func init() {
 }
 
 type AMF struct {
-	sbi      sbi.SBI              //sbi server
 	consumer *consumer.Consumer   //sbi consumer interacting with other NFs
-	producer *producer.Handler    //handling Sbi requests received at the server
+	producer *producer.Producer    //handling Sbi requests received at the server
 	selector *nfselect.NfSelector //Nf selection implementation
 	ngap     *ngap.Server         //ngap server handling Ran connections and ngap messages
 	context  *context.AMFContext  // AMF context
@@ -56,11 +49,13 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	//create ngap server
 	nf.ngap = ngap.NewServer(nf)
 	//create sbi producer
-	nf.producer = producer.NewHandler(nf, nf.ngap.Sender(), nf.ngap.Nas())
+	nf.producer = producer.NewProducer(nf, nf.ngap.Sender(), nf.ngap.Nas())
 	//create sbi consumer
 	nf.consumer = consumer.NewConsumer(nf)
-	// create SBI server
-	nf.sbi, err = sbi.CreateSbi(cfg.Configuration.Sbi, nf.makeroutes)
+
+	nf.agent, err = fabric.CreateServiceAgent(nil)
+	nf.sender = nf.agent.Forwarder()
+	err = nf.agent.Server().Register(nf.producer.Services())
 
 	return
 }
@@ -73,7 +68,7 @@ func (nf *AMF) Config() *config.Config {
 	return nf.conf
 }
 
-func (nf *AMF) Producer() *producer.Handler {
+func (nf *AMF) Producer() *producer.Producer {
 	return nf.producer
 }
 
@@ -93,33 +88,6 @@ func (nf *AMF) NfSelector() nfselectinf.NfSelector {
 	return nf.selector
 }
 
-//add routes to the gin router
-func (nf *AMF) makeroutes(router *gin.Engine) error {
-	var gn string
-	var routes sbi.Routes
-	gn, routes = httpcallback.MakeRoutes(nf.producer)
-	sbi.AddHttpRoutes(router, gn, routes)
-	gn, routes = oam.MakeRoutes(nf.producer)
-	sbi.AddHttpRoutes(router, gn, routes)
-	for _, serviceName := range nf.conf.Configuration.ServiceNameList {
-		switch models.ServiceName(serviceName) {
-		case models.ServiceName_NAMF_COMM:
-			gn, routes = communication.MakeRoutes(nf.producer)
-			sbi.AddHttpRoutes(router, gn, routes)
-		case models.ServiceName_NAMF_EVTS:
-			gn, routes = eventexposure.MakeRoutes(nf.producer)
-			sbi.AddHttpRoutes(router, gn, routes)
-		case models.ServiceName_NAMF_MT:
-			gn, routes = mt.MakeRoutes(nf.producer)
-			sbi.AddHttpRoutes(router, gn, routes)
-		case models.ServiceName_NAMF_LOC:
-			gn, routes = location.MakeRoutes(nf.producer)
-			sbi.AddHttpRoutes(router, gn, routes)
-		}
-	}
-	return nil
-}
-
 func (nf *AMF) Start() (err error) {
 
 	// start ngap server
@@ -130,6 +98,7 @@ func (nf *AMF) Start() (err error) {
 	//TODO: probably nrf registration should be implemented in a separated go
 	//routine. The Amf is functioning only after a registration success.
 
+	/*
 	log.Info("Registering to NRF")
 	cnt := 1
 LOOP:
@@ -152,15 +121,18 @@ LOOP:
 	}
 
 	log.Info("Amf is registered, it is ok now")
+	*/
+
 	if err != nil {
 		nf.ngap.Stop()
 		return
 	}
 
-	log.Info("Starting sbi server")
-	//start sbi server
-	nf.sbi.Serve()
+	if err = nf.agent.Start(); err != nil {
+		nf.ngap.Stop()
+	}
 	return
+
 }
 
 func (nf *AMF) Terminate() {
@@ -168,7 +140,7 @@ func (nf *AMF) Terminate() {
 	//stop ngap server
 	nf.ngap.Stop()
 	//stop sbi server
-	nf.sbi.Stop()
+	nf.agent.Terminate()
 
 	if _, err := nf.consumer.Nrf().SendDeregisterNFInstance(); err != nil {
 		log.Errorf("Fail to send degistration to the Nrf: %s", err.Error())

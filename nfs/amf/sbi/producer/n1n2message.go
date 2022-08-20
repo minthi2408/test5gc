@@ -15,7 +15,7 @@ import (
 )
 
 // TS23502 4.2.3.3, 4.2.4.3, 4.3.2.2, 4.3.2.3, 4.3.3.2, 4.3.7
-func (h *Handler) HandleN1N2MessageTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleN1N2MessageTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	/*
 	logger.ProducerLog.Infof("Handle N1N2 Message Transfer Request")
 
@@ -369,7 +369,7 @@ func N1N2MessageTransferProcedure(ueContextID string, reqUri string,
 }
 */
 
-func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.CommLog.Info("Handle N1N2Message Transfer Status Request")
 
 	ueContextID := request.Params["ueContextId"]
@@ -383,7 +383,7 @@ func (h *Handler) HandleN1N2MessageTransferStatusRequest(request *httpwrapper.Re
 	}
 }
 
-func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string) (models.N1N2MessageTransferCause,
+func (h *Producer) doN1N2MessageTransferStatus(ueContextID string, reqUri string) (models.N1N2MessageTransferCause,
 	*models.ProblemDetails) {
 
 	ue, ok := h.amf().AmfUeFindByUeContextID(ueContextID)
@@ -406,7 +406,7 @@ func (h *Handler) doN1N2MessageTransferStatus(ueContextID string, reqUri string)
 }
 
 // TS 29.518 5.2.2.3.3
-func (h *Handler) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	reqdat := request.Body.(models.UeN1N2InfoSubscriptionCreateData)
 	ueId := request.Params["ueContextId"]
 
@@ -417,7 +417,7 @@ func (h *Handler) HandleN1N2MessageSubscirbeRequest(request *httpwrapper.Request
 	}
 }
 
-func (h *Handler) doN1N2MessageSubscribe(ueId string,
+func (h *Producer) doN1N2MessageSubscribe(ueId string,
 	dat *models.UeN1N2InfoSubscriptionCreateData) (
 	*models.UeN1N2InfoSubscriptionCreatedData, *models.ProblemDetails) {
 
@@ -435,7 +435,7 @@ func (h *Handler) doN1N2MessageSubscribe(ueId string,
 	}
 }
 
-func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	//logger.CommLog.Info("Handle N1N2Message Unsubscribe Request")
 
 	ueId := request.Params["ueContextId"]
@@ -448,7 +448,7 @@ func (h *Handler) HandleN1N2MessageUnSubscribeRequest(request *httpwrapper.Reque
 	}
 }
 
-func (h *Handler) doN1N2MessageUnSubscribe(ueId string, subId string) *models.ProblemDetails {
+func (h *Producer) doN1N2MessageUnSubscribe(ueId string, subId string) *models.ProblemDetails {
 
 	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
 		return &models.ProblemDetails{

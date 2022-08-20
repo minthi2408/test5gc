@@ -12,7 +12,7 @@ import (
 
 
 // TS 29.518 5.2.2.2.3
-func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleCreateUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infof("Handle Create UE Context Request")
 
 	createUeContextRequest := request.Body.(models.CreateUeContextRequest)
@@ -25,7 +25,7 @@ func (h *Handler) HandleCreateUEContextRequest(request *httpwrapper.Request) *ht
 	}
 	return nil
 }
-func (h *Handler) doCreateUEContext(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
+func (h *Producer) doCreateUEContext(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
 	*models.CreateUeContextResponse, *models.UeContextCreateError) {
 	amf := h.amf() 
 	ueContextCreateData := createUeContextRequest.JsonData
@@ -68,7 +68,7 @@ func (h *Handler) doCreateUEContext(ueContextID string, createUeContextRequest m
 }
 
 // TS 29.518 5.2.2.2.4
-func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleReleaseUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Release UE Context Request")
 
 	ueContextRelease := request.Body.(models.UeContextRelease)
@@ -83,7 +83,7 @@ func (h *Handler) HandleReleaseUEContextRequest(request *httpwrapper.Request) *h
 	return nil
 }
 
-func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models.UeContextRelease) *models.ProblemDetails {
+func (h *Producer) doReleaseUEContext(ueContextID string, ueContextRelease models.UeContextRelease) *models.ProblemDetails {
 	// TODO: UE is emergency registered and the SUPI is not authenticated
 	if ueContextRelease.Supi != "" {
 		log.Warnf("Emergency registered UE is not supported.")
@@ -115,7 +115,7 @@ func (h *Handler) doReleaseUEContext(ueContextID string, ueContextRelease models
 	return nil
 }
 // TS 29.518 5.2.2.2.1
-func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleUEContextTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle UE Context Transfer Request")
 
 	req := request.Body.(models.UeContextTransferRequest)
@@ -128,7 +128,7 @@ func (h *Handler) HandleUEContextTransferRequest(request *httpwrapper.Request) *
 	}
 }
 
-func (h *Handler) doUEContextTransfer(ueId string, req models.UeContextTransferRequest) (
+func (h *Producer) doUEContextTransfer(ueId string, req models.UeContextTransferRequest) (
 	*models.UeContextTransferResponse, *models.ProblemDetails) {
 
 	amf := h.amf() 
@@ -172,7 +172,7 @@ func (h *Handler) doUEContextTransfer(ueId string, req models.UeContextTransferR
 
 
 // TS 29.518 5.2.2.6
-func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAssignEbiDataRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Assign Ebi Data Request")
 
 	ebidat := request.Body.(models.AssignEbiData)
@@ -187,7 +187,7 @@ func (h *Handler) HandleAssignEbiDataRequest(request *httpwrapper.Request) *http
 	}
 }
 
-func (h *Handler) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
+func (h *Producer) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
 	*models.AssignedEbiData, *models.AssignEbiError, *models.ProblemDetails) {
 
 	if ue, ok := h.amf().AmfUeFindByUeContextID(ueId); !ok {
@@ -210,7 +210,7 @@ func (h *Handler) doAssignEbiData(ueId string, ebidat models.AssignEbiData) (
 }
 
 // TS 29.518 5.2.2.2.2
-func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Registration Status Update Request")
 
 	reqdat := request.Body.(models.UeRegStatusUpdateReqData)
@@ -223,7 +223,7 @@ func (h *Handler) HandleRegistrationStatusUpdateRequest(request *httpwrapper.Req
 	}
 }
 
-func (h *Handler) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegStatusUpdateReqData) (
+func (h *Producer) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegStatusUpdateReqData) (
 	*models.UeRegStatusUpdateRspData, *models.ProblemDetails) {
 
 	// ueId must be a 5g GUTI (TS 29.518 6.1.3.2.4.5.1)

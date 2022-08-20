@@ -18,7 +18,7 @@ import (
 )
 //NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
 
-func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("[AMF] Handle SmContext Status Notify")
 
 	guti := request.Params["guti"]
@@ -32,7 +32,7 @@ func (h *Handler) HandleSmContextStatusNotify(request *httpwrapper.Request) *htt
 	return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 }
 
-func (h *Handler) doSmContextStatusNotify(guti string, pduId int32, notification models.SmContextStatusNotification) *models.ProblemDetails {
+func (h *Producer) doSmContextStatusNotify(guti string, pduId int32, notification models.SmContextStatusNotification) *models.ProblemDetails {
 	if ue, ok := h.amf().AmfUeFindByGuti(guti); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -150,7 +150,7 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 }
 
 
-func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
 
 	polId := request.Params["polAssoId"]
@@ -163,7 +163,7 @@ func (h *Handler) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.R
 	}
 }
 
-func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate models.PolicyUpdate) *models.ProblemDetails {
+func (h *Producer) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate models.PolicyUpdate) *models.ProblemDetails {
 	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polId)
 	if !ok {
 		return &models.ProblemDetails{
@@ -224,7 +224,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate mo
 }
 
 // TS 29.507 4.2.4.3
-func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle AM Policy Control Update Notify [Request for termination of the policy association]")
 
 	polAssoID := request.Params["polAssoId"]
@@ -237,7 +237,7 @@ func (h *Handler) HandleAmPolicyControlUpdateNotifyTerminate(request *httpwrappe
 	}
 }
 
-func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
+func (h *Producer) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 	terminationNotification models.TerminationNotification) *models.ProblemDetails {
 
 	ue, ok := h.amf().AmfUeFindByPolicyAssociationID(polAssoID)
@@ -264,7 +264,7 @@ func (h *Handler) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 }
 
 // TS 23.502 4.2.2.2.3 Registration with AMF re-allocation
-func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("[AMF] Handle N1 Message Notify")
 
 	n1MessageNotify := request.Body.(models.N1MessageNotify)
@@ -276,7 +276,7 @@ func (h *Handler) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapp
 	}
 }
 
-func (h *Handler) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
+func (h *Producer) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
 	log.Debugf("n1MessageNotify: %+v", n1MessageNotify)
 
 	registrationCtxtContainer := n1MessageNotify.JsonData.RegistrationCtxtContainer

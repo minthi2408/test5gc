@@ -21,17 +21,18 @@ type Response interface {
 	Marshallable
 }
 
+//the type of a network function (amf, smf, etc.)
+type NetworkFunctionType string
+
 // the abstraction of querries that are sent by an upper layer caller to select
 // a remote producer
 // Note: we have not sure how the query should be implemented yet. Should it be a
 // complex sql-like query, or should it be any other simplified form?
 
 type NfQuery interface {
-	GetNfType() NfType
+	GetNfType() NetworkFunctionType
 }
 
-//the type of a network function (amf, smf, etc.)
-type NfType string
 
 //define a context where a network function operate
 //a NfQuery should be map to a single NfContext so that a list of currently
@@ -43,7 +44,8 @@ type NfContext struct {
 // there should be core parameters
 // there should be plug-in parameters that are NF-dependent
 type AgentConfig struct {
-	nfType NfType
+	NfType 			NetworkFunctionType
+	http			*HttpServerConfig
 }
 
 // the abstraction of a service supported by an NF
@@ -52,9 +54,6 @@ type Service interface {
 	// name of the service. Prefixing it with a protocol transport address of
 	// its NF instance should produce the service url
 	Name() string
-	// handle a consumer request. this should be implemented in the upper
-	// layers
-	Handle(Request) (Response, error)
 }
 
 // a service abstraction to expose service requesting to upper layers
@@ -66,33 +65,33 @@ type Forwarder interface {
 	Send(Request, NfQuery) (Response, error)
 }
 
+// a server abstraction that listen to requests for registered services
+type ServiceServer interface {
+	//register services to handling incomming requests
+	Register([]Service) error
+}
+
+
 // an abstraction that exposes the agent to the upper layers
 //
 type ServiceAgent interface {
-	//terminate the agent
+	// start agent; just once
+	Start() error
+	// terminate the agent; only after it has started
 	Terminate()
 
 	// expose the forwarder
 	Forwarder() Forwarder
-
-	//register a service to handling incomming requests
-	Register(Service) error
+	// expose server
+	Server() ServiceServer
 }
 
-// a factory method to create an agent
-// it returns an nil value and an error in case of failure
-// otherwise, internal go routines are running. The caller should tell the
-// agent to terminate when exiting the application
-
-func MakeAgent(config AgentConfig) (ServiceAgent, error) {
-	return nil, nil
-}
 
 //////////////////////////////
 //Registry
 
 type AgentProfile interface {
-	NfType() NfType
+	NfType() NetworkFunctionType
 }
 
 //a registry to query for producers

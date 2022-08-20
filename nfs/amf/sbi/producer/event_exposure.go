@@ -10,7 +10,7 @@ import (
 	"github.com/free5gc/util/httpwrapper"
 )
 
-func (h *Handler) HandleCreateAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleCreateAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
 	reqsub := request.Body.(models.AmfCreateEventSubscription)
 
 	//ressub, prob := CreateAMFEventSubscriptionProcedure(reqsub)
@@ -30,7 +30,7 @@ func (h *Handler) HandleCreateAMFEventSubscription(request *httpwrapper.Request)
 	return nil
 }
 
-func (h *Handler) HandleDeleteAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleDeleteAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle Delete AMF Event Subscription")
 
 	subId := request.Params["subscriptionId"]
@@ -42,7 +42,7 @@ func (h *Handler) HandleDeleteAMFEventSubscription(request *httpwrapper.Request)
 	}
 }
 
-func (h *Handler) HandleModifyAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleModifyAMFEventSubscription(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle Modify AMF Event Subscription")
 
 	subId := request.Params["subscriptionId"]

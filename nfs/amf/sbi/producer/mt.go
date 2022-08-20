@@ -9,7 +9,7 @@ import (
 	"github.com/free5gc/util/httpwrapper"
 )
 
-func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Provide Domain Selection Info Request")
 
 	ueContextID := request.Params["ueContextId"]
@@ -24,7 +24,7 @@ func (h *Handler) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.R
 	}
 }
 
-func (h *Handler) doProvideDomainSelectionInfo(ueContextID string, infoClassQuery string, supportedFeaturesQuery string) (
+func (h *Producer) doProvideDomainSelectionInfo(ueContextID string, infoClassQuery string, supportedFeaturesQuery string) (
 	*models.UeContextInfo, *models.ProblemDetails) {
 	amf := h.amf()
 

@@ -9,7 +9,7 @@ import (
 	"github.com/free5gc/util/httpwrapper"
 )
 
-func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleProvideLocationInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Provide Location Info Request")
 
 	req := request.Body.(models.RequestLocInfo)
@@ -22,7 +22,7 @@ func (h *Handler) HandleProvideLocationInfoRequest(request *httpwrapper.Request)
 	}
 }
 
-func (h *Handler) doProvideLocationInfo(req models.RequestLocInfo, ueId string) (
+func (h *Producer) doProvideLocationInfo(req models.RequestLocInfo, ueId string) (
 	*models.ProvideLocInfo, *models.ProblemDetails) {
 	amf := h.amf()
 

@@ -4,6 +4,13 @@ import (
 //	"fmt"
 	"etri5gc/nfs/amf/context"
 	//"etri5gc/nfs/amf/ngap"
+	"etri5gc/fabric"
+	"etri5gc/nfs/amf/sbi/producer/httpcallback"
+	"etri5gc/nfs/amf/sbi/producer/eventexposure"
+	"etri5gc/nfs/amf/sbi/producer/location"
+	"etri5gc/nfs/amf/sbi/producer/communication"
+	"etri5gc/nfs/amf/sbi/producer/oam"
+	"etri5gc/nfs/amf/sbi/producer/mt"
 	"etri5gc/nfs/amf/sbi/consumer"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/nas/nasType"
@@ -40,20 +47,31 @@ type Backend interface {
 	Context() *context.AMFContext
 }
 
-type Handler struct {
+type Producer struct {
 	backend		Backend
 	ngap		NgapSender
 	nas			NasInf
 }
 
-func NewHandler(b Backend, ngap NgapSender, nas NasInf) *Handler {
-	return &Handler{
+func NewProducer(b Backend, ngap NgapSender, nas NasInf) *Producer {
+	return &Producer{
 		backend: b,
 		ngap: ngap,
 		nas: nas,
 	}
 }
 
-func (h *Handler) amf() *context.AMFContext {
-	return h.backend.Context()
+func (prod *Producer) Services() []fabric.Service {
+	services := make([]fabric.Service,6,6)
+	services[0] = httpcallback.MakeService(prod)
+	services[1] = communication.MakeService(prod)
+	services[2] = eventexposure.MakeService(prod)
+	services[3] = location.MakeService(prod)
+	services[4] = mt.MakeService(prod)
+	services[5] = oam.MakeService(prod)
+
+}
+
+func (prod *Producer) amf() *context.AMFContext {
+	return prod.backend.Context()
 }

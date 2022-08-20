@@ -11,7 +11,7 @@ import (
 )
 
 // TS 29.518 5.2.2.5.1
-func (h *Handler) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle AMF Status Change Subscribe Request")
 
 	datreq := request.Body.(models.SubscriptionData)
@@ -28,7 +28,7 @@ func (h *Handler) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Req
 }
 
 // TS 29.518 5.2.2.5.2
-func (h *Handler) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle AMF Status Change UnSubscribe Request")
 
 	subId := request.Params["subscriptionId"]
@@ -42,7 +42,7 @@ func (h *Handler) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.R
 
 
 // TS 29.518 5.2.2.5.1.3
-func (h *Handler) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Request) *httpwrapper.Response {
+func (h *Producer) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle AMF Status Change Subscribe Modify Request")
 
 	dat := request.Body.(models.SubscriptionData)

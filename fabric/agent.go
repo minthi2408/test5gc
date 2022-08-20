@@ -1,26 +1,152 @@
 package fabric
 
-type HttpServer interface {
-}
+import (
+	"fmt"
+	"net/http"
+	"errors"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	"github.com/free5gc/util/httpwrapper"
+)
+
 
 type RegistryManager interface {
 }
 
+// Route is the information for every URI.
+type HttpRoute struct {
+	// Name is the name of this Route.
+	Name string
+	// Method is the string for the HTTP method. ex) GET, POST etc..
+	Method string
+	// Pattern is the pattern of the URI.
+	Pattern string
+	// HandlerFunc is the handler function of this route.
+	HandlerFunc gin.HandlerFunc
+}
+
+type HttpRoutes []HttpRoute
+
+type HttpService struct {
+	Group			string
+	Routes			[]HttpRoute
+}
+
+func (s *HttpService) Name() string {
+	return s.Group
+}
+
 type httpAgent struct {
-	forwarder Forwarder
 	tm        TelemetryManager
 	cm        ConnectionManager
 	rm        RegistryManager
-	server    HttpServer
+	server    *httpServer
+	forwarder *httpForwarder
+}
+
+func (agent *httpAgent) Start() (err error) {
+	return
 }
 
 func (agent *httpAgent) Terminate() {
 }
 
-func (agent *httpAgent) Send(Request, NfContext) (Response, error) {
-	return nil, nil
+func (agent *httpAgent) Forwarder() Forwarder {
+	return agent.forwarder
 }
 
-func (agent *httpAgent) Register(service Service) error {
-	return nil
+func (agent *httpAgent) Server() ServiceServer {
+	return agent.server
+}
+
+// a factory method to create an agent
+// it returns an nil value and an error in case of failure
+// otherwise, internal go routines are running. The caller should tell the
+// agent to terminate when exiting the application
+
+func CreateServiceAgent(config	*AgentConfig) (ServiceAgent, error) {
+	agent := &httpAgent{
+		forwarder:		&httpForwarder{},
+		server:			newHttpServer(config.http),
+	}
+
+	return agent, nil
+}
+
+//httpServer
+type httpServer struct {
+	config		*HttpServerConfig
+	server		*http.Server	
+}
+
+type HttpServerConfig struct {
+	BindingIPv4			string
+	Port				int
+}
+
+func newHttpServer(config *HttpServerConfig) *httpServer {
+	return &httpServer {
+		config:	config,
+	}
+}
+
+// create a http server, register services and their handlers
+func (server *httpServer) Register(services []Service) (err error) {
+	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowMethods: []string{"GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"},
+		AllowHeaders: []string{
+			"Origin", "Content-Length", "Content-Type", "User-Agent", "Referrer", "Host",
+			"Token", "X-Requested-With",
+		},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowAllOrigins:  true,
+		MaxAge:           86400,
+	}))
+
+	
+	addr := fmt.Sprintf("%s:%d", server.config.BindingIPv4, server.config.Port)
+
+	for _, s := range services {
+		if httpservice, ok := s.(*HttpService); !ok {
+			panic(errors.New("Not a HttpService"))
+		} else {
+			addHttpRoutes(router, httpservice.Group, httpservice.Routes)
+		}
+	}
+	server.server, err = httpwrapper.NewHttp2Server(addr,/* amf.KeyLogPath*/"", router)
+	return 
+}
+
+func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gin.RouterGroup{
+	group := engine.Group(groupname)
+
+	for _, route := range routes {
+		switch route.Method {
+		case "GET":
+			group.GET(route.Pattern, route.HandlerFunc)
+		case "POST":
+			group.POST(route.Pattern, route.HandlerFunc)
+		case "PUT":
+			group.PUT(route.Pattern, route.HandlerFunc)
+		case "DELETE":
+			group.DELETE(route.Pattern, route.HandlerFunc)
+		}
+	}
+	return group
+}
+
+// IndexHandler is the index handler.
+func HttpIndexHandler(c *gin.Context) {
+	c.String(http.StatusOK, "Hello from EtriB5GC!")
+}
+
+// httpForwarder
+type httpForwarder struct {
+}
+
+func (fw *httpForwarder) Send(Request, NfQuery) (Response, error) {
+	return nil, nil
 }
