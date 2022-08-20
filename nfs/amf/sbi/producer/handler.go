@@ -69,7 +69,7 @@ func (prod *Producer) Services() []fabric.Service {
 	services[3] = location.MakeService(prod)
 	services[4] = mt.MakeService(prod)
 	services[5] = oam.MakeService(prod)
-
+	return services
 }
 
 func (prod *Producer) amf() *context.AMFContext {

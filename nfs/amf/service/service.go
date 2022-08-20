@@ -142,9 +142,11 @@ func (nf *AMF) Terminate() {
 	//stop sbi server
 	nf.agent.Terminate()
 
+	/*
 	if _, err := nf.consumer.Nrf().SendDeregisterNFInstance(); err != nil {
 		log.Errorf("Fail to send degistration to the Nrf: %s", err.Error())
 	}
+	*/
 
 	fmt.Println("Kill it")
 }

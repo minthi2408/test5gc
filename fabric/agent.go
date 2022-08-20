@@ -1,9 +1,10 @@
 package fabric
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
-	"errors"
+	"sync"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/free5gc/util/httpwrapper"
@@ -32,7 +33,7 @@ type HttpService struct {
 	Routes			[]HttpRoute
 }
 
-func (s *HttpService) Name() string {
+func (s HttpService) Name() string {
 	return s.Group
 }
 
@@ -45,10 +46,16 @@ type httpAgent struct {
 }
 
 func (agent *httpAgent) Start() (err error) {
+	if agent.server == nil {
+		panic(errors.New("http server has not been created"))
+	}
+	err = agent.server.serve()
 	return
 }
 
 func (agent *httpAgent) Terminate() {
+	agent.server.close()
+	//log.Info("Sbi server stopped")
 }
 
 func (agent *httpAgent) Forwarder() Forwarder {
@@ -77,6 +84,7 @@ func CreateServiceAgent(config	*AgentConfig) (ServiceAgent, error) {
 type httpServer struct {
 	config		*HttpServerConfig
 	server		*http.Server	
+	wg			sync.WaitGroup
 }
 
 type HttpServerConfig struct {
@@ -91,7 +99,7 @@ func newHttpServer(config *HttpServerConfig) *httpServer {
 }
 
 // create a http server, register services and their handlers
-func (server *httpServer) Register(services []Service) (err error) {
+func (s *httpServer) Register(services []Service) (err error) {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
@@ -107,18 +115,50 @@ func (server *httpServer) Register(services []Service) (err error) {
 	}))
 
 	
-	addr := fmt.Sprintf("%s:%d", server.config.BindingIPv4, server.config.Port)
+	addr := fmt.Sprintf("%s:%d", s.config.BindingIPv4, s.config.Port)
 
-	for _, s := range services {
-		if httpservice, ok := s.(*HttpService); !ok {
+	for _, sv := range services {
+		if httpservice, ok := sv.(*HttpService); !ok {
 			panic(errors.New("Not a HttpService"))
 		} else {
 			addHttpRoutes(router, httpservice.Group, httpservice.Routes)
 		}
 	}
-	server.server, err = httpwrapper.NewHttp2Server(addr,/* amf.KeyLogPath*/"", router)
+	s.server, err = httpwrapper.NewHttp2Server(addr,/* amf.KeyLogPath*/"", router)
 	return 
 }
+
+func (s *httpServer) serve() (err error) {
+	go func() {
+		err = s.server.ListenAndServe()
+
+		/*
+		if s.config.Scheme == "http" {
+			if err := s.server.ListenAndServe(); err != nil {
+				//log.Errorf("Http server failed to listen", err)
+			}
+			return
+		}
+
+		if err :=s.server.ListenAndServeTLS(s.config.Tls.Pem, s.config.Tls.Key); err != nil {
+			//log.Errorf("Http server failed to listen", err)
+		}
+		*/
+
+		s.wg.Add(1)
+	}()
+	//log.Info("Sbi server is running")
+	return
+}
+
+func (s *httpServer) close() {
+	if s.server == nil {
+		panic(errors.New("http server has not been started"))
+	}
+	s.server.Close()
+	s.wg.Wait()
+}
+
 
 func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gin.RouterGroup{
 	group := engine.Group(groupname)
