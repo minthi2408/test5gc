@@ -239,7 +239,15 @@ type AmfUe struct {
 
 	/* Security Context */
 	seccon	SecContext
+	
+	/* udm client */
+	udmcli	udmClient
 
+	/* pcf client */
+	pcfcli	pcfClient
+
+	/* ausf client */
+	ausfcli	ausfClient
 
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
@@ -410,6 +418,17 @@ func (ue *AmfUe) GetLocInfo() *LocInfo {
 	return &ue.loc
 }
 
+func (ue *AmfUe) UdmClient() *udmClient {
+	return &ue.udmcli
+}
+
+func (ue *AmfUe) PcfClient() *pcfClient {
+	return &ue.pcfcli
+}
+
+func (ue *AmfUe) AusfClient() *ausfClient {
+	return &ue.ausfcli
+}
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
 	if _, ok := ue.RanUe[anType]; !ok {
 		return false

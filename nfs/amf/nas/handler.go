@@ -59,7 +59,7 @@ func (gmm *GmmFsm) handleULNASTransport(ue *context.AmfUe, anType models.AccessT
 		if err != nil {
 			return err
 		}
-		err = gmm.consumer.Udm().PutUpuAck(ue, upuMac)
+		err = ue.UdmClient().PutUpuAck(upuMac)
 		if err != nil {
 			return err
 		}
@@ -124,7 +124,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 				}
 				log.Warningf("Duplicated PDU session ID[%d]", pduSessionID)
 				smContext.SetDuplicatedPduSessionID(true)
-				response, _, _, err := gmm.consumer.Smf().SendUpdateSmContextRequest(smContext, updateData, nil, nil)
+				response, _, _, err := smContext.SmfClient().SendUpdateSmContextRequest(updateData, nil, nil)
 				if err != nil {
 					return err
 				} else if response == nil {
@@ -294,8 +294,7 @@ func (gmm *GmmFsm) forward5GSMMessageToSMF(
 	if accessType != smContext.AccessType() {
 		smContextUpdateData.AnType = accessType
 	}
-	response, errResponse, problemDetail, err := gmm.consumer.Smf().SendUpdateSmContextRequest(smContext,
-		smContextUpdateData, smMessage, nil)
+	response, errResponse, problemDetail, err := smContext.SmfClient().SendUpdateSmContextRequest(smContextUpdateData, smMessage, nil)
 
 	if err != nil {
 		// TODO: error handling
@@ -799,8 +798,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 				if smContext, ok := ue.SmContextFindByPDUSessionID(pduSessionId); ok {
 					// uplink data are pending for the corresponding PDU session identity
 					if hasUplinkData && smContext.AccessType() == models.AccessType__3_GPP_ACCESS {
-						response, errResponse, problemDetail, err := gmm.consumer.Smf().SendUpdateSmContextActivateUpCnxState(
-							ue, smContext, anType)
+						response, errResponse, problemDetail, err := smContext.SmfClient().SendUpdateSmContextActivateUpCnxState(anType)
 						if response == nil {
 							reactivationResult[pduSessionId] = true
 							errPduSessionId = append(errPduSessionId, uint8(pduSessionId))
@@ -849,7 +847,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 					causeAll := &context.CauseAll{
 						Cause: &cause,
 					}
-					problemDetail, err := gmm.consumer.Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
+					problemDetail, err := smContext.SmfClient().SendReleaseSmContextRequest(causeAll, "", nil)
 					if problemDetail != nil {
 						pduSessionStatus[psi] = true
 						log.Errorf("Release SmContext Failed Problem[%+v]", problemDetail)
@@ -914,7 +912,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 				}
 				if allowedPsis[requestData.PduSessionId] {
 					// TODO: error handling
-					response, errRes, _, err := gmm.consumer.Smf().SendUpdateSmContextChangeAccessType(ue, smContext, true)
+					response, errRes, _, err := smContext.SmfClient().SendUpdateSmContextChangeAccessType(true)
 					if err != nil {
 						return err
 					} else if response == nil {
@@ -967,7 +965,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		updateReq := models.PolicyAssociationUpdateRequest{}
 		updateReq.Triggers = append(updateReq.Triggers, models.RequestTrigger_LOC_CH)
 		updateReq.UserLoc = &ueloc.Location
-		problemDetails, err := gmm.consumer.Pcf().AMPolicyControlUpdate(ue, updateReq)
+		problemDetails, err := ue.PcfClient().AMPolicyControlUpdate(updateReq)
 		if problemDetails != nil {
 			log.Errorf("AM Policy Control Update Failed Problem[%+v]", problemDetails)
 		} else if err != nil {
@@ -1128,7 +1126,8 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 }
 //NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
 func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
-	/*TODO: tungtq - implement this in the context package
+	//TODO: tungtq - implement this in the context package
+	/*
 	udminfo := ue.GetUdmInfo()
 	if udminfo.NudmSDMUri == "" {
 		snf, err := gmm.nas.backend.NfSelector().SelectUdm(ue.Supi)
@@ -1139,15 +1138,16 @@ func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
 		udminfo.NudmUECMUri = snf.NfUri()
 		udminfo.NudmSDMUri = snf.(*nfselect.UdmNf).SdmUri()
 	}
-	problemDetails, err := gmm.consumer.Udm().SDMGetSliceSelectionSubscriptionData(ue)
+	*/
+
+	problemDetails, err := ue.UdmClient().SDMGetSliceSelectionSubscriptionData()
+
 	if problemDetails != nil {
 		log.Errorf("SDM_Get Slice Selection Subscription Data Failed Problem[%+v]", problemDetails)
 	} else if err != nil {
 		log.Errorf("SDM_Get Slice Selection Subscription Data Error[%+v]", err)
 	}
 	return err
-	*/
-	return nil
 }
 
 // TS 23.502 4.2.2.2.3 Registration with AMF Re-allocation
@@ -1440,7 +1440,7 @@ func (gmm *GmmFsm) handleNotificationResponse(ue *context.AmfUe, notificationRes
 					causeAll := &context.CauseAll{
 						Cause: &cause,
 					}
-					problemDetail, err := gmm.consumer.Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
+					problemDetail, err := smContext.SmfClient().SendReleaseSmContextRequest(causeAll, "", nil)
 					if problemDetail != nil {
 						log.Errorf("Release SmContext Failed Problem[%+v]", problemDetail)
 					} else if err != nil {
@@ -1628,8 +1628,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 				return true
 			}
 			if uplinkDataPsi[pduSessionID] && smContext.AccessType() == models.AccessType__3_GPP_ACCESS {
-				response, errRes, _, err := gmm.consumer.Smf().SendUpdateSmContextActivateUpCnxState(
-					ue, smContext, models.AccessType__3_GPP_ACCESS)
+				response, errRes, _, err := smContext.SmfClient().SendUpdateSmContextActivateUpCnxState(models.AccessType__3_GPP_ACCESS)
 				if err != nil {
 					log.Errorf("SendUpdateSmContextActivateUpCnxState[pduSessionID:%d] Error: %+v",
 						pduSessionID, err)
@@ -1671,7 +1670,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 					causeAll := &context.CauseAll{
 						Cause: &cause,
 					}
-					problemDetail, err := gmm.consumer.Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
+					problemDetail, err := smContext.SmfClient().SendReleaseSmContextRequest(causeAll, "", nil)
 					if problemDetail != nil {
 						log.Errorf("Release SmContext Failed Problem[%+v]", problemDetail)
 					} else if err != nil {
@@ -1727,8 +1726,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 						reactivationResult = new([16]bool)
 					}
 					if allowPduSessionPsi[requestData.PduSessionId] {
-						response, errRes, _, err := gmm.consumer.Smf().SendUpdateSmContextChangeAccessType(
-							ue, smContext, true)
+						response, errRes, _, err := smContext.SmfClient().SendUpdateSmContextChangeAccessType(true)
 						if err != nil {
 							return err
 						} else if response == nil {
@@ -1920,7 +1918,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 			}
 		}
 
-		response, problemDetails, err := gmm.consumer.Ausf().SendAuth5gAkaConfirmRequest(ue, hex.EncodeToString(resStar[:]))
+		response, problemDetails, err := ue.AusfClient().SendAuth5gAkaConfirmRequest(hex.EncodeToString(resStar[:]))
 		if err != nil {
 			return err
 		} else if problemDetails != nil {
@@ -1954,7 +1952,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 			}
 		}
 	case models.AuthType_EAP_AKA_PRIME:
-		response, problemDetails, err := gmm.consumer.Ausf().SendEapAuthConfirmRequest(ue, *authenticationResponse.EAPMessage)
+		response, problemDetails, err := ue.AusfClient().SendEapAuthConfirmRequest(*authenticationResponse.EAPMessage)
 		if err != nil {
 			return err
 		} else if problemDetails != nil {
@@ -2067,7 +2065,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 			}
 			resynchronizationInfo.Rand = av5gAka.Rand
 
-			response, problemDetails, err := gmm.consumer.Ausf().SendUEAuthenticationAuthenticateRequest(ue, resynchronizationInfo)
+			response, problemDetails, err := ue.AusfClient().SendUEAuthenticationAuthenticateRequest(resynchronizationInfo)
 			if err != nil {
 				return err
 			} else if problemDetails != nil {
@@ -2204,7 +2202,7 @@ func (gmm *GmmFsm) handleDeregistrationRequest(ue *context.AmfUe, anType models.
 
 		if smContext.AccessType() == anType ||
 			targetDeregistrationAccessType == nasMessage.AccessTypeBoth {
-			problemDetail, err := gmm.consumer.Smf().SendReleaseSmContextRequest(ue, smContext, nil, "", nil)
+			problemDetail, err := smContext.SmfClient().SendReleaseSmContextRequest(nil, "", nil)
 			if problemDetail != nil {
 				log.Errorf("Release SmContext Failed Problem[%+v]", problemDetail)
 			} else if err != nil {
@@ -2224,7 +2222,7 @@ func (gmm *GmmFsm) handleDeregistrationRequest(ue *context.AmfUe, anType models.
 		}
 
 		if terminateAmPolicyAssocaition {
-			problemDetails, err := gmm.consumer.Pcf().AMPolicyControlDelete(ue)
+			problemDetails, err := ue.PcfClient().AMPolicyControlDelete()
 			if problemDetails != nil {
 				log.Errorf("AM Policy Control Delete Failed Problem[%+v]", problemDetails)
 			} else if err != nil {
