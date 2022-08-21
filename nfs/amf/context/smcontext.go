@@ -26,9 +26,16 @@ type SmContext struct {
 	hSmfID 			string
 	vSmfID 			string
 
+	/* Smf client that sends request to a SMF producer */
+	smfcli			*smfClient
+
 	// for duplicate pdu session id handling
 	ulNASTransport	*nasMessage.ULNASTransport
 	duplicated		bool
+}
+
+func (c *SmContext) GetSmfClient() *smfClient {
+	return c.smfcli
 }
 
 func NewSmContext(pduSessionID int32) *SmContext {

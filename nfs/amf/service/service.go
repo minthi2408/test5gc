@@ -5,9 +5,7 @@ import (
 	"etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/nas"
-	"etri5gc/nfs/amf/nfselect"
 	"etri5gc/nfs/amf/ngap"
-	 nfselectinf "etri5gc/nfs/amf/sbi/nfselect"
 
 	"etri5gc/nfs/amf/sbi/producer"
 	"etri5gc/nfs/amf/sbi/consumer"
@@ -28,7 +26,6 @@ func init() {
 type AMF struct {
 	consumer *consumer.Consumer   //sbi consumer interacting with other NFs
 	producer *producer.Producer    //handling Sbi requests received at the server
-	selector *nfselect.NfSelector //Nf selection implementation
 	ngap     *ngap.Server         //ngap server handling Ran connections and ngap messages
 	context  *context.AMFContext  // AMF context
 	conf     *config.Config       // loaded AMF config
@@ -44,8 +41,6 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg)
 
-	//create network function selector
-	nf.selector = nfselect.NewNfSelector(nf)
 	//create ngap server
 	nf.ngap = ngap.NewServer(nf)
 	//create sbi producer
@@ -84,9 +79,6 @@ func (nf *AMF) Ngap() *ngap.Server {
 	return nf.ngap
 }
 
-func (nf *AMF) NfSelector() nfselectinf.NfSelector {
-	return nf.selector
-}
 
 func (nf *AMF) Start() (err error) {
 

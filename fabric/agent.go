@@ -49,7 +49,7 @@ func (agent *httpAgent) Start() (err error) {
 	if agent.server == nil {
 		panic(errors.New("http server has not been created"))
 	}
-	err = agent.server.serve()
+	agent.server.serve()
 	return
 }
 
@@ -128,9 +128,9 @@ func (s *httpServer) Register(services []Service) (err error) {
 	return 
 }
 
-func (s *httpServer) serve() (err error) {
+func (s *httpServer) serve() {
 	go func() {
-		err = s.server.ListenAndServe()
+		s.server.ListenAndServe()
 
 		/*
 		if s.config.Scheme == "http" {
@@ -147,8 +147,7 @@ func (s *httpServer) serve() (err error) {
 
 		s.wg.Add(1)
 	}()
-	//log.Info("Sbi server is running")
-	return
+	//log.Info("http server is running")
 }
 
 func (s *httpServer) close() {

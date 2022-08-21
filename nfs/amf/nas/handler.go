@@ -1,21 +1,20 @@
 package nas
 
 import (
-	"bytes"
+//	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
-	"strings"
-	"time"
+//	"strings"
+//	"time"
 
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/nfselect"
 	"etri5gc/nfs/amf/ngap/util"
 
-	"github.com/antihax/optional"
+//	"github.com/antihax/optional"
 	"github.com/mitchellh/mapstructure"
 	"github.com/mohae/deepcopy"
 
@@ -24,12 +23,12 @@ import (
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/nas/security"
-	"github.com/free5gc/ngap/ngapConvert"
+//	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi"
+//	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
-	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
+//	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
 )
 
 func (gmm *GmmFsm) handleULNASTransport(ue *context.AmfUe, anType models.AccessType,
@@ -174,6 +173,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 			// case iii) if the AMF does not have a PDU session routing context for the PDU session ID and the UE
 			// and the Request type IE is included and is set to "initial request"
 			case nasMessage.ULNASTransportRequestTypeInitialRequest:
+				/* TODO: tungtq - comment out becuase missing the next code block
 				var (
 					snssai models.Snssai
 					dnn    string
@@ -209,7 +209,9 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 						}
 					}
 				}
-				
+				*/
+				//TODO: tungtq - implement this in the context package
+				/*
 				if newSmContext, cause, err := gmm.nas.backend.NfSelector().SelectSmf(ue, anType, pduSessionID, snssai, dnn); err != nil {
 					log.Errorf("Select SMF failed: %+v", err)
 					gmm.nas.SendDLNASTransport(ue.RanUe[anType], nasMessage.PayloadContainerTypeN1SMInfo,
@@ -238,6 +240,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 						// TODO: handle response(response N2SmInfo to RAN if exists)
 					}
 				}
+				*/
 			case nasMessage.ULNASTransportRequestTypeModificationRequest:
 				fallthrough
 			case nasMessage.ULNASTransportRequestTypeExistingPduSession:
@@ -512,6 +515,8 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 	// TODO (TS 23.502 4.2.2.2 step 4): if UE's 5g-GUTI is included & serving AMF has changed
 	// since last registration procedure, new AMF may invoke Namf_Communication_UEContextTransfer
 	// to old AMF, including the complete registration request nas msg, to request UE's SUPI & UE Context
+	//TODO: tungtq - just remove this part for now.
+	/*
 	if ue.ServingAmfChanged {
 		var transferReason models.TransferReason
 		switch ue.RegistrationType5GS {
@@ -547,6 +552,7 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 			ue.CopyDataFromUeContextModel(*ueContextTransferRspData.UeContext)
 		}
 	}
+	*/
 	return nil
 }
 
@@ -624,6 +630,8 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	}
 
 	//NOTE: tungtq - replace an infinite searching loop with a one-time search
+	//TODO: remove AMPolicyControlCreate for now, we must implement it in the context package
+	/*
 	snf, err := gmm.nas.backend.NfSelector().SelectPcf(ue.Supi, amf.Locality())
 	if err != nil {
 		return err
@@ -665,12 +673,12 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 
 	amf.AllocateRegistrationArea(ue, anType)
 	log.Debugf("Use original GUTI[%s]", ue.Guti)
-
+	*/
 	gmm.assignLadnInfo(ue, anType)
 
 	amf.AddAmfUeToUePool(ue, ue.Supi)
 	/*
-	//Tungtq: temporarily commented
+	//TODO: tungtq: temporarily commented
 	ue.T3502Value = amf.T3502Value
 	if anType == models.AccessType__3_GPP_ACCESS {
 		ue.T3512Value = amf.T3512Value
@@ -1063,6 +1071,8 @@ func negotiateDRXParameters(ue *context.AmfUe, requestedDRXParameters *nasType.R
 
 func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.AccessType) error {
 	log.Debugln("communicateWithUDM")
+	/* TODO tungtq - we must implement this in the context package
+
 	udminfo := ue.GetUdmInfo()
 	// UDM selection described in TS 23.501 6.3.8
 	// TODO: consider udm group id, Routing ID part of SUCI, GPSI or External Group ID (e.g., by the NEF)
@@ -1113,10 +1123,12 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 		return fmt.Errorf("SDM Subscribe Error[%+v]", err)
 	}
 	udminfo.ContextValid = true
+	*/
 	return nil
 }
 //NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
 func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
+	/*TODO: tungtq - implement this in the context package
 	udminfo := ue.GetUdmInfo()
 	if udminfo.NudmSDMUri == "" {
 		snf, err := gmm.nas.backend.NfSelector().SelectUdm(ue.Supi)
@@ -1134,10 +1146,13 @@ func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
 		log.Errorf("SDM_Get Slice Selection Subscription Data Error[%+v]", err)
 	}
 	return err
+	*/
+	return nil
 }
 
 // TS 23.502 4.2.2.2.3 Registration with AMF Re-allocation
 func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.AccessType) error {
+	/* TODO: comment out temporarily by tungtq; will review later 
 	amf := gmm.nas.backend.Context()
 	nssfinfo := ue.GetNssfInfo()
 
@@ -1290,6 +1305,7 @@ func (gmm * GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.Access
 			}
 		}
 	}
+	*/
 	return nil
 }
 
@@ -1470,7 +1486,8 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 		return false, nil
 	}
 
-
+	//TODO tungtq - implement this in the context package
+	/*
 	// TODO: consider ausf group id, Routing ID part of SUCI
 	snf, err := gmm.nas.backend.NfSelector().SelectAusf()
 	if err!=nil {
@@ -1492,6 +1509,7 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 	ausfinfo.ABBA = []uint8{0x00, 0x00} // set ABBA value as described at TS 33.501 Annex A.7.1
 
 	gmm.nas.SendAuthenticationRequest(ue.RanUe[accessType])
+	*/
 	return false, nil
 }
 

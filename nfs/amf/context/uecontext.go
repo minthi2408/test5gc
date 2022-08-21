@@ -62,7 +62,6 @@ type UdmInfo struct {
 	UdmGroupId                        string
 	SubscribedNssai                   []models.SubscribedSnssai
 	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData
-
 }
 
 func (info *UdmInfo) copy(ueContext *models.UeContext) {
@@ -240,7 +239,8 @@ type AmfUe struct {
 
 	/* Security Context */
 	seccon	SecContext
-	
+
+
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
 	/* Registration procedure related context */
@@ -416,6 +416,8 @@ func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
 	}
 	return true
 }
+
+
 
 func (ue *AmfUe) CmIdle(anType models.AccessType) bool {
 	return !ue.CmConnect(anType)
