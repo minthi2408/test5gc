@@ -1,15 +1,15 @@
 package ngap
 
 import (
-//	"encoding/hex"
-//	"strconv"
+	//	"encoding/hex"
+	//	"strconv"
 	"etri5gc/nfs/amf/context"
-//	"etri5gc/nfs/amf/nas"
+	//	"etri5gc/nfs/amf/nas"
 
-//	"github.com/free5gc/aper"
-//	"github.com/free5gc/nas/nasMessage"
-//	libngap "github.com/free5gc/ngap"
-//	"github.com/free5gc/ngap/ngapConvert"
+	//	"github.com/free5gc/aper"
+	//	"github.com/free5gc/nas/nasMessage"
+	//	libngap "github.com/free5gc/ngap"
+	//	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
 )
@@ -85,8 +85,7 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, init
 			if !ok {
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
-			_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
-				models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
+			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 			}
@@ -99,7 +98,6 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, init
 		}
 	}
 }
-
 
 func (h *ngapHandler) handleUEContextModificationFailure(ran *context.AmfRan, uEContextModificationFailure *ngapType.UEContextModificationFailure) {
 	var amf_ngapid *ngapType.AMFUENGAPID
@@ -225,7 +223,7 @@ func (h *ngapHandler) handleHandoverFailure(ran *context.AmfRan, handoverFailure
 						Value: int32(causeValue),
 					},
 				}
-				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverCanceled(amfUe, smContext, causeAll)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2HandoverCanceled(causeAll)
 				if err != nil {
 					log.Errorf("Send UpdateSmContextN2HandoverCanceled Error for PduSessionId[%d]", pduSessionID)
 				}
@@ -265,5 +263,3 @@ func (h *ngapHandler) handleAMFconfigurationUpdateFailure(ran *context.AmfRan, A
 		printCriticalityDiagnostics(ran, criticalityDiagnostics)
 	}
 }
-
-

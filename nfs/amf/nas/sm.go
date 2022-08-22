@@ -57,18 +57,17 @@ var transitions = fsm.Transitions{
 	{Event: DeregistrationAcceptEvent, From: context.DeregistrationInitiated, To: context.Deregistered},
 }
 
-
 type GmmFsm struct {
-	sm *fsm.FSM
-	nas *Nas
+	sm       *fsm.FSM
+	nas      *Nas
 	consumer *consumer.Consumer
 }
 
 func newGmmFsm(nas *Nas) *GmmFsm {
-	gmm := &GmmFsm {
-		nas:	nas,
+	gmm := &GmmFsm{
+		nas: nas,
 	}
-	callbacks := fsm.Callbacks {
+	callbacks := fsm.Callbacks{
 		context.Deregistered:            gmm.DeRegistered,
 		context.Authentication:          gmm.Authentication,
 		context.SecurityMode:            gmm.SecurityMode,
@@ -77,7 +76,7 @@ func newGmmFsm(nas *Nas) *GmmFsm {
 		context.DeregistrationInitiated: gmm.DeregisteredInitiated,
 	}
 	//Note: make sure that transitions and states are well-defined. The program
-	//will panic if an error is returned 
+	//will panic if an error is returned
 	gmm.sm, _ = fsm.NewFSM(transitions, callbacks)
 	gmm.consumer = nas.backend.Consumer()
 	return gmm
@@ -457,7 +456,7 @@ func (gmm *GmmFsm) ContextSetup(state *fsm.State, event fsm.EventType, args fsm.
 		amfUe := args[ArgAmfUe].(*context.AmfUe)
 		accessType := args[ArgAccessType].(models.AccessType)
 		if amfUe.GetNssfInfo().UeCmRegistered {
-			problemDetails, err := gmm.consumer.Udm().UeCmDeregistration(amfUe, accessType)
+			problemDetails, err := amfUe.UdmClient().UeCmDeregistration(accessType)
 			if problemDetails != nil {
 				if problemDetails.Cause != "CONTEXT_NOT_FOUND" {
 					log.Errorf("UECM_Registration Failed Problem[%+v]", problemDetails)

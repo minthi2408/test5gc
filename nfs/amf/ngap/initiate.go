@@ -2,15 +2,16 @@ package ngap
 
 import (
 	"encoding/hex"
-	"strconv"
 	"etri5gc/nfs/amf/context"
-//	"etri5gc/nfs/amf/nas"
+	"strconv"
+
+	//	"etri5gc/nfs/amf/nas"
 
 	"etri5gc/nfs/amf/ngap/util"
 
-//	"github.com/free5gc/aper"
+	//	"github.com/free5gc/aper"
 	"github.com/free5gc/nas/nasMessage"
-//	libngap "github.com/free5gc/ngap"
+	//	libngap "github.com/free5gc/ngap"
 	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
@@ -136,7 +137,6 @@ func (h *ngapHandler) handleUplinkNasTransport(ran *context.AmfRan, uplinkNasTra
 	var nasPdu *ngapType.NASPDU
 	var userLocationInformation *ngapType.UserLocationInformation
 
-
 	for i := 0; i < len(uplinkNasTransport.ProtocolIEs.List); i++ {
 		ie := uplinkNasTransport.ProtocolIEs.List[i]
 		switch ie.Id.Value {
@@ -206,16 +206,16 @@ func (h *ngapHandler) handleNGReset(ran *context.AmfRan, nGReset *ngapType.NGRes
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDCause:
 			cause = ie.Value.Cause
-		log.Trace("Decode IE Cause")
+			log.Trace("Decode IE Cause")
 			if cause == nil {
-		log.Error("Cause is nil")
+				log.Error("Cause is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDResetType:
 			resetType = ie.Value.ResetType
-		log.Trace("Decode IE ResetType")
+			log.Trace("Decode IE ResetType")
 			if resetType == nil {
-		log.Error("ResetType is nil")
+				log.Error("ResetType is nil")
 				return
 			}
 		}
@@ -274,7 +274,6 @@ func (h *ngapHandler) handleNGReset(ran *context.AmfRan, nGReset *ngapType.NGRes
 	}
 }
 
-
 func (h *ngapHandler) handleLocationReportingFailureIndication(ran *context.AmfRan, locationReportingFailureIndication *ngapType.LocationReportingFailureIndication) {
 	var amf_ngapid *ngapType.AMFUENGAPID
 	var ran_ngapid *ngapType.RANUENGAPID
@@ -313,7 +312,7 @@ func (h *ngapHandler) handleLocationReportingFailureIndication(ran *context.AmfR
 
 	ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 	if ranUe == nil {
-	log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		return
 	}
 	log.Info("Handle Location Reporting Failure Indication")
@@ -321,7 +320,7 @@ func (h *ngapHandler) handleLocationReportingFailureIndication(ran *context.AmfR
 }
 
 func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, initialUEMessage *ngapType.InitialUEMessage, pdu []byte) {
-	amf := h.backend.Context() 
+	amf := h.backend.Context()
 
 	var ran_ngapid *ngapType.RANUENGAPID
 	var nasPdu *ngapType.NASPDU
@@ -334,7 +333,6 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, initialUEMessa
 
 	var iesCriticalityDiagnostics ngapType.CriticalityDiagnosticsIEList
 
-	
 	log.Info("Handle Initial UE Message")
 
 	for _, ie := range initialUEMessage.ProtocolIEs.List {
@@ -470,11 +468,11 @@ func (h *ngapHandler) handleInitialUEMessage(ran *context.AmfRan, initialUEMessa
 	// }
 
 	/*
-	//NOTE: TungTQ remove the encoding and use the original PDU instead
-	pdu, err := libngap.Encoder(*message)
-	if err != nil {
-		log.Errorf("libngap Encoder Error: %+v", err)
-	}
+		//NOTE: TungTQ remove the encoding and use the original PDU instead
+		pdu, err := libngap.Encoder(*message)
+		if err != nil {
+			log.Errorf("libngap Encoder Error: %+v", err)
+		}
 	*/
 	ranUe.InitialUEMessage = pdu
 	h.nas.HandleNAS(ranUe, ngapType.ProcedureCodeInitialUEMessage, nasPdu.Value)
@@ -530,7 +528,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, PDUSes
 	}
 
 	log.Info("Handle PDU Session Resource Notify")
-		log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
+	log.Tracef("AmfUeNgapID[%d] RanUeNgapID[%d]", ranUe.AmfUeNgapId(), ranUe.RanUeNgapId())
 	amfUe := ranUe.AmfUe()
 	if amfUe == nil {
 		log.Error("amfUe is nil")
@@ -550,8 +548,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, PDUSes
 		if !ok {
 			log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 		}
-		response, errResponse, problemDetail, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
-			models.N2SmInfoType_PDU_RES_NTY, transfer)
+		response, errResponse, problemDetail, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_NTY, transfer)
 		if err != nil {
 			log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceNotifyTransfer] Error: %+v", err)
 		}
@@ -607,8 +604,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, PDUSes
 			if !ok {
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
-			response, errResponse, problemDetail, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
-				models.N2SmInfoType_PDU_RES_NTY_REL, transfer)
+			response, errResponse, problemDetail, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_NTY_REL, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceNotifyReleasedTransfer] Error: %+v", err)
 			}
@@ -637,7 +633,7 @@ func (h *ngapHandler) handlePDUSessionResourceNotify(ran *context.AmfRan, PDUSes
 			} else if errResponse != nil {
 				errJSON := errResponse.JsonData
 				n1Msg := errResponse.BinaryDataN2SmInformation
-					log.Warnf("PDU Session Release is rejected by SMF[pduSessionId:%d], Error[%s]\n",
+				log.Warnf("PDU Session Release is rejected by SMF[pduSessionId:%d], Error[%s]\n",
 					pduSessionID, errJSON.Error.Cause)
 				if n1Msg != nil {
 					h.nas.SendDLNASTransport(
@@ -664,35 +660,35 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 	var ranUe *context.RanUe
 
 	/*
-	//NOTE: tungtq - need a special treatment
-	initiatingMessage := message.InitiatingMessage // reject
-	if initiatingMessage == nil {
-	log.Error("InitiatingMessage is nil")
-		cause := ngapType.Cause{
-			Present: ngapType.CausePresentProtocol,
-			Protocol: &ngapType.CauseProtocol{
-				Value: ngapType.CauseProtocolPresentAbstractSyntaxErrorReject,
-			},
+		//NOTE: tungtq - need a special treatment
+		initiatingMessage := message.InitiatingMessage // reject
+		if initiatingMessage == nil {
+		log.Error("InitiatingMessage is nil")
+			cause := ngapType.Cause{
+				Present: ngapType.CausePresentProtocol,
+				Protocol: &ngapType.CauseProtocol{
+					Value: ngapType.CauseProtocolPresentAbstractSyntaxErrorReject,
+				},
+			}
+			h.sender.SendErrorIndication(ran, nil, nil, &cause, nil)
+			return
 		}
-		h.sender.SendErrorIndication(ran, nil, nil, &cause, nil)
-		return
-	}
 	*/
 
 	/*
-	//NOTE: tungtq - need a special treatment
-	pDUSessionResourceModifyIndication := initiatingMessage.Value.PDUSessionResourceModifyIndication
-	if pDUSessionResourceModifyIndication == nil {
-	log.Error("PDUSessionResourceModifyIndication is nil")
-		cause := ngapType.Cause{
-			Present: ngapType.CausePresentProtocol,
-			Protocol: &ngapType.CauseProtocol{
-				Value: ngapType.CauseProtocolPresentAbstractSyntaxErrorReject,
-			},
+		//NOTE: tungtq - need a special treatment
+		pDUSessionResourceModifyIndication := initiatingMessage.Value.PDUSessionResourceModifyIndication
+		if pDUSessionResourceModifyIndication == nil {
+		log.Error("PDUSessionResourceModifyIndication is nil")
+			cause := ngapType.Cause{
+				Present: ngapType.CausePresentProtocol,
+				Protocol: &ngapType.CauseProtocol{
+					Value: ngapType.CauseProtocolPresentAbstractSyntaxErrorReject,
+				},
+			}
+			h.sender.SendErrorIndication(ran, nil, nil, &cause, nil)
+			return
 		}
-		h.sender.SendErrorIndication(ran, nil, nil, &cause, nil)
-		return
-	}
 	*/
 	for _, ie := range pDUSessionResourceModifyIndication.ProtocolIEs.List {
 		switch ie.Id.Value {
@@ -700,7 +696,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
 			if amf_ngapid == nil {
-			log.Error("AmfUeNgapID is nil")
+				log.Error("AmfUeNgapID is nil")
 				item := buildCriticalityDiagnosticsIEItem(ngapType.CriticalityPresentReject,
 					ngapType.ProtocolIEIDAMFUENGAPID, ngapType.TypeOfErrorPresentMissing)
 				iesCriticalityDiagnostics.List = append(iesCriticalityDiagnostics.List, item)
@@ -709,7 +705,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE RanUeNgapID")
 			if ran_ngapid == nil {
-			log.Error("RanUeNgapID is nil")
+				log.Error("RanUeNgapID is nil")
 				item := buildCriticalityDiagnosticsIEItem(ngapType.CriticalityPresentReject,
 					ngapType.ProtocolIEIDRANUENGAPID, ngapType.TypeOfErrorPresentMissing)
 				iesCriticalityDiagnostics.List = append(iesCriticalityDiagnostics.List, item)
@@ -727,7 +723,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 	}
 
 	if len(iesCriticalityDiagnostics.List) > 0 {
-	log.Error("Has missing reject IE(s)")
+		log.Error("Has missing reject IE(s)")
 
 		procedureCode := ngapType.ProcedureCodePDUSessionResourceModifyIndication
 		triggeringMessage := ngapType.TriggeringMessagePresentInitiatingMessage
@@ -740,7 +736,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 
 	ranUe = ran.RanUeFindByRanUeNgapID(ran_ngapid.Value)
 	if ranUe == nil {
-	log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
+		log.Errorf("No UE Context[RanUeNgapID: %d]", ran_ngapid.Value)
 		cause := ngapType.Cause{
 			Present: ngapType.CausePresentRadioNetwork,
 			RadioNetwork: &ngapType.CauseRadioNetwork{
@@ -771,8 +767,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyIndication(ran *context.AmfR
 		if !ok {
 			log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 		}
-		response, errResponse, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2Info(amfUe, smContext,
-			models.N2SmInfoType_PDU_RES_MOD_IND, transfer)
+		response, errResponse, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_MOD_IND, transfer)
 		if err != nil {
 			log.Errorf("SendUpdateSmContextN2Info Error:\n%s", err.Error())
 		}
@@ -797,7 +792,6 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, uEConte
 	var pDUSessionResourceList *ngapType.PDUSessionResourceListCxtRelReq
 	var cause *ngapType.Cause
 
-	
 	for _, ie := range uEContextReleaseRequest.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
@@ -860,7 +854,7 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, uEConte
 			return
 		}
 		//TODO: comment out by tungtq
-	//	gmm_common.StopAll5GSMMTimers(amfUe)
+		//	gmm_common.StopAll5GSMMTimers(amfUe)
 		causeAll := context.CauseAll{
 			NgapCause: &models.NgApCause{
 				Group: int32(causeGroup),
@@ -878,7 +872,7 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, uEConte
 						// TODO: Check if doing error handling here
 						continue
 					}
-					response, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextDeactivateUpCnxState(amfUe, smContext, causeAll)
+					response, _, _, err := smContext.SmfClient().SendUpdateSmContextDeactivateUpCnxState(causeAll)
 					if err != nil {
 						log.Errorf("Send Update SmContextDeactivate UpCnxState Error[%s]", err.Error())
 					} else if response == nil {
@@ -890,11 +884,11 @@ func (h *ngapHandler) handleUEContextReleaseRequest(ran *context.AmfRan, uEConte
 			log.Info("Ue Context in Non GMM-Registered")
 			amfUe.SmContextList.Range(func(key, value interface{}) bool {
 				smContext := value.(*context.SmContext)
-				detail, err := h.backend.Consumer().Smf().SendReleaseSmContextRequest(amfUe, smContext, &causeAll, "", nil)
+				detail, err := smContext.SmfClient().SendReleaseSmContextRequest(&causeAll, "", nil)
 				if err != nil {
-				log.Errorf("Send ReleaseSmContextRequest Error[%s]", err.Error())
+					log.Errorf("Send ReleaseSmContextRequest Error[%s]", err.Error())
 				} else if detail != nil {
-				log.Errorf("Send ReleaseSmContextRequeste Error[%s]", detail.Cause)
+					log.Errorf("Send ReleaseSmContextRequeste Error[%s]", detail.Cause)
 				}
 				return true
 			})
@@ -918,7 +912,7 @@ func (h *ngapHandler) handleRRCInactiveTransitionReport(ran *context.AmfRan, rRC
 			amf_ngapid = ie.Value.AMFUENGAPID
 			log.Trace("Decode IE AmfUeNgapID")
 			if amf_ngapid == nil {
-			log.Error("AmfUeNgapID is nil")
+				log.Error("AmfUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRANUENGAPID: // reject
@@ -1010,31 +1004,31 @@ func (h *ngapHandler) handleHandoverNotify(ran *context.AmfRan, HandoverNotify *
 		return
 	}
 
-//	targetUe.Log.Info("Handle Handover notification")
+	//	targetUe.Log.Info("Handle Handover notification")
 
 	if userLocationInformation != nil {
 		targetUe.UpdateLocation(userLocationInformation)
 	}
 	amfUe := targetUe.AmfUe()
 	if amfUe == nil {
-	log.Error("AmfUe is nil")
+		log.Error("AmfUe is nil")
 		return
 	}
 	sourceUe := targetUe.GetHandoverInfo().SourceUe
 	if sourceUe == nil {
 		// TODO: Send to S-AMF
 		// Desciibed in (23.502 4.9.1.3.3) [conditional] 6a.Namf_Communication_N2InfoNotify.
-	log.Error("N2 Handover between AMF has not been implemented yet")
+		log.Error("N2 Handover between AMF has not been implemented yet")
 	} else {
-//		targetUe.Log.Info("Handle Handover notification Finshed ")
+		//		targetUe.Log.Info("Handle Handover notification Finshed ")
 		for _, pduSessionid := range targetUe.GetHandoverInfo().SuccessPduSessionId {
 			smContext, ok := amfUe.SmContextFindByPDUSessionID(pduSessionid)
 			if !ok {
-//				sourceUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionid)
+				//				sourceUe.Log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionid)
 			}
-			_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverComplete(amfUe, smContext, "", nil)
+			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2HandoverComplete("", nil)
 			if err != nil {
-	log.Errorf("Send UpdateSmContextN2HandoverComplete Error[%s]", err.Error())
+				log.Errorf("Send UpdateSmContextN2HandoverComplete Error[%s]", err.Error())
 			}
 		}
 		amfUe.AttachRanUe(targetUe)
@@ -1151,8 +1145,7 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, pathSwitchReq
 			if !ok {
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
-			response, errResponse, _, err := h.backend.Consumer().Smf().SendUpdateSmContextXnHandover(amfUe, smContext,
-				models.N2SmInfoType_PATH_SWITCH_REQ, transfer)
+			response, errResponse, _, err := smContext.SmfClient().SendUpdateSmContextXnHandover(models.N2SmInfoType_PATH_SWITCH_REQ, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextXnHandover[PathSwitchRequestTransfer] Error:\n%s", err.Error())
 			}
@@ -1180,8 +1173,7 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, pathSwitchReq
 			if !ok {
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
-			response, errResponse, _, err := h.backend.Consumer().Smf().SendUpdateSmContextXnHandoverFailed(amfUe, smContext,
-				models.N2SmInfoType_PATH_SWITCH_SETUP_FAIL, transfer)
+			response, errResponse, _, err := smContext.SmfClient().SendUpdateSmContextXnHandoverFailed(models.N2SmInfoType_PATH_SWITCH_SETUP_FAIL, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextXnHandoverFailed[PathSwitchRequestSetupFailedTransfer] Error: %+v", err)
 			}
@@ -1319,7 +1311,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 		return
 	}
 
-//	sourceUe.Log.Info("Handle HandoverRequired")
+	//	sourceUe.Log.Info("Handle HandoverRequired")
 
 	amfUe := sourceUe.AmfUe()
 	if amfUe == nil {
@@ -1335,7 +1327,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 		Procedure: context.OnGoingProcedureN2Handover,
 	})
 	if !amfUe.SecurityContextIsValid() {
-//		sourceUe.Log.Info("Handle Handover Preparation Failure [Authentication Failure]")
+		//		sourceUe.Log.Info("Handle Handover Preparation Failure [Authentication Failure]")
 		cause = &ngapType.Cause{
 			Present: ngapType.CausePresentNas,
 			Nas: &ngapType.CauseNas{
@@ -1349,8 +1341,8 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 	targetRan, ok := h.backend.Context().AmfRanFindByRanID(targetRanNodeId)
 	if !ok {
 		// handover between different AMF
-//		sourceUe.Log.Warnf("Handover required : cannot find target Ran Node Id[%+v] in this AMF", targetRanNodeId)
-//		sourceUe.Log.Error("Handover between different AMF has not been implemented yet")
+		//		sourceUe.Log.Warnf("Handover required : cannot find target Ran Node Id[%+v] in this AMF", targetRanNodeId)
+		//		sourceUe.Log.Error("Handover between different AMF has not been implemented yet")
 		return
 		// TODO: Send to T-AMF
 		// Described in (23.502 4.9.1.3.2) step 3.Namf_Communication_CreateUEContext Request
@@ -1366,13 +1358,12 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 		for _, pDUSessionResourceHoItem := range pDUSessionResourceListHORqd.List {
 			pduSessionId := int32(pDUSessionResourceHoItem.PDUSessionID.Value)
 			if smContext, exist := amfUe.SmContextFindByPDUSessionID(pduSessionId); exist {
-				response, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverPreparing(amfUe, smContext,
-					models.N2SmInfoType_HANDOVER_REQUIRED, pDUSessionResourceHoItem.HandoverRequiredTransfer, "", &targetId)
+				response, _, _, err := smContext.SmfClient().SendUpdateSmContextN2HandoverPreparing(models.N2SmInfoType_HANDOVER_REQUIRED, pDUSessionResourceHoItem.HandoverRequiredTransfer, "", &targetId)
 				if err != nil {
-//					sourceUe.Log.Errorf("consumer.SendUpdateSmContextN2HandoverPreparing Error: %+v", err)
+					//					sourceUe.Log.Errorf("consumer.SendUpdateSmContextN2HandoverPreparing Error: %+v", err)
 				}
 				if response == nil {
-//					sourceUe.Log.Errorf("SendUpdateSmContextN2HandoverPreparing Error for PduSessionId[%d]", pduSessionId)
+					//					sourceUe.Log.Errorf("SendUpdateSmContextN2HandoverPreparing Error for PduSessionId[%d]", pduSessionId)
 					continue
 				} else if response.BinaryDataN2SmInformation != nil {
 					util.AppendPDUSessionResourceSetupListHOReq(&pduSessionReqList, pduSessionId,
@@ -1381,7 +1372,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 			}
 		}
 		if len(pduSessionReqList.List) == 0 {
-//			sourceUe.Log.Info("Handle Handover Preparation Failure [HoFailure In Target5GC NgranNode Or TargetSystem]")
+			//			sourceUe.Log.Info("Handle Handover Preparation Failure [HoFailure In Target5GC NgranNode Or TargetSystem]")
 			cause = &ngapType.Cause{
 				Present: ngapType.CausePresentRadioNetwork,
 				RadioNetwork: &ngapType.CauseRadioNetwork{
@@ -1398,12 +1389,10 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 	}
 }
 
-
 func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, HandoverCancel *ngapType.HandoverCancel) {
 	var amf_ngapid *ngapType.AMFUENGAPID
 	var ran_ngapid *ngapType.RANUENGAPID
 	var cause *ngapType.Cause
-
 
 	for i := 0; i < len(HandoverCancel.ProtocolIEs.List); i++ {
 		ie := HandoverCancel.ProtocolIEs.List[i]
@@ -1445,10 +1434,10 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, HandoverCancel *
 		return
 	}
 
-//	sourceUe.Log.Info("Handle Handover Cancel")
+	//	sourceUe.Log.Info("Handle Handover Cancel")
 
 	if sourceUe.AmfUeNgapId() != amf_ngapid.Value {
-	log.Warnf("Conflict AMF_UE_NGAP_ID : %d != %d", sourceUe.AmfUeNgapId(), amf_ngapid.Value)
+		log.Warnf("Conflict AMF_UE_NGAP_ID : %d != %d", sourceUe.AmfUeNgapId(), amf_ngapid.Value)
 	}
 	log.Tracef("Source: RAN_UE_NGAP_ID[%d] AMF_UE_NGAP_ID[%d]", sourceUe.RanUeNgapId(), sourceUe.AmfUeNgapId())
 
@@ -1475,9 +1464,9 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, HandoverCancel *
 						Value: int32(causeValue),
 					},
 				}
-				_, _, _, err := h.backend.Consumer().Smf().SendUpdateSmContextN2HandoverCanceled(amfUe, smContext, causeAll)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2HandoverCanceled(causeAll)
 				if err != nil {
-//					sourceUe.Log.Errorf("Send UpdateSmContextN2HandoverCanceled Error for PduSessionId[%d]", pduSessionID)
+					//					sourceUe.Log.Errorf("Send UpdateSmContextN2HandoverCanceled Error for PduSessionId[%d]", pduSessionID)
 				}
 				return true
 			})
@@ -1486,7 +1475,6 @@ func (h *ngapHandler) handleHandoverCancel(ran *context.AmfRan, HandoverCancel *
 		h.sender.SendHandoverCancelAcknowledge(sourceUe, nil)
 	}
 }
-
 
 func (h *ngapHandler) handleUplinkRanStatusTransfer(ran *context.AmfRan, uplinkRanStatusTransfer *ngapType.UplinkRANStatusTransfer) {
 	var amf_ngapid *ngapType.AMFUENGAPID
@@ -1585,103 +1573,102 @@ func (h *ngapHandler) handleNasNonDeliveryIndication(ran *context.AmfRan, nASNon
 
 func (h *ngapHandler) handleRanConfigurationUpdate(ran *context.AmfRan, rANConfigurationUpdate *ngapType.RANConfigurationUpdate) {
 	/*
-	//TODO: TungTQ do it later
-	var ranName *ngapType.RANNodeName
-	var supportedTAList *ngapType.SupportedTAList
-	var pagingDRX *ngapType.PagingDRX
+		//TODO: TungTQ do it later
+		var ranName *ngapType.RANNodeName
+		var supportedTAList *ngapType.SupportedTAList
+		var pagingDRX *ngapType.PagingDRX
 
-	var cause ngapType.Cause
+		var cause ngapType.Cause
 
-	log.Info("Handle Ran Configuration Update")
-	for i := 0; i < len(rANConfigurationUpdate.ProtocolIEs.List); i++ {
-		ie := rANConfigurationUpdate.ProtocolIEs.List[i]
-		switch ie.Id.Value {
-		case ngapType.ProtocolIEIDRANNodeName:
-			ranName = ie.Value.RANNodeName
-			if ranName == nil {
-	log.Error("RAN Node Name is nil")
-				return
+		log.Info("Handle Ran Configuration Update")
+		for i := 0; i < len(rANConfigurationUpdate.ProtocolIEs.List); i++ {
+			ie := rANConfigurationUpdate.ProtocolIEs.List[i]
+			switch ie.Id.Value {
+			case ngapType.ProtocolIEIDRANNodeName:
+				ranName = ie.Value.RANNodeName
+				if ranName == nil {
+		log.Error("RAN Node Name is nil")
+					return
+				}
+		log.Tracef("Decode IE RANNodeName = [%s]", ranName.Value)
+			case ngapType.ProtocolIEIDSupportedTAList:
+				supportedTAList = ie.Value.SupportedTAList
+		log.Trace("Decode IE SupportedTAList")
+				if supportedTAList == nil {
+		log.Error("Supported TA List is nil")
+					return
+				}
+			case ngapType.ProtocolIEIDDefaultPagingDRX:
+				pagingDRX = ie.Value.DefaultPagingDRX
+				if pagingDRX == nil {
+		log.Error("PagingDRX is nil")
+					return
+				}
+		log.Tracef("Decode IE PagingDRX = [%d]", pagingDRX.Value)
 			}
-	log.Tracef("Decode IE RANNodeName = [%s]", ranName.Value)
-		case ngapType.ProtocolIEIDSupportedTAList:
-			supportedTAList = ie.Value.SupportedTAList
-	log.Trace("Decode IE SupportedTAList")
-			if supportedTAList == nil {
-	log.Error("Supported TA List is nil")
-				return
-			}
-		case ngapType.ProtocolIEIDDefaultPagingDRX:
-			pagingDRX = ie.Value.DefaultPagingDRX
-			if pagingDRX == nil {
-	log.Error("PagingDRX is nil")
-				return
-			}
-	log.Tracef("Decode IE PagingDRX = [%d]", pagingDRX.Value)
 		}
-	}
 
-	for i := 0; i < len(supportedTAList.List); i++ {
-		supportedTAItem := supportedTAList.List[i]
-		tac := hex.EncodeToString(supportedTAItem.TAC.Value)
-		capOfSupportTai := cap(ran.SupportedTAList)
-		for j := 0; j < len(supportedTAItem.BroadcastPLMNList.List); j++ {
-			supportedTAI := context.NewSupportedTAI()
-			supportedTAI.Tai.Tac = tac
-			broadcastPLMNItem := supportedTAItem.BroadcastPLMNList.List[j]
-			plmnId := ngapConvert.PlmnIdToModels(broadcastPLMNItem.PLMNIdentity)
-			supportedTAI.Tai.PlmnId = &plmnId
-			capOfSNssaiList := cap(supportedTAI.SNssaiList)
-			for k := 0; k < len(broadcastPLMNItem.TAISliceSupportList.List); k++ {
-				tAISliceSupportItem := broadcastPLMNItem.TAISliceSupportList.List[k]
-				if len(supportedTAI.SNssaiList) < capOfSNssaiList {
-					supportedTAI.SNssaiList = append(supportedTAI.SNssaiList, ngapConvert.SNssaiToModels(tAISliceSupportItem.SNSSAI))
+		for i := 0; i < len(supportedTAList.List); i++ {
+			supportedTAItem := supportedTAList.List[i]
+			tac := hex.EncodeToString(supportedTAItem.TAC.Value)
+			capOfSupportTai := cap(ran.SupportedTAList)
+			for j := 0; j < len(supportedTAItem.BroadcastPLMNList.List); j++ {
+				supportedTAI := context.NewSupportedTAI()
+				supportedTAI.Tai.Tac = tac
+				broadcastPLMNItem := supportedTAItem.BroadcastPLMNList.List[j]
+				plmnId := ngapConvert.PlmnIdToModels(broadcastPLMNItem.PLMNIdentity)
+				supportedTAI.Tai.PlmnId = &plmnId
+				capOfSNssaiList := cap(supportedTAI.SNssaiList)
+				for k := 0; k < len(broadcastPLMNItem.TAISliceSupportList.List); k++ {
+					tAISliceSupportItem := broadcastPLMNItem.TAISliceSupportList.List[k]
+					if len(supportedTAI.SNssaiList) < capOfSNssaiList {
+						supportedTAI.SNssaiList = append(supportedTAI.SNssaiList, ngapConvert.SNssaiToModels(tAISliceSupportItem.SNSSAI))
+					} else {
+						break
+					}
+				}
+		log.Tracef("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
+				if len(ran.SupportedTAList) < capOfSupportTai {
+					ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
 				} else {
 					break
 				}
 			}
-	log.Tracef("PLMN_ID[MCC:%s MNC:%s] TAC[%s]", plmnId.Mcc, plmnId.Mnc, tac)
-			if len(ran.SupportedTAList) < capOfSupportTai {
-				ran.SupportedTAList = append(ran.SupportedTAList, supportedTAI)
-			} else {
-				break
-			}
 		}
-	}
 
-	if len(ran.SupportedTAList) == 0 {
-			log.Warn("RanConfigurationUpdate failure: No supported TA exist in RanConfigurationUpdate")
-		cause.Present = ngapType.CausePresentMisc
-		cause.Misc = &ngapType.CauseMisc{
-			Value: ngapType.CauseMiscPresentUnspecified,
-		}
-	} else {
-		var found bool
-		for i, tai := range ran.SupportedTAList {
-			if context.InTaiList(tai.Tai, h.backend.Context().SupportTaiList()) {
-	log.Tracef("SERVED_TAI_INDEX[%d]", i)
-				found = true
-				break
-			}
-		}
-		if !found {
-				log.Warn("RanConfigurationUpdate failure: Cannot find Served TAI in AMF")
+		if len(ran.SupportedTAList) == 0 {
+				log.Warn("RanConfigurationUpdate failure: No supported TA exist in RanConfigurationUpdate")
 			cause.Present = ngapType.CausePresentMisc
 			cause.Misc = &ngapType.CauseMisc{
-				Value: ngapType.CauseMiscPresentUnknownPLMN,
+				Value: ngapType.CauseMiscPresentUnspecified,
+			}
+		} else {
+			var found bool
+			for i, tai := range ran.SupportedTAList {
+				if context.InTaiList(tai.Tai, h.backend.Context().SupportTaiList()) {
+		log.Tracef("SERVED_TAI_INDEX[%d]", i)
+					found = true
+					break
+				}
+			}
+			if !found {
+					log.Warn("RanConfigurationUpdate failure: Cannot find Served TAI in AMF")
+				cause.Present = ngapType.CausePresentMisc
+				cause.Misc = &ngapType.CauseMisc{
+					Value: ngapType.CauseMiscPresentUnknownPLMN,
+				}
 			}
 		}
-	}
 
-	if cause.Present == ngapType.CausePresentNothing {
-			log.Info("Handle RanConfigurationUpdateAcknowledge")
-		h.sender.SendRanConfigurationUpdateAcknowledge(ran, nil)
-	} else {
-			log.Info("Handle RanConfigurationUpdateAcknowledgeFailure")
-		h.sender.SendRanConfigurationUpdateFailure(ran, cause, nil)
-	}
+		if cause.Present == ngapType.CausePresentNothing {
+				log.Info("Handle RanConfigurationUpdateAcknowledge")
+			h.sender.SendRanConfigurationUpdateAcknowledge(ran, nil)
+		} else {
+				log.Info("Handle RanConfigurationUpdateAcknowledgeFailure")
+			h.sender.SendRanConfigurationUpdateFailure(ran, cause, nil)
+		}
 	*/
 }
-
 
 func (h *ngapHandler) handleUplinkRanConfigurationTransfer(ran *context.AmfRan, uplinkRANConfigurationTransfer *ngapType.UplinkRANConfigurationTransfer) {
 	var sONConfigurationTransferUL *ngapType.SONConfigurationTransfer
@@ -1719,7 +1706,6 @@ func (h *ngapHandler) handleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan
 	var routingID *ngapType.RoutingID
 	var nRPPaPDU *ngapType.NRPPaPDU
 
-
 	for _, ie := range uplinkUEAssociatedNRPPaTransport.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID: // reject
@@ -1733,7 +1719,7 @@ func (h *ngapHandler) handleUplinkUEAssociatedNRPPATransport(ran *context.AmfRan
 			ran_ngapid = ie.Value.RANUENGAPID
 			log.Trace("Decode IE ran_ngapid")
 			if ran_ngapid == nil {
-		log.Error("RanUeNgapID is nil")
+				log.Error("RanUeNgapID is nil")
 				return
 			}
 		case ngapType.ProtocolIEIDRoutingID: // reject
@@ -1971,7 +1957,6 @@ func (h *ngapHandler) handleErrorIndication(ran *context.AmfRan, errorIndication
 	var cause *ngapType.Cause
 	var criticalityDiagnostics *ngapType.CriticalityDiagnostics
 
-
 	for _, ie := range errorIndication.ProtocolIEs.List {
 		switch ie.Id.Value {
 		case ngapType.ProtocolIEIDAMFUENGAPID:
@@ -2115,4 +2100,3 @@ func (h *ngapHandler) handleCellTrafficTrace(ran *context.AmfRan, cellTrafficTra
 	// shall send the SUPI/IMEI(SV) numbers together with the Trace Recording Session Reference and Trace Reference
 	// to the Trace Collection Entity.
 }
-
