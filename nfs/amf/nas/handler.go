@@ -481,44 +481,36 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 	// TODO (TS 23.502 4.2.2.2 step 4): if UE's 5g-GUTI is included & serving AMF has changed
 	// since last registration procedure, new AMF may invoke Namf_Communication_UEContextTransfer
 	// to old AMF, including the complete registration request nas msg, to request UE's SUPI & UE Context
-	//TODO: tungtq - just remove this part for now.
-	/*
-		if ue.ServingAmfChanged {
-			var transferReason models.TransferReason
-			switch ue.RegistrationType5GS {
-			case nasMessage.RegistrationType5GSInitialRegistration:
-				transferReason = models.TransferReason_INIT_REG
-			case nasMessage.RegistrationType5GSMobilityRegistrationUpdating:
-				fallthrough
-			case nasMessage.RegistrationType5GSPeriodicRegistrationUpdating:
-				transferReason = models.TransferReason_MOBI_REG
-			}
 
-			searchOpt := Nnrf_NFDiscovery.SearchNFInstancesParamOpts{
-				Guami: optional.NewInterface(openapi.MarshToJsonString(guamiFromUeGuti)),
-			}
-			err := gmm.nas.backend.NfSelector().SearchAmfCommunicationInstance(ue, models.NfType_AMF, models.NfType_AMF, &searchOpt)
-			if err != nil {
-				log.Errorf("[GMM] %+v", err)
-				gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMUEIdentityCannotBeDerivedByTheNetwork, "")
-				return err
-			}
-			ueContextTransferRspData, problemDetails, err := gmm.consumer.Amf().UEContextTransferRequest(ue, anType, transferReason)
-			if problemDetails != nil {
-				if problemDetails.Cause == "INTEGRITY_CHECK_FAIL" || problemDetails.Cause == "CONTEXT_NOT_FOUND" {
-					log.Warnf("Can not retrieve UE Context from old AMF[Cause: %s]", problemDetails.Cause)
-				} else {
-					log.Warnf("UE Context Transfer Request Failed Problem[%+v]", problemDetails)
-				}
-				secinfo.SecurityContextAvailable = false // need to start authentication procedure later
-			} else if err != nil {
-				log.Errorf("UE Context Transfer Request Error[%+v]", err)
-				gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMUEIdentityCannotBeDerivedByTheNetwork, "")
-			} else {
-				ue.CopyDataFromUeContextModel(*ueContextTransferRspData.UeContext)
-			}
+	if ue.ServingAmfChanged {
+		var transferReason models.TransferReason
+		switch ue.RegistrationType5GS {
+		case nasMessage.RegistrationType5GSInitialRegistration:
+			transferReason = models.TransferReason_INIT_REG
+		case nasMessage.RegistrationType5GSMobilityRegistrationUpdating:
+			fallthrough
+		case nasMessage.RegistrationType5GSPeriodicRegistrationUpdating:
+			transferReason = models.TransferReason_MOBI_REG
 		}
-	*/
+
+		ueContextTransferRspData, problemDetails, err := ue.AmfClient().UEContextTransferRequest(anType, transferReason)
+		if problemDetails != nil {
+			if problemDetails.Cause == "INTEGRITY_CHECK_FAIL" || problemDetails.Cause == "CONTEXT_NOT_FOUND" {
+				log.Warnf("Can not retrieve UE Context from old AMF[Cause: %s]", problemDetails.Cause)
+			} else {
+				log.Warnf("UE Context Transfer Request Failed Problem[%+v]", problemDetails)
+			}
+			secinfo.SecurityContextAvailable = false // need to start authentication procedure later
+		} else if err != nil {
+			log.Errorf("UE Context Transfer Request Error[%+v]", err)
+			gmm.nas.SendRegistrationReject(ue.RanUe[anType], nasMessage.Cause5GMMUEIdentityCannotBeDerivedByTheNetwork, "")
+		} else {
+			//TODO: tqtung - should it be done within AmfUe?
+			ue.CopyDataFromUeContextModel(*ueContextTransferRspData.UeContext)
+		}
+
+	}
+
 	return nil
 }
 

@@ -1,16 +1,18 @@
 package context
+
 import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
-//	"fmt"
+
+	//	"fmt"
+	"net/http"
 	"reflect"
 	"regexp"
-	"net/http"
-	"sync"
 	"strconv"
+	"sync"
 
-//	"github.com/mohae/deepcopy"
+	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/nas/security"
@@ -123,7 +125,6 @@ type PcfInfo struct {
 	AmPolicyAssociation          *models.PolicyAssociation
 	RequestTriggerLocationChange bool // true if AmPolicyAssociation.Trigger contains RequestTrigger_LOC_CH
 	ConfigurationUpdateMessage   []byte
-
 }
 
 func (info *PcfInfo) copy(ueContext *models.UeContext) {
@@ -163,7 +164,6 @@ type NssfInfo struct {
 	NetworkSlicingSubscriptionChanged bool
 	SdmSubscriptionId                 string
 	UeCmRegistered                    bool
-
 }
 
 //func (info *NssfInfo) copy(ueContext *models.UeContext) {
@@ -180,7 +180,6 @@ type AusfInfo struct {
 	ABBA                              []uint8
 	Kseaf                             string
 	Kamf                              string
-
 }
 
 type SecContext struct {
@@ -212,6 +211,7 @@ type LocInfo struct {
 	LastVisitedRegisteredTai models.Tai
 	TimeZone                 string
 }
+
 /*
 func (ue *AmfUe) updateLoc(ranUe *RanUe) {
 	if ue.loc.Tai != ranUe.Tai {
@@ -226,28 +226,31 @@ type AmfUe struct {
 	amf *AMFContext // never nil
 
 	/* context about udm */
-	udm			UdmInfo	
+	udm UdmInfo
 
 	/* context about PCF */
-	pcf		PcfInfo	
+	pcf PcfInfo
 
 	/* contex about ausf */
-	ausf	AusfInfo
+	ausf AusfInfo
 
 	/* Network Slicing related context and Nssf */
-	nssf	NssfInfo		
+	nssf NssfInfo
 
 	/* Security Context */
-	seccon	SecContext
-	
+	seccon SecContext
+
 	/* udm client */
-	udmcli	udmClient
+	udmcli udmClient
 
 	/* pcf client */
-	pcfcli	pcfClient
+	pcfcli pcfClient
 
 	/* ausf client */
-	ausfcli	ausfClient
+	ausfcli ausfClient
+
+	/* amf client */
+	amfcli amfClient
 
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
@@ -277,14 +280,14 @@ type AmfUe struct {
 	/* Ue Identity*/
 	EventSubscriptionsInfo map[string]*AmfUeEventSubscription
 	/* User Location*/
-	loc					LocInfo
-	
+	loc LocInfo
+
 	/* UeContextForHandover*/
 	HandoverNotifyUri string
 	/* N1N2Message */
-	N1N2MessageIDGenerator          IdGenerator 
+	N1N2MessageIDGenerator          IdGenerator
 	N1N2Message                     *N1N2Message
-	N1N2MessageSubscribeIDGenerator IdGenerator 
+	N1N2MessageSubscribeIDGenerator IdGenerator
 	// map[int64]models.UeN1N2InfoSubscriptionCreateData; use n1n2MessageSubscriptionID as key
 	N1N2MessageSubscription sync.Map
 	/* Pdu Sesseion context */
@@ -300,7 +303,7 @@ type AmfUe struct {
 	UeRadioCapabilityForPaging                 *UERadioCapabilityForPaging
 	InfoOnRecommendedCellsAndRanNodesForPaging *InfoOnRecommendedCellsAndRanNodesForPaging
 	UESpecificDRX                              uint8
-		
+
 	/* Registration Area */
 	RegistrationArea map[models.AccessType][]models.Tai
 	LadnInfo         []LADN
@@ -324,9 +327,7 @@ type AmfUe struct {
 	T3512Value                      int // default 54 min
 	Non3gppDeregistrationTimerValue int // default 54 min
 	Lock                            sync.Mutex
-
 }
-
 
 type N1N2Message struct {
 	Request     models.N1N2MessageTransferRequest
@@ -370,7 +371,7 @@ type NGRANCGI struct {
 }
 
 func (ue *AmfUe) init(amf *AMFContext) {
-	ue.amf = amf 
+	ue.amf = amf
 	ue.State = make(map[models.AccessType]*fsm.State)
 	ue.State[models.AccessType__3_GPP_ACCESS] = fsm.NewState(Deregistered)
 	ue.State[models.AccessType_NON_3_GPP_ACCESS] = fsm.NewState(Deregistered)
@@ -413,7 +414,6 @@ func (ue *AmfUe) GetSecInfo() *SecContext {
 	return &ue.seccon
 }
 
-
 func (ue *AmfUe) GetLocInfo() *LocInfo {
 	return &ue.loc
 }
@@ -429,14 +429,17 @@ func (ue *AmfUe) PcfClient() *pcfClient {
 func (ue *AmfUe) AusfClient() *ausfClient {
 	return &ue.ausfcli
 }
+
+func (ue *AmfUe) AmfClient() *amfClient {
+	return &ue.amfcli
+}
+
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {
 	if _, ok := ue.RanUe[anType]; !ok {
 		return false
 	}
 	return true
 }
-
-
 
 func (ue *AmfUe) CmIdle(anType models.AccessType) bool {
 	return !ue.CmConnect(anType)
@@ -445,7 +448,7 @@ func (ue *AmfUe) CmIdle(anType models.AccessType) bool {
 func (ue *AmfUe) Remove() {
 	for _, ranUe := range ue.RanUe {
 		if err := ranUe.Remove(); err != nil {
-	//		logger.ContextLog.Errorf("Remove RanUe error: %v", err)
+			//		logger.ContextLog.Errorf("Remove RanUe error: %v", err)
 		}
 	}
 	ue.amf.tmsiIdGen.FreeID(int64(ue.Tmsi))
@@ -554,12 +557,12 @@ func (ue *AmfUe) SecurityContextIsValid() bool {
 func (ue *AmfUe) DerivateKamf() {
 	supiRegexp, err := regexp.Compile("(?:imsi|supi)-([0-9]{5,15})")
 	if err != nil {
-	//	logger.ContextLog.Error(err)
+		//	logger.ContextLog.Error(err)
 		return
 	}
 	groups := supiRegexp.FindStringSubmatch(ue.Supi)
 	if groups == nil {
-	//	logger.NasLog.Errorln("supi is not correct")
+		//	logger.NasLog.Errorln("supi is not correct")
 		return
 	}
 
@@ -570,12 +573,12 @@ func (ue *AmfUe) DerivateKamf() {
 
 	KseafDecode, err := hex.DecodeString(ue.ausf.Kseaf)
 	if err != nil {
-	//	logger.ContextLog.Error(err)
+		//	logger.ContextLog.Error(err)
 		return
 	}
 	KamfBytes, err := ueauth.GetKDFValue(KseafDecode, ueauth.FC_FOR_KAMF_DERIVATION, P0, L0, P1, L1)
 	if err != nil {
-	//	logger.ContextLog.Error(err)
+		//	logger.ContextLog.Error(err)
 		return
 	}
 	ue.ausf.Kamf = hex.EncodeToString(KamfBytes)
@@ -609,7 +612,7 @@ func (ue *AmfUe) DerivateAlgKey() {
 
 	kint, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
 	if err != nil {
-	//	logger.ContextLog.Error(err)
+		//	logger.ContextLog.Error(err)
 		return
 	}
 	copy(ue.seccon.KnasInt[:], kint[16:32])
@@ -634,7 +637,7 @@ func (ue *AmfUe) DerivateAnKey(anType models.AccessType) {
 	}
 	key, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_KGNB_KN3IWF_DERIVATION, P0, L0, P1, L1)
 	if err != nil {
-	//	logger.ContextLog.Error(err)
+		//	logger.ContextLog.Error(err)
 		return
 	}
 	switch accessType {
@@ -762,7 +765,6 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.Pei = ueContext.Pei
 	}
 
-
 	if ueContext.AusfGroupId != "" {
 		ue.ausf.AusfGroupId = ueContext.AusfGroupId
 	}
@@ -771,7 +773,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.ausf.RoutingIndicator = ueContext.RoutingIndicator
 	}
 	ue.udm.copy(&ueContext)
-	
+
 	if ueContext.SeafData != nil {
 		seafData := ueContext.SeafData
 
@@ -782,7 +784,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 			}
 		}
 		if nh, err := hex.DecodeString(seafData.Nh); err != nil {
-		//	logger.ContextLog.Error(err)
+			//	logger.ContextLog.Error(err)
 			return
 		} else {
 			ue.seccon.NH = nh
@@ -891,7 +893,7 @@ func (ue *AmfUe) DeleteSmContext(pduId int32) {
 
 // /sbi/producer/location
 
-func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo{
+func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo {
 	anType := ue.GetAnType()
 
 	if anType == "" {
@@ -921,7 +923,6 @@ func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo
 
 }
 
-
 // /sbi/producer/mt
 
 func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextInfo {
@@ -939,16 +940,14 @@ func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextI
 		info.SupportVoPSn3gpp = ranUe.supportVoPSn3gpp
 	}
 
-	return info 
+	return info
 }
 
 // /sbi/producer/
 
-
-
 //
 
-func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext,reqtype *models.RequestType) (dat models.SmContextCreateData) {
+func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext, reqtype *models.RequestType) (dat models.SmContextCreateData) {
 	dat.Supi = ue.Supi
 	dat.UnauthenticatedSupi = ue.UnauthenticatedSupi
 	dat.Pei = ue.Pei
@@ -1005,7 +1004,7 @@ func (ue *AmfUe) BuildReleaseSmContextData(cause *CauseAll, n2SmInfoType models.
 	// TODO: other param(ueLocation...)
 	return
 }
-func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferReqData,res *models.UeContextTransferResponse) *models.ProblemDetails {
+func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferReqData, res *models.UeContextTransferResponse) *models.ProblemDetails {
 	resdat := res.JsonData
 	//if ue.GetAnType() != UeContextTransferReqData.AccessType {
 	//for _, tai := range ue.RegistrationArea[ue.GetAnType()] {
@@ -1056,7 +1055,7 @@ func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferRe
 	case models.TransferReason_MOBI_REG_UE_VALIDATED:
 		fn()
 	default:
-	//	logger.ProducerLog.Warnf("Invalid Transfer Reason: %+v", UeContextTransferReqData.Reason)
+		//	logger.ProducerLog.Warnf("Invalid Transfer Reason: %+v", UeContextTransferReqData.Reason)
 		return &models.ProblemDetails{
 			Status: http.StatusForbidden,
 			Cause:  "MANDATORY_IE_INCORRECT",
@@ -1070,68 +1069,67 @@ func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferRe
 	return nil
 }
 
-
 func (ue *AmfUe) buildContextModel() *models.UeContext {
 	ueContext := &models.UeContext{
-		Supi: ue.Supi,
+		Supi:          ue.Supi,
 		SupiUnauthInd: ue.UnauthenticatedSupi,
 	}
-/*
-	if ue.Gpsi != "" {
-		ueContext.GpsiList = append(ueContext.GpsiList, ue.Gpsi)
-	}
+	/*
+		if ue.Gpsi != "" {
+			ueContext.GpsiList = append(ueContext.GpsiList, ue.Gpsi)
+		}
 
-	if ue.Pei != "" {
-		ueContext.Pei = ue.Pei
-	}
+		if ue.Pei != "" {
+			ueContext.Pei = ue.Pei
+		}
 
-	if ue.udm.UdmGroupId != "" {
-		ueContext.UdmGroupId = ue.UdmGroupId
-	}
+		if ue.udm.UdmGroupId != "" {
+			ueContext.UdmGroupId = ue.UdmGroupId
+		}
 
-	if ue.AusfGroupId != "" {
-		ueContext.AusfGroupId = ue.AusfGroupId
-	}
+		if ue.AusfGroupId != "" {
+			ueContext.AusfGroupId = ue.AusfGroupId
+		}
 
-	if ue.RoutingIndicator != "" {
-		ueContext.RoutingIndicator = ue.RoutingIndicator
-	}
+		if ue.RoutingIndicator != "" {
+			ueContext.RoutingIndicator = ue.RoutingIndicator
+		}
 
-	if ue.AccessAndMobilitySubscriptionData != nil {
-		if ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
-			ueContext.SubUeAmbr = &models.Ambr{
-				Uplink:   ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink,
-				Downlink: ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink,
+		if ue.AccessAndMobilitySubscriptionData != nil {
+			if ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
+				ueContext.SubUeAmbr = &models.Ambr{
+					Uplink:   ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink,
+					Downlink: ue.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink,
+				}
+			}
+			if ue.AccessAndMobilitySubscriptionData.RfspIndex != 0 {
+				ueContext.SubRfsp = ue.AccessAndMobilitySubscriptionData.RfspIndex
 			}
 		}
-		if ue.AccessAndMobilitySubscriptionData.RfspIndex != 0 {
-			ueContext.SubRfsp = ue.AccessAndMobilitySubscriptionData.RfspIndex
+
+		if ue.PcfId != "" {
+			ueContext.PcfId = ue.PcfId
 		}
-	}
 
-	if ue.PcfId != "" {
-		ueContext.PcfId = ue.PcfId
-	}
-
-	if ue.AmPolicyUri != "" {
-		ueContext.PcfAmPolicyUri = ue.AmPolicyUri
-	}
-
-	if ue.AmPolicyAssociation != nil {
-		if len(ue.AmPolicyAssociation.Triggers) > 0 {
-			ueContext.AmPolicyReqTriggerList = buildAmPolicyReqTriggers(ue.AmPolicyAssociation.Triggers)
+		if ue.AmPolicyUri != "" {
+			ueContext.PcfAmPolicyUri = ue.AmPolicyUri
 		}
-	}
 
-	for _, eventSub := range ue.EventSubscriptionsInfo {
-		if eventSub.EventSubscription != nil {
-			ueContext.EventSubscriptionList = append(ueContext.EventSubscriptionList, *eventSub.EventSubscription)
+		if ue.AmPolicyAssociation != nil {
+			if len(ue.AmPolicyAssociation.Triggers) > 0 {
+				ueContext.AmPolicyReqTriggerList = buildAmPolicyReqTriggers(ue.AmPolicyAssociation.Triggers)
+			}
 		}
-	}
 
-	if ue.TraceData != nil {
-		ueContext.TraceData = ue.TraceData
-	}
+		for _, eventSub := range ue.EventSubscriptionsInfo {
+			if eventSub.EventSubscription != nil {
+				ueContext.EventSubscriptionList = append(ueContext.EventSubscriptionList, *eventSub.EventSubscription)
+			}
+		}
+
+		if ue.TraceData != nil {
+			ueContext.TraceData = ue.TraceData
+		}
 	*/
 	return ueContext
 }
@@ -1152,8 +1150,7 @@ func buildAmPolicyReqTriggers(triggers []models.RequestTrigger) (amPolicyReqTrig
 	return
 }
 
-
-func (ue *AmfUe) N1N2InfoSubscribe(dat *models.UeN1N2InfoSubscriptionCreateData) (string, *models.ProblemDetails){
+func (ue *AmfUe) N1N2InfoSubscribe(dat *models.UeN1N2InfoSubscriptionCreateData) (string, *models.ProblemDetails) {
 	if id, err := ue.N1N2MessageSubscribeIDGenerator.Allocate(); err != nil {
 		return "", &models.ProblemDetails{
 			Status: http.StatusInternalServerError,
@@ -1169,7 +1166,6 @@ func (ue *AmfUe) N1N2InfoUnsubscribe(subId string) {
 	ue.N1N2MessageSubscription.Delete(subId)
 }
 
-
 func (ue *AmfUe) N1N2MessageUnsubscribe(subId string) {
 	ue.N1N2MessageSubscription.Delete(subId)
 }
@@ -1180,4 +1176,3 @@ func (ue *AmfUe) N1N2MessageStatus(uri string) (models.N1N2MessageTransferCause,
 	}
 	return ue.N1N2Message.Status, true
 }
-
