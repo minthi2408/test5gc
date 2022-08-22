@@ -2,7 +2,6 @@ package nas
 
 import (
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/sbi/consumer"
 
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasConvert"
@@ -60,7 +59,6 @@ var transitions = fsm.Transitions{
 type GmmFsm struct {
 	sm       *fsm.FSM
 	nas      *Nas
-	consumer *consumer.Consumer
 }
 
 func newGmmFsm(nas *Nas) *GmmFsm {
@@ -78,7 +76,6 @@ func newGmmFsm(nas *Nas) *GmmFsm {
 	//Note: make sure that transitions and states are well-defined. The program
 	//will panic if an error is returned
 	gmm.sm, _ = fsm.NewFSM(transitions, callbacks)
-	gmm.consumer = nas.backend.Consumer()
 	return gmm
 }
 

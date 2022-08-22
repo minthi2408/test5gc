@@ -252,6 +252,9 @@ type AmfUe struct {
 	/* amf client */
 	amfcli amfClient
 
+	/* callback client */
+	callback ueCallback
+
 	/* Gmm State */
 	State map[models.AccessType]*fsm.State
 	/* Registration procedure related context */
@@ -432,6 +435,10 @@ func (ue *AmfUe) AusfClient() *ausfClient {
 
 func (ue *AmfUe) AmfClient() *amfClient {
 	return &ue.amfcli
+}
+
+func (ue *AmfUe) CallbackClient() *ueCallback {
+	return &ue.callback
 }
 
 func (ue *AmfUe) CmConnect(anType models.AccessType) bool {

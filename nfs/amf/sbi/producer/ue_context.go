@@ -256,7 +256,7 @@ func (h *Producer) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegSt
 					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionId)
 				}
 
-				problem, err := h.backend.Consumer().Smf().SendReleaseSmContextRequest(ue, smContext, causeAll, "", nil)
+				problem, err := smContext.SmfClient().SendReleaseSmContextRequest(causeAll, "", nil)
 				if problem != nil {
 					log.Errorf("Release SmContext[pduSessionId: %d] Failed Problem[%+v]", pduSessionId, problem)
 				} else if err != nil {
@@ -265,7 +265,7 @@ func (h *Producer) doRegistrationStatusUpdate(ueId string, reqdat models.UeRegSt
 			}
 
 			if reqdat.PcfReselectedInd {
-				problem, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue)
+				problem, err := ue.PcfClient().AMPolicyControlDelete()
 				if problem != nil {
 					log.Errorf("AM Policy Control Delete Failed Problem[%+v]", problem)
 				} else if err != nil {

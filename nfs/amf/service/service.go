@@ -8,7 +8,6 @@ import (
 	"etri5gc/nfs/amf/ngap"
 
 	"etri5gc/nfs/amf/sbi/producer"
-	"etri5gc/nfs/amf/sbi/consumer"
 	"fmt"
 	//"time"
 
@@ -24,7 +23,6 @@ func init() {
 }
 
 type AMF struct {
-	consumer *consumer.Consumer   //sbi consumer interacting with other NFs
 	producer *producer.Producer    //handling Sbi requests received at the server
 	ngap     *ngap.Server         //ngap server handling Ran connections and ngap messages
 	context  *context.AMFContext  // AMF context
@@ -45,8 +43,6 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	nf.ngap = ngap.NewServer(nf)
 	//create sbi producer
 	nf.producer = producer.NewProducer(nf, nf.ngap.Sender(), nf.ngap.Nas())
-	//create sbi consumer
-	nf.consumer = consumer.NewConsumer(nf)
 
 	nf.agent, err = fabric.CreateServiceAgent(nil)
 	nf.sender = nf.agent.Forwarder()
@@ -67,9 +63,6 @@ func (nf *AMF) Producer() *producer.Producer {
 	return nf.producer
 }
 
-func (nf *AMF) Consumer() *consumer.Consumer {
-	return nf.consumer
-}
 
 func (nf *AMF) Nas() *nas.Nas {
 	return nf.ngap.Nas()

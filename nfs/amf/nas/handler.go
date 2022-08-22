@@ -53,7 +53,7 @@ func (gmm *GmmFsm) handleULNASTransport(ue *context.AmfUe, anType models.AccessT
 		return fmt.Errorf("PayloadContainerTypeSOR has not been implemented yet in UL NAS TRANSPORT")
 	case nasMessage.PayloadContainerTypeUEPolicy:
 		log.Infoln("AMF Transfer UEPolicy To PCF")
-		gmm.consumer.Callback().SendN1MessageNotify(ue, models.N1MessageClass_UPDP,
+		ue.CallbackClient().SendN1MessageNotify(models.N1MessageClass_UPDP,
 			ulNasTransport.PayloadContainer.GetPayloadContainerContents(), nil)
 	case nasMessage.PayloadContainerTypeUEParameterUpdate:
 		log.Infoln("AMF Transfer UEParameterUpdate To UDM")
@@ -559,7 +559,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 			TransferStatus: models.UeContextTransferStatus_TRANSFERRED,
 		}
 		// TODO: based on locol policy, decide if need to change serving PCF for UE
-		regStatusTransferComplete, problemDetails, err := gmm.consumer.Amf().RegistrationStatusUpdate(ue, req)
+		regStatusTransferComplete, problemDetails, err := ue.AmfClient().RegistrationStatusUpdate(req)
 		if problemDetails != nil {
 			log.Errorf("Registration Status Update Failed Problem[%+v]", problemDetails)
 		} else if err != nil {
@@ -895,7 +895,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 				} else {
 					log.Warnf("UE was reachable but did not accept to re-activate the PDU Session[%d]",
 						requestData.PduSessionId)
-					gmm.consumer.Callback().SendN1N2TransferFailureNotification(ue, models.N1N2MessageTransferCause_UE_NOT_REACHABLE_FOR_SESSION)
+					ue.CallbackClient().SendN1N2TransferFailureNotification(models.N1N2MessageTransferCause_UE_NOT_REACHABLE_FOR_SESSION)
 				}
 			} else if smInfo.N2InfoContent.NgapIeType == models.NgapIeType_PDU_RES_SETUP_REQ {
 				var nasPdu []byte
@@ -1149,7 +1149,7 @@ func (gmm *GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.AccessT
 			req := models.UeRegStatusUpdateReqData{
 				TransferStatus: models.UeContextTransferStatus_NOT_TRANSFERRED,
 			}
-			_, problemDetails, err = gmm.consumer.Amf().RegistrationStatusUpdate(ue, req)
+			_, problemDetails, err = ue.AmfClient().RegistrationStatusUpdate(req)
 			if problemDetails != nil {
 				log.Errorf("Registration Status Update Failed Problem[%+v]", problemDetails)
 			} else if err != nil {
@@ -1218,7 +1218,7 @@ func (gmm *GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.AccessT
 
 				var n1Message bytes.Buffer
 				ue.RegistrationRequest.EncodeRegistrationRequest(&n1Message)
-				gmm.consumer.Callback().SendN1MessageNotifyAtAMFReAllocation(ue, n1Message.Bytes(), &registerContext)
+				ue.CallbackClient().SendN1MessageNotifyAtAMFReAllocation(n1Message.Bytes(), &registerContext)
 			} else {
 				// Condition (B) Step 7: initial AMF can not find Target AMF via NRF -> Send Reroute NAS Request to RAN
 				allowedNssaiNgap := ngapConvert.AllowedNssaiToNgap(nssfinfo.AllowedNssai[anType])
@@ -1692,7 +1692,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 					} else {
 						log.Warnf("UE was reachable but did not accept to re-activate the PDU Session[%d]",
 							requestData.PduSessionId)
-						gmm.consumer.Callback().SendN1N2TransferFailureNotification(ue, models.N1N2MessageTransferCause_UE_NOT_REACHABLE_FOR_SESSION)
+						ue.CallbackClient().SendN1N2TransferFailureNotification(models.N1N2MessageTransferCause_UE_NOT_REACHABLE_FOR_SESSION)
 					}
 				}
 			} else if smInfo.N2InfoContent.NgapIeType == models.NgapIeType_PDU_RES_SETUP_REQ {

@@ -3,7 +3,6 @@ package ngap
 import (
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf"
-	//"etri5gc/nfs/amf/sbi/consumer"
 	"github.com/free5gc/aper"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
@@ -551,7 +550,6 @@ func(s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 	// }
 	amf := s.backend.Context()
 	ranpool := 	amf.AmfRanPool()
-	callback := s.backend.Consumer().Callback()
 	taiList := ue.RegistrationArea[models.AccessType__3_GPP_ACCESS]
 	ranpool.Range(func(key, value interface{}) bool {
 		ran := value.(*context.AmfRan)
@@ -584,7 +582,8 @@ func(s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 			log.Warnf("T3513 expires %d times, abort paging procedure", cfg.MaxRetryTimes)
 			ue.T3513 = nil // clear the timer
 			if ue.OnGoing(models.AccessType__3_GPP_ACCESS).Procedure != context.OnGoingProcedureN2Handover {
-				callback.SendN1N2TransferFailureNotification(ue, models.N1N2MessageTransferCause_UE_NOT_RESPONDING)
+
+				ue.CallbackClient().SendN1N2TransferFailureNotification(models.N1N2MessageTransferCause_UE_NOT_RESPONDING)
 			}
 		})
 	}

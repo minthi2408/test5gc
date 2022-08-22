@@ -254,7 +254,7 @@ func (h *Producer) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 	// use go routine to write response first to ensure the order of the procedure
 	//NOTE: tungtq - need a worker pool
 	go func() {
-		if prob, err := h.backend.Consumer().Pcf().AMPolicyControlDelete(ue); prob != nil {
+		if prob, err := ue.PcfClient().AMPolicyControlDelete(); prob != nil {
 			log.Errorf("AM Policy Control Delete Failed Problem[%+v]", prob)
 		} else if err != nil {
 			log.Errorf("AM Policy Control Delete Error[%v]", err.Error())

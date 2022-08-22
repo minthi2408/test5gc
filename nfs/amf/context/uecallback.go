@@ -1,35 +1,16 @@
-package consumer
+package context
 
 import (
-	"fmt"
-//	"bytes"
-	"reflect"
-	"strconv"
-	org_context	"context"
-	"etri5gc/nfs/amf/context"
-//	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/Namf_Communication"
 )
 
-
-type callback struct {
-	amf *context.AMFContext
+type ueCallback struct {
+	ue		*AmfUe
 }
 
-func newCallback(c *context.AMFContext) *callback {
-	return &callback {
-		amf: c,
-	}
-}
 
-func callback_client() *Namf_Communication.APIClient {
-	conf := Namf_Communication.NewConfiguration()
-	return Namf_Communication.NewAPIClient(conf)
-}
-
-func (c *callback) SendN2InfoNotifyN2Handover(ue *context.AmfUe, releaseList []int32) error {
+func (c *ueCallback) SendN2InfoNotifyN2Handover(releaseList []int32) error {
+	/*
 	if ue.HandoverNotifyUri == "" {
 		return fmt.Errorf("N2 Info Notify N2Handover failed(uri dose not exist)")
 	}
@@ -53,51 +34,14 @@ func (c *callback) SendN2InfoNotifyN2Handover(ue *context.AmfUe, releaseList []i
 //			HttpLog.Errorln(err.Error())
 		}
 	}
+	*/
 	return nil
 }
 
 
-func (c callback) SendAmfStatusChangeNotify(amfStatus string, guamiList []models.Guami) {
-	subs := c.amf.GetStatusSubList()
-	subs.Range(func(key, value interface{}) bool {
-		subscriptionData := value.(models.SubscriptionData)
-		client := callback_client()
-		amfStatusNotification := models.AmfStatusChangeNotification{}
-		amfStatusInfo := models.AmfStatusInfo{}
 
-		for _, guami := range guamiList {
-			for _, subGumi := range subscriptionData.GuamiList {
-				if reflect.DeepEqual(guami, subGumi) {
-					// AMF status is available
-					amfStatusInfo.GuamiList = append(amfStatusInfo.GuamiList, guami)
-				}
-			}
-		}
-
-		amfStatusInfo = models.AmfStatusInfo{
-			StatusChange:     (models.StatusChange)(amfStatus),
-			TargetAmfRemoval: "",
-			TargetAmfFailure: "",
-		}
-
-		amfStatusNotification.AmfStatusInfoList = append(amfStatusNotification.AmfStatusInfoList, amfStatusInfo)
-		uri := subscriptionData.AmfStatusUri
-
-		//logger.ProducerLog.Infof("[AMF] Send Amf Status Change Notify to %s", uri)
-		httpResponse, err := client.AmfStatusChangeCallbackDocumentApiServiceCallbackDocumentApi.
-			AmfStatusChangeNotify(org_context.Background(), uri, amfStatusNotification)
-		if err != nil {
-			if httpResponse == nil {
-				//HttpLog.Errorln(err.Error())
-			} else if err.Error() != httpResponse.Status {
-				//HttpLog.Errorln(err.Error())
-			}
-		}
-		return true
-	})
-}
-
-func (c *callback) SendN1N2TransferFailureNotification(ue *context.AmfUe, cause models.N1N2MessageTransferCause) {
+func (c *ueCallback) SendN1N2TransferFailureNotification(cause models.N1N2MessageTransferCause) {
+	/*
 	if ue.N1N2Message == nil {
 		return
 	}
@@ -123,10 +67,11 @@ func (c *callback) SendN1N2TransferFailureNotification(ue *context.AmfUe, cause 
 			ue.N1N2Message = nil
 		}
 	}
+	*/
 }
 
-func (c *callback) SendN1MessageNotify(ue *context.AmfUe, n1class models.N1MessageClass, n1Msg []byte,
-	registerContext *models.RegistrationContextContainer) {
+func (c *ueCallback) SendN1MessageNotify(n1class models.N1MessageClass, n1Msg []byte, registerContext *models.RegistrationContextContainer) {
+	/*
 	ue.N1N2MessageSubscription.Range(func(key, value interface{}) bool {
 		subscriptionID := key.(int64)
 		subscription := value.(models.UeN1N2InfoSubscriptionCreateData)
@@ -159,11 +104,12 @@ func (c *callback) SendN1MessageNotify(ue *context.AmfUe, n1class models.N1Messa
 		}
 		return true
 	})
+	*/
 }
 
 // TS 29.518 5.2.2.3.5.2
-func (c *callback) SendN1MessageNotifyAtAMFReAllocation(
-	ue *context.AmfUe, n1Msg []byte, registerContext *models.RegistrationContextContainer) {
+func (c *ueCallback) SendN1MessageNotifyAtAMFReAllocation(n1Msg []byte, registerContext *models.RegistrationContextContainer) {
+	/*
 	client := callback_client()
 
 	n1MessageNotify := models.N1MessageNotify{
@@ -197,9 +143,11 @@ func (c *callback) SendN1MessageNotifyAtAMFReAllocation(
 			//HttpLog.Errorln(err.Error())
 		}
 	}
+	*/
 }
 
-func (c *callback) SendN2InfoNotify(ue *context.AmfUe, n2class models.N2InformationClass, n1Msg, n2Msg []byte) {
+func (c *ueCallback) SendN2InfoNotify(n2class models.N2InformationClass, n1Msg, n2Msg []byte) {
+	/*
 	ue.N1N2MessageSubscription.Range(func(key, value interface{}) bool {
 		subscriptionID := key.(int64)
 		subscription := value.(models.UeN1N2InfoSubscriptionCreateData)
@@ -267,5 +215,6 @@ func (c *callback) SendN2InfoNotify(ue *context.AmfUe, n2class models.N2Informat
 		}
 		return true
 	})
+	*/
 }
 

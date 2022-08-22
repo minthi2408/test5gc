@@ -11,7 +11,6 @@ import (
 	"etri5gc/nfs/amf/sbi/producer/communication"
 	"etri5gc/nfs/amf/sbi/producer/oam"
 	"etri5gc/nfs/amf/sbi/producer/mt"
-	"etri5gc/nfs/amf/sbi/consumer"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/openapi/models"
@@ -43,7 +42,6 @@ type NgapSender interface {
 
 
 type Backend interface {
-	Consumer() *consumer.Consumer
 	Context() *context.AMFContext
 }
 

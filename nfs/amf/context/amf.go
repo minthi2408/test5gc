@@ -51,6 +51,8 @@ type AMFContext struct {
 	httpIPv6Address     string
 	tnlWeightFactor     int64
 	secAlgo             SecurityAlgorithm
+
+	callback			*amfCallback
 }
 
 
@@ -121,6 +123,10 @@ func (amf *AMFContext) buildNfServices() {
 
 func (amf *AMFContext) GetConfig() *config.Config {
 	return amf.cfg
+}
+
+func (amf *AMFContext) CallbackCli() *amfCallback {
+	return amf.callback
 }
 
 func (amf *AMFContext) NrfUri() string {
