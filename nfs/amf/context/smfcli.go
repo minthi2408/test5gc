@@ -1,15 +1,22 @@
 package context
 import (
 	"github.com/free5gc/openapi/models"
+	"etri5gc/fabric"
 )
 
 
 type smfClient struct {
 	ue		*AmfUe
 	sm		*SmContext
+	fw		fabric.Forwarder
+	query	fabric.NfQuery
 }
 
 func (c *smfClient) SendCreateSmContextRequest(rtype *models.RequestType, naspdu []byte) (res *models.PostSmContextsResponse, ref string, errRes *models.PostSmContextsErrorResponse, prob *models.ProblemDetails, err1 error) {
+	//1. create a request
+	//2. call the agent
+	//response, err := ue.fw.Send(request, ue.query)
+	//the forwarder should return a response in a dataplane-protocol agnostic (just like the request)
 /*
 	dat := ue.BuildCreateSmContextData(sm, nil)
 

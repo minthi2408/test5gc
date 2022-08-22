@@ -74,10 +74,13 @@ func (agent *httpAgent) Server() ServiceServer {
 func CreateServiceAgent(config	*AgentConfig) (ServiceAgent, error) {
 	agent := &httpAgent{
 		forwarder:		&httpForwarder{},
-		server:			newHttpServer(config.http),
 	}
-
-	return agent, nil
+	if config.DProto == DATAPLANE_HTTP {
+		agent.server = newHttpServer(config.HttpConf)
+		return agent, nil
+	} else {
+		return nil, errors.New("the input data protocol is not supported")
+	}
 }
 
 //httpServer

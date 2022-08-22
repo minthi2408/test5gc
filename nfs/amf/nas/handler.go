@@ -176,7 +176,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 			// and the Request type IE is included and is set to "initial request"
 			case nasMessage.ULNASTransportRequestTypeInitialRequest:
 
-				if newSmContext, err := ue.CreateSmContext(ulNasTransport); err != nil {
+				if newSmContext, err := ue.CreateSmContext(ulNasTransport, pduSessionID, anType); err != nil {
 					//create a session context and prepare smf selection query: failed
 					log.Errorf("Select SMF failed: %+v", err)
 					cause := nasMessage.Cause5GMMPayloadWasNotForwarded

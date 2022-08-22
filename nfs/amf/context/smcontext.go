@@ -1,10 +1,12 @@
 package context
 
 import (
+	"errors"
 	"sync"
-
+	
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/nas/nasConvert"
 )
 
 type SmContext struct {
@@ -217,8 +219,11 @@ func (c *SmContext) DeleteULNASTransport() {
 	c.ulNASTransport = nil
 }
 
-func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport) (smc *SmContext, err error) {
-	/* TODO: tqtung - comment out as a reference for network selection implementation
+
+// create a session management context and populate its attributes with the information from an input NAS message
+// the session is not attached to the AmfUe yet
+func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport, pduSessionId int32, anType models.AccessType) (smc *SmContext, err error) {
+	//1. identity the contexts of the target SMF
 	var (
 		snssai models.Snssai
 		dnn    string
@@ -227,24 +232,25 @@ func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport) (smc *SmContext
 
 	// If the S-NSSAI IE is not included and the user's subscription context obtained from UDM. AMF shall
 	// select a default snssai
-	if ulNasTransport.SNSSAI != nil {
-		snssai = nasConvert.SnssaiToModels(ulNasTransport.SNSSAI)
+	if msg.SNSSAI != nil {
+		snssai = nasConvert.SnssaiToModels(msg.SNSSAI)
 	} else {
 		if allowedNssai, ok := ue.GetNssfInfo().AllowedNssai[anType]; ok {
 			snssai = *allowedNssai[0].AllowedSnssai
 		} else {
-			return errors.New("Ue doesn't have allowedNssai")
+			return nil, errors.New("Ue doesn't have allowedNssai")
 		}
 	}
 
-	if ulNasTransport.DNN != nil {
-		dnn = ulNasTransport.DNN.GetDNN()
+	if msg.DNN != nil {
+		dnn = msg.DNN.GetDNN()
 	} else {
 		// if user's subscription context obtained from UDM does not contain the default DNN for the,
 		// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
-		dnn = gmm.nas.amf().SupportDnnList()[0]
+		udminfo := ue.udm
+		dnn = ue.amf.SupportDnnList()[0]
 		if udminfo.SmfSelectionData != nil {
-			snssaiStr := context.SnssaiModelsToHex(snssai)
+			snssaiStr := SnssaiModelsToHex(snssai)
 			if snssaiInfo, ok := udminfo.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
 				for _, dnnInfo := range snssaiInfo.DnnInfos {
 					if dnnInfo.DefaultDnnIndicator {
@@ -254,37 +260,16 @@ func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport) (smc *SmContext
 			}
 		}
 	}
-	//TODO: tungtq - implement this in the context package
-	/*
-		if newSmContext, cause, err := gmm.nas.backend.NfSelector().SelectSmf(ue, anType, pduSessionID, snssai, dnn); err != nil {
-			log.Errorf("Select SMF failed: %+v", err)
-			gmm.nas.SendDLNASTransport(ue.RanUe[anType], nasMessage.PayloadContainerTypeN1SMInfo,
-				smMessage, pduSessionID, cause, nil, 0)
-		} else {
-			ue.Lock.Lock()
-			defer ue.Lock.Unlock()
-			_, smContextRef, errResponse, problemDetail, err :=
-				gmm.consumer.Smf().SendCreateSmContextRequest(ue, newSmContext, nil, smMessage)
-			if err != nil {
-				log.Errorf("CreateSmContextRequest Error: %+v", err)
-				return nil
-			} else if problemDetail != nil {
-				// TODO: error handling
-				return fmt.Errorf("Failed to Create smContext[pduSessionID: %d], Error[%v]", pduSessionID, problemDetail)
-			} else if errResponse != nil {
-				log.Warnf("PDU Session Establishment Request is rejected by SMF[pduSessionId:%d]",
-					pduSessionID)
-				gmm.nas.SendDLNASTransport(ue.RanUe[anType], nasMessage.PayloadContainerTypeN1SMInfo,
-					errResponse.BinaryDataN1SmMessage, pduSessionID, 0, nil, 0)
-			} else {
-				newSmContext.SetSmContextRef(smContextRef)
-				newSmContext.SetUserLocation(deepcopy.Copy(ue.GetLocInfo().Location).(models.UserLocation))
-				ue.StoreSmContext(pduSessionID, newSmContext)
-				log.Infof("create smContext[pduSessionID: %d] Success", pduSessionID)
-				// TODO: handle response(response N2SmInfo to RAN if exists)
-			}
-		}
-	*/
+
+	//2. create the session management context (and populate SMF discovery
+	//query)
+
+	//TODO tqtung - session creattion is incompleted
+	//also, we need to populate an SMF discoery query
+	smc = NewSmContext(pduSessionId)
+	smc.SetSnssai(snssai)
+	smc.SetDnn(dnn)
+	smc.SetAccessType(anType)
 
 	return
 }

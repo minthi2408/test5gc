@@ -4,6 +4,13 @@ import (
 	"time"
 )
 
+const (
+	DATAPLANE_HTTP = iota
+	DATAPLANE_HTTPS
+	DATALANE_MAX_PROTOCOLS
+)
+
+type DataPlaneProtocol	int
 // anything that can be marshalled/unmarshalled
 // it is up to its concrete implementation to determined an encoding method
 type Marshallable interface {
@@ -45,7 +52,8 @@ type NfContext struct {
 // there should be plug-in parameters that are NF-dependent
 type AgentConfig struct {
 	NfType 			NetworkFunctionType
-	http			*HttpServerConfig
+	DProto			DataPlaneProtocol	
+	HttpConf		*HttpServerConfig
 }
 
 // the abstraction of a service supported by an NF
