@@ -4,12 +4,13 @@ import (
 	"errors"
     "etri5gc/fabric/httpdp"
     "etri5gc/fabric/common"
+    "etri5gc/fabric/telemetry"
 )
 
 type serviceAgent struct {
-	telemetry        TelemetryManager
+	reporter         telemetry.Writer
 	connections      ConnectionManager
-	registry         RegistryManager
+	registry         AgentRegistry
     server           ServiceServer
     forwarder        Forwarder
 }
@@ -47,7 +48,7 @@ func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 		agent.server = httpdp.NewHttpServer(config.HttpConf)
 		return agent, nil
 	} else {
-		return nil, errors.New("the input data protocol is not supported")
+		return nil, errors.New("the input data plane protocol is not supported")
 	}
 }
 

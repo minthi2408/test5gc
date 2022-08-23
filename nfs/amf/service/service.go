@@ -44,6 +44,7 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 	//create sbi producer
 	nf.producer = producer.NewProducer(nf, nf.ngap.Sender(), nf.ngap.Nas())
 
+    //TODO: agent configuration
 	nf.agent, err = fabric.CreateServiceAgent(nil)
 	nf.sender = nf.agent.Forwarder()
 	err = nf.agent.Register(nf.producer.Services())

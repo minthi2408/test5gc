@@ -10,11 +10,16 @@ import (
 // there should be core parameters
 // there should be plug-in parameters that are NF-dependent
 type AgentConfig struct {
-	NfType   common.NetworkFunctionType
-	DProto   common.DataPlaneProtocol
-	HttpConf *httpdp.HttpServerConfig
+	NfType      common.NetworkFunctionType
+	DProto      common.DataPlaneProtocol
+	HttpConf    *httpdp.HttpServerConfig
+
+    services    []common.Service
 }
 
+func (conf *AgentConfig) SetServices(services []common.Service) {
+    conf.services = services
+}
 
 // a service abstraction to expose service requesting to upper layers
 // if the agent implements a http-based data plane protocol then the forwarder
@@ -56,23 +61,17 @@ type ServiceAgent interface {
 //Registry
 
 //a registry to query for producers
-type RegistryManager interface {
-	Query(common.NfContext) []common.AgentProfile
+type AgentRegistry interface {
+	Search(common.NfQuery) []common.AgentProfile
 }
 
 ///////////////////////
 //Selector
 // selector do the load balancing on the list of agent profiles
-type Selector interface {
+type LoadBalancer interface {
 	Select([]common.AgentProfile) common.AgentProfile
 }
 
-////////////////////////////////////
-//telemetry
-
-type TelemetryManager interface {
-	Report(common.TelemetryReport)
-}
 
 /////////////////////////
 //connection

@@ -1,7 +1,5 @@
 package common
-import (
-    "time"
-)
+
 const (
 	DATAPLANE_HTTP = iota
 	DATAPLANE_HTTPS
@@ -59,10 +57,8 @@ type Service interface {
 
 type AgentProfile interface {
 	NfType() NetworkFunctionType
+    Addr() AgentAddr
 }
 
 
-type TelemetryReport interface {
-	Time() time.Time
-}
 
