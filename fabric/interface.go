@@ -10,7 +10,8 @@ const (
 	DATALANE_MAX_PROTOCOLS
 )
 
-type DataPlaneProtocol	int
+type DataPlaneProtocol int
+
 // anything that can be marshalled/unmarshalled
 // it is up to its concrete implementation to determined an encoding method
 type Marshallable interface {
@@ -28,6 +29,9 @@ type Response interface {
 	Marshallable
 }
 
+type AgentAddr interface {
+}
+
 //the type of a network function (amf, smf, etc.)
 type NetworkFunctionType string
 
@@ -40,7 +44,6 @@ type NfQuery interface {
 	GetNfType() NetworkFunctionType
 }
 
-
 //define a context where a network function operate
 //a NfQuery should be map to a single NfContext so that a list of currently
 //deployed (running) NFs can be retrieved
@@ -51,9 +54,9 @@ type NfContext struct {
 // there should be core parameters
 // there should be plug-in parameters that are NF-dependent
 type AgentConfig struct {
-	NfType 			NetworkFunctionType
-	DProto			DataPlaneProtocol	
-	HttpConf		*HttpServerConfig
+	NfType   NetworkFunctionType
+	DProto   DataPlaneProtocol
+	HttpConf *HttpServerConfig
 }
 
 // the abstraction of a service supported by an NF
@@ -70,7 +73,8 @@ type Service interface {
 // telemetry will be implemented by the forwarder with transparancy.
 type Forwarder interface {
 	//select an producer; send a request to get a response; retry if selected producer is dead
-	Send(Request, NfQuery) (Response, error)
+	DiscoveryThenSend(Request, NfQuery) (Response, AgentAddr, error)
+	DirectSend(Request, AgentAddr) (Response, error)
 }
 
 // a server abstraction that listen to requests for registered services
@@ -78,7 +82,6 @@ type ServiceServer interface {
 	//register services to handling incomming requests
 	Register([]Service) error
 }
-
 
 // an abstraction that exposes the agent to the upper layers
 //
@@ -93,7 +96,6 @@ type ServiceAgent interface {
 	// expose server
 	Server() ServiceServer
 }
-
 
 //////////////////////////////
 //Registry

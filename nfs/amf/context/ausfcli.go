@@ -4,9 +4,11 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
+	"etri5gc/openapi"
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 
 	"github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasConvert"
@@ -57,6 +59,7 @@ type ausfClient struct {
 	ue     *AmfUe
 	info   AusfInfo
 	seccon SecContext
+	sender requestSender
 }
 
 func (c *ausfClient) Info() *AusfInfo {
@@ -266,25 +269,41 @@ func (c *ausfClient) clear() {
 	c.info.AuthFailureCauseSynchFailureTimes = 0
 	c.info.IdentityRequestSendTimes = 0
 }
+
+///////////////////////////////////// consumer /////////////////////
 func (c *ausfClient) Select() {
 }
 
-func (c *ausfClient) SendUEAuthenticationAuthenticateRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
+func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
+
+	//1. Prepare parameters
+	servedGuami := c.ue.amf.ServedGuami()
+
+	var authInfo models.AuthenticationInfo
+	authInfo.SupiOrSuci = c.ue.Suci
+	if mnc, err := strconv.Atoi(servedGuami.PlmnId.Mnc); err != nil {
+		return nil, nil, err
+	} else {
+		authInfo.ServingNetworkName = fmt.Sprintf("5G:mnc%03d.mcc%s.3gppnetwork.org", mnc, servedGuami.PlmnId.Mcc)
+	}
+	if resynchronizationInfo != nil {
+		authInfo.ResynchronizationInfo = resynchronizationInfo
+	}
+
+	//2. build openapi request
+	request := &openapi.Request{
+		Path:         "/ue-authentications",
+		Body:         &authInfo,
+		HeaderParams: make(map[string]string),
+	}
+	request.HeaderParams["Content-Type"] = "application/json"
+	request.HeaderParams["Accept"] = "application/json"
+	//3. send request
+	//res, err := c.sender.Send(request)
+	c.sender.Send(request)
+
+	//4. handle response
 	/*
-		client := ausf_auth_client(ue.GetAusfInfo().AusfUri)
-		servedGuami := c.amf.ServedGuami()
-
-		var authInfo models.AuthenticationInfo
-		authInfo.SupiOrSuci = ue.Suci
-		if mnc, err := strconv.Atoi(servedGuami.PlmnId.Mnc); err != nil {
-			return nil, nil, err
-		} else {
-			authInfo.ServingNetworkName = fmt.Sprintf("5G:mnc%03d.mcc%s.3gppnetwork.org", mnc, servedGuami.PlmnId.Mcc)
-		}
-		if resynchronizationInfo != nil {
-			authInfo.ResynchronizationInfo = resynchronizationInfo
-		}
-
 		ueAuthenticationCtx, httpResponse, err := client.DefaultApi.UeAuthenticationsPost(org_context.Background(), authInfo)
 		if err == nil {
 			return &ueAuthenticationCtx, nil, nil

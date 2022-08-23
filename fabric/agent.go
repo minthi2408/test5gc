@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
-	"github.com/free5gc/util/httpwrapper"
-)
 
+	"github.com/free5gc/util/httpwrapper"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+)
 
 type RegistryManager interface {
 }
@@ -29,8 +29,8 @@ type HttpRoute struct {
 type HttpRoutes []HttpRoute
 
 type HttpService struct {
-	Group			string
-	Routes			[]HttpRoute
+	Group  string
+	Routes []HttpRoute
 }
 
 func (s HttpService) Name() string {
@@ -71,9 +71,9 @@ func (agent *httpAgent) Server() ServiceServer {
 // otherwise, internal go routines are running. The caller should tell the
 // agent to terminate when exiting the application
 
-func CreateServiceAgent(config	*AgentConfig) (ServiceAgent, error) {
+func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 	agent := &httpAgent{
-		forwarder:		&httpForwarder{},
+		forwarder: &httpForwarder{},
 	}
 	if config.DProto == DATAPLANE_HTTP {
 		agent.server = newHttpServer(config.HttpConf)
@@ -85,19 +85,19 @@ func CreateServiceAgent(config	*AgentConfig) (ServiceAgent, error) {
 
 //httpServer
 type httpServer struct {
-	config		*HttpServerConfig
-	server		*http.Server	
-	wg			sync.WaitGroup
+	config *HttpServerConfig
+	server *http.Server
+	wg     sync.WaitGroup
 }
 
 type HttpServerConfig struct {
-	BindingIPv4			string
-	Port				int
+	BindingIPv4 string
+	Port        int
 }
 
 func newHttpServer(config *HttpServerConfig) *httpServer {
-	return &httpServer {
-		config:	config,
+	return &httpServer{
+		config: config,
 	}
 }
 
@@ -117,7 +117,6 @@ func (s *httpServer) Register(services []Service) (err error) {
 		MaxAge:           86400,
 	}))
 
-	
 	addr := fmt.Sprintf("%s:%d", s.config.BindingIPv4, s.config.Port)
 
 	for _, sv := range services {
@@ -127,8 +126,8 @@ func (s *httpServer) Register(services []Service) (err error) {
 			addHttpRoutes(router, httpservice.Group, httpservice.Routes)
 		}
 	}
-	s.server, err = httpwrapper.NewHttp2Server(addr,/* amf.KeyLogPath*/"", router)
-	return 
+	s.server, err = httpwrapper.NewHttp2Server(addr /* amf.KeyLogPath*/, "", router)
+	return
 }
 
 func (s *httpServer) serve() {
@@ -136,16 +135,16 @@ func (s *httpServer) serve() {
 		s.server.ListenAndServe()
 
 		/*
-		if s.config.Scheme == "http" {
-			if err := s.server.ListenAndServe(); err != nil {
+			if s.config.Scheme == "http" {
+				if err := s.server.ListenAndServe(); err != nil {
+					//log.Errorf("Http server failed to listen", err)
+				}
+				return
+			}
+
+			if err :=s.server.ListenAndServeTLS(s.config.Tls.Pem, s.config.Tls.Key); err != nil {
 				//log.Errorf("Http server failed to listen", err)
 			}
-			return
-		}
-
-		if err :=s.server.ListenAndServeTLS(s.config.Tls.Pem, s.config.Tls.Key); err != nil {
-			//log.Errorf("Http server failed to listen", err)
-		}
 		*/
 
 		s.wg.Add(1)
@@ -161,8 +160,7 @@ func (s *httpServer) close() {
 	s.wg.Wait()
 }
 
-
-func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gin.RouterGroup{
+func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gin.RouterGroup {
 	group := engine.Group(groupname)
 
 	for _, route := range routes {
@@ -189,6 +187,16 @@ func HttpIndexHandler(c *gin.Context) {
 type httpForwarder struct {
 }
 
-func (fw *httpForwarder) Send(Request, NfQuery) (Response, error) {
+func (fw *httpForwarder) DiscoveryThenSend(req Request, query NfQuery) (Response, AgentAddr, error) {
+	// try until success or out of hope:
+	// find a list of producers matched the query from the local registry; then
+	// select one among them; get a connection from the connection manager for
+	// the selected one; send the request using the connection
+	return nil, nil, nil
+}
+
+func (fw *httpForwarder) DirectSend(req Request, addr AgentAddr) (Response, error) {
+	//get a connection for the given addr from the connection manager then send
+	//the request using that connection
 	return nil, nil
 }

@@ -1429,7 +1429,7 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 	// TODO: consider ausf group id, Routing ID part of SUCI
 	ausf.Select() //make a query to find an ausf producer
 
-	response, problemDetails, err := ausf.SendUEAuthenticationAuthenticateRequest(nil)
+	response, problemDetails, err := ausf.SendUEAuthRequest(nil)
 
 	if err != nil {
 		log.Errorf("Nausf_UEAU Authenticate Request Error: %+v", err)
@@ -1999,7 +1999,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 			}
 			resynchronizationInfo.Rand = av5gAka.Rand
 
-			response, problemDetails, err := ue.AusfClient().SendUEAuthenticationAuthenticateRequest(resynchronizationInfo)
+			response, problemDetails, err := ue.AusfClient().SendUEAuthRequest(resynchronizationInfo)
 			if err != nil {
 				return err
 			} else if problemDetails != nil {
