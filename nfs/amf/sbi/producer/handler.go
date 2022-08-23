@@ -4,7 +4,7 @@ import (
 //	"fmt"
 	"etri5gc/nfs/amf/context"
 	//"etri5gc/nfs/amf/ngap"
-	"etri5gc/fabric"
+	"etri5gc/fabric/common"
 	"etri5gc/nfs/amf/sbi/producer/httpcallback"
 	"etri5gc/nfs/amf/sbi/producer/eventexposure"
 	"etri5gc/nfs/amf/sbi/producer/location"
@@ -59,8 +59,8 @@ func NewProducer(b Backend, ngap NgapSender, nas NasInf) *Producer {
 	}
 }
 
-func (prod *Producer) Services() []fabric.Service {
-	services := make([]fabric.Service,6,6)
+func (prod *Producer) Services() []common.Service {
+	services := make([]common.Service,6,6)
 	services[0] = httpcallback.MakeService(prod)
 	services[1] = communication.MakeService(prod)
 	services[2] = eventexposure.MakeService(prod)

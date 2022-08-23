@@ -2,7 +2,7 @@ package communication
 
 import (
 	"strings"
-	"etri5gc/fabric"
+	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
 )
 const (
@@ -28,16 +28,16 @@ type Handler struct {
 	prod	Backend	
 }
 
-func MakeService(p Backend) (service fabric.HttpService) {
+func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
 		prod:	p,
 	}
-	service.Routes = fabric.HttpRoutes{
+	service.Routes = httpdp.HttpRoutes{
 		{
 			"Index",
 			"GET",
 			"/",
-			fabric.HttpIndexHandler,
+			httpdp.HttpIndexHandler,
 		},
 
 		{

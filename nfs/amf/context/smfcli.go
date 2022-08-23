@@ -1,6 +1,7 @@
 package context
 import (
 	"github.com/free5gc/openapi/models"
+	"etri5gc/fabric/common"
 	"etri5gc/fabric"
 )
 
@@ -9,7 +10,7 @@ type smfClient struct {
 	ue		*AmfUe
 	sm		*SmContext
 	fw		fabric.Forwarder
-	query	fabric.NfQuery
+	query	common.NfQuery
 }
 
 func (c *smfClient) SendCreateSmContextRequest(rtype *models.RequestType, naspdu []byte) (res *models.PostSmContextsResponse, ref string, errRes *models.PostSmContextsErrorResponse, prob *models.ProblemDetails, err1 error) {

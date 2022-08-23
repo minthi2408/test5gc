@@ -46,7 +46,7 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 
 	nf.agent, err = fabric.CreateServiceAgent(nil)
 	nf.sender = nf.agent.Forwarder()
-	err = nf.agent.Server().Register(nf.producer.Services())
+	err = nf.agent.Register(nf.producer.Services())
 
 	return
 }
