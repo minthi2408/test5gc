@@ -51,17 +51,17 @@ func (ue *AmfUe) BuildConfigurationUpdateCommand(msg *nasMessage.ConfigurationUp
 			msg.RejectedNSSAI.SetIei(nasMessage.ConfigurationUpdateCommandRejectedNSSAIType)
 		}
 	}
-
+	pcfinfo := ue.pcfcli.Info()
 	// TODO: UniversalTimeAndLocalTimeZone
-	if anType == models.AccessType__3_GPP_ACCESS && ue.pcf.AmPolicyAssociation != nil &&
-		ue.pcf.AmPolicyAssociation.ServAreaRes != nil {
+	if anType == models.AccessType__3_GPP_ACCESS && pcfinfo.AmPolicyAssociation != nil &&
+		pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		msg.ServiceAreaList =
 			nasType.NewServiceAreaList(nasMessage.ConfigurationUpdateCommandServiceAreaListType)
-		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *ue.pcf.AmPolicyAssociation.ServAreaRes)
+		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *pcfinfo.AmPolicyAssociation.ServAreaRes)
 		msg.ServiceAreaList.SetLen(uint8(len(partialServiceAreaList)))
 		msg.ServiceAreaList.SetPartialServiceAreaList(partialServiceAreaList)
 	}
-	
+
 	netname := ue.amf.NetworkName()
 	if netname.Full != "" {
 		fullNetworkName := nasConvert.FullNetworkNameToNas(netname.Full)
@@ -102,7 +102,6 @@ func (ue *AmfUe) BuildConfigurationUpdateCommand(msg *nasMessage.ConfigurationUp
 		msg.LADNInformation.SetLADND(buf)
 	}
 }
-
 
 func (ue *AmfUe) BuildRegistrationAccept(msg *nasMessage.RegistrationAccept, anType models.AccessType) {
 	msg.RegistrationResult5GS.SetLen(1)
@@ -175,7 +174,6 @@ func (ue *AmfUe) BuildRegistrationAccept(msg *nasMessage.RegistrationAccept, anT
 		msg.ConfiguredNSSAI.SetSNSSAIValue(buf)
 	}
 
-	
 	if ue.LadnInfo != nil {
 		msg.LADNInformation = nasType.NewLADNInformation(nasMessage.RegistrationAcceptLADNInformationType)
 		buf := make([]uint8, 0)
@@ -194,11 +192,11 @@ func (ue *AmfUe) BuildRegistrationAccept(msg *nasMessage.RegistrationAccept, anT
 		msg.NetworkSlicingIndication.SetDCNI(0)
 		ue.nssf.NetworkSlicingSubscriptionChanged = false // reset the value
 	}
-
-	if anType == models.AccessType__3_GPP_ACCESS && ue.pcf.AmPolicyAssociation != nil &&
-		ue.pcf.AmPolicyAssociation.ServAreaRes != nil {
+	pcfinfo := ue.pcfcli.Info()
+	if anType == models.AccessType__3_GPP_ACCESS && pcfinfo.AmPolicyAssociation != nil &&
+		pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		msg.ServiceAreaList = nasType.NewServiceAreaList(nasMessage.RegistrationAcceptServiceAreaListType)
-		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *ue.pcf.AmPolicyAssociation.ServAreaRes)
+		partialServiceAreaList := nasConvert.PartialServiceAreaListToNas(ue.PlmnId, *pcfinfo.AmPolicyAssociation.ServAreaRes)
 		msg.ServiceAreaList.SetLen(uint8(len(partialServiceAreaList)))
 		msg.ServiceAreaList.SetPartialServiceAreaList(partialServiceAreaList)
 	}

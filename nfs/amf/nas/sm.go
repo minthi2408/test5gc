@@ -57,8 +57,8 @@ var transitions = fsm.Transitions{
 }
 
 type GmmFsm struct {
-	sm       *fsm.FSM
-	nas      *Nas
+	sm  *fsm.FSM
+	nas *Nas
 }
 
 func newGmmFsm(nas *Nas) *GmmFsm {
@@ -275,7 +275,7 @@ func (gmm *GmmFsm) Authentication(state *fsm.State, event fsm.EventType, args fs
 		// clear authentication related data at exit
 		amfUe := args[ArgAmfUe].(*context.AmfUe)
 		log.Debugln(event)
-		ausfinfo := amfUe.GetAusfInfo()
+		ausfinfo := amfUe.AusfClient().Info()
 		ausfinfo.AuthenticationCtx = nil
 		ausfinfo.AuthFailureCauseSynchFailureTimes = 0
 		ausfinfo.IdentityRequestSendTimes = 0

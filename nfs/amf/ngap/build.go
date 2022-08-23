@@ -2,10 +2,11 @@ package ngap
 
 import (
 	"encoding/hex"
-	"fmt"
-	"strings"
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
+	"fmt"
+	"strings"
+
 	"github.com/free5gc/aper"
 	libngap "github.com/free5gc/ngap"
 	"github.com/free5gc/ngap/ngapConvert"
@@ -713,7 +714,7 @@ func (s *ngapSender) buildPDUSessionResourceSetupRequest(ue *context.RanUe, nasP
 	pDUSessionResourceSetupRequestIEs.List = append(pDUSessionResourceSetupRequestIEs.List, ie)
 
 	// UE AggreateMaximum Bit Rate
-	udminfo := ue.AmfUe().GetUdmInfo()
+	udminfo := ue.AmfUe().UdmClient().Info()
 
 	ie = ngapType.PDUSessionResourceSetupRequestIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDUEAggregateMaximumBitRate
@@ -958,7 +959,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.Present = ngapType.InitialContextSetupRequestIEsPresentUEAggregateMaximumBitRate
 		ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
 
-		udminfo := amfUe.GetUdmInfo()
+		udminfo := amfUe.UdmClient().Info()
 		ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
 		ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 		ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
@@ -1078,7 +1079,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	}
 
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
-	udminfo := amfUe.GetUdmInfo()
+	udminfo := amfUe.UdmClient().Info()
 	// Trace Activation (optional)
 	if udminfo.TraceData != nil {
 		ie = ngapType.InitialContextSetupRequestIEs{}
@@ -1121,7 +1122,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.UERadioCapability.Value = uecapa
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
-	pcfinfo := amfUe.GetPcfInfo()
+	pcfinfo := amfUe.PcfClient().Info()
 	// Index to RAT/Frequency Selection Priority (optional)
 	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
 		ie = ngapType.InitialContextSetupRequestIEs{}
@@ -1299,7 +1300,7 @@ func (s *ngapSender) buildUEContextModificationRequest(
 	// Security Key (optional)
 
 	// Index to RAT/Frequency Selection Priority (optional)
-	pcfinfo := amfUe.GetPcfInfo()
+	pcfinfo := amfUe.PcfClient().Info()
 	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
 		ie = ngapType.UEContextModificationRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDIndexToRFSP
@@ -1313,7 +1314,7 @@ func (s *ngapSender) buildUEContextModificationRequest(
 	}
 
 	// UE Aggregate Maximum Bit Rate (optional)
-	udminfo := amfUe.GetUdmInfo()
+	udminfo := amfUe.UdmClient().Info()
 	if udminfo.AccessAndMobilitySubscriptionData != nil &&
 		udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
 		ie = ngapType.UEContextModificationRequestIEs{}
@@ -1633,7 +1634,7 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	ie.Value.Present = ngapType.HandoverRequestIEsPresentUEAggregateMaximumBitRate
 	ie.Value.UEAggregateMaximumBitRate = new(ngapType.UEAggregateMaximumBitRate)
 
-	udminfo := amfUe.GetUdmInfo()
+	udminfo := amfUe.UdmClient().Info()
 	ueAmbrUL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Uplink)
 	ueAmbrDL := ngapConvert.UEAmbrToInt64(udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr.Downlink)
 	ie.Value.UEAggregateMaximumBitRate.UEAggregateMaximumBitRateUL.Value = ueAmbrUL
@@ -2693,7 +2694,7 @@ func (s *ngapSender) buildDeactivateTrace(amfUe *context.AmfUe, anType models.Ac
 	rANUENGAPID.Value = ranUe.RanUeNgapId()
 
 	deactivateTraceIEs.List = append(deactivateTraceIEs.List, ie)
-	udminfo := amfUe.GetUdmInfo()
+	udminfo := amfUe.UdmClient().Info()
 	if udminfo.TraceData != nil {
 		// NG-RAN TraceID
 		ie = ngapType.DeactivateTraceIEs{}

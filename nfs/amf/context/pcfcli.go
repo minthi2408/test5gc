@@ -4,11 +4,55 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
-type pcfClient struct {
-	ue *AmfUe
+type PcfInfo struct {
+	PcfId                        string
+	PcfUri                       string
+	PolicyAssociationId          string
+	AmPolicyUri                  string
+	AmPolicyAssociation          *models.PolicyAssociation
+	RequestTriggerLocationChange bool // true if AmPolicyAssociation.Trigger contains RequestTrigger_LOC_CH
+	ConfigurationUpdateMessage   []byte
 }
 
+func (info *PcfInfo) copy(ueContext *models.UeContext) {
+	if ueContext.PcfId != "" {
+		info.PcfId = ueContext.PcfId
+	}
+
+	if ueContext.PcfAmPolicyUri != "" {
+		info.AmPolicyUri = ueContext.PcfAmPolicyUri
+	}
+
+	if len(ueContext.AmPolicyReqTriggerList) > 0 {
+		if info.AmPolicyAssociation == nil {
+			info.AmPolicyAssociation = new(models.PolicyAssociation)
+		}
+		for _, trigger := range ueContext.AmPolicyReqTriggerList {
+			switch trigger {
+			case models.AmPolicyReqTrigger_LOCATION_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
+			case models.AmPolicyReqTrigger_PRA_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
+			case models.AmPolicyReqTrigger_SARI_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
+			case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
+				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
+			}
+		}
+	}
+}
+
+type pcfClient struct {
+	ue   *AmfUe
+	info PcfInfo
+}
+
+//build a PCF discovery query
 func (c *pcfClient) Select(locality string) {
+}
+
+func (c *pcfClient) Info() *PcfInfo {
+	return &c.info
 }
 
 func (c *pcfClient) AMPolicyControlCreate(anType models.AccessType) (*models.ProblemDetails, error) {

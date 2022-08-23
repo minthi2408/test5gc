@@ -1,14 +1,155 @@
 package context
 
 import (
+	"encoding/binary"
+	"encoding/hex"
+	"regexp"
+
 	"github.com/free5gc/nas/nasType"
+	"github.com/free5gc/nas/security"
 	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/util/ueauth"
 )
 
-type ausfClient struct {
-	ue *AmfUe
+type AusfInfo struct {
+	AusfGroupId                       string
+	AusfId                            string
+	AusfUri                           string
+	RoutingIndicator                  string
+	AuthenticationCtx                 *models.UeAuthenticationCtx
+	AuthFailureCauseSynchFailureTimes int
+	IdentityRequestSendTimes          int
+	ABBA                              []uint8
+	Kseaf                             string
+	Kamf                              string
 }
 
+type ausfClient struct {
+	ue   *AmfUe
+	info AusfInfo
+}
+
+func (c *ausfClient) Info() *AusfInfo {
+	return &c.info
+}
+
+// Kamf Derivation function defined in TS 33.501 Annex A.7
+func (c *ausfClient) DerivateKamf() {
+	supiRegexp, err := regexp.Compile("(?:imsi|supi)-([0-9]{5,15})")
+	if err != nil {
+		//	logger.ContextLog.Error(err)
+		return
+	}
+	groups := supiRegexp.FindStringSubmatch(c.ue.Supi)
+	if groups == nil {
+		//	logger.NasLog.Errorln("supi is not correct")
+		return
+	}
+
+	P0 := []byte(groups[1])
+	L0 := ueauth.KDFLen(P0)
+	P1 := c.info.ABBA
+	L1 := ueauth.KDFLen(P1)
+
+	KseafDecode, err := hex.DecodeString(c.info.Kseaf)
+	if err != nil {
+		//	logger.ContextLog.Error(err)
+		return
+	}
+	KamfBytes, err := ueauth.GetKDFValue(KseafDecode, ueauth.FC_FOR_KAMF_DERIVATION, P0, L0, P1, L1)
+	if err != nil {
+		//	logger.ContextLog.Error(err)
+		return
+	}
+	c.info.Kamf = hex.EncodeToString(KamfBytes)
+}
+
+// Algorithm key Derivation function defined in TS 33.501 Annex A.9
+func (c *ausfClient) DerivateAlgKey() {
+	// Security Key
+	P0 := []byte{security.NNASEncAlg}
+	L0 := ueauth.KDFLen(P0)
+	P1 := []byte{c.ue.seccon.CipheringAlg}
+	L1 := ueauth.KDFLen(P1)
+
+	KamfBytes, err := hex.DecodeString(c.info.Kamf)
+	if err != nil {
+		//logger.ContextLog.Error(err)
+		return
+	}
+	kenc, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
+	if err != nil {
+		//logger.ContextLog.Error(err)
+		return
+	}
+	copy(c.ue.seccon.KnasEnc[:], kenc[16:32])
+
+	// Integrity Key
+	P0 = []byte{security.NNASIntAlg}
+	L0 = ueauth.KDFLen(P0)
+	P1 = []byte{c.ue.seccon.IntegrityAlg}
+	L1 = ueauth.KDFLen(P1)
+
+	kint, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
+	if err != nil {
+		//	logger.ContextLog.Error(err)
+		return
+	}
+	copy(c.ue.seccon.KnasInt[:], kint[16:32])
+}
+
+// Access Network key Derivation function defined in TS 33.501 Annex A.9
+func (c *ausfClient) DerivateAnKey(anType models.AccessType) {
+	accessType := security.AccessType3GPP // Defalut 3gpp
+	P0 := make([]byte, 4)
+	binary.BigEndian.PutUint32(P0, c.ue.seccon.ULCount.Get())
+	L0 := ueauth.KDFLen(P0)
+	if anType == models.AccessType_NON_3_GPP_ACCESS {
+		accessType = security.AccessTypeNon3GPP
+	}
+	P1 := []byte{accessType}
+	L1 := ueauth.KDFLen(P1)
+
+	KamfBytes, err := hex.DecodeString(c.info.Kamf)
+	if err != nil {
+		//logger.ContextLog.Error(err)
+		return
+	}
+	key, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_KGNB_KN3IWF_DERIVATION, P0, L0, P1, L1)
+	if err != nil {
+		//	logger.ContextLog.Error(err)
+		return
+	}
+	switch accessType {
+	case security.AccessType3GPP:
+		c.ue.seccon.Kgnb = key
+	case security.AccessTypeNon3GPP:
+		c.ue.seccon.Kn3iwf = key
+	}
+}
+
+// NH Derivation function defined in TS 33.501 Annex A.10
+func (c *ausfClient) DerivateNH(syncInput []byte) {
+
+	P0 := syncInput
+	L0 := ueauth.KDFLen(P0)
+
+	KamfBytes, err := hex.DecodeString(c.info.Kamf)
+	if err != nil {
+		//logger.ContextLog.Error(err)
+		return
+	}
+	c.ue.seccon.NH, err = ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_NH_DERIVATION, P0, L0)
+	if err != nil {
+		//logger.ContextLog.Error(err)
+		return
+	}
+}
+
+func (c *ausfClient) clear() {
+	c.info.AuthFailureCauseSynchFailureTimes = 0
+	c.info.IdentityRequestSendTimes = 0
+}
 func (c *ausfClient) Select() {
 }
 

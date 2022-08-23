@@ -3,10 +3,10 @@ package context
 import (
 	"errors"
 	"sync"
-	
+
+	"github.com/free5gc/nas/nasConvert"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/openapi/models"
-	"github.com/free5gc/nas/nasConvert"
 )
 
 type SmContext struct {
@@ -219,7 +219,6 @@ func (c *SmContext) DeleteULNASTransport() {
 	c.ulNASTransport = nil
 }
 
-
 // create a session management context and populate its attributes with the information from an input NAS message
 // the session is not attached to the AmfUe yet
 func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport, pduSessionId int32, anType models.AccessType) (smc *SmContext, err error) {
@@ -247,7 +246,7 @@ func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport, pduSessionId in
 	} else {
 		// if user's subscription context obtained from UDM does not contain the default DNN for the,
 		// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
-		udminfo := ue.udm
+		udminfo := ue.udmcli.Info()
 		dnn = ue.amf.SupportDnnList()[0]
 		if udminfo.SmfSelectionData != nil {
 			snssaiStr := SnssaiModelsToHex(snssai)

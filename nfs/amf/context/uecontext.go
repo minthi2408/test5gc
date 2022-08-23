@@ -2,13 +2,11 @@ package context
 
 import (
 	"encoding/base64"
-	"encoding/binary"
 	"encoding/hex"
 
 	//	"fmt"
 	"net/http"
 	"reflect"
-	"regexp"
 	"strconv"
 	"sync"
 
@@ -19,7 +17,6 @@ import (
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
 	"github.com/free5gc/util/idgenerator"
-	"github.com/free5gc/util/ueauth"
 )
 
 type OnGoingProcedure string
@@ -51,110 +48,6 @@ const (
 	Registered              fsm.StateType = "Registered"
 )
 
-type UdmInfo struct {
-	UdmId                             string
-	NudmUECMUri                       string
-	NudmSDMUri                        string
-	ContextValid                      bool
-	Reachability                      models.UeReachability
-	SubscribedData                    models.SubscribedData
-	SmfSelectionData                  *models.SmfSelectionSubscriptionData
-	UeContextInSmfData                *models.UeContextInSmfData
-	TraceData                         *models.TraceData
-	UdmGroupId                        string
-	SubscribedNssai                   []models.SubscribedSnssai
-	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData
-}
-
-func (info *UdmInfo) copy(ueContext *models.UeContext) {
-	if ueContext.SubUeAmbr != nil {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		if info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
-			info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
-		}
-
-		subAmbr := info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
-		subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
-		subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
-	}
-
-	if ueContext.SubRfsp != 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		info.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
-	}
-
-	if len(ueContext.RestrictedRatList) > 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		info.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
-	}
-
-	if len(ueContext.ForbiddenAreaList) > 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		info.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
-	}
-
-	if ueContext.ServiceAreaRestriction != nil {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
-		}
-		info.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
-	}
-	if ueContext.TraceData != nil {
-		info.TraceData = ueContext.TraceData
-	}
-
-	if ueContext.UdmGroupId != "" {
-		info.UdmGroupId = ueContext.UdmGroupId
-	}
-
-}
-
-type PcfInfo struct {
-	PcfId                        string
-	PcfUri                       string
-	PolicyAssociationId          string
-	AmPolicyUri                  string
-	AmPolicyAssociation          *models.PolicyAssociation
-	RequestTriggerLocationChange bool // true if AmPolicyAssociation.Trigger contains RequestTrigger_LOC_CH
-	ConfigurationUpdateMessage   []byte
-}
-
-func (info *PcfInfo) copy(ueContext *models.UeContext) {
-	if ueContext.PcfId != "" {
-		info.PcfId = ueContext.PcfId
-	}
-
-	if ueContext.PcfAmPolicyUri != "" {
-		info.AmPolicyUri = ueContext.PcfAmPolicyUri
-	}
-
-	if len(ueContext.AmPolicyReqTriggerList) > 0 {
-		if info.AmPolicyAssociation == nil {
-			info.AmPolicyAssociation = new(models.PolicyAssociation)
-		}
-		for _, trigger := range ueContext.AmPolicyReqTriggerList {
-			switch trigger {
-			case models.AmPolicyReqTrigger_LOCATION_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
-			case models.AmPolicyReqTrigger_PRA_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
-			case models.AmPolicyReqTrigger_SARI_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
-			case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
-			}
-		}
-	}
-}
-
 type NssfInfo struct {
 	NssfId                            string
 	NssfUri                           string
@@ -168,19 +61,6 @@ type NssfInfo struct {
 
 //func (info *NssfInfo) copy(ueContext *models.UeContext) {
 //}
-
-type AusfInfo struct {
-	AusfGroupId                       string
-	AusfId                            string
-	AusfUri                           string
-	RoutingIndicator                  string
-	AuthenticationCtx                 *models.UeAuthenticationCtx
-	AuthFailureCauseSynchFailureTimes int
-	IdentityRequestSendTimes          int
-	ABBA                              []uint8
-	Kseaf                             string
-	Kamf                              string
-}
 
 type SecContext struct {
 	SecurityContextAvailable bool
@@ -224,15 +104,6 @@ func (ue *AmfUe) updateLoc(ranUe *RanUe) {
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
 	amf *AMFContext // never nil
-
-	/* context about udm */
-	udm UdmInfo
-
-	/* context about PCF */
-	pcf PcfInfo
-
-	/* contex about ausf */
-	ausf AusfInfo
 
 	/* Network Slicing related context and Nssf */
 	nssf NssfInfo
@@ -397,20 +268,8 @@ func (ue *AmfUe) ServingAMF() *AMFContext {
 	return ue.amf
 }
 
-func (ue *AmfUe) GetUdmInfo() *UdmInfo {
-	return &ue.udm
-}
-
-func (ue *AmfUe) GetPcfInfo() *PcfInfo {
-	return &ue.pcf
-}
-
 func (ue *AmfUe) GetNssfInfo() *NssfInfo {
 	return &ue.nssf
-}
-
-func (ue *AmfUe) GetAusfInfo() *AusfInfo {
-	return &ue.ausf
 }
 
 func (ue *AmfUe) GetSecInfo() *SecContext {
@@ -515,8 +374,9 @@ func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.Access
 	return false
 }
 
+//TODO: tqtung - need cleaning the long chained object reference
 func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
-	for _, sNssai := range ue.udm.SubscribedNssai {
+	for _, sNssai := range ue.udmcli.info.SubscribedNssai {
 		if reflect.DeepEqual(*sNssai.SubscribedSnssai, targetSNssai) {
 			return true
 		}
@@ -545,8 +405,9 @@ func (ue *AmfUe) TaiListInRegistrationArea(taiList []models.Tai, accessType mode
 	return true
 }
 
+//TODO: tqtung need cleaning the long chained object reference
 func (ue *AmfUe) HasWildCardSubscribedDNN() bool {
-	for _, snssaiInfo := range ue.udm.SmfSelectionData.SubscribedSnssaiInfos {
+	for _, snssaiInfo := range ue.udmcli.info.SmfSelectionData.SubscribedSnssaiInfos {
 		for _, dnnInfo := range snssaiInfo.DnnInfos {
 			if dnnInfo.Dnn == "*" {
 				return true
@@ -562,114 +423,124 @@ func (ue *AmfUe) SecurityContextIsValid() bool {
 
 // Kamf Derivation function defined in TS 33.501 Annex A.7
 func (ue *AmfUe) DerivateKamf() {
-	supiRegexp, err := regexp.Compile("(?:imsi|supi)-([0-9]{5,15})")
-	if err != nil {
-		//	logger.ContextLog.Error(err)
-		return
-	}
-	groups := supiRegexp.FindStringSubmatch(ue.Supi)
-	if groups == nil {
-		//	logger.NasLog.Errorln("supi is not correct")
-		return
-	}
+	ue.ausfcli.DerivateKamf()
+	/*
+		supiRegexp, err := regexp.Compile("(?:imsi|supi)-([0-9]{5,15})")
+		if err != nil {
+			//	logger.ContextLog.Error(err)
+			return
+		}
+		groups := supiRegexp.FindStringSubmatch(ue.Supi)
+		if groups == nil {
+			//	logger.NasLog.Errorln("supi is not correct")
+			return
+		}
 
-	P0 := []byte(groups[1])
-	L0 := ueauth.KDFLen(P0)
-	P1 := ue.ausf.ABBA
-	L1 := ueauth.KDFLen(P1)
+		P0 := []byte(groups[1])
+		L0 := ueauth.KDFLen(P0)
+		P1 := ue.ausf.ABBA
+		L1 := ueauth.KDFLen(P1)
 
-	KseafDecode, err := hex.DecodeString(ue.ausf.Kseaf)
-	if err != nil {
-		//	logger.ContextLog.Error(err)
-		return
-	}
-	KamfBytes, err := ueauth.GetKDFValue(KseafDecode, ueauth.FC_FOR_KAMF_DERIVATION, P0, L0, P1, L1)
-	if err != nil {
-		//	logger.ContextLog.Error(err)
-		return
-	}
-	ue.ausf.Kamf = hex.EncodeToString(KamfBytes)
+		KseafDecode, err := hex.DecodeString(ue.ausf.Kseaf)
+		if err != nil {
+			//	logger.ContextLog.Error(err)
+			return
+		}
+		KamfBytes, err := ueauth.GetKDFValue(KseafDecode, ueauth.FC_FOR_KAMF_DERIVATION, P0, L0, P1, L1)
+		if err != nil {
+			//	logger.ContextLog.Error(err)
+			return
+		}
+		ue.ausf.Kamf = hex.EncodeToString(KamfBytes)
+	*/
 }
 
-// Algorithm key Derivation function defined in TS 33.501 Annex A.9
 func (ue *AmfUe) DerivateAlgKey() {
-	// Security Key
-	P0 := []byte{security.NNASEncAlg}
-	L0 := ueauth.KDFLen(P0)
-	P1 := []byte{ue.seccon.CipheringAlg}
-	L1 := ueauth.KDFLen(P1)
+	ue.ausfcli.DerivateAlgKey()
+	/*
+		// Security Key
+		P0 := []byte{security.NNASEncAlg}
+		L0 := ueauth.KDFLen(P0)
+		P1 := []byte{ue.seccon.CipheringAlg}
+		L1 := ueauth.KDFLen(P1)
 
-	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-	if err != nil {
-		//logger.ContextLog.Error(err)
-		return
-	}
-	kenc, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
-	if err != nil {
-		//logger.ContextLog.Error(err)
-		return
-	}
-	copy(ue.seccon.KnasEnc[:], kenc[16:32])
+		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
+		if err != nil {
+			//logger.ContextLog.Error(err)
+			return
+		}
+		kenc, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
+		if err != nil {
+			//logger.ContextLog.Error(err)
+			return
+		}
+		copy(ue.seccon.KnasEnc[:], kenc[16:32])
 
-	// Integrity Key
-	P0 = []byte{security.NNASIntAlg}
-	L0 = ueauth.KDFLen(P0)
-	P1 = []byte{ue.seccon.IntegrityAlg}
-	L1 = ueauth.KDFLen(P1)
+		// Integrity Key
+		P0 = []byte{security.NNASIntAlg}
+		L0 = ueauth.KDFLen(P0)
+		P1 = []byte{ue.seccon.IntegrityAlg}
+		L1 = ueauth.KDFLen(P1)
 
-	kint, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
-	if err != nil {
-		//	logger.ContextLog.Error(err)
-		return
-	}
-	copy(ue.seccon.KnasInt[:], kint[16:32])
+		kint, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
+		if err != nil {
+			//	logger.ContextLog.Error(err)
+			return
+		}
+		copy(ue.seccon.KnasInt[:], kint[16:32])
+	*/
 }
 
-// Access Network key Derivation function defined in TS 33.501 Annex A.9
 func (ue *AmfUe) DerivateAnKey(anType models.AccessType) {
-	accessType := security.AccessType3GPP // Defalut 3gpp
-	P0 := make([]byte, 4)
-	binary.BigEndian.PutUint32(P0, ue.seccon.ULCount.Get())
-	L0 := ueauth.KDFLen(P0)
-	if anType == models.AccessType_NON_3_GPP_ACCESS {
-		accessType = security.AccessTypeNon3GPP
-	}
-	P1 := []byte{accessType}
-	L1 := ueauth.KDFLen(P1)
+	ue.ausfcli.DerivateAnKey(anType)
+	/*
+		accessType := security.AccessType3GPP // Defalut 3gpp
+		P0 := make([]byte, 4)
+		binary.BigEndian.PutUint32(P0, ue.seccon.ULCount.Get())
+		L0 := ueauth.KDFLen(P0)
+		if anType == models.AccessType_NON_3_GPP_ACCESS {
+			accessType = security.AccessTypeNon3GPP
+		}
+		P1 := []byte{accessType}
+		L1 := ueauth.KDFLen(P1)
 
-	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-	if err != nil {
-		//logger.ContextLog.Error(err)
-		return
-	}
-	key, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_KGNB_KN3IWF_DERIVATION, P0, L0, P1, L1)
-	if err != nil {
-		//	logger.ContextLog.Error(err)
-		return
-	}
-	switch accessType {
-	case security.AccessType3GPP:
-		ue.seccon.Kgnb = key
-	case security.AccessTypeNon3GPP:
-		ue.seccon.Kn3iwf = key
-	}
+		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
+		if err != nil {
+			//logger.ContextLog.Error(err)
+			return
+		}
+		key, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_KGNB_KN3IWF_DERIVATION, P0, L0, P1, L1)
+		if err != nil {
+			//	logger.ContextLog.Error(err)
+			return
+		}
+		switch accessType {
+		case security.AccessType3GPP:
+			ue.seccon.Kgnb = key
+		case security.AccessTypeNon3GPP:
+			ue.seccon.Kn3iwf = key
+		}
+	*/
 }
 
 // NH Derivation function defined in TS 33.501 Annex A.10
 func (ue *AmfUe) DerivateNH(syncInput []byte) {
-	P0 := syncInput
-	L0 := ueauth.KDFLen(P0)
+	ue.ausfcli.DerivateNH(syncInput)
+	/*
+		P0 := syncInput
+		L0 := ueauth.KDFLen(P0)
 
-	KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-	if err != nil {
-		//logger.ContextLog.Error(err)
-		return
-	}
-	ue.seccon.NH, err = ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_NH_DERIVATION, P0, L0)
-	if err != nil {
-		//logger.ContextLog.Error(err)
-		return
-	}
+		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
+		if err != nil {
+			//logger.ContextLog.Error(err)
+			return
+		}
+		ue.seccon.NH, err = ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_NH_DERIVATION, P0, L0)
+		if err != nil {
+			//logger.ContextLog.Error(err)
+			return
+		}
+	*/
 }
 
 func (ue *AmfUe) UpdateSecurityContext(anType models.AccessType) {
@@ -733,8 +604,7 @@ func (ue *AmfUe) ClearRegistrationRequestData(accessType models.AccessType) {
 	ue.RegistrationRequest = nil
 	ue.RegistrationType5GS = 0
 	ue.IdentityTypeUsedForRegistration = 0
-	ue.ausf.AuthFailureCauseSynchFailureTimes = 0
-	ue.ausf.IdentityRequestSendTimes = 0
+	ue.ausfcli.clear()
 	ue.ServingAmfChanged = false
 	ue.RegistrationAcceptForNon3GPPAccess = nil
 	if ranUe := ue.RanUe[accessType]; ranUe != nil {
@@ -758,8 +628,8 @@ func (ue *AmfUe) OnGoing(anType models.AccessType) OnGoing {
 }
 
 func (ue *AmfUe) RemoveAmPolicyAssociation() {
-	ue.pcf.AmPolicyAssociation = nil
-	ue.pcf.PolicyAssociationId = ""
+	ue.pcfcli.info.AmPolicyAssociation = nil
+	ue.pcfcli.info.PolicyAssociationId = ""
 }
 
 func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
@@ -773,13 +643,13 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 	}
 
 	if ueContext.AusfGroupId != "" {
-		ue.ausf.AusfGroupId = ueContext.AusfGroupId
+		ue.ausfcli.info.AusfGroupId = ueContext.AusfGroupId
 	}
 
 	if ueContext.RoutingIndicator != "" {
-		ue.ausf.RoutingIndicator = ueContext.RoutingIndicator
+		ue.ausfcli.info.RoutingIndicator = ueContext.RoutingIndicator
 	}
-	ue.udm.copy(&ueContext)
+	ue.udmcli.info.copy(&ueContext)
 
 	if ueContext.SeafData != nil {
 		seafData := ueContext.SeafData
@@ -787,7 +657,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.seccon.NgKsi = *seafData.NgKsi
 		if seafData.KeyAmf != nil {
 			if seafData.KeyAmf.KeyType == models.KeyAmfType_KAMF {
-				ue.ausf.Kamf = seafData.KeyAmf.KeyVal
+				ue.ausfcli.info.Kamf = seafData.KeyAmf.KeyVal
 			}
 		}
 		if nh, err := hex.DecodeString(seafData.Nh); err != nil {
@@ -799,7 +669,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 		ue.seccon.NCC = uint8(seafData.Ncc)
 	}
 
-	ue.pcf.copy(&ueContext)
+	ue.pcfcli.Info().copy(&ueContext)
 	if len(ueContext.SessionContextList) > 0 {
 		for _, pduSessionContext := range ueContext.SessionContextList {
 			smContext := SmContext{

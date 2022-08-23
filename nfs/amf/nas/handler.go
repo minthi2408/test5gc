@@ -78,7 +78,7 @@ func (gmm *GmmFsm) transport5GSMMessage(ue *context.AmfUe, anType models.AccessT
 
 	log.Info("Transport 5GSM Message to SMF")
 
-	udminfo := ue.GetUdmInfo()
+	udminfo := ue.UdmClient().Info()
 
 	smMessage := ulNasTransport.PayloadContainer.GetPayloadContainerContents()
 
@@ -522,7 +522,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	log.Infoln("Handle InitialRegistration")
 
 	amf := gmm.nas.amf()
-	udminfo := ue.GetUdmInfo()
+	udminfo := ue.UdmClient().Info()
 	// update Kgnb/Kn3iwf
 	ue.UpdateSecurityContext(anType)
 
@@ -587,7 +587,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 		}
 	}
 	//TODO: tqtung - these next few lines should be removed becuase we do not use NRF, but a check is needed
-	pcfinfo := ue.GetPcfInfo()
+	pcfinfo := ue.PcfClient().Info()
 	//pcfinfo.PcfId = snf.NfId()
 	//pcfinfo.PcfUri = snf.NfUri()
 	pcfcli := ue.PcfClient()
@@ -659,8 +659,8 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.AmfUe, anType models.AccessType) error {
 	log.Infoln("Handle MobilityAndPeriodicRegistrationUpdating")
 
-	udminfo := ue.GetUdmInfo()
-	pcfinfo := ue.GetPcfInfo()
+	udminfo := ue.UdmClient().Info()
+	pcfinfo := ue.PcfClient().Info()
 	ueloc := ue.GetLocInfo()
 
 	if ue.RegistrationRequest.UpdateType5GS != nil {
@@ -914,7 +914,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 		}
 	}
 
-	if ueloc.LocationChanged && ue.GetPcfInfo().RequestTriggerLocationChange {
+	if ueloc.LocationChanged && ue.PcfClient().Info().RequestTriggerLocationChange {
 		updateReq := models.PolicyAssociationUpdateRequest{}
 		updateReq.Triggers = append(updateReq.Triggers, models.RequestTrigger_LOC_CH)
 		updateReq.UserLoc = &ueloc.Location
@@ -1023,7 +1023,7 @@ func negotiateDRXParameters(ue *context.AmfUe, requestedDRXParameters *nasType.R
 func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.AccessType) error {
 	log.Debugln("communicateWithUDM")
 
-	udminfo := ue.GetUdmInfo()
+	udminfo := ue.UdmClient().Info()
 	// UDM selection described in TS 23.501 6.3.8
 	// TODO: consider udm group id, Routing ID part of SUCI, GPSI or External Group ID (e.g., by the NEF)
 
@@ -1231,7 +1231,7 @@ func (gmm *GmmFsm) handleRequestedNssai(ue *context.AmfUe, anType models.AccessT
 	// if registration request has no requested nssai, or non of snssai in requested nssai is permitted by nssf
 	// then use ue subscribed snssai which is marked as default as allowed nssai
 	if len(nssfinfo.AllowedNssai[anType]) == 0 {
-		for _, snssai := range ue.GetUdmInfo().SubscribedNssai {
+		for _, snssai := range ue.UdmClient().Info().SubscribedNssai {
 			if snssai.DefaultIndication {
 				if amf.InPlmnSupportList(*snssai.SubscribedSnssai) {
 					allowedSnssai := models.AllowedSnssai{
@@ -1250,7 +1250,7 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 	amf := gmm.nas.backend.Context()
 
 	ladnpool := amf.LadnPool()
-	udminfo := ue.GetUdmInfo()
+	udminfo := ue.UdmClient().Info()
 
 	ue.LadnInfo = nil
 	if ue.RegistrationRequest.LADNIndication != nil {
@@ -1408,7 +1408,7 @@ func (gmm *GmmFsm) handleConfigurationUpdateComplete(ue *context.AmfUe,
 func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.AccessType) (bool, error) {
 	log.Info("Authentication procedure")
 
-	ausfinfo := ue.GetAusfInfo()
+	ausfinfo := ue.AusfClient().Info()
 	// Check whether UE has SUCI and SUPI
 	if IdentityVerification(ue) {
 		log.Debugln("UE has SUCI / SUPI")
@@ -1460,7 +1460,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 		ue.T3565 = nil // clear the timer
 	}
 
-	pcfinfo := ue.GetPcfInfo()
+	pcfinfo := ue.PcfClient().Info()
 
 	// Set No ongoing
 	if procedure := ue.OnGoing(anType).Procedure; procedure == context.OnGoingProcedurePaging {
@@ -1810,7 +1810,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 		ue.T3560 = nil // clear the timer
 	}
 
-	ausfinfo := ue.GetAusfInfo()
+	ausfinfo := ue.AusfClient().Info()
 	if ausfinfo.AuthenticationCtx == nil {
 		return fmt.Errorf("Ue Authentication Context is nil")
 	}
@@ -1943,7 +1943,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 	authenticationFailure *nasMessage.AuthenticationFailure) error {
 	log.Info("Handle Authentication Failure")
 
-	ausfinfo := ue.GetAusfInfo()
+	ausfinfo := ue.AusfClient().Info()
 	secinfo := ue.GetSecInfo()
 
 	if ue.T3560 != nil {
@@ -2143,7 +2143,7 @@ func (gmm *GmmFsm) handleDeregistrationRequest(ue *context.AmfUe, anType models.
 		return true
 	})
 
-	if ue.GetPcfInfo().AmPolicyAssociation != nil {
+	if ue.PcfClient().Info().AmPolicyAssociation != nil {
 		terminateAmPolicyAssocaition := true
 		switch anType {
 		case models.AccessType__3_GPP_ACCESS:

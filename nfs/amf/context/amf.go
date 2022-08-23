@@ -8,17 +8,19 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-//	"time"
+
+	//	"time"
 
 	"etri5gc/nfs/amf/config"
 
-	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/idgenerator"
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
-var log	*logrus.Entry
+var log *logrus.Entry
+
 func init() {
 	log = logrus.WithFields(logrus.Fields{"mod": "context"})
 }
@@ -29,32 +31,30 @@ type IdGenerator interface {
 }
 
 type AMFContext struct {
-	cfg					*config.Config //Amf configuration
-	uepool				sync.Map //list of Amf-connected Ue
-	ranpool				sync.Map //list of connected Ran
-	ruepool				sync.Map //list of contacted Ue
-	eventsubpool		sync.Map //list of event subscriptions
-	statussubpool		sync.Map //list of status subscriptions
+	cfg           *config.Config //Amf configuration
+	uepool        sync.Map       //list of Amf-connected Ue
+	ranpool       sync.Map       //list of connected Ran
+	ruepool       sync.Map       //list of contacted Ue
+	eventsubpool  sync.Map       //list of event subscriptions
+	statussubpool sync.Map       //list of status subscriptions
 
-	ladnpool    		map[string]*LADN // dnn as key
+	ladnpool map[string]*LADN // dnn as key
 
-	eventsubIdGen   	IdGenerator
-	statussubIdGen		IdGenerator
-	tmsiIdGen			IdGenerator
-	ngapIdGen			IdGenerator
+	eventsubIdGen  IdGenerator
+	statussubIdGen IdGenerator
+	tmsiIdGen      IdGenerator
+	ngapIdGen      IdGenerator
 
-	
-	relcap          	int64 //Relative Capacity
-	id              	string //nf identity
-	services        	map[models.ServiceName]models.NfService // nfservice that amf support
+	relcap   int64                                   //Relative Capacity
+	id       string                                  //nf identity
+	services map[models.ServiceName]models.NfService // nfservice that amf support
 
-	httpIPv6Address     string
-	tnlWeightFactor     int64
-	secAlgo             SecurityAlgorithm
+	httpIPv6Address string
+	tnlWeightFactor int64
+	secAlgo         SecurityAlgorithm
 
-	callback			*amfCallback
+	callback *amfCallback
 }
-
 
 type SecurityAlgorithm struct {
 	IntegrityOrder []uint8 // slice of security.AlgIntegrityXXX
@@ -70,13 +70,13 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 
 func CreateAmfContext(cfg *config.Config) *AMFContext {
 	ret := &AMFContext{
-		cfg:			cfg,
-		tmsiIdGen:		idgenerator.NewGenerator(1, math.MaxInt32),
+		cfg:            cfg,
+		tmsiIdGen:      idgenerator.NewGenerator(1, math.MaxInt32),
 		eventsubIdGen:  idgenerator.NewGenerator(1, math.MaxInt32),
 		statussubIdGen: idgenerator.NewGenerator(1, math.MaxInt32),
-		ngapIdGen:		idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId),
-		ladnpool:		make(map[string]*LADN),
-		services:		make(map[models.ServiceName]models.NfService),
+		ngapIdGen:      idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId),
+		ladnpool:       make(map[string]*LADN),
+		services:       make(map[models.ServiceName]models.NfService),
 	}
 	ret.init()
 	return ret
@@ -98,25 +98,25 @@ func (amf *AMFContext) buildNfServices() {
 	versionUri := "v" + tv[0]
 	for index, nameString := range amf.cfg.Configuration.ServiceNameList {
 		name := models.ServiceName(nameString)
-		amf.services[name] = models.NfService {
-			ServiceInstanceId:	strconv.Itoa(index),
-			ServiceName:      	name,
-			Versions: 			&[]models.NfServiceVersion {
-									{
-										ApiFullVersion:  version,
-										ApiVersionInUri: versionUri,
-									},
-								},
-			Scheme:          	amf.UriScheme(),
-			NfServiceStatus: 	models.NfServiceStatus_REGISTERED,
-			ApiPrefix:       	amf.GetIPv4Uri(),
-			IpEndPoints: 		&[]models.IpEndPoint {
-									{
-										Ipv4Address: amf.RegisterIPv4(),
-										Transport:   models.TransportProtocol_TCP,
-										Port:        int32(amf.Port()),
-									},
-								},
+		amf.services[name] = models.NfService{
+			ServiceInstanceId: strconv.Itoa(index),
+			ServiceName:       name,
+			Versions: &[]models.NfServiceVersion{
+				{
+					ApiFullVersion:  version,
+					ApiVersionInUri: versionUri,
+				},
+			},
+			Scheme:          amf.UriScheme(),
+			NfServiceStatus: models.NfServiceStatus_REGISTERED,
+			ApiPrefix:       amf.GetIPv4Uri(),
+			IpEndPoints: &[]models.IpEndPoint{
+				{
+					Ipv4Address: amf.RegisterIPv4(),
+					Transport:   models.TransportProtocol_TCP,
+					Port:        int32(amf.Port()),
+				},
+			},
 		}
 	}
 }
@@ -170,30 +170,30 @@ func (amf *AMFContext) NetworkName() *config.NetworkName {
 }
 
 func (amf *AMFContext) RelativeCapacity() int64 {
-	return amf.relcap	
+	return amf.relcap
 }
 
 func (amf *AMFContext) SupportTaiList() []models.Tai {
 	return amf.cfg.Configuration.SupportTAIList
 }
 
-func (amf *AMFContext) ServedGuamiList() []models.Guami  {
+func (amf *AMFContext) ServedGuamiList() []models.Guami {
 	return amf.cfg.Configuration.ServedGuamiList
 }
 
-func (amf *AMFContext) PlmnSupportList() []config.PlmnSupportItem  {
+func (amf *AMFContext) PlmnSupportList() []config.PlmnSupportItem {
 	return amf.cfg.Configuration.PlmnSupportList
 }
 
-func (amf *AMFContext) ServedGuami() *models.Guami  {
+func (amf *AMFContext) ServedGuami() *models.Guami {
 	return &amf.cfg.Configuration.ServedGuamiList[0]
 }
 
-func (amf *AMFContext) LadnPool () map[string]*LADN {
+func (amf *AMFContext) LadnPool() map[string]*LADN {
 	return amf.ladnpool
 }
 func (amf *AMFContext) Ladn(dnn string) (ladn *LADN, ok bool) {
-	ladn, ok =  amf.ladnpool[dnn]
+	ladn, ok = amf.ladnpool[dnn]
 	return
 }
 
@@ -205,7 +205,7 @@ func (amf *AMFContext) T3513Cfg() *config.TimerValue {
 	return &amf.cfg.Configuration.T3513
 }
 
-func  (amf *AMFContext) AmfRanPool() sync.Map {
+func (amf *AMFContext) AmfRanPool() sync.Map {
 	return amf.ranpool
 }
 
@@ -335,11 +335,11 @@ func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateDat
 	//}
 	//}
 
-	ue.ausf.RoutingIndicator = dat.UeContext.RoutingIndicator
+	ue.ausfcli.info.RoutingIndicator = dat.UeContext.RoutingIndicator
 
 	// optional
-	ue.udm.UdmGroupId = dat.UeContext.UdmGroupId
-	ue.ausf.AusfGroupId = dat.UeContext.AusfGroupId
+	ue.udmcli.info.UdmGroupId = dat.UeContext.UdmGroupId
+	ue.ausfcli.info.AusfGroupId = dat.UeContext.AusfGroupId
 	// dat.UeContext.HpcfId
 	ue.loc.RatType = dat.UeContext.RestrictedRatList[0] // minItem = -1
 	// dat.UeContext.ForbiddenAreaList
@@ -453,7 +453,7 @@ func (amf *AMFContext) AmfRanFindByRanID(ranNodeID models.GlobalRanNodeId) (*Amf
 	return ran, ok
 }
 
-func (amf *AMFContext) SupportDnnList() []string{
+func (amf *AMFContext) SupportDnnList() []string {
 	return amf.cfg.Configuration.SupportDnnList
 }
 
@@ -492,7 +492,7 @@ func (amf *AMFContext) AmfUeFindByGuti(guti string) (ue *AmfUe, ok bool) {
 func (amf *AMFContext) AmfUeFindByPolicyAssociationID(polAssoId string) (ue *AmfUe, ok bool) {
 	amf.uepool.Range(func(key, value interface{}) bool {
 		candidate := value.(*AmfUe)
-		if ok = (candidate.pcf.PolicyAssociationId == polAssoId); ok {
+		if ok = (candidate.pcfcli.Info().PolicyAssociationId == polAssoId); ok {
 			ue = candidate
 			return false
 		}
@@ -513,15 +513,13 @@ func (amf *AMFContext) GetIPv4Uri() string {
 	return amf.cfg.Configuration.Sbi.GetIPv4Uri()
 }
 
-
-
 // Build AMF profile to register to NRF
 func (amf *AMFContext) BuildProfile() (*models.NfProfile, error) {
 	var err error
-	profile := models.NfProfile {
+	profile := models.NfProfile{
 		NfInstanceId: amf.id,
-		NfType: models.NfType_AMF,
-		NfStatus: models.NfStatus_REGISTERED,
+		NfType:       models.NfType_AMF,
+		NfStatus:     models.NfStatus_REGISTERED,
 	}
 
 	var plmns []models.PlmnId
@@ -574,4 +572,3 @@ func (amf *AMFContext) BuildProfile() (*models.NfProfile, error) {
 		append(profile.DefaultNotificationSubscriptions, defaultNotificationSubscription)
 	return &profile, err
 }
-

@@ -4,8 +4,81 @@ import (
 	"github.com/free5gc/openapi/models"
 )
 
+type UdmInfo struct {
+	UdmId                             string
+	NudmUECMUri                       string
+	NudmSDMUri                        string
+	ContextValid                      bool
+	Reachability                      models.UeReachability
+	SubscribedData                    models.SubscribedData
+	SmfSelectionData                  *models.SmfSelectionSubscriptionData
+	UeContextInSmfData                *models.UeContextInSmfData
+	TraceData                         *models.TraceData
+	UdmGroupId                        string
+	SubscribedNssai                   []models.SubscribedSnssai
+	AccessAndMobilitySubscriptionData *models.AccessAndMobilitySubscriptionData
+}
+
+func (info *UdmInfo) copy(ueContext *models.UeContext) {
+	if ueContext.SubUeAmbr != nil {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		if info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
+			info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
+		}
+
+		subAmbr := info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
+		subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
+		subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
+	}
+
+	if ueContext.SubRfsp != 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
+	}
+
+	if len(ueContext.RestrictedRatList) > 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
+	}
+
+	if len(ueContext.ForbiddenAreaList) > 0 {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
+	}
+
+	if ueContext.ServiceAreaRestriction != nil {
+		if info.AccessAndMobilitySubscriptionData == nil {
+			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		}
+		info.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
+	}
+	if ueContext.TraceData != nil {
+		info.TraceData = ueContext.TraceData
+	}
+
+	if ueContext.UdmGroupId != "" {
+		info.UdmGroupId = ueContext.UdmGroupId
+	}
+
+}
+
 type udmClient struct {
 	ue *AmfUe
+
+	/* context about udm */
+	info UdmInfo
+}
+
+func (c *udmClient) Info() *UdmInfo {
+	return &c.info
 }
 
 func (c *udmClient) Select() {

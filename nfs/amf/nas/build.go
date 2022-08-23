@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 
 	"github.com/mitchellh/mapstructure"
-	
+
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/nas/nas_security"
+
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasConvert"
 	"github.com/free5gc/nas/nasMessage"
@@ -111,7 +112,7 @@ func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error
 	m.GmmMessage = libnas.NewGmmMessage()
 	m.GmmHeader.SetMessageType(libnas.MsgTypeAuthenticationRequest)
 
-	ausfinfo := ue.GetAusfInfo()
+	ausfinfo := ue.AusfClient().Info()
 
 	authenticationRequest := nasMessage.NewAuthenticationRequest(0)
 	authenticationRequest.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
@@ -249,7 +250,7 @@ func (builder *Nas) BuildAuthenticationResult(ue *context.AmfUe, eapSuccess bool
 	}
 	authenticationResult.EAPMessage.SetLen(uint16(len(rawEapMsg)))
 	authenticationResult.EAPMessage.SetEAPMessage(rawEapMsg)
-	ausfinfo := ue.GetAusfInfo()
+	ausfinfo := ue.AusfClient().Info()
 	if eapSuccess {
 		authenticationResult.ABBA = nasType.NewABBA(nasMessage.AuthenticationResultABBAType)
 		authenticationResult.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
@@ -380,7 +381,7 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 		securityModeCommand.EAPMessage.SetEAPMessage(rawEapMsg)
 
 		if eapSuccess {
-			ausfinfo := ue.GetAusfInfo()
+			ausfinfo := ue.AusfClient().Info()
 			securityModeCommand.ABBA = nasType.NewABBA(nasMessage.SecurityModeCommandABBAType)
 			securityModeCommand.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
 			securityModeCommand.ABBA.SetABBAContents(ausfinfo.ABBA)
@@ -526,7 +527,6 @@ func (builder *Nas) BuildRegistrationAccept(
 	return nas_security.Encode(ue, m, anType)
 }
 
-
 func (builder *Nas) BuildStatus5GMM(cause uint8) ([]byte, error) {
 	m := libnas.NewMessage()
 	m.GmmMessage = libnas.NewGmmMessage()
@@ -568,7 +568,7 @@ func (builder *Nas) BuildConfigurationUpdateCommand(ue *context.AmfUe, anType mo
 	}
 
 	ue.BuildConfigurationUpdateCommand(configurationUpdateCommand, anType)
-	
+
 	m.GmmMessage.ConfigurationUpdateCommand = configurationUpdateCommand
 
 	return m.PlainNasEncode()

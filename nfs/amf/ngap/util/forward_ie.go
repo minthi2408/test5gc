@@ -2,8 +2,9 @@ package util
 
 import (
 	"encoding/hex"
-	
+
 	"etri5gc/nfs/amf/context"
+
 	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
@@ -83,7 +84,7 @@ func AppendPDUSessionResourceToReleaseListRelCmd(list *ngapType.PDUSessionResour
 func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrictionList {
 	mobilityRestrictionList := ngapType.MobilityRestrictionList{}
 	mobilityRestrictionList.ServingPLMN = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-	udminfo := ue.GetUdmInfo()
+	udminfo := ue.UdmClient().Info()
 	if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.RatRestrictions) > 0 {
 		mobilityRestrictionList.RATRestrictions = new(ngapType.RATRestrictions)
 		ratRestrictions := mobilityRestrictionList.RATRestrictions
@@ -104,8 +105,8 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 			for _, tac := range info.Tacs {
 				tacBytes, err := hex.DecodeString(tac)
 				if err != nil {
-				//	logger.NgapLog.Errorf(
-				//		"[Error] DecodeString tac error: %+v", err)
+					//	logger.NgapLog.Errorf(
+					//		"[Error] DecodeString tac error: %+v", err)
 				}
 				tacNgap := ngapType.TAC{}
 				tacNgap.Value = tacBytes
@@ -114,7 +115,7 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 			forbiddenAreaInformation.List = append(forbiddenAreaInformation.List, item)
 		}
 	}
-	pcfinfo := ue.GetPcfInfo()
+	pcfinfo := ue.PcfClient().Info()
 	if pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
 		mobilityRestrictionList.ServiceAreaInformation = new(ngapType.ServiceAreaInformation)
 		serviceAreaInformation := mobilityRestrictionList.ServiceAreaInformation
@@ -126,8 +127,8 @@ func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrict
 			for _, tac := range area.Tacs {
 				tacBytes, err := hex.DecodeString(tac)
 				if err != nil {
-				//	logger.NgapLog.Errorf(
-				//		"[Error] DecodeString tac error: %+v", err)
+					//	logger.NgapLog.Errorf(
+					//		"[Error] DecodeString tac error: %+v", err)
 				}
 				tacNgap := ngapType.TAC{}
 				tacNgap.Value = tacBytes

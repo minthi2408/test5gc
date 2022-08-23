@@ -5,17 +5,18 @@ import (
 	"net/http"
 	"strconv"
 
-//	"github.com/mohae/deepcopy"
+	//	"github.com/mohae/deepcopy"
 
 	"etri5gc/nfs/amf/context"
 
-//	"github.com/free5gc/amf/internal/util"
-//	"github.com/free5gc/nas/nasConvert"
-//	"github.com/free5gc/nas/nasMessage"
+	//	"github.com/free5gc/amf/internal/util"
+	//	"github.com/free5gc/nas/nasConvert"
+	//	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/ngap/ngapType"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
+
 //NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
 
 func (h *Producer) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
@@ -25,7 +26,7 @@ func (h *Producer) HandleSmContextStatusNotify(request *httpwrapper.Request) *ht
 	pduIdStr := request.Params["pduSessionId"]
 	if pduId, err := strconv.Atoi(pduIdStr); err == nil {
 		notification := request.Body.(models.SmContextStatusNotification)
-	 	if prob:= h.doSmContextStatusNotify(guti, int32(pduId), notification); prob != nil {
+		if prob := h.doSmContextStatusNotify(guti, int32(pduId), notification); prob != nil {
 			return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 		}
 	}
@@ -41,7 +42,7 @@ func (h *Producer) doSmContextStatusNotify(guti string, pduId int32, notificatio
 		}
 	} else {
 
-		if smContext, ok := ue.SmContextFindByPDUSessionID(pduId); ! ok {
+		if smContext, ok := ue.SmContextFindByPDUSessionID(pduId); !ok {
 			return &models.ProblemDetails{
 				Status: http.StatusNotFound,
 				Cause:  "CONTEXT_NOT_FOUND",
@@ -64,7 +65,7 @@ func (h *Producer) doSmContextStatusNotify(guti string, pduId int32, notificatio
 			if smContext.PduSessionIDDuplicated() {
 				smContext.SetDuplicatedPduSessionID(false)
 				go ResumePduSession(ue, smContext)
-				
+
 			} else {
 				ue.DeleteSmContext(pduId)
 			}
@@ -75,80 +76,79 @@ func (h *Producer) doSmContextStatusNotify(guti string, pduId int32, notificatio
 
 func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 	/*
-	TungTQ : I do not understand this procedure yet, need more time 
+			TungTQ : I do not understand this procedure yet, need more time
 
-	//ue.ProducerLog.Debugf("Resume establishing PDU Session[%d]", pduSessionID)
-	var (
-		snssai    models.Snssai
-		dnn       string
-		smMessage []byte
-	)
-	smMessage = sm.ULNASTransport().GetPayloadContainerContents()
+			//ue.ProducerLog.Debugf("Resume establishing PDU Session[%d]", pduSessionID)
+			var (
+				snssai    models.Snssai
+				dnn       string
+				smMessage []byte
+			)
+			smMessage = sm.ULNASTransport().GetPayloadContainerContents()
 
-	//get snssai
-	if sm.ULNASTransport().SNSSAI != nil {
-		snssai = nasConvert.SnssaiToModels(sm.ULNASTransport().SNSSAI)
-	} else {
-		if allowedNssai, ok := ue.AllowedNssai[smContext.AccessType()]; ok {
-			snssai = *allowedNssai[0].AllowedSnssai
-		} else {
-			//ue.GmmLog.Error("Ue doesn't have allowedNssai")
-			return
-		}
-	}
+			//get snssai
+			if sm.ULNASTransport().SNSSAI != nil {
+				snssai = nasConvert.SnssaiToModels(sm.ULNASTransport().SNSSAI)
+			} else {
+				if allowedNssai, ok := ue.AllowedNssai[smContext.AccessType()]; ok {
+					snssai = *allowedNssai[0].AllowedSnssai
+				} else {
+					//ue.GmmLog.Error("Ue doesn't have allowedNssai")
+					return
+				}
+			}
 
-	//get dnn
-	if sm.ULNASTransport().DNN != nil {
-		dnn = sm.ULNASTransport().DNN.GetDNN()
-	} else {
-		if ue.SmfSelectionData != nil {
-			snssaiStr := util.SnssaiModelsToHex(snssai)
-			if snssaiInfo, ok := ue.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
-				for _, dnnInfo := range snssaiInfo.DnnInfos {
-					if dnnInfo.DefaultDnnIndicator {
-						dnn = dnnInfo.Dnn
+			//get dnn
+			if sm.ULNASTransport().DNN != nil {
+				dnn = sm.ULNASTransport().DNN.GetDNN()
+			} else {
+				if ue.SmfSelectionData != nil {
+					snssaiStr := util.SnssaiModelsToHex(snssai)
+					if snssaiInfo, ok := ue.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
+						for _, dnnInfo := range snssaiInfo.DnnInfos {
+							if dnnInfo.DefaultDnnIndicator {
+								dnn = dnnInfo.Dnn
+							}
+						}
+					} else {
+						// user's subscription context obtained from UDM does not contain the default DNN for the,
+						// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
+						dnn = "internet"
 					}
 				}
-			} else {
-				// user's subscription context obtained from UDM does not contain the default DNN for the,
-				// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
-				dnn = "internet"
 			}
+			//select smf
+			newSmContext, cause, err := consumer.SelectSmf(ue, smContext.AccessType(), pduSessionID, snssai, dnn)
+			if err != nil {
+				//logger.CallbackLog.Error(err)
+				gmm_message.SendDLNASTransport(ue.RanUe[smContext.AccessType()],
+					nasMessage.PayloadContainerTypeN1SMInfo,
+					smContext.ULNASTransport().GetPayloadContainerContents(), pduSessionID, cause, nil, 0)
+				return
+			}
+
+			// send CreateSmContextRequest to the selected SMF
+			response, smContextRef, errResponse, problemDetail, err := consumer.SendCreateSmContextRequest(
+				ue, newSmContext, nil, smMessage)
+			if response != nil {
+				newSmContext.SetSmContextRef(smContextRef)
+				newSmContext.SetUserLocation(deepcopy.Copy(ue.Location).(models.UserLocation))
+				ue.GmmLog.Infof("create smContext[pduSessionID: %d] Success", pduSessionID)
+				ue.StoreSmContext(pduSessionID, newSmContext)
+				// TODO: handle response(response N2SmInfo to RAN if exists)
+			} else if errResponse != nil {
+				ue.ProducerLog.Warnf("PDU Session Establishment Request is rejected by SMF[pduSessionId:%d]\n", pduSessionID)
+				gmm_message.SendDLNASTransport(ue.RanUe[smContext.AccessType()],
+					nasMessage.PayloadContainerTypeN1SMInfo, errResponse.BinaryDataN1SmMessage, pduSessionID, 0, nil, 0)
+			} else if err != nil {
+				ue.ProducerLog.Errorf("Failed to Create smContext[pduSessionID: %d], Error[%s]\n", pduSessionID, err.Error())
+			} else {
+				ue.ProducerLog.Errorf("Failed to Create smContext[pduSessionID: %d], Error[%v]\n", pduSessionID, problemDetail)
+			}
+			sm.DeleteULNASTransport()
 		}
-	}
-	//select smf
-	newSmContext, cause, err := consumer.SelectSmf(ue, smContext.AccessType(), pduSessionID, snssai, dnn)
-	if err != nil {
-		//logger.CallbackLog.Error(err)
-		gmm_message.SendDLNASTransport(ue.RanUe[smContext.AccessType()],
-			nasMessage.PayloadContainerTypeN1SMInfo,
-			smContext.ULNASTransport().GetPayloadContainerContents(), pduSessionID, cause, nil, 0)
-		return
-	}
-
-	// send CreateSmContextRequest to the selected SMF
-	response, smContextRef, errResponse, problemDetail, err := consumer.SendCreateSmContextRequest(
-		ue, newSmContext, nil, smMessage)
-	if response != nil {
-		newSmContext.SetSmContextRef(smContextRef)
-		newSmContext.SetUserLocation(deepcopy.Copy(ue.Location).(models.UserLocation))
-		ue.GmmLog.Infof("create smContext[pduSessionID: %d] Success", pduSessionID)
-		ue.StoreSmContext(pduSessionID, newSmContext)
-		// TODO: handle response(response N2SmInfo to RAN if exists)
-	} else if errResponse != nil {
-		ue.ProducerLog.Warnf("PDU Session Establishment Request is rejected by SMF[pduSessionId:%d]\n", pduSessionID)
-		gmm_message.SendDLNASTransport(ue.RanUe[smContext.AccessType()],
-			nasMessage.PayloadContainerTypeN1SMInfo, errResponse.BinaryDataN1SmMessage, pduSessionID, 0, nil, 0)
-	} else if err != nil {
-		ue.ProducerLog.Errorf("Failed to Create smContext[pduSessionID: %d], Error[%s]\n", pduSessionID, err.Error())
-	} else {
-		ue.ProducerLog.Errorf("Failed to Create smContext[pduSessionID: %d], Error[%v]\n", pduSessionID, problemDetail)
-	}
-	sm.DeleteULNASTransport()
+	*/
 }
-*/
-}
-
 
 func (h *Producer) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
@@ -156,7 +156,7 @@ func (h *Producer) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.
 	polId := request.Params["polAssoId"]
 	polUpdate := request.Body.(models.PolicyUpdate)
 
-	if prob:= h.doAmPolicyControlUpdateNotifyUpdate(polId, polUpdate); prob != nil {
+	if prob := h.doAmPolicyControlUpdateNotifyUpdate(polId, polUpdate); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
@@ -172,7 +172,7 @@ func (h *Producer) doAmPolicyControlUpdateNotifyUpdate(polId string, polUpdate m
 			Detail: fmt.Sprintf("Policy Association ID[%s] Not Found", polId),
 		}
 	}
-	pcfinfo := ue.GetPcfInfo()
+	pcfinfo := ue.PcfClient().Info()
 	pcfinfo.AmPolicyAssociation.Triggers = polUpdate.Triggers
 	pcfinfo.RequestTriggerLocationChange = false
 
