@@ -2,12 +2,8 @@ package nas
 
 import (
 	"encoding/base64"
-	"encoding/hex"
-
-	"github.com/mitchellh/mapstructure"
 
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/nas/nas_security"
 
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasConvert"
@@ -55,7 +51,7 @@ func (builder *Nas) BuildDLNASTransport(ue *context.AmfUe, accessType models.Acc
 
 	m.GmmMessage.DLNASTransport = dLNASTransport
 
-	return nas_security.Encode(ue, m, accessType)
+	return ue.AusfClient().NasEncode(m, accessType)
 }
 
 func (builder *Nas) BuildNotification(ue *context.AmfUe, accessType models.AccessType) ([]byte, error) {
@@ -80,7 +76,7 @@ func (builder *Nas) BuildNotification(ue *context.AmfUe, accessType models.Acces
 
 	m.GmmMessage.Notification = notification
 
-	return nas_security.Encode(ue, m, accessType)
+	return ue.AusfClient().NasEncode(m, accessType)
 }
 
 func (builder *Nas) BuildIdentityRequest(ue *context.AmfUe, accessType models.AccessType, typeOfIdentity uint8) ([]byte, error) {
@@ -88,7 +84,7 @@ func (builder *Nas) BuildIdentityRequest(ue *context.AmfUe, accessType models.Ac
 	m.GmmMessage = libnas.NewGmmMessage()
 	m.GmmHeader.SetMessageType(libnas.MsgTypeIdentityRequest)
 
-	if ue.GetSecInfo().SecurityContextAvailable {
+	if ue.AusfClient().SecurityContextAvailable() {
 		m.SecurityHeader = libnas.SecurityHeader{
 			ProtocolDiscriminator: nasMessage.Epd5GSMobilityManagementMessage,
 			SecurityHeaderType:    libnas.SecurityHeaderTypeIntegrityProtectedAndCiphered,
@@ -104,7 +100,7 @@ func (builder *Nas) BuildIdentityRequest(ue *context.AmfUe, accessType models.Ac
 
 	m.GmmMessage.IdentityRequest = identityRequest
 
-	return nas_security.Encode(ue, m, accessType)
+	return ue.AusfClient().NasEncode(m, accessType)
 }
 
 func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error) {
@@ -112,57 +108,11 @@ func (builder *Nas) BuildAuthenticationRequest(ue *context.AmfUe) ([]byte, error
 	m.GmmMessage = libnas.NewGmmMessage()
 	m.GmmHeader.SetMessageType(libnas.MsgTypeAuthenticationRequest)
 
-	ausfinfo := ue.AusfClient().Info()
-
-	authenticationRequest := nasMessage.NewAuthenticationRequest(0)
-	authenticationRequest.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
-	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(libnas.SecurityHeaderTypePlainNas)
-	authenticationRequest.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
-	authenticationRequest.AuthenticationRequestMessageIdentity.SetMessageType(libnas.MsgTypeAuthenticationRequest)
-	authenticationRequest.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.GetSecInfo().NgKsi)
-	authenticationRequest.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
-	authenticationRequest.ABBA.SetABBAContents(ausfinfo.ABBA)
-
-	switch ausfinfo.AuthenticationCtx.AuthType {
-	case models.AuthType__5_G_AKA:
-		var tmpArray [16]byte
-		var av5gAka models.Av5gAka
-
-		if err := mapstructure.Decode(ausfinfo.AuthenticationCtx.Var5gAuthData, &av5gAka); err != nil {
-			log.Error("Var5gAuthData Convert Type Error")
-			return nil, err
-		}
-
-		rand, err := hex.DecodeString(av5gAka.Rand)
-		if err != nil {
-			return nil, err
-		}
-		authenticationRequest.AuthenticationParameterRAND =
-			nasType.NewAuthenticationParameterRAND(nasMessage.AuthenticationRequestAuthenticationParameterRANDType)
-		copy(tmpArray[:], rand[0:16])
-		authenticationRequest.AuthenticationParameterRAND.SetRANDValue(tmpArray)
-
-		autn, err := hex.DecodeString(av5gAka.Autn)
-		if err != nil {
-			return nil, err
-		}
-		authenticationRequest.AuthenticationParameterAUTN =
-			nasType.NewAuthenticationParameterAUTN(nasMessage.AuthenticationRequestAuthenticationParameterAUTNType)
-		authenticationRequest.AuthenticationParameterAUTN.SetLen(uint8(len(autn)))
-		copy(tmpArray[:], autn[0:16])
-		authenticationRequest.AuthenticationParameterAUTN.SetAUTN(tmpArray)
-	case models.AuthType_EAP_AKA_PRIME:
-		eapMsg := ausfinfo.AuthenticationCtx.Var5gAuthData.(string)
-		rawEapMsg, err := base64.StdEncoding.DecodeString(eapMsg)
-		if err != nil {
-			return nil, err
-		}
-		authenticationRequest.EAPMessage = nasType.NewEAPMessage(nasMessage.AuthenticationRequestEAPMessageType)
-		authenticationRequest.EAPMessage.SetLen(uint16(len(rawEapMsg)))
-		authenticationRequest.EAPMessage.SetEAPMessage(rawEapMsg)
+	req := nasMessage.NewAuthenticationRequest(0)
+	if err := ue.AusfClient().BuildAuthRequest(req); err != nil {
+		return nil, err
 	}
-
-	m.GmmMessage.AuthenticationRequest = authenticationRequest
+	m.GmmMessage.AuthenticationRequest = req
 
 	return m.PlainNasEncode()
 }
@@ -204,7 +154,7 @@ func (builder *Nas) BuildServiceAccept(ue *context.AmfUe, accessType models.Acce
 	}
 	m.GmmMessage.ServiceAccept = serviceAccept
 
-	return nas_security.Encode(ue, m, accessType)
+	return ue.AusfClient().NasEncode(m, accessType)
 }
 
 func (builder *Nas) BuildAuthenticationReject(ue *context.AmfUe, eapMsg string) ([]byte, error) {
@@ -238,26 +188,12 @@ func (builder *Nas) BuildAuthenticationResult(ue *context.AmfUe, eapSuccess bool
 	m.GmmMessage = libnas.NewGmmMessage()
 	m.GmmHeader.SetMessageType(libnas.MsgTypeAuthenticationResult)
 
-	authenticationResult := nasMessage.NewAuthenticationResult(0)
-	authenticationResult.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
-	authenticationResult.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(libnas.SecurityHeaderTypePlainNas)
-	authenticationResult.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
-	authenticationResult.AuthenticationResultMessageIdentity.SetMessageType(libnas.MsgTypeAuthenticationResult)
-	authenticationResult.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(ue.GetSecInfo().NgKsi)
-	rawEapMsg, err := base64.StdEncoding.DecodeString(eapMsg)
-	if err != nil {
+	result := nasMessage.NewAuthenticationResult(0)
+	if err := ue.AusfClient().BuildAuthResult(result, eapSuccess, eapMsg); err != nil {
 		return nil, err
 	}
-	authenticationResult.EAPMessage.SetLen(uint16(len(rawEapMsg)))
-	authenticationResult.EAPMessage.SetEAPMessage(rawEapMsg)
-	ausfinfo := ue.AusfClient().Info()
-	if eapSuccess {
-		authenticationResult.ABBA = nasType.NewABBA(nasMessage.AuthenticationResultABBAType)
-		authenticationResult.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
-		authenticationResult.ABBA.SetABBAContents(ausfinfo.ABBA)
-	}
 
-	m.GmmMessage.AuthenticationResult = authenticationResult
+	m.GmmMessage.AuthenticationResult = result
 
 	return m.PlainNasEncode()
 }
@@ -326,75 +262,24 @@ func (builder *Nas) BuildSecurityModeCommand(ue *context.AmfUe, accessType model
 	m := libnas.NewMessage()
 	m.GmmMessage = libnas.NewGmmMessage()
 	m.GmmHeader.SetMessageType(libnas.MsgTypeSecurityModeCommand)
-
+	ausf := ue.AusfClient()
 	m.SecurityHeader = libnas.SecurityHeader{
 		ProtocolDiscriminator: nasMessage.Epd5GSMobilityManagementMessage,
 		SecurityHeaderType:    libnas.SecurityHeaderTypeIntegrityProtectedWithNew5gNasSecurityContext,
 	}
-	secinfo := ue.GetSecInfo()
 
-	securityModeCommand := nasMessage.NewSecurityModeCommand(0)
-	securityModeCommand.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
-	securityModeCommand.SpareHalfOctetAndSecurityHeaderType.SetSecurityHeaderType(libnas.SecurityHeaderTypePlainNas)
-	securityModeCommand.SpareHalfOctetAndSecurityHeaderType.SetSpareHalfOctet(0)
-	securityModeCommand.SecurityModeCommandMessageIdentity.SetMessageType(libnas.MsgTypeSecurityModeCommand)
-
-	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfCipheringAlgorithm(secinfo.CipheringAlg)
-	securityModeCommand.SelectedNASSecurityAlgorithms.SetTypeOfIntegrityProtectionAlgorithm(secinfo.IntegrityAlg)
-
-	securityModeCommand.SpareHalfOctetAndNgksi = nasConvert.SpareHalfOctetAndNgksiToNas(secinfo.NgKsi)
-
-	securityModeCommand.ReplayedUESecurityCapabilities.SetLen(secinfo.UESecurityCapability.GetLen())
-	securityModeCommand.ReplayedUESecurityCapabilities.Buffer = secinfo.UESecurityCapability.Buffer
-
-	if ue.Pei != "" {
-		securityModeCommand.IMEISVRequest = nasType.NewIMEISVRequest(nasMessage.SecurityModeCommandIMEISVRequestType)
-		securityModeCommand.IMEISVRequest.SetIMEISVRequestValue(nasMessage.IMEISVNotRequested)
-	} else {
-		securityModeCommand.IMEISVRequest = nasType.NewIMEISVRequest(nasMessage.SecurityModeCommandIMEISVRequestType)
-		securityModeCommand.IMEISVRequest.SetIMEISVRequestValue(nasMessage.IMEISVRequested)
+	cmd := nasMessage.NewSecurityModeCommand(0)
+	if err := ausf.BuildSecModeCmd(cmd, eapSuccess, eapMessage); err != nil {
+		return nil, err
 	}
 
-	securityModeCommand.Additional5GSecurityInformation =
-		nasType.NewAdditional5GSecurityInformation(nasMessage.SecurityModeCommandAdditional5GSecurityInformationType)
-	securityModeCommand.Additional5GSecurityInformation.SetLen(1)
-	if ue.RetransmissionOfInitialNASMsg {
-		securityModeCommand.Additional5GSecurityInformation.SetRINMR(1)
-	} else {
-		securityModeCommand.Additional5GSecurityInformation.SetRINMR(0)
-	}
-
-	if ue.RegistrationType5GS == nasMessage.RegistrationType5GSPeriodicRegistrationUpdating ||
-		ue.RegistrationType5GS == nasMessage.RegistrationType5GSMobilityRegistrationUpdating {
-		securityModeCommand.Additional5GSecurityInformation.SetHDP(1)
-	} else {
-		securityModeCommand.Additional5GSecurityInformation.SetHDP(0)
-	}
-
-	if eapMessage != "" {
-		securityModeCommand.EAPMessage = nasType.NewEAPMessage(nasMessage.SecurityModeCommandEAPMessageType)
-		rawEapMsg, err := base64.StdEncoding.DecodeString(eapMessage)
-		if err != nil {
-			return nil, err
-		}
-		securityModeCommand.EAPMessage.SetLen(uint16(len(rawEapMsg)))
-		securityModeCommand.EAPMessage.SetEAPMessage(rawEapMsg)
-
-		if eapSuccess {
-			ausfinfo := ue.AusfClient().Info()
-			securityModeCommand.ABBA = nasType.NewABBA(nasMessage.SecurityModeCommandABBAType)
-			securityModeCommand.ABBA.SetLen(uint8(len(ausfinfo.ABBA)))
-			securityModeCommand.ABBA.SetABBAContents(ausfinfo.ABBA)
-		}
-	}
-
-	secinfo.SecurityContextAvailable = true
-	m.GmmMessage.SecurityModeCommand = securityModeCommand
-	payload, err := nas_security.Encode(ue, m, accessType)
+	m.GmmMessage.SecurityModeCommand = cmd
+	payload, err := ue.AusfClient().NasEncode(m, accessType)
 	if err != nil {
-		secinfo.SecurityContextAvailable = false
+		ausf.SetSecurityContextAvailable(false)
 		return nil, err
 	} else {
+		ausf.SetSecurityContextAvailable(true)
 		return payload, nil
 	}
 }
@@ -438,7 +323,7 @@ func (builder *Nas) BuildDeregistrationRequest(ue *context.RanUe, accessType uin
 		} else if accessType == 0x02 {
 			anType = models.AccessType_NON_3_GPP_ACCESS
 		}
-		return nas_security.Encode(ue.AmfUe(), m, anType)
+		return ue.AmfUe().AusfClient().NasEncode(m, anType)
 	}
 	return m.PlainNasEncode()
 }
@@ -524,7 +409,7 @@ func (builder *Nas) BuildRegistrationAccept(
 
 	m.GmmMessage.RegistrationAccept = registrationAccept
 
-	return nas_security.Encode(ue, m, anType)
+	return ue.AusfClient().NasEncode(m, anType)
 }
 
 func (builder *Nas) BuildStatus5GMM(cause uint8) ([]byte, error) {

@@ -6,7 +6,6 @@ import (
 
 	"etri5gc/nfs/amf"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/nas/nas_security"
 
 	"github.com/free5gc/aper"
 	libnas "github.com/free5gc/nas"
@@ -72,7 +71,7 @@ func (n *Nas) HandleNAS(ue *context.RanUe, code int64, naspdu []byte) {
 		newAmfUe.AttachRanUe(ue)
 	}
 
-	msg, err := nas_security.Decode(ue.AmfUe(), ue.Ran().AnType(), naspdu)
+	msg, err := ue.AmfUe().AusfClient().NasDecode(ue.Ran().AnType(), naspdu)
 	if err != nil {
 		log.Errorln(err)
 		return

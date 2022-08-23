@@ -1101,31 +1101,24 @@ func (h *ngapHandler) handlePathSwitchRequest(ran *context.AmfRan, pathSwitchReq
 	log.Info("Handle Path Switch Request")
 
 	amfUe := ranUe.AmfUe()
+	ausf := amfUe.AusfClient()
+
 	if amfUe == nil {
 		log.Error("AmfUe is nil")
 		h.sender.SendPathSwitchRequestFailure(ran, sourceAMFUENGAPID.Value, ran_ngapid.Value, nil, nil)
 		return
 	}
 
-	if amfUe.SecurityContextIsValid() {
+	if ausf.SecurityContextIsValid() {
 		// Update NH
-		amfUe.UpdateNH()
+		ausf.UpdateNH()
 	} else {
 		log.Errorf("No Security Context : SUPI[%s]", amfUe.Supi)
 		h.sender.SendPathSwitchRequestFailure(ran, sourceAMFUENGAPID.Value, ran_ngapid.Value, nil, nil)
 		return
 	}
 
-	if uESecurityCapabilities != nil {
-		secinfo := amfUe.GetSecInfo()
-		secinfo.UESecurityCapability.SetEA1_128_5G(uESecurityCapabilities.NRencryptionAlgorithms.Value.Bytes[0] & 0x80)
-		secinfo.UESecurityCapability.SetEA2_128_5G(uESecurityCapabilities.NRencryptionAlgorithms.Value.Bytes[0] & 0x40)
-		secinfo.UESecurityCapability.SetEA3_128_5G(uESecurityCapabilities.NRencryptionAlgorithms.Value.Bytes[0] & 0x20)
-		secinfo.UESecurityCapability.SetIA1_128_5G(uESecurityCapabilities.NRintegrityProtectionAlgorithms.Value.Bytes[0] & 0x80)
-		secinfo.UESecurityCapability.SetIA2_128_5G(uESecurityCapabilities.NRintegrityProtectionAlgorithms.Value.Bytes[0] & 0x40)
-		secinfo.UESecurityCapability.SetIA3_128_5G(uESecurityCapabilities.NRintegrityProtectionAlgorithms.Value.Bytes[0] & 0x20)
-		// not support any E-UTRA algorithms
-	}
+	ausf.SetUeSecCap(uESecurityCapabilities)
 
 	if ran_ngapid != nil {
 		ranUe.SetRanUeNgapId(ran_ngapid.Value)
@@ -1314,6 +1307,8 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 	//	sourceUe.Log.Info("Handle HandoverRequired")
 
 	amfUe := sourceUe.AmfUe()
+	ausf := amfUe.AusfClient()
+
 	if amfUe == nil {
 		log.Error("Cannot find amfUE from sourceUE")
 		return
@@ -1326,7 +1321,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 	amfUe.SetOnGoing(sourceUe.Ran().AnType(), &context.OnGoing{
 		Procedure: context.OnGoingProcedureN2Handover,
 	})
-	if !amfUe.SecurityContextIsValid() {
+	if !ausf.SecurityContextIsValid() {
 		//		sourceUe.Log.Info("Handle Handover Preparation Failure [Authentication Failure]")
 		cause = &ngapType.Cause{
 			Present: ngapType.CausePresentNas,
@@ -1383,7 +1378,7 @@ func (h *ngapHandler) handleHandoverRequired(ran *context.AmfRan, HandoverRequir
 			return
 		}
 		// Update NH
-		amfUe.UpdateNH()
+		ausf.UpdateNH()
 		h.sender.SendHandoverRequest(sourceUe, targetRan, *cause, pduSessionReqList,
 			*sourceToTargetTransparentContainer, false)
 	}

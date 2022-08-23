@@ -1027,7 +1027,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 
 	// UE Security Capabilities
-	secinfo := amfUe.GetSecInfo()
+	secinfo := amfUe.AusfClient().SecInfo()
 	ie = ngapType.InitialContextSetupRequestIEs{}
 	ie.Id.Value = ngapType.ProtocolIEIDUESecurityCapabilities
 	ie.Criticality.Value = ngapType.CriticalityPresentReject
@@ -1651,7 +1651,7 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 
-	secinfo := amfUe.GetSecInfo()
+	secinfo := amfUe.AusfClient().SecInfo()
 
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
 	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7
@@ -1848,7 +1848,7 @@ func (s *ngapSender) buildPathSwitchRequestAcknowledge(
 	ie.Value.Present = ngapType.PathSwitchRequestAcknowledgeIEsPresentUESecurityCapabilities
 	ie.Value.UESecurityCapabilities = new(ngapType.UESecurityCapabilities)
 
-	secinfo := ue.AmfUe().GetSecInfo()
+	secinfo := ue.AmfUe().AusfClient().SecInfo()
 	ueSecurityCapabilities := ie.Value.UESecurityCapabilities
 	nrEncryptionAlgorighm := []byte{0x00, 0x00}
 	nrEncryptionAlgorighm[0] |= secinfo.UESecurityCapability.GetEA1_128_5G() << 7

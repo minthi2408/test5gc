@@ -288,11 +288,12 @@ func (gmm *GmmFsm) SecurityMode(state *fsm.State, event fsm.EventType, args fsm.
 	switch event {
 	case fsm.EntryEvent:
 		amfUe := args[ArgAmfUe].(*context.AmfUe)
+		ausf := amfUe.AusfClient()
 		accessType := args[ArgAccessType].(models.AccessType)
 		// set log information
 
 		log.Debugln("EntryEvent at GMM State[SecurityMode]")
-		if amfUe.SecurityContextIsValid() {
+		if ausf.SecurityContextIsValid() {
 			log.Debugln("UE has a valid security context - skip security mode control procedure")
 			if err := gmm.sm.SendEvent(state, SecurityModeSuccessEvent, fsm.ArgsType{
 				ArgAmfUe:      amfUe,
@@ -306,9 +307,9 @@ func (gmm *GmmFsm) SecurityMode(state *fsm.State, event fsm.EventType, args fsm.
 			eapMessage := args[ArgEAPMessage].(string)
 			secalgo := gmm.nas.backend.Context().SecurityAlgorithm()
 			// Select enc/int algorithm based on ue security capability & amf's policy,
-			amfUe.SelectSecurityAlg(secalgo.IntegrityOrder, secalgo.CipheringOrder)
+			ausf.SelectSecurityAlg(secalgo.IntegrityOrder, secalgo.CipheringOrder)
 			// Generate KnasEnc, KnasInt
-			amfUe.DerivateAlgKey()
+			ausf.DerivateAlgKey()
 			gmm.nas.SendSecurityModeCommand(amfUe.RanUe[accessType], accessType, eapSuccess, eapMessage)
 		}
 	case GmmMessageEvent:

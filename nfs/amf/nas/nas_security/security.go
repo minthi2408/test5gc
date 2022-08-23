@@ -1,16 +1,8 @@
 package nas_security
 
-import (
 //	"encoding/hex"
-	"fmt"
-	"reflect"
 
-	"etri5gc/nfs/amf/context"
-	"github.com/free5gc/nas"
-	"github.com/free5gc/nas/security"
-	"github.com/free5gc/openapi/models"
-)
-
+/*
 func Encode(ue *context.AmfUe, msg *nas.Message, accessType models.AccessType) ([]byte, error) {
 	if ue == nil {
 		return nil, fmt.Errorf("amfUe is nil")
@@ -19,7 +11,7 @@ func Encode(ue *context.AmfUe, msg *nas.Message, accessType models.AccessType) (
 		return nil, fmt.Errorf("Nas Message is empty")
 	}
 
-	secinfo := ue.GetSecInfo()
+	secinfo := ue.AusfClient().SecInfo()
 	// Plain NAS message
 	if !secinfo.SecurityContextAvailable {
 		return msg.PlainNasEncode()
@@ -81,10 +73,6 @@ func Encode(ue *context.AmfUe, msg *nas.Message, accessType models.AccessType) (
 	}
 }
 
-/*
-payload either a security protected 5GS NAS message or a plain 5GS NAS message which
-format is followed TS 24.501 9.1.1
-*/
 func Decode(ue *context.AmfUe, accessType models.AccessType, payload []byte) (*nas.Message, error) {
 	if ue == nil {
 		return nil, fmt.Errorf("amfUe is nil")
@@ -93,7 +81,7 @@ func Decode(ue *context.AmfUe, accessType models.AccessType, payload []byte) (*n
 		return nil, fmt.Errorf("Nas payload is empty")
 	}
 
-	secinfo := ue.GetSecInfo()
+	secinfo := ue.AusfClient().SecInfo()
 	msg := new(nas.Message)
 	msg.SecurityHeaderType = nas.GetSecurityHeaderType(payload) & 0x0f
 	//secinfo.NASLog.Traceln("securityHeaderType is ", msg.SecurityHeaderType)
@@ -211,3 +199,4 @@ func GetBearerType(accessType models.AccessType) uint8 {
 		return security.OnlyOneBearer
 	}
 }
+*/

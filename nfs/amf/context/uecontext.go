@@ -1,8 +1,6 @@
 package context
 
 import (
-	"encoding/base64"
-	"encoding/hex"
 
 	//	"fmt"
 	"net/http"
@@ -13,7 +11,6 @@ import (
 	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
-	"github.com/free5gc/nas/security"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
 	"github.com/free5gc/util/idgenerator"
@@ -62,27 +59,6 @@ type NssfInfo struct {
 //func (info *NssfInfo) copy(ueContext *models.UeContext) {
 //}
 
-type SecContext struct {
-	SecurityContextAvailable bool
-	UESecurityCapability     nasType.UESecurityCapability // for security command
-	NgKsi                    models.NgKsi
-	MacFailed                bool      // set to true if the integrity check of current NAS message is failed
-	KnasInt                  [16]uint8 // 16 byte
-	KnasEnc                  [16]uint8 // 16 byte
-	Kgnb                     []uint8   // 32 byte
-	Kn3iwf                   []uint8   // 32 byte
-	NH                       []uint8   // 32 byte
-	NCC                      uint8     // 0..7
-	ULCount                  security.Count
-	DLCount                  security.Count
-	CipheringAlg             uint8
-	IntegrityAlg             uint8
-}
-
-func (s *SecContext) isValid() bool {
-	return s.SecurityContextAvailable && s.NgKsi.Ksi != nasMessage.NasKeySetIdentifierNoKeyIsAvailable && !s.MacFailed
-}
-
 type LocInfo struct {
 	RatType                  models.RatType
 	Location                 models.UserLocation
@@ -107,9 +83,6 @@ type AmfUe struct {
 
 	/* Network Slicing related context and Nssf */
 	nssf NssfInfo
-
-	/* Security Context */
-	seccon SecContext
 
 	/* udm client */
 	udmcli udmClient
@@ -272,10 +245,6 @@ func (ue *AmfUe) GetNssfInfo() *NssfInfo {
 	return &ue.nssf
 }
 
-func (ue *AmfUe) GetSecInfo() *SecContext {
-	return &ue.seccon
-}
-
 func (ue *AmfUe) GetLocInfo() *LocInfo {
 	return &ue.loc
 }
@@ -417,189 +386,6 @@ func (ue *AmfUe) HasWildCardSubscribedDNN() bool {
 	return false
 }
 
-func (ue *AmfUe) SecurityContextIsValid() bool {
-	return ue.seccon.isValid()
-}
-
-// Kamf Derivation function defined in TS 33.501 Annex A.7
-func (ue *AmfUe) DerivateKamf() {
-	ue.ausfcli.DerivateKamf()
-	/*
-		supiRegexp, err := regexp.Compile("(?:imsi|supi)-([0-9]{5,15})")
-		if err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		}
-		groups := supiRegexp.FindStringSubmatch(ue.Supi)
-		if groups == nil {
-			//	logger.NasLog.Errorln("supi is not correct")
-			return
-		}
-
-		P0 := []byte(groups[1])
-		L0 := ueauth.KDFLen(P0)
-		P1 := ue.ausf.ABBA
-		L1 := ueauth.KDFLen(P1)
-
-		KseafDecode, err := hex.DecodeString(ue.ausf.Kseaf)
-		if err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		}
-		KamfBytes, err := ueauth.GetKDFValue(KseafDecode, ueauth.FC_FOR_KAMF_DERIVATION, P0, L0, P1, L1)
-		if err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		}
-		ue.ausf.Kamf = hex.EncodeToString(KamfBytes)
-	*/
-}
-
-func (ue *AmfUe) DerivateAlgKey() {
-	ue.ausfcli.DerivateAlgKey()
-	/*
-		// Security Key
-		P0 := []byte{security.NNASEncAlg}
-		L0 := ueauth.KDFLen(P0)
-		P1 := []byte{ue.seccon.CipheringAlg}
-		L1 := ueauth.KDFLen(P1)
-
-		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-		if err != nil {
-			//logger.ContextLog.Error(err)
-			return
-		}
-		kenc, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
-		if err != nil {
-			//logger.ContextLog.Error(err)
-			return
-		}
-		copy(ue.seccon.KnasEnc[:], kenc[16:32])
-
-		// Integrity Key
-		P0 = []byte{security.NNASIntAlg}
-		L0 = ueauth.KDFLen(P0)
-		P1 = []byte{ue.seccon.IntegrityAlg}
-		L1 = ueauth.KDFLen(P1)
-
-		kint, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_ALGORITHM_KEY_DERIVATION, P0, L0, P1, L1)
-		if err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		}
-		copy(ue.seccon.KnasInt[:], kint[16:32])
-	*/
-}
-
-func (ue *AmfUe) DerivateAnKey(anType models.AccessType) {
-	ue.ausfcli.DerivateAnKey(anType)
-	/*
-		accessType := security.AccessType3GPP // Defalut 3gpp
-		P0 := make([]byte, 4)
-		binary.BigEndian.PutUint32(P0, ue.seccon.ULCount.Get())
-		L0 := ueauth.KDFLen(P0)
-		if anType == models.AccessType_NON_3_GPP_ACCESS {
-			accessType = security.AccessTypeNon3GPP
-		}
-		P1 := []byte{accessType}
-		L1 := ueauth.KDFLen(P1)
-
-		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-		if err != nil {
-			//logger.ContextLog.Error(err)
-			return
-		}
-		key, err := ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_KGNB_KN3IWF_DERIVATION, P0, L0, P1, L1)
-		if err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		}
-		switch accessType {
-		case security.AccessType3GPP:
-			ue.seccon.Kgnb = key
-		case security.AccessTypeNon3GPP:
-			ue.seccon.Kn3iwf = key
-		}
-	*/
-}
-
-// NH Derivation function defined in TS 33.501 Annex A.10
-func (ue *AmfUe) DerivateNH(syncInput []byte) {
-	ue.ausfcli.DerivateNH(syncInput)
-	/*
-		P0 := syncInput
-		L0 := ueauth.KDFLen(P0)
-
-		KamfBytes, err := hex.DecodeString(ue.ausf.Kamf)
-		if err != nil {
-			//logger.ContextLog.Error(err)
-			return
-		}
-		ue.seccon.NH, err = ueauth.GetKDFValue(KamfBytes, ueauth.FC_FOR_NH_DERIVATION, P0, L0)
-		if err != nil {
-			//logger.ContextLog.Error(err)
-			return
-		}
-	*/
-}
-
-func (ue *AmfUe) UpdateSecurityContext(anType models.AccessType) {
-	ue.DerivateAnKey(anType)
-	switch anType {
-	case models.AccessType__3_GPP_ACCESS:
-		ue.DerivateNH(ue.seccon.Kgnb)
-	case models.AccessType_NON_3_GPP_ACCESS:
-		ue.DerivateNH(ue.seccon.Kn3iwf)
-	}
-	ue.seccon.NCC = 1
-}
-
-func (ue *AmfUe) UpdateNH() {
-	ue.seccon.NCC++
-	ue.DerivateNH(ue.seccon.NH)
-}
-
-func (ue *AmfUe) SelectSecurityAlg(intOrder, encOrder []uint8) {
-	ue.seccon.CipheringAlg = security.AlgCiphering128NEA0
-	ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA0
-
-	ueSupported := uint8(0)
-	for _, intAlg := range intOrder {
-		switch intAlg {
-		case security.AlgIntegrity128NIA0:
-			ueSupported = ue.seccon.UESecurityCapability.GetIA0_5G()
-		case security.AlgIntegrity128NIA1:
-			ueSupported = ue.seccon.UESecurityCapability.GetIA1_128_5G()
-		case security.AlgIntegrity128NIA2:
-			ueSupported = ue.seccon.UESecurityCapability.GetIA2_128_5G()
-		case security.AlgIntegrity128NIA3:
-			ueSupported = ue.seccon.UESecurityCapability.GetIA3_128_5G()
-		}
-		if ueSupported == 1 {
-			ue.seccon.IntegrityAlg = intAlg
-			break
-		}
-	}
-
-	ueSupported = uint8(0)
-	for _, encAlg := range encOrder {
-		switch encAlg {
-		case security.AlgCiphering128NEA0:
-			ueSupported = ue.seccon.UESecurityCapability.GetEA0_5G()
-		case security.AlgCiphering128NEA1:
-			ueSupported = ue.seccon.UESecurityCapability.GetEA1_128_5G()
-		case security.AlgCiphering128NEA2:
-			ueSupported = ue.seccon.UESecurityCapability.GetEA2_128_5G()
-		case security.AlgCiphering128NEA3:
-			ueSupported = ue.seccon.UESecurityCapability.GetEA3_128_5G()
-		}
-		if ueSupported == 1 {
-			ue.seccon.CipheringAlg = encAlg
-			break
-		}
-	}
-}
-
 func (ue *AmfUe) ClearRegistrationRequestData(accessType models.AccessType) {
 	ue.RegistrationRequest = nil
 	ue.RegistrationType5GS = 0
@@ -633,121 +419,123 @@ func (ue *AmfUe) RemoveAmPolicyAssociation() {
 }
 
 func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
-	if ueContext.Supi != "" {
-		ue.Supi = ueContext.Supi
-		ue.UnauthenticatedSupi = ueContext.SupiUnauthInd
-	}
+	/*
+		if ueContext.Supi != "" {
+			ue.Supi = ueContext.Supi
+			ue.UnauthenticatedSupi = ueContext.SupiUnauthInd
+		}
 
-	if ueContext.Pei != "" {
-		ue.Pei = ueContext.Pei
-	}
+		if ueContext.Pei != "" {
+			ue.Pei = ueContext.Pei
+		}
 
-	if ueContext.AusfGroupId != "" {
-		ue.ausfcli.info.AusfGroupId = ueContext.AusfGroupId
-	}
+		if ueContext.AusfGroupId != "" {
+			ue.ausfcli.info.AusfGroupId = ueContext.AusfGroupId
+		}
 
-	if ueContext.RoutingIndicator != "" {
-		ue.ausfcli.info.RoutingIndicator = ueContext.RoutingIndicator
-	}
-	ue.udmcli.info.copy(&ueContext)
+		if ueContext.RoutingIndicator != "" {
+			ue.ausfcli.info.RoutingIndicator = ueContext.RoutingIndicator
+		}
+		ue.udmcli.info.copy(&ueContext)
 
-	if ueContext.SeafData != nil {
-		seafData := ueContext.SeafData
+		if ueContext.SeafData != nil {
+			seafData := ueContext.SeafData
 
-		ue.seccon.NgKsi = *seafData.NgKsi
-		if seafData.KeyAmf != nil {
-			if seafData.KeyAmf.KeyType == models.KeyAmfType_KAMF {
-				ue.ausfcli.info.Kamf = seafData.KeyAmf.KeyVal
+			ue.seccon.NgKsi = *seafData.NgKsi
+			if seafData.KeyAmf != nil {
+				if seafData.KeyAmf.KeyType == models.KeyAmfType_KAMF {
+					ue.ausfcli.info.Kamf = seafData.KeyAmf.KeyVal
+				}
+			}
+			if nh, err := hex.DecodeString(seafData.Nh); err != nil {
+				//	logger.ContextLog.Error(err)
+				return
+			} else {
+				ue.seccon.NH = nh
+			}
+			ue.seccon.NCC = uint8(seafData.Ncc)
+		}
+
+		ue.pcfcli.Info().copy(&ueContext)
+		if len(ueContext.SessionContextList) > 0 {
+			for _, pduSessionContext := range ueContext.SessionContextList {
+				smContext := SmContext{
+					pduSessionID: pduSessionContext.PduSessionId,
+					smContextRef: pduSessionContext.SmContextRef,
+					snssai:       *pduSessionContext.SNssai,
+					dnn:          pduSessionContext.Dnn,
+					accessType:   pduSessionContext.AccessType,
+					hSmfID:       pduSessionContext.HsmfId,
+					vSmfID:       pduSessionContext.VsmfId,
+					nsInstance:   pduSessionContext.NsInstance,
+				}
+				ue.StoreSmContext(pduSessionContext.PduSessionId, &smContext)
 			}
 		}
-		if nh, err := hex.DecodeString(seafData.Nh); err != nil {
-			//	logger.ContextLog.Error(err)
-			return
-		} else {
-			ue.seccon.NH = nh
-		}
-		ue.seccon.NCC = uint8(seafData.Ncc)
-	}
 
-	ue.pcfcli.Info().copy(&ueContext)
-	if len(ueContext.SessionContextList) > 0 {
-		for _, pduSessionContext := range ueContext.SessionContextList {
-			smContext := SmContext{
-				pduSessionID: pduSessionContext.PduSessionId,
-				smContextRef: pduSessionContext.SmContextRef,
-				snssai:       *pduSessionContext.SNssai,
-				dnn:          pduSessionContext.Dnn,
-				accessType:   pduSessionContext.AccessType,
-				hSmfID:       pduSessionContext.HsmfId,
-				vSmfID:       pduSessionContext.VsmfId,
-				nsInstance:   pduSessionContext.NsInstance,
-			}
-			ue.StoreSmContext(pduSessionContext.PduSessionId, &smContext)
-		}
-	}
-
-	if len(ueContext.MmContextList) > 0 {
-		for _, mmContext := range ueContext.MmContextList {
-			if mmContext.AccessType == models.AccessType__3_GPP_ACCESS {
-				if nasSecurityMode := mmContext.NasSecurityMode; nasSecurityMode != nil {
-					switch nasSecurityMode.IntegrityAlgorithm {
-					case models.IntegrityAlgorithm_NIA0:
-						ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA0
-					case models.IntegrityAlgorithm_NIA1:
-						ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA1
-					case models.IntegrityAlgorithm_NIA2:
-						ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA2
-					case models.IntegrityAlgorithm_NIA3:
-						ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA3
-					}
-
-					switch nasSecurityMode.CipheringAlgorithm {
-					case models.CipheringAlgorithm_NEA0:
-						ue.seccon.CipheringAlg = security.AlgCiphering128NEA0
-					case models.CipheringAlgorithm_NEA1:
-						ue.seccon.CipheringAlg = security.AlgCiphering128NEA1
-					case models.CipheringAlgorithm_NEA2:
-						ue.seccon.CipheringAlg = security.AlgCiphering128NEA2
-					case models.CipheringAlgorithm_NEA3:
-						ue.seccon.CipheringAlg = security.AlgCiphering128NEA3
-					}
-
-					if mmContext.NasDownlinkCount != 0 {
-						overflow := uint16((uint32(mmContext.NasDownlinkCount) & 0x00ffff00) >> 8)
-						sqn := uint8(uint32(mmContext.NasDownlinkCount & 0x000000ff))
-						ue.seccon.DLCount.Set(overflow, sqn)
-					}
-
-					if mmContext.NasUplinkCount != 0 {
-						overflow := uint16((uint32(mmContext.NasUplinkCount) & 0x00ffff00) >> 8)
-						sqn := uint8(uint32(mmContext.NasUplinkCount & 0x000000ff))
-						ue.seccon.ULCount.Set(overflow, sqn)
-					}
-
-					// TS 29.518 Table 6.1.6.3.2.1
-					if mmContext.UeSecurityCapability != "" {
-						// ue.SecurityCapabilities
-						buf, err := base64.StdEncoding.DecodeString(mmContext.UeSecurityCapability)
-						if err != nil {
-							//logger.ContextLog.Error(err)
-							return
+		if len(ueContext.MmContextList) > 0 {
+			for _, mmContext := range ueContext.MmContextList {
+				if mmContext.AccessType == models.AccessType__3_GPP_ACCESS {
+					if nasSecurityMode := mmContext.NasSecurityMode; nasSecurityMode != nil {
+						switch nasSecurityMode.IntegrityAlgorithm {
+						case models.IntegrityAlgorithm_NIA0:
+							ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA0
+						case models.IntegrityAlgorithm_NIA1:
+							ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA1
+						case models.IntegrityAlgorithm_NIA2:
+							ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA2
+						case models.IntegrityAlgorithm_NIA3:
+							ue.seccon.IntegrityAlg = security.AlgIntegrity128NIA3
 						}
-						ue.seccon.UESecurityCapability.Buffer = buf
-						ue.seccon.UESecurityCapability.SetLen(uint8(len(buf)))
+
+						switch nasSecurityMode.CipheringAlgorithm {
+						case models.CipheringAlgorithm_NEA0:
+							ue.seccon.CipheringAlg = security.AlgCiphering128NEA0
+						case models.CipheringAlgorithm_NEA1:
+							ue.seccon.CipheringAlg = security.AlgCiphering128NEA1
+						case models.CipheringAlgorithm_NEA2:
+							ue.seccon.CipheringAlg = security.AlgCiphering128NEA2
+						case models.CipheringAlgorithm_NEA3:
+							ue.seccon.CipheringAlg = security.AlgCiphering128NEA3
+						}
+
+						if mmContext.NasDownlinkCount != 0 {
+							overflow := uint16((uint32(mmContext.NasDownlinkCount) & 0x00ffff00) >> 8)
+							sqn := uint8(uint32(mmContext.NasDownlinkCount & 0x000000ff))
+							ue.seccon.DLCount.Set(overflow, sqn)
+						}
+
+						if mmContext.NasUplinkCount != 0 {
+							overflow := uint16((uint32(mmContext.NasUplinkCount) & 0x00ffff00) >> 8)
+							sqn := uint8(uint32(mmContext.NasUplinkCount & 0x000000ff))
+							ue.seccon.ULCount.Set(overflow, sqn)
+						}
+
+						// TS 29.518 Table 6.1.6.3.2.1
+						if mmContext.UeSecurityCapability != "" {
+							// ue.SecurityCapabilities
+							buf, err := base64.StdEncoding.DecodeString(mmContext.UeSecurityCapability)
+							if err != nil {
+								//logger.ContextLog.Error(err)
+								return
+							}
+							ue.seccon.UESecurityCapability.Buffer = buf
+							ue.seccon.UESecurityCapability.SetLen(uint8(len(buf)))
+						}
 					}
 				}
-			}
 
-			if mmContext.AllowedNssai != nil {
-				for _, snssai := range mmContext.AllowedNssai {
-					allowedSnssai := models.AllowedSnssai{
-						AllowedSnssai: &snssai,
+				if mmContext.AllowedNssai != nil {
+					for _, snssai := range mmContext.AllowedNssai {
+						allowedSnssai := models.AllowedSnssai{
+							AllowedSnssai: &snssai,
+						}
+						ue.nssf.AllowedNssai[mmContext.AccessType] = append(ue.nssf.AllowedNssai[mmContext.AccessType], allowedSnssai)
 					}
-					ue.nssf.AllowedNssai[mmContext.AccessType] = append(ue.nssf.AllowedNssai[mmContext.AccessType], allowedSnssai)
 				}
 			}
 		}
-	}
+	*/
 }
 
 // SM Context related function

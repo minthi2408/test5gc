@@ -37,7 +37,7 @@ func (gmm *GmmFsm) handleULNASTransport(ue *context.AmfUe, anType models.AccessT
 	ulNasTransport *nasMessage.ULNASTransport) error {
 	log.Infoln("Handle UL NAS Transport")
 
-	if ue.GetSecInfo().MacFailed {
+	if ue.AusfClient().IsMacFailed() {
 		return fmt.Errorf("NAS message integrity check failed")
 	}
 
@@ -351,8 +351,9 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 	// the UE has a valid 5G NAS security context and the UE needs to send non-cleartext IEs
 	// TS 24.501 4.4.6: When the UE sends a REGISTRATION REQUEST or SERVICE REQUEST message that includes a NAS message
 	// container IE, the UE shall set the security header type of the initial NAS message to "integrity protected"
-	secinfo := ue.GetSecInfo()
-	if registrationRequest.NASMessageContainer != nil && !secinfo.MacFailed {
+	ausf := ue.AusfClient()
+	secinfo := ausf.SecInfo()
+	if registrationRequest.NASMessageContainer != nil && !ausf.IsMacFailed() {
 		contents := registrationRequest.NASMessageContainer.GetNASMessageContainerContents()
 
 		// TS 24.501 4.4.6: When the UE sends a REGISTRATION REQUEST or SERVICE REQUEST message that includes a NAS
@@ -378,7 +379,7 @@ func (gmm *GmmFsm) handleRegistrationRequest(ue *context.AmfUe, anType models.Ac
 		}
 	}
 	// TS 33.501 6.4.6 step 3: if the initial NAS message was protected but did not pass the integrity check
-	ue.RetransmissionOfInitialNASMsg = secinfo.MacFailed
+	ue.RetransmissionOfInitialNASMsg = ausf.IsMacFailed()
 
 	ue.RegistrationRequest = registrationRequest
 	ue.RegistrationType5GS = registrationRequest.NgksiAndRegistrationType5GS.GetRegistrationType5GS()
@@ -524,7 +525,7 @@ func (gmm *GmmFsm) handleInitialRegistration(ue *context.AmfUe, anType models.Ac
 	amf := gmm.nas.amf()
 	udminfo := ue.UdmClient().Info()
 	// update Kgnb/Kn3iwf
-	ue.UpdateSecurityContext(anType)
+	ue.AusfClient().UpdateSecurityContext(anType)
 
 	// Registration with AMF re-allocation (TS 23.502 4.2.2.2.3)
 	if len(udminfo.SubscribedNssai) == 0 {
@@ -942,7 +943,7 @@ func (gmm *GmmFsm) handleMobilityAndPeriodicRegistrationUpdating(ue *context.Amf
 
 	if ue.RanUe[anType].UeContextRequest() {
 		// update Kgnb/Kn3iwf
-		ue.UpdateSecurityContext(anType)
+		ue.AusfClient().UpdateSecurityContext(anType)
 
 		if anType == models.AccessType__3_GPP_ACCESS {
 			gmm.nas.SendRegistrationAccept(ue, anType, pduSessionStatus, reactivationResult,
@@ -1302,7 +1303,8 @@ func (gmm *GmmFsm) assignLadnInfo(ue *context.AmfUe, accessType models.AccessTyp
 func (gmm *GmmFsm) handleIdentityResponse(ue *context.AmfUe, identityResponse *nasMessage.IdentityResponse) error {
 
 	log.Info("Handle Identity Response")
-	secinfo := ue.GetSecInfo()
+	ausf := ue.AusfClient()
+
 	mobileIdentityContents := identityResponse.MobileIdentity.GetMobileIdentityContents()
 	if nasConvert.GetTypeOfIdentity(mobileIdentityContents[0]) != ue.RequestIdentityType {
 		return fmt.Errorf("Received identity type doesn't match request type")
@@ -1320,14 +1322,14 @@ func (gmm *GmmFsm) handleIdentityResponse(ue *context.AmfUe, identityResponse *n
 		ue.PlmnId = context.PlmnIdStringToModels(plmnId)
 		log.Debugf("get SUCI: %s", ue.Suci)
 	case nasMessage.MobileIdentity5GSType5gGuti:
-		if secinfo.MacFailed {
+		if ausf.IsMacFailed() {
 			return fmt.Errorf("NAS message integrity check failed")
 		}
 		_, guti := nasConvert.GutiToString(mobileIdentityContents)
 		ue.Guti = guti
 		log.Debugf("get GUTI: %s", guti)
 	case nasMessage.MobileIdentity5GSType5gSTmsi:
-		if secinfo.MacFailed {
+		if ausf.IsMacFailed() {
 			return fmt.Errorf("NAS message integrity check failed")
 		}
 		sTmsi := hex.EncodeToString(mobileIdentityContents[1:])
@@ -1338,14 +1340,14 @@ func (gmm *GmmFsm) handleIdentityResponse(ue *context.AmfUe, identityResponse *n
 		}
 		log.Debugf("get 5G-S-TMSI: %s", sTmsi)
 	case nasMessage.MobileIdentity5GSTypeImei:
-		if secinfo.MacFailed {
+		if ausf.IsMacFailed() {
 			return fmt.Errorf("NAS message integrity check failed")
 		}
 		imei := nasConvert.PeiToString(mobileIdentityContents)
 		ue.Pei = imei
 		log.Debugf("get PEI: %s", imei)
 	case nasMessage.MobileIdentity5GSTypeImeisv:
-		if secinfo.MacFailed {
+		if ausf.IsMacFailed() {
 			return fmt.Errorf("NAS message integrity check failed")
 		}
 		imeisv := nasConvert.PeiToString(mobileIdentityContents)
@@ -1358,7 +1360,7 @@ func (gmm *GmmFsm) handleIdentityResponse(ue *context.AmfUe, identityResponse *n
 // TS 24501 5.6.3.2
 func (gmm *GmmFsm) handleNotificationResponse(ue *context.AmfUe, notificationResponse *nasMessage.NotificationResponse) error {
 	log.Info("Handle Notification Response")
-	if ue.GetSecInfo().MacFailed {
+	if ue.AusfClient().IsMacFailed() {
 		return fmt.Errorf("NAS message integrity check failed")
 	}
 
@@ -1394,7 +1396,7 @@ func (gmm *GmmFsm) handleConfigurationUpdateComplete(ue *context.AmfUe,
 	configurationUpdateComplete *nasMessage.ConfigurationUpdateComplete) error {
 	log.Info("Handle Configuration Update Complete")
 
-	if ue.GetSecInfo().MacFailed {
+	if ue.AusfClient().IsMacFailed() {
 		return fmt.Errorf("NAS message integrity check failed")
 	}
 
@@ -1408,11 +1410,12 @@ func (gmm *GmmFsm) handleConfigurationUpdateComplete(ue *context.AmfUe,
 func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.AccessType) (bool, error) {
 	log.Info("Authentication procedure")
 
-	ausfinfo := ue.AusfClient().Info()
+	ausf := ue.AusfClient()
+	ausfinfo := ausf.Info()
 	// Check whether UE has SUCI and SUPI
 	if IdentityVerification(ue) {
 		log.Debugln("UE has SUCI / SUPI")
-		if ue.SecurityContextIsValid() {
+		if ausf.SecurityContextIsValid() {
 			log.Debugln("UE has a valid security context - skip the authentication procedure")
 			return true, nil
 		}
@@ -1424,7 +1427,6 @@ func (gmm *GmmFsm) AuthenticationProcedure(ue *context.AmfUe, accessType models.
 	}
 
 	// TODO: consider ausf group id, Routing ID part of SUCI
-	ausf := ue.AusfClient()
 	ausf.Select() //make a query to find an ausf producer
 
 	response, problemDetails, err := ausf.SendUEAuthenticationAuthenticateRequest(nil)
@@ -1449,7 +1451,8 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 	serviceRequest *nasMessage.ServiceRequest) error {
 
 	log.Info("Handle Service Request")
-	secinfo := ue.GetSecInfo()
+	ausf := ue.AusfClient()
+	secinfo := ausf.SecInfo()
 
 	if ue.T3513 != nil {
 		ue.T3513.Stop()
@@ -1472,7 +1475,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 	}
 
 	// Send Authtication / Security Procedure not support
-	if !ue.SecurityContextIsValid() {
+	if !ue.AusfClient().SecurityContextIsValid() {
 		log.Warnf("No Security Context : SUPI[%s]", ue.Supi)
 		gmm.nas.SendServiceReject(ue.RanUe[anType], nil, nasMessage.Cause5GMMUEIdentityCannotBeDerivedByTheNetwork)
 		gmm.nas.ngap.SendUEContextReleaseCommand(ue.RanUe[anType],
@@ -1510,7 +1513,7 @@ func (gmm *GmmFsm) handleServiceRequest(ue *context.AmfUe, anType models.AccessT
 			serviceRequest = m.ServiceRequest
 		}
 		// TS 33.501 6.4.6 step 3: if the initial NAS message was protected but did not pass the integrity check
-		ue.RetransmissionOfInitialNASMsg = secinfo.MacFailed
+		ue.RetransmissionOfInitialNASMsg = ausf.IsMacFailed()
 	}
 
 	serviceType := serviceRequest.GetServiceTypeValue()
@@ -1774,7 +1777,7 @@ func (gmm *GmmFsm) sendServiceAccept(ue *context.AmfUe, anType models.AccessType
 	reactivationResult *[16]bool, errPduSessionId, errCause []uint8) error {
 	if ue.RanUe[anType].UeContextRequest() {
 		// update Kgnb/Kn3iwf
-		ue.UpdateSecurityContext(anType)
+		ue.AusfClient().UpdateSecurityContext(anType)
 
 		nasPdu, err := gmm.nas.BuildServiceAccept(ue, anType, pDUSessionStatus, reactivationResult,
 			errPduSessionId, errCause)
@@ -1861,7 +1864,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 			ue.UnauthenticatedSupi = false
 			ausfinfo.Kseaf = response.Kseaf
 			ue.Supi = response.Supi
-			ue.DerivateKamf()
+			ue.AusfClient().DerivateKamf()
 			log.Debugln("ue.DerivateKamf()", ausfinfo.Kamf)
 			return gmm.sm.SendEvent(ue.State[accessType], AuthSuccessEvent, fsm.ArgsType{
 				ArgAmfUe:      ue,
@@ -1896,7 +1899,7 @@ func (gmm *GmmFsm) handleAuthenticationResponse(ue *context.AmfUe, accessType mo
 			ue.UnauthenticatedSupi = false
 			ausfinfo.Kseaf = response.KSeaf
 			ue.Supi = response.Supi
-			ue.DerivateKamf()
+			ue.AusfClient().DerivateKamf()
 			// TODO: select enc/int algorithm based on ue security capability & amf's policy,
 			// then generate KnasEnc, KnasInt
 			return gmm.sm.SendEvent(ue.State[accessType], AuthSuccessEvent, fsm.ArgsType{
@@ -1944,7 +1947,7 @@ func (gmm *GmmFsm) handleAuthenticationFailure(ue *context.AmfUe, anType models.
 	log.Info("Handle Authentication Failure")
 
 	ausfinfo := ue.AusfClient().Info()
-	secinfo := ue.GetSecInfo()
+	secinfo := ue.AusfClient().SecInfo()
 
 	if ue.T3560 != nil {
 		ue.T3560.Stop()
@@ -2059,7 +2062,7 @@ func (gmm *GmmFsm) handleSecurityModeComplete(ue *context.AmfUe, anType models.A
 	securityModeComplete *nasMessage.SecurityModeComplete) error {
 	log.Info("Handle Security Mode Complete")
 
-	if ue.GetSecInfo().MacFailed {
+	if ue.AusfClient().IsMacFailed() {
 		return fmt.Errorf("NAS message integrity check failed")
 	}
 
@@ -2068,9 +2071,9 @@ func (gmm *GmmFsm) handleSecurityModeComplete(ue *context.AmfUe, anType models.A
 		ue.T3560 = nil // clear the timer
 	}
 
-	if ue.SecurityContextIsValid() {
+	if ue.AusfClient().SecurityContextIsValid() {
 		// update Kgnb/Kn3iwf
-		ue.UpdateSecurityContext(anType)
+		ue.AusfClient().UpdateSecurityContext(anType)
 	}
 
 	if securityModeComplete.IMEISV != nil {
@@ -2251,7 +2254,7 @@ func (gmm *GmmFsm) handleDeregistrationAccept(ue *context.AmfUe, anType models.A
 
 func (gmm *GmmFsm) handleStatus5GMM(ue *context.AmfUe, anType models.AccessType, status5GMM *nasMessage.Status5GMM) error {
 	log.Info("Handle Staus 5GMM")
-	if ue.GetSecInfo().MacFailed {
+	if ue.AusfClient().IsMacFailed() {
 		return fmt.Errorf("NAS message integrity check failed")
 	}
 
