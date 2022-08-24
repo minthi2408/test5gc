@@ -59,15 +59,4 @@ type LoadBalancer interface {
 	Select([]common.AgentProfile) common.AgentProfile
 }
 
-/////////////////////////
-//connection
 
-type ConnectionManager interface {
-	// create a new connection or resuse an existing one
-	// add security layer if needs
-	// NOTE: it is just a connection preparation, no interaction is done now
-	Connect(common.AgentAddr) (RemoteConnection, error)
-
-	// drop an unresponsive connection
-	Drop(common.AgentAddr)
-}

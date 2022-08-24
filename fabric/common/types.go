@@ -4,6 +4,9 @@ const (
 	DATAPLANE_HTTP = iota
 	DATAPLANE_HTTPS
 	DATALANE_MAX_PROTOCOLS
+
+    SERVICE_MSG_TYPE_OPENAPI = iota
+    SERVICE_MSG_TYPE_MAX
 )
 
 type DataPlaneProtocol int
@@ -15,13 +18,19 @@ type Marshallable interface {
 	Unmarshal([]byte) error
 }
 
+type ServiceMessage interface {
+    MsgType() int
+}
+
 // the abstraction of service requests composed by the upper layer
 type Request interface {
+    ServiceMessage
 	//	Marshallable
 }
 
 // the abstraction of service responses composed by the upper layer
 type Response interface {
+    ServiceMessage
 	//	Marshallable
 }
 

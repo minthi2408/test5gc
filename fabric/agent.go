@@ -2,6 +2,7 @@ package fabric
 
 import (
 	"errors"
+	"etri5gc/fabric/conman"
 	"etri5gc/fabric/common"
 	"etri5gc/fabric/httpdp"
 	"etri5gc/fabric/registrydb"
@@ -25,8 +26,9 @@ func (conf *AgentConfig) SetServices(services []common.Service) {
 
 type serviceAgent struct {
 	reporter    telemetry.Writer
-	connections ConnectionManager
+	conmngr     conman.ConnectionManager
 	registry    AgentRegistry
+    lb          LoadBalancer
 	server      ServiceServer
 	forwarder   Forwarder
 }
@@ -46,6 +48,9 @@ func (agent *serviceAgent) Terminate() {
 func (agent *serviceAgent) Forwarder() Forwarder {
 	return agent.forwarder
 }
+func (agent *serviceAgent) Telemetry() telemetry.Writer {
+    return agent.reporter
+}
 
 func (agent *serviceAgent) Register(services []common.Service) error {
 	return agent.server.Register(services)
@@ -59,9 +64,11 @@ func (agent *serviceAgent) Register(services []common.Service) error {
 func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 	agent := &serviceAgent{
 		registry: registrydb.NewDistributedAgentRegistry(),
+        conmngr:  conman.NewConnectionManager(),
 	}
+
 	if config.DProto == common.DATAPLANE_HTTP {
-		agent.forwarder = httpdp.NewForwarder()
+		agent.forwarder = newForwarder(agent.registry, agent.lb, agent.conmngr)
 		agent.server = httpdp.NewHttpServer(config.HttpConf)
 		return agent, nil
 	} else {

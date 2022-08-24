@@ -2,6 +2,7 @@ package fabric
 
 import (
 	"errors"
+	"etri5gc/fabric/conman"
 	"etri5gc/fabric/common"
 )
 
@@ -10,11 +11,6 @@ const (
 	FORWARDER_REQUEST_TIMEOUT = 2000 //miliseconds
 )
 
-//abstraction of protocol-specific service clients
-type RemoteConnection interface {
-	Send(common.Request) (common.Response, error)
-	Addr() common.AgentAddr
-}
 
 type forwarderImpl struct {
 	//registry to search for remote agents
@@ -22,12 +18,12 @@ type forwarderImpl struct {
 	//a load balancer implementation
 	lb LoadBalancer
 	//for creating a connection to a selected remote agent
-	conman ConnectionManager
+	conman conman.ConnectionManager
 	//protocol-sepecific implementation of service client
-	sender RemoteConnection
+	sender conman.RemoteConnection
 }
 
-func newForwarder(reg AgentRegistry, lb LoadBalancer, conman ConnectionManager) Forwarder {
+func newForwarder(reg AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) Forwarder {
 	ret := &forwarderImpl{
 		reg:    reg,
 		lb:     lb,
