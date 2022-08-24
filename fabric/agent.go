@@ -2,17 +2,33 @@ package fabric
 
 import (
 	"errors"
-    "etri5gc/fabric/httpdp"
-    "etri5gc/fabric/common"
-    "etri5gc/fabric/telemetry"
+	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
+	"etri5gc/fabric/registrydb"
+	"etri5gc/fabric/telemetry"
 )
 
+// configuration parameters for an agent
+// there should be core parameters
+// there should be plug-in parameters that are NF-dependent
+type AgentConfig struct {
+	NfType   common.NetworkFunctionType
+	DProto   common.DataPlaneProtocol
+	HttpConf *httpdp.HttpServerConfig
+
+	services []common.Service
+}
+
+func (conf *AgentConfig) SetServices(services []common.Service) {
+	conf.services = services
+}
+
 type serviceAgent struct {
-	reporter         telemetry.Writer
-	connections      ConnectionManager
-	registry         AgentRegistry
-    server           ServiceServer
-    forwarder        Forwarder
+	reporter    telemetry.Writer
+	connections ConnectionManager
+	registry    AgentRegistry
+	server      ServiceServer
+	forwarder   Forwarder
 }
 
 func (agent *serviceAgent) Start() (err error) {
@@ -42,6 +58,7 @@ func (agent *serviceAgent) Register(services []common.Service) error {
 
 func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 	agent := &serviceAgent{
+		registry: registrydb.NewDistributedAgentRegistry(),
 	}
 	if config.DProto == common.DATAPLANE_HTTP {
 		agent.forwarder = httpdp.NewForwarder()
@@ -51,5 +68,3 @@ func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 		return nil, errors.New("the input data plane protocol is not supported")
 	}
 }
-
-

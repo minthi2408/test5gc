@@ -1,25 +1,8 @@
 package fabric
 
 import (
-    "etri5gc/fabric/common"
-    "etri5gc/fabric/httpdp"
+	"etri5gc/fabric/common"
 )
-
-
-// configuration parameters for an agent
-// there should be core parameters
-// there should be plug-in parameters that are NF-dependent
-type AgentConfig struct {
-	NfType      common.NetworkFunctionType
-	DProto      common.DataPlaneProtocol
-	HttpConf    *httpdp.HttpServerConfig
-
-    services    []common.Service
-}
-
-func (conf *AgentConfig) SetServices(services []common.Service) {
-    conf.services = services
-}
 
 // a service abstraction to expose service requesting to upper layers
 // if the agent implements a http-based data plane protocol then the forwarder
@@ -34,12 +17,12 @@ type Forwarder interface {
 // a server abstraction that listen to requests for registered services
 type ServiceServer interface {
 	//register services to handling incomming requests
-    //must be called before the server starts
+	//must be called before the server starts
 	Register([]common.Service) error
-    //start server
-    Serve()
-    //terminate server
-    Terminate()
+	//start server
+	Serve()
+	//terminate server
+	Terminate()
 }
 
 // an abstraction that exposes the agent to the upper layers
@@ -53,7 +36,7 @@ type ServiceAgent interface {
 	// expose the forwarder
 	Forwarder() Forwarder
 
-	//  expose service registering method 
+	//  expose service registering method
 	Register([]common.Service) error
 }
 
@@ -62,7 +45,11 @@ type ServiceAgent interface {
 
 //a registry to query for producers
 type AgentRegistry interface {
+	//search agents which match a query
 	Search(common.NfQuery) []common.AgentProfile
+
+	//drop a dead agent
+	Drop(common.AgentProfile)
 }
 
 ///////////////////////
@@ -72,9 +59,15 @@ type LoadBalancer interface {
 	Select([]common.AgentProfile) common.AgentProfile
 }
 
-
 /////////////////////////
 //connection
 
 type ConnectionManager interface {
+	// create a new connection or resuse an existing one
+	// add security layer if needs
+	// NOTE: it is just a connection preparation, no interaction is done now
+	Connect(common.AgentAddr) (RemoteConnection, error)
+
+	// drop an unresponsive connection
+	Drop(common.AgentAddr)
 }

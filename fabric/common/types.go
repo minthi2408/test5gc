@@ -17,34 +17,16 @@ type Marshallable interface {
 
 // the abstraction of service requests composed by the upper layer
 type Request interface {
-	Marshallable
+	//	Marshallable
 }
 
 // the abstraction of service responses composed by the upper layer
 type Response interface {
-	Marshallable
+	//	Marshallable
 }
 
 type AgentAddr interface {
-    Protocol() DataPlaneProtocol
-}
-
-//the type of a network function (amf, smf, etc.)
-type NetworkFunctionType string
-
-// the abstraction of querries that are sent by an upper layer caller to select
-// a remote producer
-// Note: we have not sure how the query should be implemented yet. Should it be a
-// complex sql-like query, or should it be any other simplified form?
-
-type NfQuery interface {
-	GetNfType() NetworkFunctionType
-}
-
-//define a context where a network function operate
-//a NfQuery should be map to a single NfContext so that a list of currently
-//deployed (running) NFs can be retrieved
-type NfContext struct {
+	Protocol() DataPlaneProtocol
 }
 
 // the abstraction of a service supported by an NF
@@ -57,8 +39,5 @@ type Service interface {
 
 type AgentProfile interface {
 	NfType() NetworkFunctionType
-    Addr() AgentAddr
+	Addr() AgentAddr
 }
-
-
-

@@ -271,6 +271,7 @@ func (c *ausfClient) clear() {
 }
 
 ///////////////////////////////////// consumer /////////////////////
+//build a query to select an AUSF producer
 func (c *ausfClient) Select() {
 }
 

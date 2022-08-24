@@ -11,6 +11,7 @@ import (
 
 	//	"time"
 
+	"etri5gc/fabric"
 	"etri5gc/nfs/amf/config"
 
 	"github.com/free5gc/openapi/models"
@@ -32,11 +33,12 @@ type IdGenerator interface {
 
 type AMFContext struct {
 	cfg           *config.Config //Amf configuration
-	uepool        sync.Map       //list of Amf-connected Ue
-	ranpool       sync.Map       //list of connected Ran
-	ruepool       sync.Map       //list of contacted Ue
-	eventsubpool  sync.Map       //list of event subscriptions
-	statussubpool sync.Map       //list of status subscriptions
+	fowarder      fabric.Forwarder
+	uepool        sync.Map //list of Amf-connected Ue
+	ranpool       sync.Map //list of connected Ran
+	ruepool       sync.Map //list of contacted Ue
+	eventsubpool  sync.Map //list of event subscriptions
+	statussubpool sync.Map //list of status subscriptions
 
 	ladnpool map[string]*LADN // dnn as key
 
@@ -68,7 +70,7 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 }
 */
 
-func CreateAmfContext(cfg *config.Config) *AMFContext {
+func CreateAmfContext(cfg *config.Config, fw fabric.Forwarder) *AMFContext {
 	ret := &AMFContext{
 		cfg:            cfg,
 		tmsiIdGen:      idgenerator.NewGenerator(1, math.MaxInt32),
@@ -299,7 +301,6 @@ func (amf *AMFContext) RemoveAmfUe(ue *AmfUe) {
 	}
 }
 */
-
 func (amf *AMFContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateData) *AmfUe {
 	//tungtq: this procedure was written by free5gc, it looks experimential so we have to work on improvements later.
 	ue := amf.NewAmfUe(supi)
