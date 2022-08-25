@@ -1,17 +1,10 @@
 package ngap
 
 import (
-	//	"encoding/hex"
-	//	"strconv"
 	"etri5gc/nfs/amf/context"
-	//	"etri5gc/nfs/amf/nas"
+	"etri5gc/openapi/models"
 
-	//	"github.com/free5gc/aper"
-	//	"github.com/free5gc/nas/nasMessage"
-	//	libngap "github.com/free5gc/ngap"
-	//	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, initialContextSetupFailure *ngapType.InitialContextSetupFailure) {

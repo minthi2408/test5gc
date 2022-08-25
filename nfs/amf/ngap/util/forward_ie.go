@@ -4,10 +4,10 @@ import (
 	"encoding/hex"
 
 	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
 
-	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 func AppendPDUSessionResourceSetupListSUReq(list *ngapType.PDUSessionResourceSetupListSUReq,

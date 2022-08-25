@@ -2,16 +2,17 @@ package ngap
 
 import (
 	"encoding/hex"
-	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/ngap/util"
 	"fmt"
 	"strings"
 
+	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/amf/ngap/util"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
+
 	"github.com/free5gc/aper"
 	libngap "github.com/free5gc/ngap"
-	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 func (s *ngapSender) buildPDUSessionResourceReleaseCommand(ue *context.RanUe, nasPdu []byte,

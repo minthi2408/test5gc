@@ -4,9 +4,10 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/free5gc/nas/nasConvert"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/nasConvert"
+
 	"github.com/free5gc/nas/nasMessage"
-	"github.com/free5gc/openapi/models"
 )
 
 type SmContext struct {

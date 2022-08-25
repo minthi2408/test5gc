@@ -1,15 +1,12 @@
 package context
 
-
 import (
-	"github.com/free5gc/openapi/models"
+	"etri5gc/openapi/models"
 )
 
-
 type amfClient struct {
-	ue	*AmfUe
+	ue *AmfUe
 }
-
 
 func (c *amfClient) test() {
 }
@@ -17,23 +14,23 @@ func (c *amfClient) test() {
 func (c *amfClient) CreateUEContextRequest(ueContextCreateData models.UeContextCreateData) (
 	ueContextCreatedData *models.UeContextCreatedData, problemDetails *models.ProblemDetails, err error) {
 	/*
-	req := models.CreateUeContextRequest{
-		JsonData: &ueContextCreateData,
-	}
-	res, httpResp, localErr := client.IndividualUeContextDocumentApi.CreateUEContext(org_context.TODO(), ue.Guti, req)
-	if localErr == nil {
-		ueContextCreatedData = res.JsonData
-		//logger.ConsumerLog.Debugf("UeContextCreatedData: %+v", *ueContextCreatedData)
-	} else if httpResp != nil {
-		if httpResp.Status != localErr.Error() {
-			err = localErr
-			return
+		req := models.CreateUeContextRequest{
+			JsonData: &ueContextCreateData,
 		}
-		problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-		problemDetails = &problem
-	} else {
-		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
-	}
+		res, httpResp, localErr := client.IndividualUeContextDocumentApi.CreateUEContext(org_context.TODO(), ue.Guti, req)
+		if localErr == nil {
+			ueContextCreatedData = res.JsonData
+			//logger.ConsumerLog.Debugf("UeContextCreatedData: %+v", *ueContextCreatedData)
+		} else if httpResp != nil {
+			if httpResp.Status != localErr.Error() {
+				err = localErr
+				return
+			}
+			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problemDetails = &problem
+		} else {
+			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+		}
 	*/
 	return
 }
@@ -41,85 +38,85 @@ func (c *amfClient) CreateUEContextRequest(ueContextCreateData models.UeContextC
 func (c *amfClient) ReleaseUEContextRequest(ngapCause models.NgApCause) (
 	problemDetails *models.ProblemDetails, err error) {
 
-		/*
-	client := amf_comm_client(ue)
+	/*
+		client := amf_comm_client(ue)
 
-	var ueContextId string
-	if ue.Supi != "" {
-		ueContextId = ue.Supi
-	} else {
-		ueContextId = ue.Pei
-	}
-
-	ueContextRelease := models.UeContextRelease{
-		NgapCause: &ngapCause,
-	}
-	if ue.RegistrationType5GS == nasMessage.RegistrationType5GSEmergencyRegistration && ue.UnauthenticatedSupi {
-		ueContextRelease.Supi = ue.Supi
-		ueContextRelease.UnauthenticatedSupi = true
-	}
-
-	httpResp, localErr := client.IndividualUeContextDocumentApi.ReleaseUEContext(
-		org_context.TODO(), ueContextId, ueContextRelease)
-	if localErr == nil {
-		return
-	} else if httpResp != nil {
-		if httpResp.Status != localErr.Error() {
-			err = localErr
-			return
+		var ueContextId string
+		if ue.Supi != "" {
+			ueContextId = ue.Supi
+		} else {
+			ueContextId = ue.Pei
 		}
-		problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-		problemDetails = &problem
-	} else {
-		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
-	}
-	return problemDetails, err
+
+		ueContextRelease := models.UeContextRelease{
+			NgapCause: &ngapCause,
+		}
+		if ue.RegistrationType5GS == nasMessage.RegistrationType5GSEmergencyRegistration && ue.UnauthenticatedSupi {
+			ueContextRelease.Supi = ue.Supi
+			ueContextRelease.UnauthenticatedSupi = true
+		}
+
+		httpResp, localErr := client.IndividualUeContextDocumentApi.ReleaseUEContext(
+			org_context.TODO(), ueContextId, ueContextRelease)
+		if localErr == nil {
+			return
+		} else if httpResp != nil {
+			if httpResp.Status != localErr.Error() {
+				err = localErr
+				return
+			}
+			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problemDetails = &problem
+		} else {
+			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+		}
+		return problemDetails, err
 	*/
 	return nil, nil
 }
 
 func (c *amfClient) UEContextTransferRequest(accessType models.AccessType, transferReason models.TransferReason) (ueContextTransferRspData *models.UeContextTransferRspData, problemDetails *models.ProblemDetails, err error) {
 	/*
-	client := amf_comm_client(ue)
+		client := amf_comm_client(ue)
 
-	ueContextTransferReqData := models.UeContextTransferReqData{
-		Reason:     transferReason,
-		AccessType: accessType,
-	}
-
-	req := models.UeContextTransferRequest{
-		JsonData: &ueContextTransferReqData,
-	}
-	if transferReason == models.TransferReason_INIT_REG || transferReason == models.TransferReason_MOBI_REG {
-		var buf bytes.Buffer
-		ue.RegistrationRequest.EncodeRegistrationRequest(&buf)
-		ueContextTransferReqData.RegRequest = &models.N1MessageContainer{
-			N1MessageClass: models.N1MessageClass__5_GMM,
-			N1MessageContent: &models.RefToBinaryData{
-				ContentId: "n1Msg",
-			},
+		ueContextTransferReqData := models.UeContextTransferReqData{
+			Reason:     transferReason,
+			AccessType: accessType,
 		}
-		req.BinaryDataN1Message = buf.Bytes()
-	}
 
-	// guti format is defined at TS 29.518 Table 6.1.3.2.2-1 5g-guti-[0-9]{5,6}[0-9a-fA-F]{14}
-	ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
-
-	res, httpResp, localErr := client.IndividualUeContextDocumentApi.UEContextTransfer(org_context.TODO(), ueContextId, req)
-	if localErr == nil {
-		ueContextTransferRspData = res.JsonData
-		//logger.ConsumerLog.Debugf("UeContextTransferRspData: %+v", *ueContextTransferRspData)
-	} else if httpResp != nil {
-		if httpResp.Status != localErr.Error() {
-			err = localErr
-			return
+		req := models.UeContextTransferRequest{
+			JsonData: &ueContextTransferReqData,
 		}
-		problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-		problemDetails = &problem
-	} else {
-		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
-	}
-	return ueContextTransferRspData, problemDetails, err
+		if transferReason == models.TransferReason_INIT_REG || transferReason == models.TransferReason_MOBI_REG {
+			var buf bytes.Buffer
+			ue.RegistrationRequest.EncodeRegistrationRequest(&buf)
+			ueContextTransferReqData.RegRequest = &models.N1MessageContainer{
+				N1MessageClass: models.N1MessageClass__5_GMM,
+				N1MessageContent: &models.RefToBinaryData{
+					ContentId: "n1Msg",
+				},
+			}
+			req.BinaryDataN1Message = buf.Bytes()
+		}
+
+		// guti format is defined at TS 29.518 Table 6.1.3.2.2-1 5g-guti-[0-9]{5,6}[0-9a-fA-F]{14}
+		ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
+
+		res, httpResp, localErr := client.IndividualUeContextDocumentApi.UEContextTransfer(org_context.TODO(), ueContextId, req)
+		if localErr == nil {
+			ueContextTransferRspData = res.JsonData
+			//logger.ConsumerLog.Debugf("UeContextTransferRspData: %+v", *ueContextTransferRspData)
+		} else if httpResp != nil {
+			if httpResp.Status != localErr.Error() {
+				err = localErr
+				return
+			}
+			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problemDetails = &problem
+		} else {
+			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+		}
+		return ueContextTransferRspData, problemDetails, err
 	*/
 	return nil, nil, nil
 }
@@ -128,23 +125,23 @@ func (c *amfClient) UEContextTransferRequest(accessType models.AccessType, trans
 func (c *amfClient) RegistrationStatusUpdate(request models.UeRegStatusUpdateReqData) (
 	regStatusTransferComplete bool, problemDetails *models.ProblemDetails, err error) {
 	/*
-	client := amf_comm_client(ue)
+		client := amf_comm_client(ue)
 
-	ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
-	res, httpResp, localErr :=
-		client.IndividualUeContextDocumentApi.RegistrationStatusUpdate(org_context.TODO(), ueContextId, request)
-	if localErr == nil {
-		regStatusTransferComplete = res.RegStatusTransferComplete
-	} else if httpResp != nil {
-		if httpResp.Status != localErr.Error() {
-			err = localErr
-			return
+		ueContextId := fmt.Sprintf("5g-guti-%s", ue.Guti)
+		res, httpResp, localErr :=
+			client.IndividualUeContextDocumentApi.RegistrationStatusUpdate(org_context.TODO(), ueContextId, request)
+		if localErr == nil {
+			regStatusTransferComplete = res.RegStatusTransferComplete
+		} else if httpResp != nil {
+			if httpResp.Status != localErr.Error() {
+				err = localErr
+				return
+			}
+			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problemDetails = &problem
+		} else {
+			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
 		}
-		problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-		problemDetails = &problem
-	} else {
-		err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
-	}
 	*/
 	return
 }

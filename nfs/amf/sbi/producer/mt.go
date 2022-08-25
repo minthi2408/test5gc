@@ -3,9 +3,9 @@ package producer
 import (
 	"net/http"
 
-//	"etri5gc/nfs/amf/context"
+	//	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
 
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -34,6 +34,6 @@ func (h *Producer) doProvideDomainSelectionInfo(ueContextID string, infoClassQue
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
 	} else {
-		return  ue.GetContextInfo(infoClassQuery, supportedFeaturesQuery), nil
+		return ue.GetContextInfo(infoClassQuery, supportedFeaturesQuery), nil
 	}
 }

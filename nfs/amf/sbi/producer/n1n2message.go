@@ -1,54 +1,47 @@
 package producer
 
 import (
+	"etri5gc/openapi/models"
 	"net/http"
-//	"strconv"
 
-//	"etri5gc/nfs/amf/context"
-
-	//ngap_message "github.com/free5gc/amf/internal/ngap/message"
-//	"github.com/free5gc/aper"
-//	"github.com/free5gc/nas/nasMessage"
-//	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
 // TS23502 4.2.3.3, 4.2.4.3, 4.3.2.2, 4.3.2.3, 4.3.3.2, 4.3.7
 func (h *Producer) HandleN1N2MessageTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	/*
-	logger.ProducerLog.Infof("Handle N1N2 Message Transfer Request")
+		logger.ProducerLog.Infof("Handle N1N2 Message Transfer Request")
 
-	n1n2MessageTransferRequest := request.Body.(models.N1N2MessageTransferRequest)
-	ueContextID := request.Params["ueContextId"]
-	reqUri := request.Params["reqUri"]
+		n1n2MessageTransferRequest := request.Body.(models.N1N2MessageTransferRequest)
+		ueContextID := request.Params["ueContextId"]
+		reqUri := request.Params["reqUri"]
 
-	n1n2MessageTransferRspData, locationHeader, problemDetails, transferErr := N1N2MessageTransferProcedure(
-		ueContextID, reqUri, n1n2MessageTransferRequest)
+		n1n2MessageTransferRspData, locationHeader, problemDetails, transferErr := N1N2MessageTransferProcedure(
+			ueContextID, reqUri, n1n2MessageTransferRequest)
 
-	if problemDetails != nil {
-		return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
-	} else if transferErr != nil {
-		return httpwrapper.NewResponse(int(transferErr.Error.Status), nil, transferErr)
-	} else if n1n2MessageTransferRspData != nil {
-		switch n1n2MessageTransferRspData.Cause {
-		case models.N1N2MessageTransferCause_N1_MSG_NOT_TRANSFERRED:
-			fallthrough
-		case models.N1N2MessageTransferCause_N1_N2_TRANSFER_INITIATED:
-			return httpwrapper.NewResponse(http.StatusOK, nil, n1n2MessageTransferRspData)
-		case models.N1N2MessageTransferCause_ATTEMPTING_TO_REACH_UE:
-			headers := http.Header{
-				"Location": {locationHeader},
+		if problemDetails != nil {
+			return httpwrapper.NewResponse(int(problemDetails.Status), nil, problemDetails)
+		} else if transferErr != nil {
+			return httpwrapper.NewResponse(int(transferErr.Error.Status), nil, transferErr)
+		} else if n1n2MessageTransferRspData != nil {
+			switch n1n2MessageTransferRspData.Cause {
+			case models.N1N2MessageTransferCause_N1_MSG_NOT_TRANSFERRED:
+				fallthrough
+			case models.N1N2MessageTransferCause_N1_N2_TRANSFER_INITIATED:
+				return httpwrapper.NewResponse(http.StatusOK, nil, n1n2MessageTransferRspData)
+			case models.N1N2MessageTransferCause_ATTEMPTING_TO_REACH_UE:
+				headers := http.Header{
+					"Location": {locationHeader},
+				}
+				return httpwrapper.NewResponse(http.StatusAccepted, headers, n1n2MessageTransferRspData)
 			}
-			return httpwrapper.NewResponse(http.StatusAccepted, headers, n1n2MessageTransferRspData)
 		}
-	}
 
-	problemDetails = &models.ProblemDetails{
-		Status: http.StatusForbidden,
-		Cause:  "UNSPECIFIED",
-	}
-	return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
+		problemDetails = &models.ProblemDetails{
+			Status: http.StatusForbidden,
+			Cause:  "UNSPECIFIED",
+		}
+		return httpwrapper.NewResponse(http.StatusForbidden, nil, problemDetails)
 	*/
 	return nil
 }
@@ -426,11 +419,11 @@ func (h *Producer) doN1N2MessageSubscribe(ueId string,
 			Status: http.StatusNotFound,
 			Cause:  "CONTEXT_NOT_FOUND",
 		}
-	} else { 
+	} else {
 		if id, prob := ue.N1N2InfoSubscribe(dat); prob != nil {
 			return nil, prob
 		} else {
-			return &models.UeN1N2InfoSubscriptionCreatedData{ N1n2NotifySubscriptionId: id}, nil
+			return &models.UeN1N2InfoSubscriptionCreatedData{N1n2NotifySubscriptionId: id}, nil
 		}
 	}
 }

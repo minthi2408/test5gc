@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mohae/deepcopy"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
 
-	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
+	"github.com/mohae/deepcopy"
 )
 
 type RelAction int
@@ -37,7 +37,7 @@ type RanUe struct {
 	amfUeNgapId int64
 
 	/* HandOver Info*/
-	handover	HandoverInfo
+	handover HandoverInfo
 
 	/* UserLocation*/
 	tai      models.Tai
@@ -58,7 +58,7 @@ type RanUe struct {
 	/* Trace Recording Session Reference */
 	trsr string
 	/* Ue Context Release Action */
-	relAct 	RelAction
+	relAct RelAction
 
 	/* context used for AMF Re-allocation procedure */
 	OldAmfName            string
@@ -68,8 +68,8 @@ type RanUe struct {
 
 	/* send initial context setup request or not*/
 	SentInitialContextSetupRequest bool
-
 }
+
 /*
 func (ranUe *RanUe) SetUeNgapId(v int64) {
 	ranUe.RanUeNgapId = v
@@ -185,8 +185,7 @@ func (ranUe *RanUe) SwitchToRan(newRan *AmfRan, ranUeNgapId int64) error {
 	ranUe.ran = newRan
 	ranUe.ranUeNgapId = ranUeNgapId
 
-
-//	logger.ContextLog.Infof("RanUe[RanUeNgapID: %d] Switch to new Ran[Name: %s]", ranUe.RanUeNgapId, ranUe.Ran.Name)
+	//	logger.ContextLog.Infof("RanUe[RanUeNgapID: %d] Switch to new Ran[Name: %s]", ranUe.RanUeNgapId, ranUe.Ran.Name)
 	return nil
 }
 
@@ -195,7 +194,7 @@ func (ranUe *RanUe) UpdateLocation(userLocationInformation *ngapType.UserLocatio
 		return
 	}
 
-	amf := ranUe.ran.amf 
+	amf := ranUe.ran.amf
 	curTime := time.Now().UTC()
 	switch userLocationInformation.Present {
 	case ngapType.UserLocationInformationPresentUserLocationInformationEUTRA:
@@ -304,5 +303,3 @@ func (ranUe *RanUe) UpdateLocation(userLocationInformation *ngapType.UserLocatio
 	case ngapType.UserLocationInformationPresentNothing:
 	}
 }
-
-

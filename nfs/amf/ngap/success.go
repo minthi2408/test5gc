@@ -1,17 +1,11 @@
 package ngap
 
 import (
-	//	"encoding/hex"
-	//	"strconv"
 	"etri5gc/nfs/amf/context"
-	//	"etri5gc/nfs/amf/nas"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
 
-	//	"github.com/free5gc/aper"
-	//	"github.com/free5gc/nas/nasMessage"
-	//	libngap "github.com/free5gc/ngap"
-	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 func (h *ngapHandler) handleUERadioCapabilityCheckResponse(ran *context.AmfRan, uERadioCapabilityCheckResponse *ngapType.UERadioCapabilityCheckResponse) {

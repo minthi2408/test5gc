@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
 
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -19,17 +19,17 @@ type PduSession struct {
 }
 
 type UEContext struct {
-	AccessType	models.AccessType
-	Supi       	string
-	Guti       	string
+	AccessType models.AccessType
+	Supi       string
+	Guti       string
 	/* Tai */
-	Mcc 		string
-	Mnc 		string
-	Tac 		string
+	Mcc string
+	Mnc string
+	Tac string
 	/* PDU sessions */
 	PduSessions []PduSession
 	/*Connection state */
-	CmState 	models.CmState
+	CmState models.CmState
 }
 
 type UEContexts []UEContext

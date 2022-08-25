@@ -14,23 +14,20 @@ import (
 
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/nasConvert"
 
 	//	"github.com/antihax/optional"
 	"github.com/mitchellh/mapstructure"
 	"github.com/mohae/deepcopy"
 
 	libnas "github.com/free5gc/nas"
-	"github.com/free5gc/nas/nasConvert"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/nas/security"
 
-	//	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	//	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
-	//	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
 )
 
 func (gmm *GmmFsm) handleULNASTransport(ue *context.AmfUe, anType models.AccessType,

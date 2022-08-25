@@ -13,8 +13,8 @@ import (
 
 	"etri5gc/fabric"
 	"etri5gc/nfs/amf/config"
+	"etri5gc/openapi/models"
 
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/idgenerator"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"

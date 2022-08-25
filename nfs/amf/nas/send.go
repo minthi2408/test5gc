@@ -3,11 +3,11 @@ package nas
 import (
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
+	"etri5gc/openapi/models"
 
 	//	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 // backOffTimerUint = 7 means backoffTimer is null

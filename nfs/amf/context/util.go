@@ -1,15 +1,16 @@
 package context
 
 import (
-	"time"
-	"reflect"
 	"encoding/hex"
 	"fmt"
+	"reflect"
 	"strconv"
+	"time"
 
-	"github.com/mohae/deepcopy"
-	"github.com/free5gc/openapi/models"
+	"etri5gc/openapi/models"
+
 	"github.com/free5gc/nas/security"
+	"github.com/mohae/deepcopy"
 )
 
 func CompareUserLocation(loc1 models.UserLocation, loc2 models.UserLocation) bool {
@@ -58,7 +59,7 @@ func AttachSourceUeTargetUe(sourceUe, targetUe *RanUe) {
 	if sourceUe == nil || targetUe == nil {
 		return
 	}
-	
+
 	amfUe := sourceUe.amfUe
 	if amfUe == nil {
 		return

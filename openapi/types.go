@@ -1,12 +1,13 @@
 package openapi
 
 import (
-    "net/http"
+	"etri5gc/fabric/common"
+	"net/http"
 	"net/url"
-    "etri5gc/fabric/common"
 )
 
 type ResponseHandlerFunc func(resp *http.Response, err error) (*Response, error)
+
 type Request struct {
 	Path         string
 	Method       string
@@ -17,24 +18,29 @@ type Request struct {
 	FormFileName string
 	FileName     string
 	FileBytes    []byte
-    //a handler to handle a http response
-    handler      ResponseHandlerFunc
-}
-
-func (req *Request) Handler() ResponseHandlerFunc {
-    return req.handler
+	//a handler to handle a http response
+	handler ResponseHandlerFunc
 }
 
 func (msg *Request) MsgType() int {
-    return common.SERVICE_MSG_TYPE_OPENAPI
+	return common.SERVICE_MSG_TYPE_OPENAPI
 }
+
+func DefaultRequest() *Request {
+	ret := &Request{
+		HeaderParams: make(map[string]string),
+	}
+	ret.HeaderParams["Content-Type"] = "application/json"
+	ret.HeaderParams["Accept"] = "application/json"
+	return ret
+}
+
 type Response struct {
-	Raw  interface{}
-	Body []byte
-	Code int
+	Raw        interface{}
+	Body       []byte
+	StatusCode int
 }
 
 func (msg *Response) MsgType() int {
-    return common.SERVICE_MSG_TYPE_OPENAPI
+	return common.SERVICE_MSG_TYPE_OPENAPI
 }
-

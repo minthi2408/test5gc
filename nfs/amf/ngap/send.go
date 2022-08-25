@@ -1,19 +1,19 @@
 package ngap
 
 import (
-	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf"
+	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
+
 	"github.com/free5gc/aper"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 type ngapSender struct {
-	backend		amf.Backend
+	backend amf.Backend
 }
 
-
-func(s *ngapSender) SendToRan(ran *context.AmfRan, packet []byte) {
+func (s *ngapSender) SendToRan(ran *context.AmfRan, packet []byte) {
 
 	if len(packet) == 0 {
 		log.Error("packet len is 0")
@@ -30,7 +30,7 @@ func(s *ngapSender) SendToRan(ran *context.AmfRan, packet []byte) {
 	}
 }
 
-func(s *ngapSender) SendToRanUe(ue *context.RanUe, packet []byte) {
+func (s *ngapSender) SendToRanUe(ue *context.RanUe, packet []byte) {
 	s.SendToRan(ue.Ran(), packet)
 }
 
@@ -44,7 +44,7 @@ func (s *ngapSender) NasSendToRan(ue *context.AmfUe, accessType models.AccessTyp
 	s.SendToRanUe(ranUe, packet)
 }
 
-func(s *ngapSender) SendNGSetupResponse(ran *context.AmfRan) {
+func (s *ngapSender) SendNGSetupResponse(ran *context.AmfRan) {
 	log.Info("Send NG-Setup response")
 
 	pkt, err := s.buildNGSetupResponse()
@@ -55,7 +55,7 @@ func(s *ngapSender) SendNGSetupResponse(ran *context.AmfRan) {
 	s.SendToRan(ran, pkt)
 }
 
-func(s *ngapSender) SendNGSetupFailure(ran *context.AmfRan, cause ngapType.Cause) {
+func (s *ngapSender) SendNGSetupFailure(ran *context.AmfRan, cause ngapType.Cause) {
 	log.Info("Send NG-Setup failure")
 
 	if cause.Present == ngapType.CausePresentNothing {
@@ -72,7 +72,7 @@ func(s *ngapSender) SendNGSetupFailure(ran *context.AmfRan, cause ngapType.Cause
 }
 
 // partOfNGInterface: if reset type is "reset all", set it to nil TS 38.413 9.2.6.11
-func(s *ngapSender) SendNGReset(ran *context.AmfRan, cause ngapType.Cause,
+func (s *ngapSender) SendNGReset(ran *context.AmfRan, cause ngapType.Cause,
 	partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList) {
 	log.Info("Send NG Reset")
 
@@ -84,7 +84,7 @@ func(s *ngapSender) SendNGReset(ran *context.AmfRan, cause ngapType.Cause,
 	s.SendToRan(ran, pkt)
 }
 
-func(s *ngapSender) SendNGResetAcknowledge(ran *context.AmfRan, partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList,
+func (s *ngapSender) SendNGResetAcknowledge(ran *context.AmfRan, partOfNGInterface *ngapType.UEAssociatedLogicalNGConnectionList,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
 	log.Info("Send NG Reset Acknowledge")
 
@@ -101,7 +101,7 @@ func(s *ngapSender) SendNGResetAcknowledge(ran *context.AmfRan, partOfNGInterfac
 	s.SendToRan(ran, pkt)
 }
 
-func(s *ngapSender) SendDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) SendDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 	mobilityRestrictionList *ngapType.MobilityRestrictionList) {
 
 	log.Info("Send Downlink Nas Transport")
@@ -118,7 +118,7 @@ func(s *ngapSender) SendDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendPDUSessionResourceReleaseCommand(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) SendPDUSessionResourceReleaseCommand(ue *context.RanUe, nasPdu []byte,
 	pduSessionResourceReleasedList ngapType.PDUSessionResourceToReleaseListRelCmd) {
 
 	log.Info("Send PDU Session Resource Release Command")
@@ -131,7 +131,7 @@ func(s *ngapSender) SendPDUSessionResourceReleaseCommand(ue *context.RanUe, nasP
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendUEContextReleaseCommand(ue *context.RanUe, action context.RelAction, causePresent int, cause aper.Enumerated) {
+func (s *ngapSender) SendUEContextReleaseCommand(ue *context.RanUe, action context.RelAction, causePresent int, cause aper.Enumerated) {
 
 	log.Info("Send UE Context Release Command")
 
@@ -152,7 +152,7 @@ func(s *ngapSender) SendUEContextReleaseCommand(ue *context.RanUe, action contex
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendErrorIndication(ran *context.AmfRan, amfUeNgapId *ngapType.AMFUENGAPID, ranUeNgapId *ngapType.RANUENGAPID,
+func (s *ngapSender) SendErrorIndication(ran *context.AmfRan, amfUeNgapId *ngapType.AMFUENGAPID, ranUeNgapId *ngapType.RANUENGAPID,
 	cause *ngapType.Cause, criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
 
 	log.Info("Send Error Indication")
@@ -174,7 +174,7 @@ func(s *ngapSender) SendErrorIndication(ran *context.AmfRan, amfUeNgapId *ngapTy
 	s.SendToRan(ran, pkt)
 }
 
-func(s *ngapSender) SendUERadioCapabilityCheckRequest(ue *context.RanUe) {
+func (s *ngapSender) SendUERadioCapabilityCheckRequest(ue *context.RanUe) {
 
 	log.Info("Send UE Radio Capability Check Request")
 
@@ -186,7 +186,7 @@ func(s *ngapSender) SendUERadioCapabilityCheckRequest(ue *context.RanUe) {
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendHandoverCancelAcknowledge(ue *context.RanUe, criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
+func (s *ngapSender) SendHandoverCancelAcknowledge(ue *context.RanUe, criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
 
 	log.Info("Send Handover Cancel Acknowledge")
 
@@ -200,7 +200,7 @@ func(s *ngapSender) SendHandoverCancelAcknowledge(ue *context.RanUe, criticality
 
 // nasPDU: from nas layer
 // pduSessionResourceSetupRequestList: provided by AMF, and transfer data is from SMF
-func(s *ngapSender) SendPDUSessionResourceSetupRequest(ue *context.RanUe, nasPdu []byte,
+func (s *ngapSender) SendPDUSessionResourceSetupRequest(ue *context.RanUe, nasPdu []byte,
 	pduSessionResourceSetupRequestList ngapType.PDUSessionResourceSetupListSUReq) {
 
 	log.Info("Send PDU Session Resource Setup Request")
@@ -220,7 +220,7 @@ func(s *ngapSender) SendPDUSessionResourceSetupRequest(ue *context.RanUe, nasPdu
 
 // pduSessionResourceModifyConfirmList: provided by AMF, and transfer data is return from SMF
 // pduSessionResourceFailedToModifyList: provided by AMF, and transfer data is return from SMF
-func(s *ngapSender) SendPDUSessionResourceModifyConfirm(
+func (s *ngapSender) SendPDUSessionResourceModifyConfirm(
 	ue *context.RanUe,
 	pduSessionResourceModifyConfirmList ngapType.PDUSessionResourceModifyListModCfm,
 	pduSessionResourceFailedToModifyList ngapType.PDUSessionResourceFailedToModifyListModCfm,
@@ -248,7 +248,7 @@ func(s *ngapSender) SendPDUSessionResourceModifyConfirm(
 }
 
 // pduSessionResourceModifyRequestList: from SMF
-func(s *ngapSender) SendPDUSessionResourceModifyRequest(ue *context.RanUe,
+func (s *ngapSender) SendPDUSessionResourceModifyRequest(ue *context.RanUe,
 	pduSessionResourceModifyRequestList ngapType.PDUSessionResourceModifyListModReq) {
 
 	log.Info("Send PDU Session Resource Modify Request")
@@ -266,7 +266,7 @@ func(s *ngapSender) SendPDUSessionResourceModifyRequest(ue *context.RanUe,
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendInitialContextSetupRequest(
+func (s *ngapSender) SendInitialContextSetupRequest(
 	amfUe *context.AmfUe,
 	anType models.AccessType,
 	nasPdu []byte,
@@ -295,7 +295,7 @@ func(s *ngapSender) SendInitialContextSetupRequest(
 	s.NasSendToRan(amfUe, anType, pkt)
 }
 
-func(s *ngapSender) SendUEContextModificationRequest(
+func (s *ngapSender) SendUEContextModificationRequest(
 	amfUe *context.AmfUe,
 	anType models.AccessType,
 	oldAmfUeNgapID *int64,
@@ -323,7 +323,7 @@ func(s *ngapSender) SendUEContextModificationRequest(
 // pduSessionResourceToReleaseList: provided by amf and transfer is return from smf
 // criticalityDiagnostics = criticalityDiagonstics IE in receiver node's error indication
 // when received node can't comprehend the IE or missing IE
-func(s *ngapSender) SendHandoverCommand(
+func (s *ngapSender) SendHandoverCommand(
 	sourceUe *context.RanUe,
 	pduSessionResourceHandoverList ngapType.PDUSessionResourceHandoverList,
 	pduSessionResourceToReleaseList ngapType.PDUSessionResourceToReleaseListHOCmd,
@@ -358,7 +358,7 @@ func(s *ngapSender) SendHandoverCommand(
 // cause = initiate the Handover Cancel procedure with the appropriate value for the Cause IE.
 // criticalityDiagnostics = criticalityDiagonstics IE in receiver node's error indication
 // when received node can't comprehend the IE or missing IE
-func(s *ngapSender) SendHandoverPreparationFailure(sourceUe *context.RanUe, cause ngapType.Cause,
+func (s *ngapSender) SendHandoverPreparationFailure(sourceUe *context.RanUe, cause ngapType.Cause,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
 	if sourceUe == nil {
 		log.Error("SourceUe is nil")
@@ -390,7 +390,7 @@ a Nsmf_PDUSession_CreateSMContext Response(N2 SM Information (PDU Session ID, ca
 // sourceToTargetTransparentContainer is received from S-RAN
 // nsci: new security context indicator, if amfUe has updated security context, set nsci to true, otherwise set to false
 // N2 handover in same AMF
-func(s *ngapSender) SendHandoverRequest(sourceUe *context.RanUe, targetRan *context.AmfRan, cause ngapType.Cause,
+func (s *ngapSender) SendHandoverRequest(sourceUe *context.RanUe, targetRan *context.AmfRan, cause ngapType.Cause,
 	pduSessionResourceSetupListHOReq ngapType.PDUSessionResourceSetupListHOReq,
 	sourceToTargetTransparentContainer ngapType.SourceToTargetTransparentContainer, nsci bool) {
 	if sourceUe == nil {
@@ -454,7 +454,7 @@ func(s *ngapSender) SendHandoverRequest(sourceUe *context.RanUe, targetRan *cont
 // information about the expected UE behaviour. TS 23.501 5.4.6, 5.4.6.2
 // rrcInactiveTransitionReportRequest: configured by amf
 // criticalityDiagnostics: from received node when received not comprehended IE or missing IE
-func(s *ngapSender) SendPathSwitchRequestAcknowledge(
+func (s *ngapSender) SendPathSwitchRequestAcknowledge(
 	ue *context.RanUe,
 	pduSessionResourceSwitchedList ngapType.PDUSessionResourceSwitchedList,
 	pduSessionResourceReleasedList ngapType.PDUSessionResourceReleasedListPSAck,
@@ -487,7 +487,7 @@ func(s *ngapSender) SendPathSwitchRequestAcknowledge(
 
 // pduSessionResourceReleasedList: provided by AMF, and the transfer data is from SMF
 // criticalityDiagnostics: from received node when received not comprehended IE or missing IE
-func(s *ngapSender) SendPathSwitchRequestFailure(
+func (s *ngapSender) SendPathSwitchRequestFailure(
 	ran *context.AmfRan,
 	amfUeNgapId,
 	ranUeNgapId int64,
@@ -510,7 +510,7 @@ func(s *ngapSender) SendPathSwitchRequestFailure(
 }
 
 // RanStatusTransferTransparentContainer from Uplink Ran Configuration Transfer
-func(s *ngapSender) SendDownlinkRanStatusTransfer(ue *context.RanUe, container ngapType.RANStatusTransferTransparentContainer) {
+func (s *ngapSender) SendDownlinkRanStatusTransfer(ue *context.RanUe, container ngapType.RANStatusTransferTransparentContainer) {
 
 	log.Info("Send Downlink Ran Status Transfer")
 
@@ -537,9 +537,9 @@ func(s *ngapSender) SendDownlinkRanStatusTransfer(ue *context.RanUe, container n
 // is associated with non-3GPP access, the AMF sends a Paging message with associated access "non-3GPP" to
 // NG-RAN node(s) via 3GPP access.
 // more paging policy with 3gpp/non-3gpp access is described in TS 23.501 5.6.8
-func(s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
+func (s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 	// var pagingPriority *ngapType.PagingPriority
-	
+
 	// if ppi != nil {
 	// pagingPriority = new(ngapType.PagingPriority)
 	// pagingPriority.Value = aper.Enumerated(*ppi)
@@ -549,7 +549,7 @@ func(s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 	// 	ngaplog.Errorf("Build Paging failed : %s", err.Error())
 	// }
 	amf := s.backend.Context()
-	ranpool := 	amf.AmfRanPool()
+	ranpool := amf.AmfRanPool()
 	taiList := ue.RegistrationArea[models.AccessType__3_GPP_ACCESS]
 	ranpool.Range(func(key, value interface{}) bool {
 		ran := value.(*context.AmfRan)
@@ -594,7 +594,7 @@ func(s *ngapSender) SendPaging(ue *context.AmfUe, ngapBuf []byte) {
 // amfUeNgapID: initial AMF get it from target AMF
 // ngapMessage: initial UE Message to reroute
 // allowedNSSAI: provided by AMF, and AMF get it from NSSF (4.2.2.2.3 step 4b)
-func(s *ngapSender) SendRerouteNasRequest(ue *context.AmfUe, anType models.AccessType, amfUeNgapID *int64, ngapMessage []byte,
+func (s *ngapSender) SendRerouteNasRequest(ue *context.AmfUe, anType models.AccessType, amfUeNgapID *int64, ngapMessage []byte,
 	allowedNSSAI *ngapType.AllowedNSSAI) {
 	log.Info("Send Reroute Nas Request")
 
@@ -612,9 +612,8 @@ func(s *ngapSender) SendRerouteNasRequest(ue *context.AmfUe, anType models.Acces
 }
 
 // criticality ->from received node when received node can't comprehend the IE or missing IE
-func(s *ngapSender) SendRanConfigurationUpdateAcknowledge(
+func (s *ngapSender) SendRanConfigurationUpdateAcknowledge(
 	ran *context.AmfRan, criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
-
 
 	log.Info("Send Ran Configuration Update Acknowledge")
 
@@ -629,7 +628,7 @@ func(s *ngapSender) SendRanConfigurationUpdateAcknowledge(
 // criticality ->from received node when received node can't comprehend the IE or missing IE
 // If the AMF cannot accept the update,
 // it shall respond with a RAN CONFIGURATION UPDATE FAILURE message and appropriate cause value.
-func(s *ngapSender) SendRanConfigurationUpdateFailure(ran *context.AmfRan, cause ngapType.Cause,
+func (s *ngapSender) SendRanConfigurationUpdateFailure(ran *context.AmfRan, cause ngapType.Cause,
 	criticalityDiagnostics *ngapType.CriticalityDiagnostics) {
 	log.Info("Send Ran Configuration Update Failure")
 
@@ -647,7 +646,7 @@ func(s *ngapSender) SendRanConfigurationUpdateFailure(ran *context.AmfRan, cause
 // forwarding the transaction towards the old AMF and detect that the AMF is unavailable. When
 // it detects unavailable, it marks the AMF and its associated GUAMI(s) as unavailable.
 // Defined in 23.501 5.21.2.2.2
-func(s *ngapSender) SendAMFStatusIndication(ran *context.AmfRan, unavailableGUAMIList ngapType.UnavailableGUAMIList) {
+func (s *ngapSender) SendAMFStatusIndication(ran *context.AmfRan, unavailableGUAMIList ngapType.UnavailableGUAMIList) {
 	log.Info("Send AMF Status Indication")
 
 	if len(unavailableGUAMIList.List) > context.MaxNumOfServedGuamiList {
@@ -668,12 +667,12 @@ func(s *ngapSender) SendAMFStatusIndication(ran *context.AmfRan, unavailableGUAM
 // amfTrafficLoadReductionIndication(int 1~99): indicates the percentage of the type, set to 0 if does not need this ie
 // of traffic relative to the instantaneous incoming rate at the NG-RAN node, provided by AMF
 // overloadStartNSSAIList: overload slices, provide by AMF
-func(s *ngapSender) SendOverloadStart(
+func (s *ngapSender) SendOverloadStart(
 	ran *context.AmfRan,
 	amfOverloadResponse *ngapType.OverloadResponse,
 	amfTrafficLoadReductionIndication int64,
 	overloadStartNSSAIList *ngapType.OverloadStartNSSAIList) {
-	
+
 	log.Info("Send Overload Start")
 
 	if amfTrafficLoadReductionIndication != 0 &&
@@ -695,8 +694,8 @@ func(s *ngapSender) SendOverloadStart(
 	s.SendToRan(ran, pkt)
 }
 
-func(s *ngapSender) SendOverloadStop(ran *context.AmfRan) {
-	
+func (s *ngapSender) SendOverloadStop(ran *context.AmfRan) {
+
 	log.Info("Send Overload Stop")
 
 	pkt, err := s.buildOverloadStop()
@@ -708,7 +707,7 @@ func(s *ngapSender) SendOverloadStop(ran *context.AmfRan) {
 }
 
 // SONConfigurationTransfer = sONConfigurationTransfer from uplink Ran Configuration Transfer
-func(s *ngapSender) SendDownlinkRanConfigurationTransfer(ran *context.AmfRan, transfer *ngapType.SONConfigurationTransfer) {
+func (s *ngapSender) SendDownlinkRanConfigurationTransfer(ran *context.AmfRan, transfer *ngapType.SONConfigurationTransfer) {
 	log.Info("Send Downlink Ran Configuration Transfer")
 
 	pkt, err := s.buildDownlinkRanConfigurationTransfer(transfer)
@@ -721,8 +720,8 @@ func(s *ngapSender) SendDownlinkRanConfigurationTransfer(ran *context.AmfRan, tr
 
 // NRPPa PDU is by pass
 // NRPPa PDU is from LMF define in 4.13.5.6
-func(s *ngapSender) SendDownlinkNonUEAssociatedNRPPATransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) {
-	
+func (s *ngapSender) SendDownlinkNonUEAssociatedNRPPATransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) {
+
 	log.Info("Send Downlink Non UE Associated NRPPA Transport")
 
 	if len(nRPPaPDU.Value) == 0 {
@@ -738,8 +737,8 @@ func(s *ngapSender) SendDownlinkNonUEAssociatedNRPPATransport(ue *context.RanUe,
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendDeactivateTrace(amfUe *context.AmfUe, anType models.AccessType) {
-	
+func (s *ngapSender) SendDeactivateTrace(amfUe *context.AmfUe, anType models.AccessType) {
+
 	ranUe := amfUe.RanUe[anType]
 	if ranUe == nil {
 		log.Error("RanUe is nil")
@@ -766,7 +765,7 @@ func(s *ngapSender) SendDeactivateTrace(amfUe *context.AmfUe, anType models.Acce
 // in Area of Interest), reporting mode and its related parameters (e.g. number of reporting) TS 23.501 5.4.7
 // Location Reference ID To Be Cancelled IE shall be present if the Event Type IE is set to "Stop UE presence
 // in the area of interest". otherwise set it to 0
-func(s *ngapSender) SendLocationReportingControl(
+func (s *ngapSender) SendLocationReportingControl(
 	ue *context.RanUe,
 	AOIList *ngapType.AreaOfInterestList,
 	LocationReportingReferenceIDToBeCancelled int64,
@@ -793,8 +792,8 @@ func(s *ngapSender) SendLocationReportingControl(
 	s.SendToRanUe(ue, pkt)
 }
 
-func(s *ngapSender) SendUETNLABindingReleaseRequest(ue *context.RanUe) {
-	
+func (s *ngapSender) SendUETNLABindingReleaseRequest(ue *context.RanUe) {
+
 	log.Info("Send UE TNLA Binging Release Request")
 
 	pkt, err := s.buildUETNLABindingReleaseRequest(ue)
@@ -806,9 +805,9 @@ func(s *ngapSender) SendUETNLABindingReleaseRequest(ue *context.RanUe) {
 }
 
 // Weight Factor associated with each of the TNL association within the AMF
-func(s *ngapSender) SendAMFConfigurationUpdate(ran *context.AmfRan, usage ngapType.TNLAssociationUsage,
+func (s *ngapSender) SendAMFConfigurationUpdate(ran *context.AmfRan, usage ngapType.TNLAssociationUsage,
 	weightfactor ngapType.TNLAddressWeightFactor) {
-	
+
 	log.Info("Send AMF Configuration Update")
 
 	pkt, err := s.buildAMFConfigurationUpdate(usage, weightfactor)
@@ -821,7 +820,7 @@ func(s *ngapSender) SendAMFConfigurationUpdate(ran *context.AmfRan, usage ngapTy
 
 // NRPPa PDU is a pdu from LMF to RAN defined in TS 23.502 4.13.5.5 step 3
 // NRPPa PDU is by pass
-func(s *ngapSender) SendDownlinkUEAssociatedNRPPaTransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) {
+func (s *ngapSender) SendDownlinkUEAssociatedNRPPaTransport(ue *context.RanUe, nRPPaPDU ngapType.NRPPaPDU) {
 	log.Info("Send Downlink UE Associated NRPPa Transport")
 
 	if len(nRPPaPDU.Value) == 0 {

@@ -2,7 +2,9 @@ package producer
 
 import (
 	"net/http"
-	"github.com/free5gc/openapi/models"
+
+	"etri5gc/openapi/models"
+
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -26,7 +28,7 @@ func (h *Producer) doProvideLocationInfo(req models.RequestLocInfo, ueId string)
 	if ue, ok := amf.AmfUeFindByUeContextID(ueId); ok {
 		if locinfo := ue.BuildLocInfo(&req); locinfo != nil {
 			return locinfo, nil
-		} 
+		}
 	}
 
 	return nil, &models.ProblemDetails{

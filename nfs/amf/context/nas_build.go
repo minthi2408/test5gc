@@ -1,11 +1,12 @@
 package context
 
 import (
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/nasConvert"
+
 	//libnas "github.com/free5gc/nas"
-	"github.com/free5gc/nas/nasConvert"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
-	"github.com/free5gc/openapi/models"
 )
 
 func (ue *AmfUe) BuildConfigurationUpdateCommand(msg *nasMessage.ConfigurationUpdateCommand, anType models.AccessType) {

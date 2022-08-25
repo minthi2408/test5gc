@@ -8,12 +8,12 @@ import (
 	//	"github.com/mohae/deepcopy"
 
 	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
 
 	//	"github.com/free5gc/amf/internal/util"
 	//	"github.com/free5gc/nas/nasConvert"
 	//	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 

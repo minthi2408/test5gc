@@ -5,16 +5,14 @@ import (
 	"etri5gc/nfs/amf/context"
 	"strconv"
 
-	//	"etri5gc/nfs/amf/nas"
-
 	"etri5gc/nfs/amf/ngap/util"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
 
 	//	"github.com/free5gc/aper"
 	"github.com/free5gc/nas/nasMessage"
 	//	libngap "github.com/free5gc/ngap"
-	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 func (h *ngapHandler) handleNGSetupRequest(ran *context.AmfRan, nGSetupRequest *ngapType.NGSetupRequest) {

@@ -6,11 +6,11 @@ import (
 
 	"etri5gc/nfs/amf"
 	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
 
 	"github.com/free5gc/aper"
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
 	"github.com/sirupsen/logrus"
 )

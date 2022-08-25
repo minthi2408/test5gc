@@ -1,16 +1,12 @@
 package context
 
 import (
+	"etri5gc/openapi/models"
 	"net/http"
-	"time"
 	"strconv"
-
-//	"etri5gc/nfs/amf/config"
-
-	"github.com/free5gc/openapi/models"
-//	"github.com/free5gc/util/idgenerator"
+	"time"
+	//	"github.com/free5gc/util/idgenerator"
 )
-
 
 type AMFContextEventSubscription struct {
 	IsAnyUe           bool
@@ -27,135 +23,112 @@ type AmfUeEventSubscription struct {
 	EventSubscription *models.AmfEventSubscription
 }
 
-
-
 //TungTQ: move event subscription handling methods from the `producer` to `context`
 
 // TODO (free5gc): handle event filter
-func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscription) (*models.AmfCreatedEventSubscription, *models.ProblemDetails) {
+func (amf *AMFContext) CreateAMFEventSub(reqsub models.AmfCreateEventSubscription) (*models.AmfCreatedEventSubscription, *models.ProblemDetails) {
 	/*
-	TODO: tungtq - it seems current implementation is a bit messy, let clean it up later
+		TODO: tungtq - it seems current implementation is a bit messy, let clean it up later
 
-	ressub := &models.AmfCreatedEventSubscription{}
+		ressub := &models.AmfCreatedEventSubscription{}
 
-	subscription := reqsub.Subscription
+		subscription := reqsub.Subscription
 
-	eventsub := &AMFContextEventSubscription{
-		EventSubscription: *subscription, //copy (not a pointer)
-	}
-	
-	var isImmediate bool
-	var immediateFlags []bool
-	var reportlist []models.AmfEventReport
-
-	// generate even id
-	id, err := amf.eventsubIdGen.Allocate()
-	if err != nil {
-		problemDetails := &models.ProblemDetails{
-			Status: http.StatusInternalServerError,
-			Cause:  "UNSPECIFIED_NF_FAILURE",
+		eventsub := &AMFContextEventSubscription{
+			EventSubscription: *subscription, //copy (not a pointer)
 		}
-		return nil, problemDetails
-	}
-	subId := strconv.Itoa(int(id))
 
-	// store subscription in context
-	ueEventSubscription := AmfUeEventSubscription{
-		EventSubscriptioni:  &eventsub.EventSubscription,
-		Timestamp:  time.Now().UTC(),
-	}
+		var isImmediate bool
+		var immediateFlags []bool
+		var reportlist []models.AmfEventReport
 
-	if subscription.Options != nil && subscription.Options.Trigger == models.AmfEventTrigger_CONTINUOUS {
-		ueEventSubscription.RemainReports = new(int32)
-		*ueEventSubscription.RemainReports = subscription.Options.MaxReports
-	}
-	for _, events := range *subscription.EventList {
-		immediateFlags = append(immediateFlags, events.ImmediateFlag)
-		if events.ImmediateFlag {
-			isImmediate = true
+		// generate even id
+		id, err := amf.eventsubIdGen.Allocate()
+		if err != nil {
+			problemDetails := &models.ProblemDetails{
+				Status: http.StatusInternalServerError,
+				Cause:  "UNSPECIFIED_NF_FAILURE",
+			}
+			return nil, problemDetails
 		}
-	}
+		subId := strconv.Itoa(int(id))
 
-	if subscription.AnyUE {
-		eventsub.IsAnyUe = true
-		ueEventSubscription.AnyUe = true
-		amf.uepool.Range(func(key, value interface{}) bool {
-			ue := value.(*AmfUe)
-			ue.EventSubscriptionsInfo[subID] = new(AmfUeEventSubscription)
-			*ue.EventSubscriptionsInfo[subId] = ueEventSubscription
-			eventsub.UeSupiList = append(eventsub.UeSupiList, ue.Supi)
-			return true
-		})
-	} else if subscription.GroupId != "" {
-		contextEventSubscription.IsGroupUe = true
-		ueEventSubscription.AnyUe = true
-		amfSelf.UePool.Range(func(key, value interface{}) bool {
-			ue := value.(*context.AmfUe)
-			if ue.GroupID == subscription.GroupId {
+		// store subscription in context
+		ueEventSubscription := AmfUeEventSubscription{
+			EventSubscriptioni:  &eventsub.EventSubscription,
+			Timestamp:  time.Now().UTC(),
+		}
+
+		if subscription.Options != nil && subscription.Options.Trigger == models.AmfEventTrigger_CONTINUOUS {
+			ueEventSubscription.RemainReports = new(int32)
+			*ueEventSubscription.RemainReports = subscription.Options.MaxReports
+		}
+		for _, events := range *subscription.EventList {
+			immediateFlags = append(immediateFlags, events.ImmediateFlag)
+			if events.ImmediateFlag {
+				isImmediate = true
+			}
+		}
+
+		if subscription.AnyUE {
+			eventsub.IsAnyUe = true
+			ueEventSubscription.AnyUe = true
+			amf.uepool.Range(func(key, value interface{}) bool {
+				ue := value.(*AmfUe)
+				ue.EventSubscriptionsInfo[subID] = new(AmfUeEventSubscription)
+				*ue.EventSubscriptionsInfo[subId] = ueEventSubscription
+				eventsub.UeSupiList = append(eventsub.UeSupiList, ue.Supi)
+				return true
+			})
+		} else if subscription.GroupId != "" {
+			contextEventSubscription.IsGroupUe = true
+			ueEventSubscription.AnyUe = true
+			amfSelf.UePool.Range(func(key, value interface{}) bool {
+				ue := value.(*context.AmfUe)
+				if ue.GroupID == subscription.GroupId {
+					ue.EventSubscriptionsInfo[newSubscriptionID] = new(context.AmfUeEventSubscription)
+					*ue.EventSubscriptionsInfo[newSubscriptionID] = ueEventSubscription
+					contextEventSubscription.UeSupiList = append(contextEventSubscription.UeSupiList, ue.Supi)
+				}
+				return true
+			})
+		} else {
+			if ue, ok := amfSelf.AmfUeFindBySupi(subscription.Supi); !ok {
+				problemDetails := &models.ProblemDetails{
+					Status: http.StatusForbidden,
+					Cause:  "UE_NOT_SERVED_BY_AMF",
+				}
+				return nil, problemDetails
+			} else {
 				ue.EventSubscriptionsInfo[newSubscriptionID] = new(context.AmfUeEventSubscription)
 				*ue.EventSubscriptionsInfo[newSubscriptionID] = ueEventSubscription
 				contextEventSubscription.UeSupiList = append(contextEventSubscription.UeSupiList, ue.Supi)
 			}
-			return true
-		})
-	} else {
-		if ue, ok := amfSelf.AmfUeFindBySupi(subscription.Supi); !ok {
-			problemDetails := &models.ProblemDetails{
-				Status: http.StatusForbidden,
-				Cause:  "UE_NOT_SERVED_BY_AMF",
-			}
-			return nil, problemDetails
-		} else {
-			ue.EventSubscriptionsInfo[newSubscriptionID] = new(context.AmfUeEventSubscription)
-			*ue.EventSubscriptionsInfo[newSubscriptionID] = ueEventSubscription
-			contextEventSubscription.UeSupiList = append(contextEventSubscription.UeSupiList, ue.Supi)
 		}
-	}
 
-	// delete subscription
-	if subscription.Options != nil {
-		eventsub.Expiry = subscription.Options.Expiry
-	}
+		// delete subscription
+		if subscription.Options != nil {
+			eventsub.Expiry = subscription.Options.Expiry
+		}
 
-	//add to event pool
-	amf.eventsubpool.Store(subId, subscription)
+		//add to event pool
+		amf.eventsubpool.Store(subId, subscription)
 
-	// build response
+		// build response
 
-	ressub.Subscription = subscription
-	ressub.SubscriptionId = subId
+		ressub.Subscription = subscription
+		ressub.SubscriptionId = subId
 
-	// for immediate use
-	if subscription.AnyUE {
-		amf.UePool.Range(func(key, value interface{}) bool {
-			ue := value.(*context.AmfUe)
-			if isImmediate {
-				subReports(ue, newSubscriptionID)
-			}
-			for i, flag := range immediateFlags {
-				if flag {
-					report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, subId)
-					if ok {
-						reportlist = append(reportlist, report)
-					}
+		// for immediate use
+		if subscription.AnyUE {
+			amf.UePool.Range(func(key, value interface{}) bool {
+				ue := value.(*context.AmfUe)
+				if isImmediate {
+					subReports(ue, newSubscriptionID)
 				}
-			}
-			// delete subscription
-			if reportlistLen := len(reportlist); reportlistLen > 0 && (!reportlist[reportlistLen-1].State.Active) {
-				delete(ue.EventSubscriptionsInfo, newSubscriptionID)
-			}
-			return true
-		})
-	} else if subscription.GroupId != "" {
-		amf.UePool.Range(func(key, value interface{}) bool {
-			ue := value.(*context.AmfUe)
-			if isImmediate {
-				subReports(ue, newSubscriptionID)
-			}
-			if ue.GroupID == subscription.GroupId {
 				for i, flag := range immediateFlags {
 					if flag {
-						report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, newSubscriptionID)
+						report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, subId)
 						if ok {
 							reportlist = append(reportlist, report)
 						}
@@ -165,36 +138,57 @@ func (amf *AMFContext)  CreateAMFEventSub(reqsub models.AmfCreateEventSubscripti
 				if reportlistLen := len(reportlist); reportlistLen > 0 && (!reportlist[reportlistLen-1].State.Active) {
 					delete(ue.EventSubscriptionsInfo, newSubscriptionID)
 				}
+				return true
+			})
+		} else if subscription.GroupId != "" {
+			amf.UePool.Range(func(key, value interface{}) bool {
+				ue := value.(*context.AmfUe)
+				if isImmediate {
+					subReports(ue, newSubscriptionID)
+				}
+				if ue.GroupID == subscription.GroupId {
+					for i, flag := range immediateFlags {
+						if flag {
+							report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, newSubscriptionID)
+							if ok {
+								reportlist = append(reportlist, report)
+							}
+						}
+					}
+					// delete subscription
+					if reportlistLen := len(reportlist); reportlistLen > 0 && (!reportlist[reportlistLen-1].State.Active) {
+						delete(ue.EventSubscriptionsInfo, newSubscriptionID)
+					}
+				}
+				return true
+			})
+		} else {
+			ue, _ := amfSelf.AmfUeFindBySupi(subscription.Supi)
+			if isImmediate {
+				subReports(ue, newSubscriptionID)
 			}
-			return true
-		})
-	} else {
-		ue, _ := amfSelf.AmfUeFindBySupi(subscription.Supi)
-		if isImmediate {
-			subReports(ue, newSubscriptionID)
-		}
-		for i, flag := range immediateFlags {
-			if flag {
-				report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, newSubscriptionID)
-				if ok {
-					reportlist = append(reportlist, report)
+			for i, flag := range immediateFlags {
+				if flag {
+					report, ok := NewAmfEventReport(ue, (*subscription.EventList)[i].Type, newSubscriptionID)
+					if ok {
+						reportlist = append(reportlist, report)
+					}
 				}
 			}
+			// delete subscription
+			if reportlistLen := len(reportlist); reportlistLen > 0 && (!reportlist[reportlistLen-1].State.Active) {
+				delete(ue.EventSubscriptionsInfo, newSubscriptionID)
+			}
 		}
-		// delete subscription
-		if reportlistLen := len(reportlist); reportlistLen > 0 && (!reportlist[reportlistLen-1].State.Active) {
-			delete(ue.EventSubscriptionsInfo, newSubscriptionID)
+		if len(reportlist) > 0 {
+			ressub.ReportList = reportlist
+			// delete subscription
+			if !reportlist[0].State.Active {
+				amf.DeleteEventSubscription(newSubscriptionID)
+			}
 		}
-	}
-	if len(reportlist) > 0 {
-		ressub.ReportList = reportlist
-		// delete subscription
-		if !reportlist[0].State.Active {
-			amf.DeleteEventSubscription(newSubscriptionID)
-		}
-	}
 
-	return ressub, nil
+		return ressub, nil
 	*/
 	return nil, nil
 }
@@ -226,7 +220,6 @@ func (amf *AMFContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
 		return nil
 	}
 }
-
 
 func (amf *AMFContext) ModifyAMFEventSub(subId string, modreq models.ModifySubscriptionRequest) (*models.AmfUpdatedEventSubscription, *models.ProblemDetails) {
 
@@ -285,7 +278,6 @@ func (amf *AMFContext) ModifyAMFEventSub(subId string, modreq models.ModifySubsc
 	}
 }
 
-
 func (context *AMFContext) FindEventSubscription(subscriptionID string) (*AMFContextEventSubscription, bool) {
 	if value, ok := context.eventsubpool.Load(subscriptionID); ok {
 		return value.(*AMFContextEventSubscription), ok
@@ -294,13 +286,11 @@ func (context *AMFContext) FindEventSubscription(subscriptionID string) (*AMFCon
 	}
 }
 
-
 ///TungTQ: AfmUe methods for handling event subscription
 
 func (ue *AmfUe) DeleteEventSub(subId string) {
 	delete(ue.EventSubscriptionsInfo, subId)
 }
-
 
 /*
 func subReports(ue *context.AmfUe, subscriptionId string) {

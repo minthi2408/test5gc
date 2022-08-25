@@ -1,13 +1,13 @@
 package context
+
 import (
 	"net/http"
-//	"time"
-	"strconv"
+	//	"time"
 	"reflect"
+	"strconv"
 
-	"github.com/free5gc/openapi/models"
+	"etri5gc/openapi/models"
 )
-
 
 func (amf *AMFContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) (
 	datres models.SubscriptionData, locheader string, prob *models.ProblemDetails) {
@@ -33,8 +33,6 @@ func (amf *AMFContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) 
 	}
 	return
 }
-
-
 
 func (amf *AMFContext) AMFStatusChangeUnSubscribe(subId string) *models.ProblemDetails {
 

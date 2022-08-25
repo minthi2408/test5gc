@@ -1,16 +1,16 @@
 package context
+
 import (
-	"github.com/free5gc/openapi/models"
-	"etri5gc/fabric/common"
 	"etri5gc/fabric"
+	"etri5gc/fabric/common"
+	"etri5gc/openapi/models"
 )
 
-
 type smfClient struct {
-	ue		*AmfUe
-	sm		*SmContext
-	fw		fabric.Forwarder
-	query	common.NfQuery
+	ue    *AmfUe
+	sm    *SmContext
+	fw    fabric.Forwarder
+	query common.NfQuery
 }
 
 func (c *smfClient) SendCreateSmContextRequest(rtype *models.RequestType, naspdu []byte) (res *models.PostSmContextsResponse, ref string, errRes *models.PostSmContextsErrorResponse, prob *models.ProblemDetails, err1 error) {
@@ -18,41 +18,42 @@ func (c *smfClient) SendCreateSmContextRequest(rtype *models.RequestType, naspdu
 	//2. call the agent
 	//response, err := ue.fw.Send(request, ue.query)
 	//the forwarder should return a response in a dataplane-protocol agnostic (just like the request)
-/*
-	dat := ue.BuildCreateSmContextData(sm, nil)
+	/*
+		dat := ue.BuildCreateSmContextData(sm, nil)
 
-	postSmContextsRequest := models.PostSmContextsRequest{
-		JsonData:              &dat,
-		BinaryDataN1SmMessage: naspdu,
-	}
-	
-	client := pdusession_client(sm)
-
-	postSmContextReponse, httpResponse, err :=
-		client.SMContextsCollectionApi.PostSmContexts(org_context.Background(), postSmContextsRequest)
-
-	if err == nil {
-		res = &postSmContextReponse
-		ref = httpResponse.Header.Get("Location")
-	} else if httpResponse != nil {
-		if httpResponse.Status != err.Error() {
-			err1 = err
-			return
+		postSmContextsRequest := models.PostSmContextsRequest{
+			JsonData:              &dat,
+			BinaryDataN1SmMessage: naspdu,
 		}
-		switch httpResponse.StatusCode {
-		case 400, 403, 404, 500, 503, 504:
-			errResponse := err.(openapi.GenericOpenAPIError).Model().(models.PostSmContextsErrorResponse)
-			errRes = &errResponse
-		case 411, 413, 415, 429:
-			problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-			prob = &problem
+
+		client := pdusession_client(sm)
+
+		postSmContextReponse, httpResponse, err :=
+			client.SMContextsCollectionApi.PostSmContexts(org_context.Background(), postSmContextsRequest)
+
+		if err == nil {
+			res = &postSmContextReponse
+			ref = httpResponse.Header.Get("Location")
+		} else if httpResponse != nil {
+			if httpResponse.Status != err.Error() {
+				err1 = err
+				return
+			}
+			switch httpResponse.StatusCode {
+			case 400, 403, 404, 500, 503, 504:
+				errResponse := err.(openapi.GenericOpenAPIError).Model().(models.PostSmContextsErrorResponse)
+				errRes = &errResponse
+			case 411, 413, 415, 429:
+				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				prob = &problem
+			}
+		} else {
+			err1 = openapi.ReportError("server no response")
 		}
-	} else {
-		err1 = openapi.ReportError("server no response")
-	}
 	*/
-	return 
+	return
 }
+
 // Upadate SmContext Request
 // servingNfId, smContextStatusUri, guami, servingNetwork -> amf change
 // anType -> anType change
@@ -74,18 +75,18 @@ func (c *smfClient) SendUpdateSmContextActivateUpCnxState(accessType models.Acce
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.UpCnxState = models.UpCnxState_ACTIVATING
-	if !context.CompareUserLocation(c.ue.GetLocInfo().Location, c.sm.UserLocation()) {
-		updateData.UeLocation = &ue.GetLocInfo().Location
-	}
-	if sm.AccessType() != accessType {
-		updateData.AnType = sm.AccessType()
-	}
-	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
-			updateData.PresenceInLadn = models.PresenceState_IN_AREA
+		updateData.UpCnxState = models.UpCnxState_ACTIVATING
+		if !context.CompareUserLocation(c.ue.GetLocInfo().Location, c.sm.UserLocation()) {
+			updateData.UeLocation = &ue.GetLocInfo().Location
 		}
-	}
+		if sm.AccessType() != accessType {
+			updateData.AnType = sm.AccessType()
+		}
+		if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
+			if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
+				updateData.PresenceInLadn = models.PresenceState_IN_AREA
+			}
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, nil)
 }
@@ -94,17 +95,17 @@ func (c *smfClient) SendUpdateSmContextDeactivateUpCnxState(cause CauseAll) (
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.UpCnxState = models.UpCnxState_DEACTIVATED
-	updateData.UeLocation = &ue.GetLocInfo().Location
-	if cause.Cause != nil {
-		updateData.Cause = *cause.Cause
-	}
-	if cause.NgapCause != nil {
-		updateData.NgApCause = cause.NgapCause
-	}
-	if cause.Var5GmmCause != nil {
-		updateData.Var5gMmCauseValue = *cause.Var5GmmCause
-	}
+		updateData.UpCnxState = models.UpCnxState_DEACTIVATED
+		updateData.UeLocation = &ue.GetLocInfo().Location
+		if cause.Cause != nil {
+			updateData.Cause = *cause.Cause
+		}
+		if cause.NgapCause != nil {
+			updateData.NgApCause = cause.NgapCause
+		}
+		if cause.Var5GmmCause != nil {
+			updateData.Var5gMmCauseValue = *cause.Var5GmmCause
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, nil)
 }
@@ -120,10 +121,10 @@ func (c *smfClient) SendUpdateSmContextN2Info(n2SmType models.N2SmInfoType, N2Sm
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.N2SmInfoType = n2SmType
-	updateData.N2SmInfo = new(models.RefToBinaryData)
-	updateData.N2SmInfo.ContentId = "N2SmInfo"
-	updateData.UeLocation = &ue.GetLocInfo().Location
+		updateData.N2SmInfoType = n2SmType
+		updateData.N2SmInfo = new(models.RefToBinaryData)
+		updateData.N2SmInfo.ContentId = "N2SmInfo"
+		updateData.UeLocation = &ue.GetLocInfo().Location
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, N2SmInfo)
 }
@@ -132,20 +133,20 @@ func (c *smfClient) SendUpdateSmContextXnHandover(n2SmType models.N2SmInfoType, 
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	if n2SmType != "" {
-		updateData.N2SmInfoType = n2SmType
-		updateData.N2SmInfo = new(models.RefToBinaryData)
-		updateData.N2SmInfo.ContentId = "N2SmInfo"
-	}
-	updateData.ToBeSwitched = true
-	updateData.UeLocation = &ue.GetLocInfo().Location
-	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
-			updateData.PresenceInLadn = models.PresenceState_IN_AREA
-		} else {
-			updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
+		if n2SmType != "" {
+			updateData.N2SmInfoType = n2SmType
+			updateData.N2SmInfo = new(models.RefToBinaryData)
+			updateData.N2SmInfo.ContentId = "N2SmInfo"
 		}
-	}
+		updateData.ToBeSwitched = true
+		updateData.UeLocation = &ue.GetLocInfo().Location
+		if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
+			if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
+				updateData.PresenceInLadn = models.PresenceState_IN_AREA
+			} else {
+				updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
+			}
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, N2SmInfo)
 }
@@ -154,32 +155,32 @@ func (c *smfClient) SendUpdateSmContextXnHandoverFailed(n2SmType models.N2SmInfo
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	if n2SmType != "" {
-		updateData.N2SmInfoType = n2SmType
-		updateData.N2SmInfo = new(models.RefToBinaryData)
-		updateData.N2SmInfo.ContentId = "N2SmInfo"
-	}
-	updateData.FailedToBeSwitched = true
+		if n2SmType != "" {
+			updateData.N2SmInfoType = n2SmType
+			updateData.N2SmInfo = new(models.RefToBinaryData)
+			updateData.N2SmInfo.ContentId = "N2SmInfo"
+		}
+		updateData.FailedToBeSwitched = true
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, N2SmInfo)
 }
 
-func (c *smfClient) SendUpdateSmContextN2HandoverPreparing(	n2SmType models.N2SmInfoType,
+func (c *smfClient) SendUpdateSmContextN2HandoverPreparing(n2SmType models.N2SmInfoType,
 	N2SmInfo []byte, amfid string, targetId *models.NgRanTargetId) (
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	if n2SmType != "" {
-		updateData.N2SmInfoType = n2SmType
-		updateData.N2SmInfo = new(models.RefToBinaryData)
-		updateData.N2SmInfo.ContentId = "N2SmInfo"
-	}
-	updateData.HoState = models.HoState_PREPARING
-	updateData.TargetId = targetId
-	// amf changed in same plmn
-	if amfid != "" {
-		updateData.TargetServingNfId = amfid
-	}
+		if n2SmType != "" {
+			updateData.N2SmInfoType = n2SmType
+			updateData.N2SmInfo = new(models.RefToBinaryData)
+			updateData.N2SmInfo.ContentId = "N2SmInfo"
+		}
+		updateData.HoState = models.HoState_PREPARING
+		updateData.TargetId = targetId
+		// amf changed in same plmn
+		if amfid != "" {
+			updateData.TargetServingNfId = amfid
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, N2SmInfo)
 }
@@ -188,12 +189,12 @@ func (c *smfClient) SendUpdateSmContextN2HandoverPrepared(n2SmType models.N2SmIn
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	if n2SmType != "" {
-		updateData.N2SmInfoType = n2SmType
-		updateData.N2SmInfo = new(models.RefToBinaryData)
-		updateData.N2SmInfo.ContentId = "N2SmInfo"
-	}
-	updateData.HoState = models.HoState_PREPARED
+		if n2SmType != "" {
+			updateData.N2SmInfoType = n2SmType
+			updateData.N2SmInfo = new(models.RefToBinaryData)
+			updateData.N2SmInfo.ContentId = "N2SmInfo"
+		}
+		updateData.HoState = models.HoState_PREPARED
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, N2SmInfo)
 }
@@ -202,19 +203,19 @@ func (c *smfClient) SendUpdateSmContextN2HandoverComplete(amfid string, guami *m
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.HoState = models.HoState_COMPLETED
-	if amfid != "" {
-		updateData.ServingNfId = amfid
-		updateData.ServingNetwork = guami.PlmnId
-		updateData.Guami = guami
-	}
-	if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-		if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
-			updateData.PresenceInLadn = models.PresenceState_IN_AREA
-		} else {
-			updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
+		updateData.HoState = models.HoState_COMPLETED
+		if amfid != "" {
+			updateData.ServingNfId = amfid
+			updateData.ServingNetwork = guami.PlmnId
+			updateData.Guami = guami
 		}
-	}
+		if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
+			if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
+				updateData.PresenceInLadn = models.PresenceState_IN_AREA
+			} else {
+				updateData.PresenceInLadn = models.PresenceState_OUT_OF_AREA
+			}
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, nil)
 }
@@ -223,16 +224,16 @@ func (c *smfClient) SendUpdateSmContextN2HandoverCanceled(cause CauseAll) (
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.HoState = models.HoState_CANCELLED
-	if cause.Cause != nil {
-		updateData.Cause = *cause.Cause
-	}
-	if cause.NgapCause != nil {
-		updateData.NgApCause = cause.NgapCause
-	}
-	if cause.Var5GmmCause != nil {
-		updateData.Var5gMmCauseValue = *cause.Var5GmmCause
-	}
+		updateData.HoState = models.HoState_CANCELLED
+		if cause.Cause != nil {
+			updateData.Cause = *cause.Cause
+		}
+		if cause.NgapCause != nil {
+			updateData.NgApCause = cause.NgapCause
+		}
+		if cause.Var5GmmCause != nil {
+			updateData.Var5gMmCauseValue = *cause.Var5GmmCause
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, nil)
 }
@@ -241,11 +242,11 @@ func (c *smfClient) SendUpdateSmContextHandoverBetweenAccessType(targetAccessTyp
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.AnType = targetAccessType
-	if N1SmMsg != nil {
-		updateData.N1SmMsg = new(models.RefToBinaryData)
-		updateData.N1SmMsg.ContentId = "N1Msg"
-	}
+		updateData.AnType = targetAccessType
+		if N1SmMsg != nil {
+			updateData.N1SmMsg = new(models.RefToBinaryData)
+			updateData.N1SmMsg.ContentId = "N1Msg"
+		}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, N1SmMsg, nil)
 }
@@ -254,20 +255,20 @@ func (c *smfClient) SendUpdateSmContextHandoverBetweenAMF(amfid string, guami *m
 	*models.UpdateSmContextResponse, *models.UpdateSmContextErrorResponse, *models.ProblemDetails, error) {
 	updateData := models.SmContextUpdateData{}
 	/*
-	updateData.ServingNfId = amfid
-	updateData.ServingNetwork = guami.PlmnId
-	updateData.Guami = guami
-	if activate {
-		updateData.UpCnxState = models.UpCnxState_ACTIVATING
-		if !context.CompareUserLocation(ue.GetLocInfo().Location, sm.UserLocation()) {
-			updateData.UeLocation = &ue.GetLocInfo().Location
-		}
-		if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
-			if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
-				updateData.PresenceInLadn = models.PresenceState_IN_AREA
+		updateData.ServingNfId = amfid
+		updateData.ServingNetwork = guami.PlmnId
+		updateData.Guami = guami
+		if activate {
+			updateData.UpCnxState = models.UpCnxState_ACTIVATING
+			if !context.CompareUserLocation(ue.GetLocInfo().Location, sm.UserLocation()) {
+				updateData.UeLocation = &ue.GetLocInfo().Location
+			}
+			if ladn, ok := ue.ServingAMF().Ladn(sm.Dnn()); ok {
+				if context.InTaiList(ue.GetLocInfo().Tai, ladn.TaiLists) {
+					updateData.PresenceInLadn = models.PresenceState_IN_AREA
+				}
 			}
 		}
-	}
 	*/
 	return c.SendUpdateSmContextRequest(updateData, nil, nil)
 }
@@ -275,37 +276,37 @@ func (c *smfClient) SendUpdateSmContextHandoverBetweenAMF(amfid string, guami *m
 func (c *smfClient) SendUpdateSmContextRequest(dat models.SmContextUpdateData, n1Msg []byte, n2Info []byte) (
 	response *models.UpdateSmContextResponse, errorResponse *models.UpdateSmContextErrorResponse,
 	problemDetail *models.ProblemDetails, err1 error) {
-		/*
-	client := pdusession_client(sm) 
+	/*
+		client := pdusession_client(sm)
 
-	updateSmContextRequest := models.UpdateSmContextRequest {
-		JsonData:  &dat,
-		BinaryDataN1SmMessage:  n1Msg,
-		BinaryDataN2SmInformation: n2Info,
-	}
-
-	updateSmContextReponse, httpResponse, err :=
-		client.IndividualSMContextApi.UpdateSmContext(org_context.Background(), sm.SmContextRef(), updateSmContextRequest)
-
-	if err == nil {
-		response = &updateSmContextReponse
-	} else if httpResponse != nil {
-		if httpResponse.Status != err.Error() {
-			err1 = err
-			return
+		updateSmContextRequest := models.UpdateSmContextRequest {
+			JsonData:  &dat,
+			BinaryDataN1SmMessage:  n1Msg,
+			BinaryDataN2SmInformation: n2Info,
 		}
-		switch httpResponse.StatusCode {
-		case 400, 403, 404, 500, 503:
-			errResponse := err.(openapi.GenericOpenAPIError).Model().(models.UpdateSmContextErrorResponse)
-			errorResponse = &errResponse
-		case 411, 413, 415, 429:
-			problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-			problemDetail = &problem
+
+		updateSmContextReponse, httpResponse, err :=
+			client.IndividualSMContextApi.UpdateSmContext(org_context.Background(), sm.SmContextRef(), updateSmContextRequest)
+
+		if err == nil {
+			response = &updateSmContextReponse
+		} else if httpResponse != nil {
+			if httpResponse.Status != err.Error() {
+				err1 = err
+				return
+			}
+			switch httpResponse.StatusCode {
+			case 400, 403, 404, 500, 503:
+				errResponse := err.(openapi.GenericOpenAPIError).Model().(models.UpdateSmContextErrorResponse)
+				errorResponse = &errResponse
+			case 411, 413, 415, 429:
+				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problemDetail = &problem
+			}
+		} else {
+			err1 = openapi.ReportError("server no response")
 		}
-	} else {
-		err1 = openapi.ReportError("server no response")
-	}
-	return response, errorResponse, problemDetail, err1
+		return response, errorResponse, problemDetail, err1
 	*/
 	return
 }
@@ -314,31 +315,26 @@ func (c *smfClient) SendUpdateSmContextRequest(dat models.SmContextUpdateData, n
 
 func (c *smfClient) SendReleaseSmContextRequest(cause *CauseAll, n2SmInfoType models.N2SmInfoType,
 	n2Info []byte) (detail *models.ProblemDetails, err error) {
-		/*
+	/*
 
-	client := pdusession_client(sm)
+		client := pdusession_client(sm)
 
-	releaseData := ue.BuildReleaseSmContextData(cause, n2SmInfoType, n2Info)
-	releaseSmContextRequest := models.ReleaseSmContextRequest{
-		JsonData: &releaseData,
-	}
+		releaseData := ue.BuildReleaseSmContextData(cause, n2SmInfoType, n2Info)
+		releaseSmContextRequest := models.ReleaseSmContextRequest{
+			JsonData: &releaseData,
+		}
 
-	response, err1 := client.IndividualSMContextApi.ReleaseSmContext(
-		org_context.Background(), sm.SmContextRef(), releaseSmContextRequest)
+		response, err1 := client.IndividualSMContextApi.ReleaseSmContext(
+			org_context.Background(), sm.SmContextRef(), releaseSmContextRequest)
 
-	if err1 == nil {
-		ue.SmContextList.Delete(sm.PduSessionID())
-	} else if response != nil && response.Status == err1.Error() {
-		problem := err1.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-		detail = &problem
-	} else {
-		err = err1
-	}
+		if err1 == nil {
+			ue.SmContextList.Delete(sm.PduSessionID())
+		} else if response != nil && response.Status == err1.Error() {
+			problem := err1.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			detail = &problem
+		} else {
+			err = err1
+		}
 	*/
 	return
 }
-
-
-
-
-

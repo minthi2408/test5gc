@@ -1,7 +1,7 @@
 package context
 
 import (
-	"github.com/free5gc/openapi/models"
+	"etri5gc/openapi/models"
 )
 
 type PcfInfo struct {

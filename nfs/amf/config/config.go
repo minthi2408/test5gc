@@ -2,13 +2,16 @@ package config
 
 import (
 	"fmt"
-	"time"
-	"strconv"
 	"io/ioutil"
+	"strconv"
+	"time"
+
 	"gopkg.in/yaml.v2"
+
+	"etri5gc/openapi/models"
 	"etri5gc/sbi"
+
 	"github.com/asaskevich/govalidator"
-	"github.com/free5gc/openapi/models"
 )
 
 const (
@@ -19,8 +22,8 @@ const (
 )
 
 type Config struct {
-	Info          *Info               `yaml:"info" valid:"required"`
-	Configuration *Configuration      `yaml:"configuration" valid:"required"`
+	Info          *Info          `yaml:"info" valid:"required"`
+	Configuration *Configuration `yaml:"configuration" valid:"required"`
 }
 
 func (c *Config) Validate() (bool, error) {
@@ -453,7 +456,6 @@ func (t *TimerValue) validate() (bool, error) {
 	return true, nil
 }
 
-
 func (c *Config) GetVersion() string {
 	if c.Info != nil && c.Info.Version != "" {
 		return c.Info.Version
@@ -489,12 +491,12 @@ func (c *Config) setDefaults() error {
 	if len(conf.NgapIpList) == 0 {
 		conf.NgapIpList = []string{"127.0.0.1"} // default localhost
 	}
-	
+
 	if conf.Sbi == nil {
 		conf.Sbi = &sbi.DefaultConfig
 	} else {
 		sbi := conf.Sbi
-		if len(sbi.Scheme) ==0 {
+		if len(sbi.Scheme) == 0 {
 			sbi.Scheme = "http"
 		}
 
@@ -502,7 +504,7 @@ func (c *Config) setDefaults() error {
 			sbi.RegisterIPv4 = AMF_DEFAULT_IPV4 // default localhost
 		}
 		if sbi.Port == 0 {
-			sbi.Port = AMF_DEFAULT_PORT  // default port
+			sbi.Port = AMF_DEFAULT_PORT // default port
 		}
 		if len(sbi.BindingIPv4) == 0 {
 			sbi.BindingIPv4 = AMF_DEFAULT_IPV4

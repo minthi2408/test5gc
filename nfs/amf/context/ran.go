@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/free5gc/ngap/ngapConvert"
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/ngapConvert"
+
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 )
 
 const (
@@ -16,27 +17,27 @@ const (
 )
 
 type AmfRan struct {
-	amf				*AMFContext
-	present			int
-	id      		*models.GlobalRanNodeId
-	name  		    string
-	atype   		models.AccessType
+	amf     *AMFContext
+	present int
+	id      *models.GlobalRanNodeId
+	name    string
+	atype   models.AccessType
 	/* socket Connect*/
-	conn 			net.Conn
+	conn net.Conn
 	/* Supported TA List */
-	tailist 		[]SupportedTAI
+	tailist []SupportedTAI
 
 	/* RAN UE List */
-	uelist 			[]*RanUe // RanUeNgapId as key
+	uelist []*RanUe // RanUeNgapId as key
 
 }
 
 func newAmfRan(conn net.Conn, amf *AMFContext) *AmfRan {
-	tailistcap := MaxNumOfTAI*MaxNumOfBroadcastPLMNs
+	tailistcap := MaxNumOfTAI * MaxNumOfBroadcastPLMNs
 	return &AmfRan{
-		conn:		conn,
-		amf:		amf,
-		tailist:	make([]SupportedTAI,0, tailistcap),
+		conn:    conn,
+		amf:     amf,
+		tailist: make([]SupportedTAI, 0, tailistcap),
 	}
 }
 func (r *AmfRan) Id() *models.GlobalRanNodeId {
@@ -138,7 +139,7 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 		ranUe := &RanUe{
 			amfUeNgapId: amfUeNgapID,
 			ranUeNgapId: ranUeNgapID,
-			ran: ran,
+			ran:         ran,
 		}
 
 		ran.uelist = append(ran.uelist, ranUe)
@@ -146,5 +147,3 @@ func (ran *AmfRan) NewRanUe(ranUeNgapID int64) (*RanUe, error) {
 		return ranUe, nil
 	}
 }
-
-

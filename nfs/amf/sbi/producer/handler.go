@@ -1,23 +1,25 @@
 package producer
 
 import (
-//	"fmt"
+	//	"fmt"
 	"etri5gc/nfs/amf/context"
 	//"etri5gc/nfs/amf/ngap"
 	"etri5gc/fabric/common"
-	"etri5gc/nfs/amf/sbi/producer/httpcallback"
-	"etri5gc/nfs/amf/sbi/producer/eventexposure"
-	"etri5gc/nfs/amf/sbi/producer/location"
 	"etri5gc/nfs/amf/sbi/producer/communication"
-	"etri5gc/nfs/amf/sbi/producer/oam"
+	"etri5gc/nfs/amf/sbi/producer/eventexposure"
+	"etri5gc/nfs/amf/sbi/producer/httpcallback"
+	"etri5gc/nfs/amf/sbi/producer/location"
 	"etri5gc/nfs/amf/sbi/producer/mt"
-	"github.com/free5gc/ngap/ngapType"
+	"etri5gc/nfs/amf/sbi/producer/oam"
+	"etri5gc/openapi/models"
+
 	"github.com/free5gc/nas/nasType"
-	"github.com/free5gc/openapi/models"
+	"github.com/free5gc/ngap/ngapType"
 	"github.com/sirupsen/logrus"
 )
 
-var log	*logrus.Entry
+var log *logrus.Entry
+
 func init() {
 	log = logrus.WithFields(logrus.Fields{"mod": "sbi.producer"})
 }
@@ -27,7 +29,7 @@ type NasHandler interface {
 }
 type NasGmm interface {
 	BuildConfigurationUpdateCommand(*context.AmfUe, models.AccessType, *nasType.NetworkSlicingIndication) ([]byte, error)
-	SendConfigurationUpdateCommand(*context.AmfUe, models.AccessType, *nasType.NetworkSlicingIndication) 
+	SendConfigurationUpdateCommand(*context.AmfUe, models.AccessType, *nasType.NetworkSlicingIndication)
 }
 
 type NasInf interface {
@@ -37,30 +39,29 @@ type NasInf interface {
 
 type NgapSender interface {
 	SendPaging(*context.AmfUe, []byte)
-	BuildPaging(*context.AmfUe, *ngapType.PagingPriority, bool) ([]byte, error) 
+	BuildPaging(*context.AmfUe, *ngapType.PagingPriority, bool) ([]byte, error)
 }
-
 
 type Backend interface {
 	Context() *context.AMFContext
 }
 
 type Producer struct {
-	backend		Backend
-	ngap		NgapSender
-	nas			NasInf
+	backend Backend
+	ngap    NgapSender
+	nas     NasInf
 }
 
 func NewProducer(b Backend, ngap NgapSender, nas NasInf) *Producer {
 	return &Producer{
 		backend: b,
-		ngap: ngap,
-		nas: nas,
+		ngap:    ngap,
+		nas:     nas,
 	}
 }
 
 func (prod *Producer) Services() []common.Service {
-	services := make([]common.Service,6,6)
+	services := make([]common.Service, 6, 6)
 	services[0] = httpcallback.MakeService(prod)
 	services[1] = communication.MakeService(prod)
 	services[2] = eventexposure.MakeService(prod)

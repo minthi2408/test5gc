@@ -2,11 +2,9 @@ package producer
 
 import (
 	"net/http"
-//	"reflect"
 
-//	"etri5gc/nfs/amf/context"
+	"etri5gc/openapi/models"
 
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/httpwrapper"
 )
 
@@ -16,7 +14,7 @@ func (h *Producer) HandleAMFStatusChangeSubscribeRequest(request *httpwrapper.Re
 
 	datreq := request.Body.(models.SubscriptionData)
 
-	if datres, locheader, prob := h.amf().AMFStatusChangeSubscribe(datreq); prob!=nil {
+	if datres, locheader, prob := h.amf().AMFStatusChangeSubscribe(datreq); prob != nil {
 		return httpwrapper.NewResponse(int(prob.Status), nil, prob)
 	} else {
 
@@ -40,7 +38,6 @@ func (h *Producer) HandleAMFStatusChangeUnSubscribeRequest(request *httpwrapper.
 	}
 }
 
-
 // TS 29.518 5.2.2.5.1.3
 func (h *Producer) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle AMF Status Change Subscribe Modify Request")
@@ -54,4 +51,3 @@ func (h *Producer) HandleAMFStatusChangeSubscribeModify(request *httpwrapper.Req
 		return httpwrapper.NewResponse(http.StatusAccepted, nil, updat)
 	}
 }
-

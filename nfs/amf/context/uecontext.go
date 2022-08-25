@@ -8,10 +8,11 @@ import (
 	"strconv"
 	"sync"
 
+	"etri5gc/openapi/models"
+
 	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/fsm"
 	"github.com/free5gc/util/idgenerator"
 )

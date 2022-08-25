@@ -5,11 +5,12 @@ import (
 	"strings"
 
 	"etri5gc/nfs/amf/context"
-	"github.com/free5gc/openapi/models"
+	"etri5gc/openapi/models"
+
 	"github.com/free5gc/util/httpwrapper"
 )
-//NOTE tuntq: removing AmfUe has been commented, need to handle it
 
+//NOTE tuntq: removing AmfUe has been commented, need to handle it
 
 // TS 29.518 5.2.2.2.3
 func (h *Producer) HandleCreateUEContextRequest(request *httpwrapper.Request) *httpwrapper.Response {
@@ -27,7 +28,7 @@ func (h *Producer) HandleCreateUEContextRequest(request *httpwrapper.Request) *h
 }
 func (h *Producer) doCreateUEContext(ueContextID string, createUeContextRequest models.CreateUeContextRequest) (
 	*models.CreateUeContextResponse, *models.UeContextCreateError) {
-	amf := h.amf() 
+	amf := h.amf()
 	ueContextCreateData := createUeContextRequest.JsonData
 
 	if ueContextCreateData.UeContext == nil || ueContextCreateData.TargetId == nil ||
@@ -43,13 +44,13 @@ func (h *Producer) doCreateUEContext(ueContextID string, createUeContextRequest 
 	// create the UE context in target amf
 	amf.NewAmfUeByReq(ueContextID, ueContextCreateData)
 
-	createUeContextResponse := &models.CreateUeContextResponse {
+	createUeContextResponse := &models.CreateUeContextResponse{
 		JsonData: &models.UeContextCreatedData{
-				UeContext: &models.UeContext{
-					Supi: ueContextCreateData.UeContext.Supi,
-				},
+			UeContext: &models.UeContext{
+				Supi: ueContextCreateData.UeContext.Supi,
 			},
-		}
+		},
+	}
 
 	// response.JsonData.TargetToSourceData =
 	// ue.N1N2Message[ueContextId].Request.JsonData.N2InfoContainer.SmInfo.N2InfoContent
@@ -102,7 +103,7 @@ func (h *Producer) doReleaseUEContext(ueContextID string, ueContextRelease model
 
 	log.Debugf("Release UE Context NGAP cause: %+v", ueContextRelease.NgapCause)
 
-	if /*ue*/_, ok := h.amf().AmfUeFindByUeContextID(ueContextID); ok {
+	if /*ue*/ _, ok := h.amf().AmfUeFindByUeContextID(ueContextID); ok {
 		//TODO: tungtq - a bad design by free5gc - let move to a different place (amf context)
 		//gmm_common.RemoveAmfUe(ue)
 	} else {
@@ -114,6 +115,7 @@ func (h *Producer) doReleaseUEContext(ueContextID string, ueContextRelease model
 
 	return nil
 }
+
 // TS 29.518 5.2.2.2.1
 func (h *Producer) HandleUEContextTransferRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle UE Context Transfer Request")
@@ -131,7 +133,7 @@ func (h *Producer) HandleUEContextTransferRequest(request *httpwrapper.Request) 
 func (h *Producer) doUEContextTransfer(ueId string, req models.UeContextTransferRequest) (
 	*models.UeContextTransferResponse, *models.ProblemDetails) {
 
-	amf := h.amf() 
+	amf := h.amf()
 
 	if req.JsonData == nil {
 		return nil, &models.ProblemDetails{
@@ -157,7 +159,7 @@ func (h *Producer) doUEContextTransfer(ueId string, req models.UeContextTransfer
 		}
 	}
 
-	res := &models.UeContextTransferResponse {
+	res := &models.UeContextTransferResponse{
 		JsonData: &models.UeContextTransferRspData{},
 	}
 
@@ -166,10 +168,7 @@ func (h *Producer) doUEContextTransfer(ueId string, req models.UeContextTransfer
 	}
 	return res, nil
 
-	
 }
-
-
 
 // TS 29.518 5.2.2.6
 func (h *Producer) HandleAssignEbiDataRequest(request *httpwrapper.Request) *httpwrapper.Response {

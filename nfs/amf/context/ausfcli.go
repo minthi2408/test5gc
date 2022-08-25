@@ -10,13 +10,14 @@ import (
 	"regexp"
 	"strconv"
 
+	"etri5gc/openapi/models"
+	"etri5gc/openapi/utils/nasConvert"
+
 	"github.com/free5gc/nas"
-	"github.com/free5gc/nas/nasConvert"
 	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/nas/security"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/util/ueauth"
 	"github.com/mitchellh/mapstructure"
 )

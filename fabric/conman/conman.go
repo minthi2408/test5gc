@@ -1,11 +1,10 @@
 package conman
 
 import (
-    "net/http"
-    "errors"
-    "etri5gc/fabric/common"
-    "etri5gc/openapi"
+	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
 )
+
 //abstraction of protocol-specific service clients
 type RemoteConnection interface {
 	Send(common.Request) (common.Response, error)
@@ -22,46 +21,28 @@ type ConnectionManager interface {
 	Drop(common.AgentAddr)
 }
 
-type remoteAgent struct {
-    addr    common.AgentAddr
-    client  *http.Client
-}
-
-
-func (c *remoteAgent) Send(req common.Request) (common.Response, error) {
-    if req.MsgType() != common.SERVICE_MSG_TYPE_OPENAPI {
-        return nil, errors.New("unknown request format")
-    }
-    openapiReq := req.(*openapi.Request)
-    //now turn an openapi request into a http request
-    httpreq := c.prepareHttpRequest(openapiReq)
-    //send the request and get a response
-    httpresp, err := c.client.Do(httpreq)
-    return openapiReq.Handler()(httpresp, err)
-
-}
-
-func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) *http.Request {
-    return nil
-}
-func (c *remoteAgent) Addr() common.AgentAddr {
-    return c.addr
-}
-
 type connectionManager struct {
+	connections map[string]RemoteConnection
 }
-
 
 func NewConnectionManager() *connectionManager {
-    ret := & connectionManager{
-    }
-    return ret
+	ret := &connectionManager{}
+	return ret
 }
 
-
+// create a connection to a remote agent
 func (cm *connectionManager) Connect(addr common.AgentAddr) (RemoteConnection, error) {
-    return nil, nil
+	//TODO: this is very simplified implementation. Netvision should implement
+	//added features such as connection reuse, connection sercurity
+	id := addr.String()
+	if conn, ok := cm.connections[id]; ok {
+		return conn, nil
+	}
+	conn := httpdp.NewHttpRemoteAgent(addr)
+	cm.connections[id] = conn
+	return conn, nil
 }
 
 func (cm *connectionManager) Drop(addr common.AgentAddr) {
+	delete(cm.connections, addr.String())
 }
