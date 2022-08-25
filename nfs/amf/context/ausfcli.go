@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"etri5gc/openapi/models"
+	"etri5gc/openapi/ausf"
 	"etri5gc/openapi/utils/nasConvert"
 
 	"github.com/free5gc/nas"
@@ -60,6 +61,7 @@ type ausfClient struct {
 	ue     *AmfUe
 	info   AusfInfo
 	seccon SecContext
+    consumer   ausf.AusfConsumer 
 	sender requestSender
 }
 
@@ -291,113 +293,46 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 	if resynchronizationInfo != nil {
 		authInfo.ResynchronizationInfo = resynchronizationInfo
 	}
-
-	//2. build openapi request
-	request := &openapi.Request{
-		Path:         "/ue-authentications",
-		Body:         &authInfo,
-		HeaderParams: make(map[string]string),
-	}
-	request.HeaderParams["Content-Type"] = "application/json"
-	request.HeaderParams["Accept"] = "application/json"
-	//3. send request
-	//res, err := c.sender.Send(request)
-	c.sender.Send(request)
-
-	//4. handle response
-	/*
-		ueAuthenticationCtx, httpResponse, err := client.DefaultApi.UeAuthenticationsPost(org_context.Background(), authInfo)
-		if err == nil {
-			return &ueAuthenticationCtx, nil, nil
-		} else if httpResponse != nil {
-			if httpResponse.Status != err.Error() {
-				return nil, nil, err
-			}
-			problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-			return nil, &problem, nil
-		} else {
-			return nil, nil, openapi.ReportError("server no response")
-		}
-	*/
-	return nil, nil, nil
+    if authCtx, _, err := c.consumer.UeAuthPost(authInfo); err == nil {
+        return &authCtx, nil, nil
+    } else if errEx, ok := err.(*openapi.Error); ok {
+        return nil, errEx.Problem(), err
+    } else {
+        return nil, nil, err
+    }
 }
+
 
 func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 	*models.ConfirmationDataResponse, *models.ProblemDetails, error) {
-	/*
-		var ausfUri string
-		if confirmUri, err := url.Parse(ue.GetAusfInfo().AuthenticationCtx.Links["5g-aka"].Href); err != nil {
-			return nil, nil, err
-		} else {
-			ausfUri = fmt.Sprintf("%s://%s", confirmUri.Scheme, confirmUri.Host)
-		}
+    //NOTE: the ausf producer should return a relative path instead of a
+    //absolute path
+    //it seems it is not neccessary to extract the path for confirmation
+    //path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
 
-		client := ausf_auth_client(ausfUri)
-
-		confirmData := &Nausf_UEAuthentication.UeAuthenticationsAuthCtxId5gAkaConfirmationPutParamOpts{
-			ConfirmationData: optional.NewInterface(models.ConfirmationData{
-				ResStar: resStar,
-			}),
-		}
-
-		confirmResult, httpResponse, err := client.DefaultApi.UeAuthenticationsAuthCtxId5gAkaConfirmationPut(
-			org_context.Background(), ue.Suci, confirmData)
-		if err == nil {
-			return &confirmResult, nil, nil
-		} else if httpResponse != nil {
-			if httpResponse.Status != err.Error() {
-				return nil, nil, err
-			}
-			switch httpResponse.StatusCode {
-			case 400, 500:
-				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-				return nil, &problem, nil
-			}
-			return nil, nil, nil
-		} else {
-			return nil, nil, openapi.ReportError("server no response")
-		}
-	*/
-	return nil, nil, nil
+    if result, _, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
+        return &result, nil, nil
+    } else if errEx, ok := err.(*openapi.Error); ok {
+        return nil, errEx.Problem(), err
+    } else {
+        return nil, nil, err
+    }
 }
 
-func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (
-	response *models.EapSession, problemDetails *models.ProblemDetails, err1 error) {
-	/*
-		confirmUri, err := url.Parse(ue.GetAusfInfo().AuthenticationCtx.Links["eap-session"].Href)
-		if err != nil {
-			//logger.ConsumerLog.Errorf("url Parse failed: %+v", err)
-		}
-		ausfUri := fmt.Sprintf("%s://%s", confirmUri.Scheme, confirmUri.Host)
+func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*models.EapSession, *models.ProblemDetails, error) {
+	//confirmUri, err := url.Parse(ue.GetAusfInfo().AuthenticationCtx.Links["eap-session"].Href)
 
-		client := ausf_auth_client(ausfUri)
+    eapin := &models.EapSession{
+        EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
+    }
 
-		eapSessionReq := &Nausf_UEAuthentication.EapAuthMethodParamOpts{
-			EapSession: optional.NewInterface(models.EapSession{
-				EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
-			}),
-		}
-
-		eapSession, httpResponse, err := client.DefaultApi.EapAuthMethod(org_context.Background(), ue.Suci, eapSessionReq)
-		if err == nil {
-			response = &eapSession
-		} else if httpResponse != nil {
-			if httpResponse.Status != err.Error() {
-				err1 = err
-				return
-			}
-			switch httpResponse.StatusCode {
-			case 400, 500:
-				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
-				problemDetails = &problem
-			}
-		} else {
-			err1 = openapi.ReportError("server no response")
-		}
-
-		return response, problemDetails, err1
-	*/
-	return
+    if eapout, _, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
+        return &eapout, nil, nil
+    } else if errEx, ok := err.(*openapi.Error); ok {
+        return nil, errEx.Problem(), err
+    } else {
+        return nil, nil, err
+    }
 }
 
 func (c *ausfClient) NasEncode(msg *nas.Message, accessType models.AccessType) ([]byte, error) {

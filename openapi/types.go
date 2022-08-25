@@ -6,6 +6,7 @@ import (
 	"net/url"
 )
 
+
 type ResponseHandlerFunc func(resp *http.Response, err error) (*Response, error)
 
 type Request struct {
@@ -44,3 +45,9 @@ type Response struct {
 func (msg *Response) MsgType() int {
 	return common.SERVICE_MSG_TYPE_OPENAPI
 }
+
+type Consumer interface {
+	Send(*Request) (*Response, error)
+    DecodeBody(interface{}, []byte, string) error
+}
+
