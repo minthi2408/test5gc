@@ -39,13 +39,16 @@ func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
 
 	//create ngap server
 	nf.ngap = ngap.NewServer(nf)
+
 	//create sbi producer
 	nf.producer = producer.NewProducer(nf, nf.ngap.Sender(), nf.ngap.Nas())
 
-	//TODO: agent configuration
-	nf.agent, err = fabric.CreateServiceAgent(nil)
+	//createfabric agent
+	agentconfig := &fabric.AgentConfig{} //TODO: should be loaded from a configuration file
+	agentconfig.SetServices(nf.producer.Services())
+	nf.agent, err = fabric.CreateServiceAgent(agentconfig)
 	nf.sender = nf.agent.Forwarder()
-	err = nf.agent.Register(nf.producer.Services())
+
 	// initialize AMF context
 	nf.context = context.CreateAmfContext(cfg, nf.sender)
 
@@ -77,35 +80,6 @@ func (nf *AMF) Start() (err error) {
 	// start ngap server
 	log.Info("Starting ngap server")
 	nf.ngap.Run(nf.conf.Configuration.NgapIpList, 38412)
-
-	// Register to NRF
-	//TODO: probably nrf registration should be implemented in a separated go
-	//routine. The Amf is functioning only after a registration success.
-
-	/*
-			log.Info("Registering to NRF")
-			cnt := 1
-		LOOP:
-			for cnt < 5 {
-				if _, nfid, ierr := nf.consumer.Nrf().SendRegisterNFInstance(); ierr != nil {
-					log.Errorf("Fail to register with NRF (attemp #%d) %s", cnt, ierr.Error())
-					cnt++
-					err = ierr
-					timer := time.NewTimer(2 * time.Second)
-					<-timer.C
-				} else {
-					if len(nfid) > 0 {
-						log.Info("Amf is registered, need to update AMF info")
-						err = nil
-						//TODO: Update NF identity
-						nf.context.SetNfId(nfid)
-					}
-					break LOOP
-				}
-			}
-
-			log.Info("Amf is registered, it is ok now")
-	*/
 
 	if err != nil {
 		nf.ngap.Stop()

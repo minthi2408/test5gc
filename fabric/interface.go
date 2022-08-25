@@ -16,9 +16,6 @@ type Forwarder interface {
 
 // a server abstraction that listen to requests for registered services
 type ServiceServer interface {
-	//register services to handling incomming requests
-	//must be called before the server starts
-	Register([]common.Service) error
 	//start server
 	Serve()
 	//terminate server
@@ -35,9 +32,6 @@ type ServiceAgent interface {
 
 	// expose the forwarder
 	Forwarder() Forwarder
-
-	//  expose service registering method
-	Register([]common.Service) error
 }
 
 ///////////////////////

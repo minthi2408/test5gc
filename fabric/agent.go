@@ -4,6 +4,7 @@ import (
 	"errors"
 	"etri5gc/fabric/common"
 	"etri5gc/fabric/conman"
+	fwimpl "etri5gc/fabric/forwarder"
 	"etri5gc/fabric/httpdp"
 	"etri5gc/fabric/registrydb"
 	"etri5gc/fabric/telemetry"
@@ -39,6 +40,7 @@ func (agent *serviceAgent) Start() (err error) {
 	if agent.server == nil {
 		panic(errors.New("server has not been created"))
 	}
+
 	agent.server.Serve()
 	return
 }
@@ -54,10 +56,6 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 	return agent.reporter
 }
 
-func (agent *serviceAgent) Register(services []common.Service) error {
-	return agent.server.Register(services)
-}
-
 // a factory method to create an agent
 // it returns an nil value and an error in case of failure
 // otherwise, internal go routines are running. The caller should tell the
@@ -71,8 +69,11 @@ func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 	}
 
 	if config.DProto == common.DATAPLANE_HTTP {
-		agent.forwarder = newForwarder(agent.registry, agent.lb, agent.conmngr)
-		agent.server = httpdp.NewHttpServer(config.HttpServerConfig)
+		var err error
+		agent.forwarder = fwimpl.New(agent.registry, agent.lb, agent.conmngr)
+		if agent.server, err = httpdp.NewHttpServer(config.HttpServerConfig, config.services); err != nil {
+			return nil, err
+		}
 		return agent, nil
 	} else {
 		return nil, errors.New("the input data plane protocol is not supported")

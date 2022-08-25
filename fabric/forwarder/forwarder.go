@@ -12,6 +12,10 @@ const (
 	FORWARDER_REQUEST_TIMEOUT = 2000 //miliseconds
 )
 
+type LoadBalancer interface {
+	Select([]common.AgentProfile) common.AgentProfile
+}
+
 type forwarderImpl struct {
 	//registry to search for remote agents
 	reg registrydb.AgentRegistry
@@ -23,7 +27,7 @@ type forwarderImpl struct {
 	sender conman.RemoteConnection
 }
 
-func newForwarder(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) Forwarder {
+func New(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) *forwarderImpl {
 	ret := &forwarderImpl{
 		reg:    reg,
 		lb:     lb,

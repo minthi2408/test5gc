@@ -58,14 +58,18 @@ type ServerConfig struct {
 	//TODO: add tls
 }
 
-func NewHttpServer(config *ServerConfig) *httpServer {
-	return &httpServer{
+func NewHttpServer(config *ServerConfig, services []common.Service) (*httpServer, error) {
+	ret := &httpServer{
 		config: config,
 	}
+	if err := ret.register(services); err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
 
 // create a http server, register services and their handlers
-func (s *httpServer) Register(services []common.Service) (err error) {
+func (s *httpServer) register(services []common.Service) (err error) {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
