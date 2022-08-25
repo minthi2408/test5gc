@@ -92,3 +92,10 @@ func (fw *forwarderImpl) DirectSend(req common.Request, addr common.AgentAddr) (
 		}
 	}
 }
+
+func (fw *forwarderImpl) Start() error {
+	return nil
+}
+
+func (fw *forwarderImpl) Terminate() {
+}

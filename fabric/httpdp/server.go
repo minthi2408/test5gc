@@ -97,7 +97,7 @@ func (s *httpServer) register(services []common.Service) (err error) {
 	return
 }
 
-func (s *httpServer) Serve() {
+func (s *httpServer) Start() error {
 	go func() {
 		s.server.ListenAndServe()
 
@@ -117,6 +117,7 @@ func (s *httpServer) Serve() {
 		s.wg.Add(1)
 	}()
 	//log.Info("http server is running")
+	return nil
 }
 
 func (s *httpServer) Terminate() {

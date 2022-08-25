@@ -52,3 +52,8 @@ type AgentProfile interface {
 	Addr() AgentAddr
 	Load() int //workload - for load balancer to make comparisons
 }
+
+type InternalService interface {
+	Start() error
+	Terminate()
+}

@@ -13,6 +13,7 @@ const (
 
 // abstraction of a service registry
 type AgentRegistry interface {
+	common.InternalService
 	//search agents which match a query
 	Search(common.NfQuery) []common.AgentProfile
 
@@ -53,6 +54,13 @@ func (r *distributedRegistry) Search(query common.NfQuery) []common.AgentProfile
 func (r *distributedRegistry) Drop(agent common.AgentProfile) {
 }
 
+func (r *distributedRegistry) Start() error {
+	return nil
+}
+
+func (r *distributedRegistry) Terminate() {
+}
+
 //centralized registry
 type centralizedRegistryClient struct {
 	profile common.AgentProfile
@@ -72,6 +80,13 @@ func (r *centralizedRegistryClient) Search(query common.NfQuery) []common.AgentP
 }
 
 func (r *centralizedRegistryClient) Drop(agent common.AgentProfile) {
+}
+
+func (r *centralizedRegistryClient) Start() error {
+	return nil
+}
+
+func (r *centralizedRegistryClient) Terminate() {
 }
 
 //static registry
@@ -97,6 +112,14 @@ func (r *staticRegistry) Search(query common.NfQuery) []common.AgentProfile {
 func (r *staticRegistry) Drop(agent common.AgentProfile) {
 }
 
+func (r *staticRegistry) Start() error {
+	return nil
+}
+
+func (r *staticRegistry) Terminate() {
+}
+
+//factory method to create a registry
 func NewRegistry(profile common.AgentProfile, config *Config) AgentRegistry {
 	switch config.RegType {
 	case REGISTRY_STATIC:

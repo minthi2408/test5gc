@@ -12,6 +12,7 @@ type RemoteConnection interface {
 }
 
 type ConnectionManager interface {
+	common.InternalService
 	// create a new connection or resuse an existing one
 	// add security layer if needs
 	// NOTE: it is just a connection preparation, no interaction is done now
@@ -45,4 +46,11 @@ func (cm *connectionManager) Connect(addr common.AgentAddr) (RemoteConnection, e
 
 func (cm *connectionManager) Drop(addr common.AgentAddr) {
 	delete(cm.connections, addr.String())
+}
+
+func (cm *connectionManager) Start() error {
+	return nil
+}
+
+func (cm *connectionManager) Terminate() {
 }

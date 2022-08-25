@@ -14,7 +14,6 @@ import (
 // there should be core parameters
 // there should be plug-in parameters that are NF-dependent
 type AgentConfig struct {
-	NfType           common.NetworkFunctionType
 	DProto           common.DataPlaneProtocol //dataplane protocol
 	HttpServerConfig *httpdp.ServerConfig     //http-based service server configuration
 	Profile          common.AgentProfile
@@ -34,6 +33,7 @@ type serviceAgent struct {
 	lb        LoadBalancer
 	server    ServiceServer
 	forwarder Forwarder
+	runnings  []common.InternalService
 }
 
 func (agent *serviceAgent) Start() (err error) {
@@ -41,12 +41,29 @@ func (agent *serviceAgent) Start() (err error) {
 		panic(errors.New("server has not been created"))
 	}
 
-	agent.server.Serve()
+	//register services to execute
+	services := make([]common.InternalService, 5)
+	services[0] = agent.server
+	services[1] = agent.reporter
+	services[2] = agent.forwarder
+	services[3] = agent.conmngr
+	services[4] = agent.registry
+	//execute service sequentially
+	for _, service := range services {
+		if err = service.Start(); err != nil {
+			agent.Terminate()
+			return
+		}
+		agent.runnings = append(agent.runnings, service)
+	}
 	return
 }
 
 func (agent *serviceAgent) Terminate() {
-	agent.server.Terminate()
+	//terminate all running services
+	for _, service := range agent.runnings {
+		service.Terminate()
+	}
 }
 
 func (agent *serviceAgent) Forwarder() Forwarder {

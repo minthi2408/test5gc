@@ -1,6 +1,7 @@
 package telemetry
 
 import (
+	"etri5gc/fabric/common"
 	"time"
 )
 
@@ -11,6 +12,7 @@ type Report interface {
 }
 
 type Writer interface {
+	common.InternalService
 	Write(Report)
 }
 
@@ -22,4 +24,11 @@ type dumpTelemetry struct {
 }
 
 func (tel *dumpTelemetry) Write(r Report) {
+}
+
+func (tel *dumpTelemetry) Start() error {
+	return nil
+}
+
+func (tel *dumpTelemetry) Terminate() {
 }

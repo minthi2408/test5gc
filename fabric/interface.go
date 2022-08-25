@@ -9,18 +9,14 @@ import (
 // works like an http client. However, load balancing, fault recover, security,
 // telemetry will be implemented by the forwarder with transparancy.
 type Forwarder interface {
+	common.InternalService
 	//select an producer; send a request to get a response; retry if selected producer is dead
 	DiscoveryThenSend(common.Request, common.NfQuery) (common.Response, common.AgentAddr, error)
 	DirectSend(common.Request, common.AgentAddr) (common.Response, error)
 }
 
 // a server abstraction that listen to requests for registered services
-type ServiceServer interface {
-	//start server
-	Serve()
-	//terminate server
-	Terminate()
-}
+type ServiceServer common.InternalService
 
 // an abstraction that exposes the agent to the upper layers
 //
