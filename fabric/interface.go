@@ -40,23 +40,9 @@ type ServiceAgent interface {
 	Register([]common.Service) error
 }
 
-//////////////////////////////
-//Registry
-
-//a registry to query for producers
-type AgentRegistry interface {
-	//search agents which match a query
-	Search(common.NfQuery) []common.AgentProfile
-
-	//drop a dead agent
-	Drop(common.AgentProfile)
-}
-
 ///////////////////////
 //Selector
 // selector do the load balancing on the list of agent profiles
 type LoadBalancer interface {
 	Select([]common.AgentProfile) common.AgentProfile
 }
-
-

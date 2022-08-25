@@ -1,10 +1,11 @@
 package httpdp
+
 import (
 	"errors"
+	"etri5gc/fabric/common"
 	"fmt"
 	"net/http"
 	"sync"
-    "etri5gc/fabric/common"
 
 	"github.com/free5gc/util/httpwrapper"
 	"github.com/gin-contrib/cors"
@@ -36,28 +37,28 @@ func (s HttpService) Name() string {
 
 //httpServer
 type httpServer struct {
-	config *HttpServerConfig
+	config *ServerConfig
 	server *http.Server
 	wg     sync.WaitGroup
 }
 
 type HttpAddr struct {
-	IPv4    string
-	Port        int
-    //TODO: add certificate
+	IPv4 string
+	Port int
+	//TODO: add certificate
 }
 
 func (addr *HttpAddr) Protocol() common.DataPlaneProtocol {
-    return common.DATAPLANE_HTTP
+	return common.DATAPLANE_HTTP
 }
 
-type HttpServerConfig struct {
+type ServerConfig struct {
 	BindingIPv4 string
 	Port        int
-    //TODO: add tls
+	//TODO: add tls
 }
 
-func NewHttpServer(config *HttpServerConfig) *httpServer {
+func NewHttpServer(config *ServerConfig) *httpServer {
 	return &httpServer{
 		config: config,
 	}
@@ -144,4 +145,3 @@ func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gi
 func HttpIndexHandler(c *gin.Context) {
 	c.String(http.StatusOK, "Hello from EtriB5GC!")
 }
-

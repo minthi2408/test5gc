@@ -35,7 +35,7 @@ func (cm *connectionManager) Connect(addr common.AgentAddr) (RemoteConnection, e
 	//TODO: this is very simplified implementation. Netvision should implement
 	//added features such as connection reuse, connection sercurity
 	id := addr.String()
-	if conn, ok := cm.connections[id]; ok {
+	if conn, ok := cm.connections[id]; ok { //connection existed
 		return conn, nil
 	}
 	conn := httpdp.NewHttpRemoteAgent(addr)

@@ -2,8 +2,9 @@ package fabric
 
 import (
 	"errors"
-	"etri5gc/fabric/conman"
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/conman"
+	"etri5gc/fabric/registrydb"
 )
 
 const (
@@ -11,10 +12,9 @@ const (
 	FORWARDER_REQUEST_TIMEOUT = 2000 //miliseconds
 )
 
-
 type forwarderImpl struct {
 	//registry to search for remote agents
-	reg AgentRegistry
+	reg registrydb.AgentRegistry
 	//a load balancer implementation
 	lb LoadBalancer
 	//for creating a connection to a selected remote agent
@@ -23,7 +23,7 @@ type forwarderImpl struct {
 	sender conman.RemoteConnection
 }
 
-func newForwarder(reg AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) Forwarder {
+func newForwarder(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) Forwarder {
 	ret := &forwarderImpl{
 		reg:    reg,
 		lb:     lb,
@@ -43,7 +43,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 		//1. discover agents
 		var profiles []common.AgentProfile
 		if profiles = fw.reg.Search(query); len(profiles) == 0 {
-			err = errors.New("No agent is found")
+			err = errors.New("Out of hope, no agent reply; can't send the request")
 			return
 		}
 		//2. select one
@@ -53,7 +53,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 
 		//3. get a connection to the selected one
 		if fw.sender, err = fw.conman.Connect(addr); err != nil {
-			// something serious happends, just stop
+			// something serious happens, just stop
 			fw.reg.Drop(agent)
 			return
 		}
@@ -70,16 +70,15 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 		fw.reg.Drop(agent)
 		fw.conman.Drop(addr)
 	}
-	err = errors.New("Out of hope, can't send the request")
-	return
 }
 
 // send a request directly to a remote agent with given address
 func (fw *forwarderImpl) DirectSend(req common.Request, addr common.AgentAddr) (
 	common.Response, error) {
 
+	// NOTE: addr might have been returned to the caller in a previous call, so
+	// make sure we can reuse the same client
 	if fw.sender != nil && addr == fw.sender.Addr() {
-		//reuse connection
 		return fw.sender.Send(req)
 	} else {
 		if sender, err := fw.conman.Connect(addr); err != nil {
