@@ -4,6 +4,7 @@ import (
 	"errors"
 	"etri5gc/fabric"
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
 	"etri5gc/openapi"
 )
 
@@ -33,4 +34,8 @@ func (s *requestSender) Send(request *openapi.Request) (response *openapi.Respon
 		err = errors.New("the response is not in the openapi format")
 	}
 	return
+}
+
+func (s *requestSender) DecodeResponse(resp *openapi.Response) error {
+    return httpdp.Encoding().DecodeResponse(resp)
 }

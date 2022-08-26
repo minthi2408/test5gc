@@ -85,6 +85,7 @@ func (prod *Producer) Services() []common.Service {
 func (prod *Producer) amf() *context.AMFContext {
 	return prod.backend.Context()
 }
+
 func MakeTestService() (service httpdp.HttpService) {
 	service.Routes = httpdp.HttpRoutes{
 		{
@@ -98,7 +99,7 @@ func MakeTestService() (service httpdp.HttpService) {
 			"AMFStatusChangeSubscribeModify",
 			strings.ToUpper("Put"),
 			"/subscriptions/:subscriptionId",
-			prodcontext.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler),
+			prodcontext.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler, httpdp.Encoding()),
 		},
 	}
 	service.Group = "test"
@@ -106,6 +107,5 @@ func MakeTestService() (service httpdp.HttpService) {
 }
 
 func myapphandler(ctx prodcontext.RequestContext) *openapi.Response {
-	ctx.SetProblem(nil)
 	return nil
 }

@@ -17,7 +17,7 @@ type Request struct {
 	FileBytes    []byte
 
 	BodyBytes []byte      //encoded body
-	Request   interface{} //dataplace protocol-bound request
+	Request   interface{} //dataplane protocol-bound request
 }
 
 func (msg *Request) MsgType() int {
@@ -36,6 +36,10 @@ func DefaultRequest() *Request {
 type Response struct {
 	Response  interface{}
 	BodyBytes []byte
+
+    Body      interface{}
+    Status  string
+    StatusCode int
 }
 
 func (msg *Response) MsgType() int {
@@ -43,6 +47,14 @@ func (msg *Response) MsgType() int {
 }
 
 type Consumer interface {
-	Send(*Request) (*Response, error)
-	DecodeBody(interface{}, []byte, string) error
+	Send(*Request) (*Response, error) //encode then send
+	DecodeResponse(*Response) error
 }
+
+type ProducerEncoding interface {
+    DecodeRequest(*Request) error
+    EncodeResponse(*Response) error
+}
+
+
+

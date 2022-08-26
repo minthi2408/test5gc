@@ -14,25 +14,33 @@ type remoteAgent struct {
 	client *http.Client
 }
 
-func (c *remoteAgent) Send(req common.Request) (common.Response, error) {
+func (c *remoteAgent) Send(req common.Request) (resp common.Response, err error) {
 	if req.MsgType() != common.SERVICE_MSG_TYPE_OPENAPI {
 		return nil, errors.New("unknown request format")
 	}
 	openapiReq := req.(*openapi.Request)
+    var httpreq *http.Request
+    var httpresp *http.Response
 	//now turn an openapi request into a http request
-	httpreq := c.prepareHttpRequest(openapiReq)
+	if httpreq, err = c.prepareHttpRequest(openapiReq); err != nil {
+        return
+    }
 	//send the request and get a response
-	if httpresp, err := c.client.Do(httpreq); err != nil {
-		return nil, err
+	if httpresp, err = c.client.Do(httpreq); err != nil {
+		return
 	} else {
 		//read body of the response and prepare the openapi response
-		openapiResp := &openapi.Response{
+        openapiResp := &openapi.Response{
 			Response: httpresp,
+            StatusCode: httpresp.StatusCode,
+            Status: httpresp.Status,
 		}
-		var err error
 		openapiResp.BodyBytes, err = ioutil.ReadAll(httpresp.Body)
 		httpresp.Body.Close()
-		return openapiResp, err
+        if err == nil {
+            resp = openapiResp
+        }
+		return 
 	}
 }
 
@@ -49,10 +57,15 @@ func NewHttpRemoteAgent(addr common.AgentAddr) *remoteAgent {
 }
 
 //build an http request from openapi request
-func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) *http.Request {
+func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) (httpreq *http.Request, err error) {
 	//netvision should implement this method (refer to the
 	//free5gc/openapi/client.go)
-	return nil
+    //1. inject the ipaddr:port into the request path
+    //2. encode the request
+    if err = oneEncoding.EncodeRequest(req); err == nil {
+        httpreq = req.Request.(*http.Request)
+    }
+	return 
 }
 
 func (c *remoteAgent) Addr() common.AgentAddr {

@@ -276,6 +276,8 @@ func (c *ausfClient) clear() {
 ///////////////////////////////////// consumer /////////////////////
 //build a query to select an AUSF producer
 func (c *ausfClient) Select() {
+    //TODO: make a proper requestSender object 
+    c.consumer = ausf.New(&requestSender{})
 }
 
 func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
@@ -293,7 +295,7 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 	if resynchronizationInfo != nil {
 		authInfo.ResynchronizationInfo = resynchronizationInfo
 	}
-	if authCtx, _, err := c.consumer.UeAuthPost(authInfo); err == nil {
+	if authCtx, err := c.consumer.UeAuthPost(authInfo); err == nil {
 		return &authCtx, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err
@@ -309,7 +311,7 @@ func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 	//it seems it is not neccessary to extract the path for confirmation
 	//path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
 
-	if result, _, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
+	if result, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
 		return &result, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err
@@ -325,7 +327,7 @@ func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*mode
 		EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
 	}
 
-	if eapout, _, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
+	if eapout, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
 		return &eapout, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err

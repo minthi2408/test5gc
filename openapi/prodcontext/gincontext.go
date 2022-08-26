@@ -1,6 +1,7 @@
 package prodcontext
 
 import (
+    "net/http"
 	"etri5gc/openapi"
 	"etri5gc/openapi/models"
 
@@ -14,11 +15,8 @@ import (
 // to complete the whole procedure of handling a request.
 
 type RequestContext interface {
-	DecodeRequest(interface{}) //decode the request to get embeded body
-	//	Problem() *models.ProblemDetails   //problem with decoding
-	SetProblem(*models.ProblemDetails) //for the application handler to register a problem
-	// SetResponse(*openapi.Response)     //set the response (after receiving it from the application handler
-	//	WriteResponse()                    //write a prepared response to internal response writer
+	DecodeRequest(body interface{}) //decode the request to get embeded body
+//	SetProblem(*models.ProblemDetails) //for the application handler to register a problem
 	Param(string) string // get a parameter from the request (application handler need it)
 }
 
@@ -29,10 +27,11 @@ type ginContextEx struct {
 	context  *gin.Context
 	request  *openapi.Request
 	response *openapi.Response
-	problem  *models.ProblemDetails
+//	problem  *models.ProblemDetails
+    encoding   openapi.ProducerEncoding 
 }
 
-func newGinContextEx(ctx *gin.Context) *ginContextEx {
+func newGinContextEx(ctx *gin.Context, encoding openapi.ProducerEncoding) *ginContextEx {
 	ret := &ginContextEx{
 		context: ctx,
 		request: &openapi.Request{
@@ -41,49 +40,57 @@ func newGinContextEx(ctx *gin.Context) *ginContextEx {
 	}
 	return ret
 }
-
-//func (c *ginContextEx) Problem() *models.ProblemDetails {
-//	return c.problem
-//}
-
+/*
 func (c *ginContextEx) SetProblem(prob *models.ProblemDetails) {
 	c.problem = prob
 }
-
-//func (c *ginContextEx) SetResponse(resp *openapi.Response) {
-//	c.response = resp
-//}
+*/
 func (c *ginContextEx) Param(key string) string {
 	return c.context.Param(key)
 }
 
-//func (c *ginContextEx) Request() *openapi.Request {
-//	return c.request
-//}
-
+//must be called by an openapi's producer handler
 func (c *ginContextEx) DecodeRequest(body interface{}) {
-	if c.request == nil {
-		return
-	}
 	//1. read the request body
-
-	//2. decode the body (suppose that a right type of body has been pupulated
-	c.request.Body = body
+    var err error
+    if c.request.BodyBytes, err = c.context.GetRawData(); err != nil {
+        c.response = &openapi.Response {
+            StatusCode: http.StatusInternalServerError,
+            Body: &models.ProblemDetails{
+            },
+        }
+    } else {
+	    //2. decode the body (suppose that a right type of body has been pupulated
+    	c.request.Body = body
+        if err = c.encoding.DecodeRequest(c.request); err != nil {
+            c.response = &openapi.Response {
+                StatusCode: http.StatusBadRequest,
+                Body: &models.ProblemDetails{
+                },
+            }
+        }
+    }
 }
 
-func (c *ginContextEx) WriteResponse() {
+func (c *ginContextEx) writeResponse() {
+    if err:=c.encoding.EncodeResponse(c.response); err != nil {
+        c.context.JSON(http.StatusInternalServerError, &models.ProblemDetails {
+        })
+    } else {
+        //TODO: how to set the Content-Type?
+        c.context.Data(c.response.StatusCode, "application/json", c.response.BodyBytes)
+    }
 }
 
-func BuildProducerRequestHandler(openapiFn OpenApiProducerHandler, appFn AppProducerHandler) gin.HandlerFunc {
+func BuildProducerRequestHandler(openapiFn OpenApiProducerHandler, appFn AppProducerHandler, encoding openapi.ProducerEncoding) gin.HandlerFunc {
 	return func(context *gin.Context) {
 
-		ctx := newGinContextEx(context)
-		//call the openapi producer handler
+		ctx := newGinContextEx(context, encoding)
+		//call the openapi producer handler to set the request body to decode
 		openapiFn(ctx)
-		//check the problem details
-		if ctx.problem == nil {
-			appFn(ctx)
+		if ctx.response == nil { //no error found after decoding
+			ctx.response = appFn(ctx) // call the application handler to handle the decoded request
 		}
-		ctx.WriteResponse()
+		ctx.writeResponse()
 	}
 }

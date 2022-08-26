@@ -4,10 +4,9 @@ import (
 	"etri5gc/openapi"
 	"etri5gc/openapi/models"
 	"fmt"
-	"net/http"
 )
 
-func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorInfo) (result models.SorSecurityInfo, httpresp *http.Response, err error) {
+func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorInfo) (result models.SorSecurityInfo, err error) {
 	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "POST"
@@ -21,20 +20,20 @@ func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorI
 	}
 
 	//handle the response
-	httpresp = resp.Response.(*http.Response)
-	encoding := httpresp.Header.Get("Content-Type")
 
 	var prob models.ProblemDetails
 
-	switch httpresp.StatusCode {
+	switch resp.StatusCode {
 	case 200:
-		err = consumer.client.DecodeBody(&result, resp.BodyBytes, encoding)
+        resp.Body = &result
+		err = consumer.client.DecodeResponse(resp)
 	case 503:
-		if err = consumer.client.DecodeBody(&prob, resp.BodyBytes, encoding); err == nil {
+        resp.Body = &prob
+		if err = consumer.client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(err.Error(), &prob)
 		}
 	default:
-		err = fmt.Errorf("invalid status code: %d", httpresp.StatusCode)
+		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
 	}
 	return
 }
