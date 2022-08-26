@@ -4,9 +4,12 @@ import (
 	//	"fmt"
 	"etri5gc/nfs/amf/context"
 	"etri5gc/openapi"
+	amfprod "etri5gc/openapi/producers/amf"
+	"strings"
 
 	//"etri5gc/nfs/amf/ngap"
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
 	"etri5gc/nfs/amf/sbi/producer/communication"
 	"etri5gc/nfs/amf/sbi/producer/eventexposure"
 	"etri5gc/nfs/amf/sbi/producer/httpcallback"
@@ -14,10 +17,10 @@ import (
 	"etri5gc/nfs/amf/sbi/producer/mt"
 	"etri5gc/nfs/amf/sbi/producer/oam"
 	"etri5gc/openapi/models"
+	"etri5gc/openapi/prodcontext"
 
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -82,45 +85,27 @@ func (prod *Producer) Services() []common.Service {
 func (prod *Producer) amf() *context.AMFContext {
 	return prod.backend.Context()
 }
+func MakeTestService() (service httpdp.HttpService) {
+	service.Routes = httpdp.HttpRoutes{
+		{
+			"Index",
+			"GET",
+			"/",
+			httpdp.HttpIndexHandler,
+		},
 
-type reqContext struct {
-	context  *gin.Context
-	request  *openapi.Request
-	response *openapi.Response
-	problem  *models.ProblemDetails
-}
-
-func (c *reqContext) Request() *openapi.Request {
-	return c.request
-}
-
-func (c *reqContext) DecodeRequest() {
-	if c.request == nil {
-		return
+		{
+			"AMFStatusChangeSubscribeModify",
+			strings.ToUpper("Put"),
+			"/subscriptions/:subscriptionId",
+			prodcontext.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler),
+		},
 	}
-	//decode the request and set the problem details
+	service.Group = "test"
+	return
 }
 
-func (c *reqContext) WriteResponse() {
-}
-
-type AppProducerHandler func(*openapi.Request) *openapi.Response
-
-func buildHandler(openapiFn openapi.OpenApiProducerHandler, appFn AppProducerHandler) gin.HandlerFunc {
-	return func(context *gin.Context) {
-		ctx := &reqContext{
-			context: context,
-			request: &openapi.Request{
-				Request: context.Request,
-			},
-		}
-
-		//call the openapi producer handler
-		openapiFn(ctx)
-		//check the problem details
-		if ctx.problem == nil {
-			ctx.response = appFn(ctx.request)
-		}
-		ctx.WriteResponse()
-	}
+func myapphandler(ctx prodcontext.RequestContext) *openapi.Response {
+	ctx.SetProblem(nil)
+	return nil
 }

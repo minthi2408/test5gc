@@ -46,13 +46,3 @@ type Consumer interface {
 	Send(*Request) (*Response, error)
 	DecodeBody(interface{}, []byte, string) error
 }
-
-type OpenApiProducerHandler func(RequestContext)
-
-//abstraction for gin.Context
-type RequestContext interface {
-	Request() *Request
-	DecodeRequest()
-	//	WriteResponse()
-	//	Param(string) string //get a parameter from the embeded request
-}
