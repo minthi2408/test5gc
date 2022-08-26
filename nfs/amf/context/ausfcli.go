@@ -10,8 +10,8 @@ import (
 	"regexp"
 	"strconv"
 
+	"etri5gc/openapi/consumers/ausf"
 	"etri5gc/openapi/models"
-	"etri5gc/openapi/ausf"
 	"etri5gc/openapi/utils/nasConvert"
 
 	"github.com/free5gc/nas"
@@ -58,11 +58,11 @@ func (s *SecContext) isValid() bool {
 }
 
 type ausfClient struct {
-	ue     *AmfUe
-	info   AusfInfo
-	seccon SecContext
-    consumer   ausf.AusfConsumer 
-	sender requestSender
+	ue       *AmfUe
+	info     AusfInfo
+	seccon   SecContext
+	consumer ausf.AusfConsumer
+	//sender requestSender
 }
 
 func (c *ausfClient) Info() *AusfInfo {
@@ -293,46 +293,45 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 	if resynchronizationInfo != nil {
 		authInfo.ResynchronizationInfo = resynchronizationInfo
 	}
-    if authCtx, _, err := c.consumer.UeAuthPost(authInfo); err == nil {
-        return &authCtx, nil, nil
-    } else if errEx, ok := err.(*openapi.Error); ok {
-        return nil, errEx.Problem(), err
-    } else {
-        return nil, nil, err
-    }
+	if authCtx, _, err := c.consumer.UeAuthPost(authInfo); err == nil {
+		return &authCtx, nil, nil
+	} else if errEx, ok := err.(*openapi.Error); ok {
+		return nil, errEx.Problem(), err
+	} else {
+		return nil, nil, err
+	}
 }
-
 
 func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 	*models.ConfirmationDataResponse, *models.ProblemDetails, error) {
-    //NOTE: the ausf producer should return a relative path instead of a
-    //absolute path
-    //it seems it is not neccessary to extract the path for confirmation
-    //path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
+	//NOTE: the ausf producer should return a relative path instead of a
+	//absolute path
+	//it seems it is not neccessary to extract the path for confirmation
+	//path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
 
-    if result, _, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
-        return &result, nil, nil
-    } else if errEx, ok := err.(*openapi.Error); ok {
-        return nil, errEx.Problem(), err
-    } else {
-        return nil, nil, err
-    }
+	if result, _, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
+		return &result, nil, nil
+	} else if errEx, ok := err.(*openapi.Error); ok {
+		return nil, errEx.Problem(), err
+	} else {
+		return nil, nil, err
+	}
 }
 
 func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*models.EapSession, *models.ProblemDetails, error) {
 	//confirmUri, err := url.Parse(ue.GetAusfInfo().AuthenticationCtx.Links["eap-session"].Href)
 
-    eapin := &models.EapSession{
-        EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
-    }
+	eapin := &models.EapSession{
+		EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
+	}
 
-    if eapout, _, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
-        return &eapout, nil, nil
-    } else if errEx, ok := err.(*openapi.Error); ok {
-        return nil, errEx.Problem(), err
-    } else {
-        return nil, nil, err
-    }
+	if eapout, _, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
+		return &eapout, nil, nil
+	} else if errEx, ok := err.(*openapi.Error); ok {
+		return nil, errEx.Problem(), err
+	} else {
+		return nil, nil, err
+	}
 }
 
 func (c *ausfClient) NasEncode(msg *nas.Message, accessType models.AccessType) ([]byte, error) {

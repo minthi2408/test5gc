@@ -27,11 +27,10 @@ func (c *remoteAgent) Send(req common.Request) (common.Response, error) {
 	} else {
 		//read body of the response and prepare the openapi response
 		openapiResp := &openapi.Response{
-			Raw:        httpresp,
-			StatusCode: httpresp.StatusCode,
+			Response: httpresp,
 		}
 		var err error
-		openapiResp.Body, err = ioutil.ReadAll(httpresp.Body)
+		openapiResp.BodyBytes, err = ioutil.ReadAll(httpresp.Body)
 		httpresp.Body.Close()
 		return openapiResp, err
 	}

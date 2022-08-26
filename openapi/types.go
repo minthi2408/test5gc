@@ -2,12 +2,8 @@ package openapi
 
 import (
 	"etri5gc/fabric/common"
-	"net/http"
 	"net/url"
 )
-
-
-type ResponseHandlerFunc func(resp *http.Response, err error) (*Response, error)
 
 type Request struct {
 	Path         string
@@ -19,8 +15,9 @@ type Request struct {
 	FormFileName string
 	FileName     string
 	FileBytes    []byte
-	//a handler to handle a http response
-	handler ResponseHandlerFunc
+
+	BodyBytes []byte      //encoded body
+	Request   interface{} //dataplace protocol-bound request
 }
 
 func (msg *Request) MsgType() int {
@@ -37,9 +34,8 @@ func DefaultRequest() *Request {
 }
 
 type Response struct {
-	Raw        interface{}
-	Body       []byte
-	StatusCode int
+	Response  interface{}
+	BodyBytes []byte
 }
 
 func (msg *Response) MsgType() int {
@@ -48,6 +44,15 @@ func (msg *Response) MsgType() int {
 
 type Consumer interface {
 	Send(*Request) (*Response, error)
-    DecodeBody(interface{}, []byte, string) error
+	DecodeBody(interface{}, []byte, string) error
 }
 
+type OpenApiProducerHandler func(RequestContext)
+
+//abstraction for gin.Context
+type RequestContext interface {
+	Request() *Request
+	DecodeRequest()
+	//	WriteResponse()
+	//	Param(string) string //get a parameter from the embeded request
+}
