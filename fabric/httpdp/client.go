@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp/encoding"
 	"etri5gc/openapi"
 )
 
@@ -62,7 +63,7 @@ func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) (httpreq *http.Re
 	//free5gc/openapi/client.go)
     //1. inject the ipaddr:port into the request path
     //2. encode the request
-    if err = oneEncoding.EncodeRequest(req); err == nil {
+    if err = encoding.New().EncodeRequest(req); err == nil {
         httpreq = req.Request.(*http.Request)
     }
 	return 

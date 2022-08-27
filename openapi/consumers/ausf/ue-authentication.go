@@ -7,7 +7,7 @@ import (
 	"etri5gc/openapi/models"
 )
 
-func (consumer *ausfConsumerImpl) EapAuthMethod(authCtxId string, eapin *models.EapSession) (
+func EapAuthMethod(client openapi.ConsumerClient, authCtxId string, eapin *models.EapSession) (
 	eapout models.EapSession, err error) {
 
 	//create a request
@@ -18,7 +18,7 @@ func (consumer *ausfConsumerImpl) EapAuthMethod(authCtxId string, eapin *models.
 
 	//send the request
 	var resp *openapi.Response
-	if resp, err = consumer.client.Send(req); err != nil {
+	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
@@ -31,12 +31,12 @@ func (consumer *ausfConsumerImpl) EapAuthMethod(authCtxId string, eapin *models.
 	case 200:
 		//err = consumer.client.DecodeBody(&eapout, resp.BodyBytes, encoding)
         resp.Body = &eapout
-        err = consumer.client.DecodeResponse(resp)
+        err = client.DecodeResponse(resp)
 	case 400:
 		fallthrough
 	case 500:
         resp.Body = &prob
-		if err = consumer.client.DecodeResponse(resp); err == nil {
+		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(err.Error(), &prob)
 		}
 	default:
@@ -46,7 +46,7 @@ func (consumer *ausfConsumerImpl) EapAuthMethod(authCtxId string, eapin *models.
 	return
 }
 
-func (consumer *ausfConsumerImpl) UeAuthPost(info models.AuthenticationInfo) (
+func UeAuthPost(client openapi.ConsumerClient, info models.AuthenticationInfo) (
 	authCtx models.UeAuthenticationCtx, err error) {
 
 	//create a request
@@ -57,7 +57,7 @@ func (consumer *ausfConsumerImpl) UeAuthPost(info models.AuthenticationInfo) (
 
 	//send the request
 	var resp *openapi.Response
-	if resp, err = consumer.client.Send(req); err != nil {
+	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
@@ -67,14 +67,14 @@ func (consumer *ausfConsumerImpl) UeAuthPost(info models.AuthenticationInfo) (
 	switch resp.StatusCode {
 	case 201:
         resp.Body = &authCtx
-		err = consumer.client.DecodeResponse(resp)
+		err = client.DecodeResponse(resp)
 	case 400:
 		fallthrough
 	case 403:
 		fallthrough
 	case 500:
         resp.Body = &prob
-		if err = consumer.client.DecodeResponse(resp); err == nil {
+		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(err.Error(), &prob)
 		}
 	default:
@@ -83,7 +83,7 @@ func (consumer *ausfConsumerImpl) UeAuthPost(info models.AuthenticationInfo) (
 	return
 }
 
-func (consumer *ausfConsumerImpl) UeAuthAuthCtxId5gAkaConfirmationPut(authCtxId string, resStar string) (
+func UeAuthAuthCtxId5gAkaConfirmationPut(client openapi.ConsumerClient, authCtxId string, resStar string) (
 	confirm models.ConfirmationDataResponse, err error) {
 
 	// create a request
@@ -96,7 +96,7 @@ func (consumer *ausfConsumerImpl) UeAuthAuthCtxId5gAkaConfirmationPut(authCtxId 
 
 	// send the request
 	var resp *openapi.Response
-	if resp, err = consumer.client.Send(req); err != nil {
+	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
@@ -106,12 +106,12 @@ func (consumer *ausfConsumerImpl) UeAuthAuthCtxId5gAkaConfirmationPut(authCtxId 
 	switch resp.StatusCode {
 	case 200:
         resp.Body = &confirm
-		err = consumer.client.DecodeResponse(resp)
+		err = client.DecodeResponse(resp)
 	case 400:
 		fallthrough
 	case 500:
         resp.Body = &prob
-		if err = consumer.client.DecodeResponse(resp); err == nil {
+		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(resp.Status, &prob)
 		}
 	default:

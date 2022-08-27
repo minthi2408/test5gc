@@ -1,17 +1,24 @@
-package context
-
+package httpdp
 import (
 	"errors"
 	"etri5gc/fabric"
 	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp"
+	"etri5gc/fabric/httpdp/encoding"
 	"etri5gc/openapi"
 )
+
+//implement the openapi consumer client abstraction
 
 type requestSender struct {
 	fw    fabric.Forwarder
 	query common.NfQuery
 	addr  common.AgentAddr
+}
+
+func NewClient(fw fabric.Forwarder) *requestSender {
+    return &requestSender{
+        fw: fw,
+    }
 }
 
 //ask agent's forwarder to send a request, a connection to a selected producer
@@ -37,5 +44,5 @@ func (s *requestSender) Send(request *openapi.Request) (response *openapi.Respon
 }
 
 func (s *requestSender) DecodeResponse(resp *openapi.Response) error {
-    return httpdp.Encoding().DecodeResponse(resp)
+    return encoding.New().DecodeResponse(resp)
 }

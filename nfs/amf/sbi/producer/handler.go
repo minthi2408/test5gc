@@ -7,9 +7,9 @@ import (
 	amfprod "etri5gc/openapi/producers/amf"
 	"strings"
 
-	//"etri5gc/nfs/amf/ngap"
 	"etri5gc/fabric/common"
 	"etri5gc/fabric/httpdp"
+	"etri5gc/fabric/httpdp/encoding"
 	"etri5gc/nfs/amf/sbi/producer/communication"
 	"etri5gc/nfs/amf/sbi/producer/eventexposure"
 	"etri5gc/nfs/amf/sbi/producer/httpcallback"
@@ -17,7 +17,7 @@ import (
 	"etri5gc/nfs/amf/sbi/producer/mt"
 	"etri5gc/nfs/amf/sbi/producer/oam"
 	"etri5gc/openapi/models"
-	"etri5gc/openapi/prodcontext"
+	openapi_http "etri5gc/openapi/httpdp"
 
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"
@@ -99,13 +99,13 @@ func MakeTestService() (service httpdp.HttpService) {
 			"AMFStatusChangeSubscribeModify",
 			strings.ToUpper("Put"),
 			"/subscriptions/:subscriptionId",
-			prodcontext.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler, httpdp.Encoding()),
+			openapi_http.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler, encoding.New()),
 		},
 	}
 	service.Group = "test"
 	return
 }
 
-func myapphandler(ctx prodcontext.RequestContext) *openapi.Response {
+func myapphandler(ctx openapi.RequestContext) *openapi.Response {
 	return nil
 }

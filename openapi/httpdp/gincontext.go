@@ -1,4 +1,4 @@
-package prodcontext
+package httpdp
 
 import (
     "net/http"
@@ -8,27 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// an abstraction of the context where a request is received at a producer. The
-// first handler method (openapi/producers) will inject a correct expecting
-// body for decoding. The next handler (application layer) will process the
-// decoded body then create a response. It then write it to a response writer
-// to complete the whole procedure of handling a request.
-
-type RequestContext interface {
-	DecodeRequest(body interface{}) //decode the request to get embeded body
-//	SetProblem(*models.ProblemDetails) //for the application handler to register a problem
-	Param(string) string // get a parameter from the request (application handler need it)
-}
-
-type AppProducerHandler func(RequestContext) *openapi.Response
-type OpenApiProducerHandler func(RequestContext)
-
+//a wrapper for gin.Context. It implements the openapi.RequestContext
+//abstraction
 type ginContextEx struct {
 	context  *gin.Context
 	request  *openapi.Request
 	response *openapi.Response
-//	problem  *models.ProblemDetails
-    encoding   openapi.ProducerEncoding 
+    encoding   openapi.ProducerEncoding
 }
 
 func newGinContextEx(ctx *gin.Context, encoding openapi.ProducerEncoding) *ginContextEx {
@@ -40,11 +26,7 @@ func newGinContextEx(ctx *gin.Context, encoding openapi.ProducerEncoding) *ginCo
 	}
 	return ret
 }
-/*
-func (c *ginContextEx) SetProblem(prob *models.ProblemDetails) {
-	c.problem = prob
-}
-*/
+
 func (c *ginContextEx) Param(key string) string {
 	return c.context.Param(key)
 }
@@ -74,6 +56,7 @@ func (c *ginContextEx) DecodeRequest(body interface{}) {
 
 func (c *ginContextEx) writeResponse() {
     if err:=c.encoding.EncodeResponse(c.response); err != nil {
+        //write the poblem in application/json format
         c.context.JSON(http.StatusInternalServerError, &models.ProblemDetails {
         })
     } else {
@@ -82,7 +65,8 @@ func (c *ginContextEx) writeResponse() {
     }
 }
 
-func BuildProducerRequestHandler(openapiFn OpenApiProducerHandler, appFn AppProducerHandler, encoding openapi.ProducerEncoding) gin.HandlerFunc {
+//build a service handler for gin
+func BuildProducerRequestHandler(openapiFn openapi.OpenApiProducerHandler, appFn openapi.AppProducerHandler, encoding openapi.ProducerEncoding) gin.HandlerFunc {
 	return func(context *gin.Context) {
 
 		ctx := newGinContextEx(context, encoding)

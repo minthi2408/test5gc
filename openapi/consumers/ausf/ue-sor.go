@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorInfo) (result models.SorSecurityInfo, err error) {
+func SupiUeSorPost(client openapi.ConsumerClient, supi string, sorInfo models.SorInfo) (result models.SorSecurityInfo, err error) {
 	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "POST"
@@ -15,7 +15,7 @@ func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorI
 
 	//send the request
 	var resp *openapi.Response
-	if resp, err = consumer.client.Send(req); err != nil {
+	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
@@ -26,10 +26,10 @@ func (consumer *ausfConsumerImpl) SupiUeSorPost(supi string, sorInfo models.SorI
 	switch resp.StatusCode {
 	case 200:
         resp.Body = &result
-		err = consumer.client.DecodeResponse(resp)
+		err = client.DecodeResponse(resp)
 	case 503:
         resp.Body = &prob
-		if err = consumer.client.DecodeResponse(resp); err == nil {
+		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(err.Error(), &prob)
 		}
 	default:

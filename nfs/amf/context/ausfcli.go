@@ -12,6 +12,7 @@ import (
 
 	"etri5gc/openapi/consumers/ausf"
 	"etri5gc/openapi/models"
+	openapi_http "etri5gc/openapi/httpdp"
 	"etri5gc/openapi/utils/nasConvert"
 
 	"github.com/free5gc/nas"
@@ -61,7 +62,7 @@ type ausfClient struct {
 	ue       *AmfUe
 	info     AusfInfo
 	seccon   SecContext
-	consumer ausf.AusfConsumer
+	consumer openapi.ConsumerClient
 	//sender requestSender
 }
 
@@ -277,7 +278,7 @@ func (c *ausfClient) clear() {
 //build a query to select an AUSF producer
 func (c *ausfClient) Select() {
     //TODO: make a proper requestSender object 
-    c.consumer = ausf.New(&requestSender{})
+    c.consumer = openapi_http.NewClient(nil)
 }
 
 func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
@@ -295,7 +296,7 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 	if resynchronizationInfo != nil {
 		authInfo.ResynchronizationInfo = resynchronizationInfo
 	}
-	if authCtx, err := c.consumer.UeAuthPost(authInfo); err == nil {
+	if authCtx, err := ausf.UeAuthPost(c.consumer, authInfo); err == nil {
 		return &authCtx, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err
@@ -311,7 +312,7 @@ func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 	//it seems it is not neccessary to extract the path for confirmation
 	//path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
 
-	if result, err := c.consumer.UeAuthAuthCtxId5gAkaConfirmationPut(c.ue.Suci, resStar); err == nil {
+	if result, err := ausf.UeAuthAuthCtxId5gAkaConfirmationPut(c.consumer, c.ue.Suci, resStar); err == nil {
 		return &result, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err
@@ -327,7 +328,7 @@ func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*mode
 		EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
 	}
 
-	if eapout, err := c.consumer.EapAuthMethod(c.ue.Suci, eapin); err == nil {
+	if eapout, err := ausf.EapAuthMethod(c.consumer, c.ue.Suci, eapin); err == nil {
 		return &eapout, nil, nil
 	} else if errEx, ok := err.(*openapi.Error); ok {
 		return nil, errEx.Problem(), err

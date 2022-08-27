@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func (consumer *ausfConsumerImpl) SupiUeUpuPost(supi string, upuInfo models.UpuInfo) (
+func SupiUeUpuPost(client openapi.ConsumerClient, supi string, upuInfo models.UpuInfo) (
 	result models.UpuSecurityInfo, err error) {
 
 	//create a request
@@ -17,7 +17,7 @@ func (consumer *ausfConsumerImpl) SupiUeUpuPost(supi string, upuInfo models.UpuI
 
 	//send the request
 	var resp *openapi.Response
-	if resp, err = consumer.client.Send(req); err != nil {
+	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
@@ -28,10 +28,10 @@ func (consumer *ausfConsumerImpl) SupiUeUpuPost(supi string, upuInfo models.UpuI
 	switch resp.StatusCode {
 	case 200:
         resp.Body = &result
-		err = consumer.client.DecodeResponse(resp)
+		err = client.DecodeResponse(resp)
 	case 503:
         resp.Body = &prob
-		if err = consumer.client.DecodeResponse(resp); err == nil {
+		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewError(err.Error(), &prob)
 		}
 	default:
