@@ -1,4 +1,4 @@
-package encoding
+package httpdp
 
 import (
     "etri5gc/openapi"
@@ -8,7 +8,7 @@ import (
 var oneEncoding *encoding = &encoding{}
 
 //get the singlon object
-func New() *encoding {
+func Encoding() *encoding {
     return oneEncoding
 }
 

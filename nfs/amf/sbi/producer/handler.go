@@ -9,7 +9,6 @@ import (
 
 	"etri5gc/fabric/common"
 	"etri5gc/fabric/httpdp"
-	"etri5gc/fabric/httpdp/encoding"
 	"etri5gc/nfs/amf/sbi/producer/communication"
 	"etri5gc/nfs/amf/sbi/producer/eventexposure"
 	"etri5gc/nfs/amf/sbi/producer/httpcallback"
@@ -99,7 +98,7 @@ func MakeTestService() (service httpdp.HttpService) {
 			"AMFStatusChangeSubscribeModify",
 			strings.ToUpper("Put"),
 			"/subscriptions/:subscriptionId",
-			openapi_http.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler, encoding.New()),
+			openapi_http.BuildProducerRequestHandler(amfprod.HTTPAMFStatusChangeSubscribeModify, myapphandler),
 		},
 	}
 	service.Group = "test"

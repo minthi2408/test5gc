@@ -276,8 +276,8 @@ func (c *ausfClient) clear() {
 ///////////////////////////////////// consumer /////////////////////
 //build a query to select an AUSF producer
 func (c *ausfClient) Select() {
-    //TODO: forward Forwarder and Decoder for the constructor  
-    c.consumer = openapi_http.NewClient(nil, nil)
+    //TODO: forward Forwarder to the constructor  
+    c.consumer = openapi_http.NewClient(nil)
 }
 
 func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
