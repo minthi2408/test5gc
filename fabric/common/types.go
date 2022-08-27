@@ -10,6 +10,7 @@ const (
 )
 
 type DataPlaneProtocol int
+type ServiceMsgType int
 
 // anything that can be marshalled/unmarshalled
 // it is up to its concrete implementation to determined an encoding method
@@ -18,8 +19,11 @@ type Marshallable interface {
 	Unmarshal([]byte) error
 }
 
+
+//currently only openapi message format is support, but the fabric should
+//be designed to incorporate other formats in the future.
 type ServiceMessage interface {
-	MsgType() int
+	MsgType() ServiceMsgType
 }
 
 // the abstraction of service requests composed by the upper layer
@@ -44,8 +48,9 @@ type AgentAddr interface {
 type Service interface {
 	// name of the service. Prefixing it with a protocol transport address of
 	// its NF instance should produce the service url
-	Name() string
+	Name() string //just a signature method, no use
 }
+
 
 type AgentProfile interface {
 	NfType() NetworkFunctionType
@@ -53,6 +58,8 @@ type AgentProfile interface {
 	Load() int //workload - for load balancer to make comparisons
 }
 
+//any service that runs within an agents; for easy initiation and clean
+//termination of the agent
 type InternalService interface {
 	Start() error
 	Terminate()

@@ -3,21 +3,25 @@ import (
 	"errors"
 	"etri5gc/fabric"
 	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp/encoding"
 	"etri5gc/openapi"
 )
 
-//implement the openapi consumer client abstraction
+type ResponseDecoder interface {
+    DecodeResponse(*openapi.Response) error
+}
 
+//implement the openapi consumer client abstraction
 type requestSender struct {
 	fw    fabric.Forwarder
 	query common.NfQuery
 	addr  common.AgentAddr
+    decoder ResponseDecoder
 }
 
-func NewClient(fw fabric.Forwarder) *requestSender {
+func NewClient(fw fabric.Forwarder, decoder ResponseDecoder) *requestSender {
     return &requestSender{
         fw: fw,
+        decoder:    decoder,
     }
 }
 
@@ -44,5 +48,5 @@ func (s *requestSender) Send(request *openapi.Request) (response *openapi.Respon
 }
 
 func (s *requestSender) DecodeResponse(resp *openapi.Response) error {
-    return encoding.New().DecodeResponse(resp)
+    return s.decoder.DecodeResponse(resp)
 }

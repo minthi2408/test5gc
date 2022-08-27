@@ -20,7 +20,7 @@ type Request struct {
 	Request   interface{} //dataplane protocol-bound request
 }
 
-func (msg *Request) MsgType() int {
+func (msg *Request) MsgType() common.ServiceMsgType {
 	return common.SERVICE_MSG_TYPE_OPENAPI
 }
 
@@ -42,7 +42,7 @@ type Response struct {
     StatusCode int
 }
 
-func (msg *Response) MsgType() int {
+func (msg *Response) MsgType() common.ServiceMsgType {
 	return common.SERVICE_MSG_TYPE_OPENAPI
 }
 

@@ -63,7 +63,6 @@ type ausfClient struct {
 	info     AusfInfo
 	seccon   SecContext
 	consumer openapi.ConsumerClient
-	//sender requestSender
 }
 
 func (c *ausfClient) Info() *AusfInfo {
@@ -277,8 +276,8 @@ func (c *ausfClient) clear() {
 ///////////////////////////////////// consumer /////////////////////
 //build a query to select an AUSF producer
 func (c *ausfClient) Select() {
-    //TODO: make a proper requestSender object 
-    c.consumer = openapi_http.NewClient(nil)
+    //TODO: forward Forwarder and Decoder for the constructor  
+    c.consumer = openapi_http.NewClient(nil, nil)
 }
 
 func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {

@@ -17,7 +17,7 @@ type remoteAgent struct {
 
 func (c *remoteAgent) Send(req common.Request) (resp common.Response, err error) {
 	if req.MsgType() != common.SERVICE_MSG_TYPE_OPENAPI {
-		return nil, errors.New("unknown request format")
+		return nil, errors.New("only openapi request format is supported")
 	}
 	openapiReq := req.(*openapi.Request)
     var httpreq *http.Request

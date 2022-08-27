@@ -11,8 +11,8 @@ import (
 //a wrapper for gin.Context. It implements the openapi.RequestContext
 //abstraction
 type ginContextEx struct {
-	context  *gin.Context
-	request  *openapi.Request
+    context  *gin.Context 
+    request  *openapi.Request
 	response *openapi.Response
     encoding   openapi.ProducerEncoding
 }
