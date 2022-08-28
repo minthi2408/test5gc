@@ -8,7 +8,7 @@ import (
 	//	"github.com/free5gc/util/idgenerator"
 )
 
-type AMFContextEventSubscription struct {
+type AmfContextEventSubscription struct {
 	IsAnyUe           bool
 	IsGroupUe         bool
 	UeSupiList        []string
@@ -26,7 +26,7 @@ type AmfUeEventSubscription struct {
 //TungTQ: move event subscription handling methods from the `producer` to `context`
 
 // TODO (free5gc): handle event filter
-func (amf *AMFContext) CreateAMFEventSub(reqsub models.AmfCreateEventSubscription) (*models.AmfCreatedEventSubscription, *models.ProblemDetails) {
+func (amf *AmfContext) CreateAMFEventSub(reqsub models.AmfCreateEventSubscription) (*models.AmfCreatedEventSubscription, *models.ProblemDetails) {
 	/*
 		TODO: tungtq - it seems current implementation is a bit messy, let clean it up later
 
@@ -34,7 +34,7 @@ func (amf *AMFContext) CreateAMFEventSub(reqsub models.AmfCreateEventSubscriptio
 
 		subscription := reqsub.Subscription
 
-		eventsub := &AMFContextEventSubscription{
+		eventsub := &AmfContextEventSubscription{
 			EventSubscription: *subscription, //copy (not a pointer)
 		}
 
@@ -193,7 +193,7 @@ func (amf *AMFContext) CreateAMFEventSub(reqsub models.AmfCreateEventSubscriptio
 	return nil, nil
 }
 
-func (amf *AMFContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
+func (amf *AmfContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
 	if value, ok := amf.eventsubpool.Load(subId); !ok {
 		return &models.ProblemDetails{
 			Status: http.StatusNotFound,
@@ -201,7 +201,7 @@ func (amf *AMFContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
 		}
 
 	} else {
-		sub, _ := value.(*AMFContextEventSubscription)
+		sub, _ := value.(*AmfContextEventSubscription)
 		for _, supi := range sub.UeSupiList {
 			//find AmfUe to delete subscription
 			if uev, ok := amf.uepool.Load(supi); ok {
@@ -221,7 +221,7 @@ func (amf *AMFContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
 	}
 }
 
-func (amf *AMFContext) ModifyAMFEventSub(subId string, modreq models.ModifySubscriptionRequest) (*models.AmfUpdatedEventSubscription, *models.ProblemDetails) {
+func (amf *AmfContext) ModifyAMFEventSub(subId string, modreq models.ModifySubscriptionRequest) (*models.AmfUpdatedEventSubscription, *models.ProblemDetails) {
 
 	if value, ok := amf.eventsubpool.Load(subId); !ok {
 		return nil, &models.ProblemDetails{
@@ -229,7 +229,7 @@ func (amf *AMFContext) ModifyAMFEventSub(subId string, modreq models.ModifySubsc
 			Cause:  "SUBSCRIPTION_NOT_FOUND",
 		}
 	} else {
-		cursub, _ := value.(*AMFContextEventSubscription)
+		cursub, _ := value.(*AmfContextEventSubscription)
 
 		if modreq.OptionItem != nil {
 			cursub.Expiry = modreq.OptionItem.Value
@@ -278,9 +278,9 @@ func (amf *AMFContext) ModifyAMFEventSub(subId string, modreq models.ModifySubsc
 	}
 }
 
-func (context *AMFContext) FindEventSubscription(subscriptionID string) (*AMFContextEventSubscription, bool) {
+func (context *AmfContext) FindEventSubscription(subscriptionID string) (*AmfContextEventSubscription, bool) {
 	if value, ok := context.eventsubpool.Load(subscriptionID); ok {
-		return value.(*AMFContextEventSubscription), ok
+		return value.(*AmfContextEventSubscription), ok
 	} else {
 		return nil, false
 	}

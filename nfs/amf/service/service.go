@@ -2,9 +2,12 @@ package service
 
 import (
 	"etri5gc/fabric"
-	"etri5gc/nfs/amf/config"
+	fabric_config "etri5gc/fabric/config"
+	fabric_common "etri5gc/fabric/common"
+
+	amf_config "etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/nas"
+//	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/ngap"
 
 	"etri5gc/nfs/amf/sbi/producer"
@@ -26,60 +29,57 @@ func init() {
 type AMF struct {
 	producer *producer.Producer  //handling Sbi requests received at the server
 	ngap     *ngap.Server        //ngap server handling Ran connections and ngap messages
-	context  *context.AMFContext // AMF context
-	conf     *config.Config      // loaded AMF config
+	context  *context.AmfContext // AMF context
+	config     *amf_config.Config      // loaded AMF config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
 
-func CreateAMF(cfg *config.Config) (nf *AMF, err error) {
+func New(config *amf_config.Config) (nf *AMF, err error) {
 	nf = &AMF{
-		conf: cfg,
+		config: config,
 	}
 
-	//create ngap server
+	//create NGAP server (including a NAS handler)
 	nf.ngap = ngap.NewServer(nf)
 
 	//create sbi producer
-	nf.producer = producer.NewProducer(nf, nf.ngap.Sender(), nf.ngap.Nas())
+	nf.producer = producer.New(nf, nf.ngap.Sender(), nf.ngap.Nas())
 
 	//createfabric agent
-	agentconfig := &fabric.AgentConfig{} //TODO: should be loaded from a configuration file
-	agentconfig.SetServices(nf.producer.Services())
-	nf.agent, err = fabric.CreateServiceAgent(agentconfig)
+
+	nf.agent, err = fabric.NewAgent(nf)
 	nf.sender = nf.agent.Forwarder()
 
 	// initialize AMF context
-	nf.context = context.CreateAmfContext(cfg, nf.sender)
+	nf.context = context.NewAmfContext(config, nf.sender)
 
 	return
 }
 
-func (nf *AMF) Context() *context.AMFContext {
+func (nf *AMF) AgentConfig() *fabric_config.AgentConfig {
+    //TODO: get it from the nf config
+    return nil
+}
+
+func (nf *AMF) Services() []fabric_common.Service {
+    return nf.producer.Services()
+}
+
+func (nf *AMF) Context() *context.AmfContext {
 	return nf.context
 }
 
-func (nf *AMF) Config() *config.Config {
-	return nf.conf
+func (nf *AMF) Config() *amf_config.Config {
+	return nf.config
 }
 
-func (nf *AMF) Producer() *producer.Producer {
-	return nf.producer
-}
-
-func (nf *AMF) Nas() *nas.Nas {
-	return nf.ngap.Nas()
-}
-
-func (nf *AMF) Ngap() *ngap.Server {
-	return nf.ngap
-}
 
 func (nf *AMF) Start() (err error) {
 
 	// start ngap server
-	log.Info("Starting ngap server")
-	nf.ngap.Run(nf.conf.Configuration.NgapIpList, 38412)
+	log.Info("Starting NGAP server")
+	nf.ngap.Run(nf.config.Configuration.NgapIpList, 38412)
 
 	if err != nil {
 		nf.ngap.Stop()
@@ -99,12 +99,6 @@ func (nf *AMF) Terminate() {
 	nf.ngap.Stop()
 	//stop sbi server
 	nf.agent.Terminate()
-
-	/*
-		if _, err := nf.consumer.Nrf().SendDeregisterNFInstance(); err != nil {
-			log.Errorf("Fail to send degistration to the Nrf: %s", err.Error())
-		}
-	*/
 
 	fmt.Println("Kill it")
 }

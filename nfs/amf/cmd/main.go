@@ -65,7 +65,7 @@ func action(c *cli.Context) (err error) {
 	}
 
 	//create the AMF
-	if nf, err = service.CreateAMF(cfg); err != nil {
+	if nf, err = service.New(cfg); err != nil {
 		log.Errorf("Fail to create AMF", err)
 		return
 	}

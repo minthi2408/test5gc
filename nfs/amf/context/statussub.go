@@ -9,7 +9,7 @@ import (
 	"etri5gc/openapi/models"
 )
 
-func (amf *AMFContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) (
+func (amf *AmfContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) (
 	datres models.SubscriptionData, locheader string, prob *models.ProblemDetails) {
 
 	for _, guami := range datreq.GuamiList {
@@ -34,7 +34,7 @@ func (amf *AMFContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) 
 	return
 }
 
-func (amf *AMFContext) AMFStatusChangeUnSubscribe(subId string) *models.ProblemDetails {
+func (amf *AmfContext) AMFStatusChangeUnSubscribe(subId string) *models.ProblemDetails {
 
 	if _, ok := amf.statussubpool.Load(subId); !ok {
 		return &models.ProblemDetails{
@@ -51,7 +51,7 @@ func (amf *AMFContext) AMFStatusChangeUnSubscribe(subId string) *models.ProblemD
 	}
 }
 
-func (amf *AMFContext) AMFStatusChangeSubscribeModify(subId string, dat models.SubscriptionData) (*models.SubscriptionData, *models.ProblemDetails) {
+func (amf *AmfContext) AMFStatusChangeSubscribeModify(subId string, dat models.SubscriptionData) (*models.SubscriptionData, *models.ProblemDetails) {
 
 	if value, ok := amf.statussubpool.Load(subId); ok {
 		curdat := value.(models.SubscriptionData)

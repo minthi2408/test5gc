@@ -2,7 +2,13 @@ package fabric
 
 import (
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/config"
 )
+
+type Application interface {
+    AgentConfig() *config.AgentConfig
+    Services()  []common.Service
+}
 
 // a service abstraction to expose service requesting to upper layers
 // if the agent implements a http-based data plane protocol then the forwarder

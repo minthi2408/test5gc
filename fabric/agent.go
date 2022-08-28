@@ -3,6 +3,7 @@ package fabric
 import (
 	"errors"
 	"etri5gc/fabric/common"
+	fabric_config "etri5gc/fabric/config"
 	"etri5gc/fabric/conman"
 	fwimpl "etri5gc/fabric/forwarder"
 	"etri5gc/fabric/httpdp"
@@ -10,23 +11,10 @@ import (
 	"etri5gc/fabric/telemetry"
 )
 
-// configuration parameters for an agent
-// there should be core parameters
-// there should be plug-in parameters that are NF-dependent
-type AgentConfig struct {
-	DProto           common.DataPlaneProtocol //dataplane protocol
-	HttpServerConfig *httpdp.ServerConfig     //http-based service server configuration
-	Profile          common.AgentProfile
-	RegistryConfig   registrydb.Config // registry configuration
 
-	services []common.Service //list of services offered by the service server
-}
-
-func (conf *AgentConfig) SetServices(services []common.Service) {
-	conf.services = services
-}
 
 type serviceAgent struct {
+    config     *fabric_config.AgentConfig
 	reporter  telemetry.Writer
 	conmngr   conman.ConnectionManager
 	registry  registrydb.AgentRegistry
@@ -78,8 +66,10 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 // otherwise, internal go routines are running. The caller should tell the
 // agent to terminate when exiting the application
 
-func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
+func NewAgent(nf Application) (ServiceAgent, error) {
+    config := nf.AgentConfig()
 	agent := &serviceAgent{
+        config: config,
 		registry: registrydb.NewRegistry(config.Profile, &config.RegistryConfig),
 		reporter: telemetry.NewWriter(),
 		conmngr:  conman.NewConnectionManager(),
@@ -88,7 +78,7 @@ func CreateServiceAgent(config *AgentConfig) (ServiceAgent, error) {
 	if config.DProto == common.DATAPLANE_HTTP {
 		var err error
 		agent.forwarder = fwimpl.New(agent.registry, agent.lb, agent.conmngr)
-		if agent.server, err = httpdp.NewHttpServer(config.HttpServerConfig, config.services); err != nil {
+		if agent.server, err = httpdp.NewHttpServer(config.HttpServerConfig, nf.Services()); err != nil {
 			return nil, err
 		}
 		return agent, nil

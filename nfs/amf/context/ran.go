@@ -17,7 +17,7 @@ const (
 )
 
 type AmfRan struct {
-	amf     *AMFContext
+	amf     *AmfContext
 	present int
 	id      *models.GlobalRanNodeId
 	name    string
@@ -32,7 +32,7 @@ type AmfRan struct {
 
 }
 
-func newAmfRan(conn net.Conn, amf *AMFContext) *AmfRan {
+func newAmfRan(conn net.Conn, amf *AmfContext) *AmfRan {
 	tailistcap := MaxNumOfTAI * MaxNumOfBroadcastPLMNs
 	return &AmfRan{
 		conn:    conn,

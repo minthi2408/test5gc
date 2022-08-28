@@ -5,7 +5,7 @@ import (
 )
 
 type amfCallback struct {
-	amf *AMFContext
+	amf *AmfContext
 }
 
 func (c *amfCallback) SendAmfStatusChangeNotify(amfStatus string, guamiList []models.Guami) {

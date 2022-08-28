@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
-	"time"
+//	"time"
 
 	"gopkg.in/yaml.v2"
 
@@ -429,10 +429,7 @@ func (p *PlmnSupportItem) validate() (bool, error) {
 	return true, nil
 }
 
-type NetworkName struct {
-	Full  string `yaml:"full" valid:"type(string)"`
-	Short string `yaml:"short,omitempty" valid:"type(string)"`
-}
+
 
 func (n *NetworkName) validate() (bool, error) {
 	if _, err := govalidator.ValidateStruct(n); err != nil {
@@ -442,11 +439,6 @@ func (n *NetworkName) validate() (bool, error) {
 	return true, nil
 }
 
-type TimerValue struct {
-	Enable        bool          `yaml:"enable" valid:"type(bool)"`
-	ExpireTime    time.Duration `yaml:"expireTime" valid:"type(time.Duration)"`
-	MaxRetryTimes int           `yaml:"maxRetryTimes,omitempty" valid:"type(int)"`
-}
 
 func (t *TimerValue) validate() (bool, error) {
 	if _, err := govalidator.ValidateStruct(t); err != nil {

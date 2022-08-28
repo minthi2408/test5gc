@@ -50,7 +50,7 @@ type NgapSender interface {
 }
 
 type Backend interface {
-	Context() *context.AMFContext
+	Context() *context.AmfContext
 }
 
 type Producer struct {
@@ -59,7 +59,7 @@ type Producer struct {
 	nas     NasInf     //sending and handling NAS message
 }
 
-func NewProducer(b Backend, ngap NgapSender, nas NasInf) *Producer {
+func New(b Backend, ngap NgapSender, nas NasInf) *Producer {
 	return &Producer{
 		backend: b,
 		ngap:    ngap,
@@ -81,7 +81,7 @@ func (prod *Producer) Services() []common.Service {
 }
 
 // access to the internal data structures of the AMF
-func (prod *Producer) amf() *context.AMFContext {
+func (prod *Producer) amf() *context.AmfContext {
 	return prod.backend.Context()
 }
 

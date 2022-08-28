@@ -80,7 +80,7 @@ func (ue *AmfUe) updateLoc(ranUe *RanUe) {
 */
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
-	amf *AMFContext // never nil
+	amf *AmfContext // never nil
 
 	/* Network Slicing related context and Nssf */
 	nssf NssfInfo
@@ -218,7 +218,7 @@ type NGRANCGI struct {
 	EUTRACGI *models.Ecgi
 }
 
-func (ue *AmfUe) init(amf *AMFContext) {
+func (ue *AmfUe) init(amf *AmfContext) {
 	ue.amf = amf
 	ue.State = make(map[models.AccessType]*fsm.State)
 	ue.State[models.AccessType__3_GPP_ACCESS] = fsm.NewState(Deregistered)
@@ -238,7 +238,7 @@ func (ue *AmfUe) init(amf *AMFContext) {
 	ue.ReleaseCause = make(map[models.AccessType]*CauseAll)
 }
 
-func (ue *AmfUe) ServingAMF() *AMFContext {
+func (ue *AmfUe) ServingAMF() *AmfContext {
 	return ue.amf
 }
 

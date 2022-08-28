@@ -57,7 +57,7 @@ func NewNas(b amf.Backend, ngap NgapSender) *Nas {
 	return ret
 }
 
-func (n *Nas) amf() *context.AMFContext {
+func (n *Nas) amf() *context.AmfContext {
 	return n.backend.Context()
 }
 
