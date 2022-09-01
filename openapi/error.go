@@ -1,25 +1,27 @@
 package openapi
 
-import (
-    "etri5gc/openapi/models"
-)
-
-type Error struct {
-    status  string
-    prob    *models.ProblemDetails
+type ApiError struct {
+	code   int
+	status string
+	data   interface{}
 }
 
-func NewError(status string, prob *models.ProblemDetails) *Error {
-    return &Error{
-        status: status,
-        prob:   prob,
-    }
+func NewApiError(code int, status string, data interface{}) *ApiError {
+	return &ApiError{
+		code:   code,
+		status: status,
+		data:   data,
+	}
 }
 
-func (e *Error) Error() string {
-    return e.status
+func (e *ApiError) Error() string {
+	return e.status
 }
 
-func (e *Error) Problem() *models.ProblemDetails {
-    return e.prob
+func (e *ApiError) Code() int {
+	return e.code
+}
+
+func (e *ApiError) Data() interface{} {
+	return e.data
 }

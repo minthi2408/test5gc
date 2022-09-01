@@ -24,22 +24,20 @@ func EapAuthMethod(client openapi.ConsumerClient, authCtxId string, eapin *model
 
 	//handle the response
 
-	var prob models.ProblemDetails
 	switch resp.StatusCode {
 	case 200:
-		//err = consumer.client.DecodeBody(&eapout, resp.BodyBytes, encoding)
 		resp.Body = &eapout
 		err = client.DecodeResponse(resp)
 	case 400:
 		fallthrough
 	case 500:
+		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
-			err = openapi.NewError(err.Error(), &prob)
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
-		return
 	}
 	return
 }
@@ -61,7 +59,6 @@ func UeAuthPost(client openapi.ConsumerClient, info models.AuthenticationInfo) (
 
 	//handle the response
 
-	var prob models.ProblemDetails
 	switch resp.StatusCode {
 	case 201:
 		resp.Body = &authCtx
@@ -71,9 +68,10 @@ func UeAuthPost(client openapi.ConsumerClient, info models.AuthenticationInfo) (
 	case 403:
 		fallthrough
 	case 500:
+		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
-			err = openapi.NewError(err.Error(), &prob)
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
@@ -100,7 +98,6 @@ func UeAuthAuthCtxId5gAkaConfirmationPut(client openapi.ConsumerClient, authCtxI
 
 	// handle the request
 
-	var prob models.ProblemDetails
 	switch resp.StatusCode {
 	case 200:
 		resp.Body = &confirm
@@ -108,9 +105,10 @@ func UeAuthAuthCtxId5gAkaConfirmationPut(client openapi.ConsumerClient, authCtxI
 	case 400:
 		fallthrough
 	case 500:
+		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
-			err = openapi.NewError(resp.Status, &prob)
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)

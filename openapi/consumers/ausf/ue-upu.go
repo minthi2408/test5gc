@@ -22,17 +22,15 @@ func SupiUeUpuPost(client openapi.ConsumerClient, supi string, upuInfo models.Up
 	}
 
 	//handle the response
-
-	var prob models.ProblemDetails
-
 	switch resp.StatusCode {
 	case 200:
-        resp.Body = &result
+		resp.Body = &result
 		err = client.DecodeResponse(resp)
 	case 503:
-        resp.Body = &prob
+		var prob models.ProblemDetails
+		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
-			err = openapi.NewError(err.Error(), &prob)
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)

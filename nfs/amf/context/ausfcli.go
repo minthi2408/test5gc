@@ -10,9 +10,10 @@ import (
 	"regexp"
 	"strconv"
 
+	"etri5gc/openapi/consumers/amf"
 	"etri5gc/openapi/consumers/ausf"
-	"etri5gc/openapi/models"
 	openapi_http "etri5gc/openapi/httpdp"
+	"etri5gc/openapi/models"
 	"etri5gc/openapi/utils/nasConvert"
 
 	"github.com/free5gc/nas"
@@ -276,8 +277,8 @@ func (c *ausfClient) clear() {
 ///////////////////////////////////// consumer /////////////////////
 //build a query to select an AUSF producer
 func (c *ausfClient) Select() {
-    //TODO: forward Forwarder to the constructor  
-    c.consumer = openapi_http.NewClient(nil)
+	//TODO: forward Forwarder to the constructor
+	c.consumer = openapi_http.NewClient(nil)
 }
 
 func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
@@ -297,8 +298,8 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 	}
 	if authCtx, err := ausf.UeAuthPost(c.consumer, authInfo); err == nil {
 		return &authCtx, nil, nil
-	} else if errEx, ok := err.(*openapi.Error); ok {
-		return nil, errEx.Problem(), err
+	} else if errEx, ok := err.(*openapi.ApiError); ok {
+		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
 	}
@@ -313,8 +314,8 @@ func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 
 	if result, err := ausf.UeAuthAuthCtxId5gAkaConfirmationPut(c.consumer, c.ue.Suci, resStar); err == nil {
 		return &result, nil, nil
-	} else if errEx, ok := err.(*openapi.Error); ok {
-		return nil, errEx.Problem(), err
+	} else if errEx, ok := err.(*openapi.ApiError); ok {
+		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
 	}
@@ -329,8 +330,8 @@ func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*mode
 
 	if eapout, err := ausf.EapAuthMethod(c.consumer, c.ue.Suci, eapin); err == nil {
 		return &eapout, nil, nil
-	} else if errEx, ok := err.(*openapi.Error); ok {
-		return nil, errEx.Problem(), err
+	} else if errEx, ok := err.(*openapi.ApiError); ok {
+		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
 	}
@@ -650,5 +651,6 @@ func (c *ausfClient) BuildSecModeCmd(cmd *nasMessage.SecurityModeCommand, eapSuc
 			cmd.ABBA.SetABBAContents(c.info.ABBA)
 		}
 	}
+	amf.N1N2MessageUnSubscribe(nil, "", "") //TODO: just for testing, remove later
 	return nil
 }

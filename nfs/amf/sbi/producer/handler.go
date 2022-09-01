@@ -15,8 +15,8 @@ import (
 	"etri5gc/nfs/amf/sbi/producer/location"
 	"etri5gc/nfs/amf/sbi/producer/mt"
 	"etri5gc/nfs/amf/sbi/producer/oam"
-	"etri5gc/openapi/models"
 	openapi_http "etri5gc/openapi/httpdp"
+	"etri5gc/openapi/models"
 
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"
@@ -109,8 +109,9 @@ func myapphandler(ctx openapi.RequestContext) *openapi.Response {
 	return nil
 }
 
+/*
 func (prod *Producer) makeCommServices(p Backend) (service httpdp.HttpService) {
-    fn := openapi_http.BuildProducerRequestHandler
+	fn := openapi_http.BuildProducerRequestHandler
 	service.Routes = httpdp.HttpRoutes{
 		{
 			"Index",
@@ -123,7 +124,7 @@ func (prod *Producer) makeCommServices(p Backend) (service httpdp.HttpService) {
 			"AMFStatusChangeSubscribeModify",
 			strings.ToUpper("Put"),
 			"/subscriptions/:subscriptionId",
-			fn(amfprod.HTTPAMFStatusChangeSubscribeModify, prod.HandleAMFStatusChangeSubscribeModify ),
+			fn(amfprod.HTTPAMFStatusChangeSubscribeModify, prod.HandleAMFStatusChangeSubscribeModify),
 		},
 
 		{
@@ -137,7 +138,7 @@ func (prod *Producer) makeCommServices(p Backend) (service httpdp.HttpService) {
 			"CreateUEContext",
 			strings.ToUpper("Put"),
 			"/ue-contexts/:ueContextId",
-			fn(amfprod.HTTPCreateUEContext, prod(HTTPCreateUEContext),
+			fn(amfprod.HTTPCreateUEContext, prod.HTTPCreateUEContext),
 		},
 
 		{
@@ -227,3 +228,4 @@ func (prod *Producer) makeCommServices(p Backend) (service httpdp.HttpService) {
 	service.Group = SERVICE_NAME
 	return
 }
+*/
