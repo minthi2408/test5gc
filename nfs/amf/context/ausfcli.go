@@ -652,5 +652,6 @@ func (c *ausfClient) BuildSecModeCmd(cmd *nasMessage.SecurityModeCommand, eapSuc
 		}
 	}
 	amf.N1N2MessageUnSubscribe(nil, "", "") //TODO: just for testing, remove later
+	amf.ProvideLocationInfo(nil, "", models.RequestLocInfo{}) //TODO: just for testing, remove later
 	return nil
 }

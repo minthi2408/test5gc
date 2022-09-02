@@ -17,4 +17,7 @@ const (
 	AMF_COMMUNICATION_SUBSCRIPTIONS     = "subscriptions"
 	AMF_COMMUNICATION_UE_CONTEXTS       = "ue-contexts"
 	AMF_COMMUNICATION_NONUE_N2_MESSAGES = "non-ue-n2-messages"
+
+	AMF_LOCATION                   = "/namf-loc/v1"
+	AMF_MT                   = "/namf-mt/v1"
 )

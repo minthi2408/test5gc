@@ -8,7 +8,8 @@ import (
 
 /*
 IndividualSubscriptionDocumentApiService Namf_Communication AMF Status Change Subscribe Modify service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param subscriptionId AMF Status Change Subscription Identifier
  * @param subscriptionData
 @return SubscriptionData
@@ -59,7 +60,8 @@ func AMFStatusChangeSubscribeModfy(client openapi.ConsumerClient, subscriptionId
 
 /*
 IndividualSubscriptionDocumentApiService Namf_Communication AMF Status Change UnSubscribe service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param subscriptionId AMF Status Change Subscription Identifier
 */
 
@@ -101,7 +103,8 @@ func AMFStatusChangeUnSubscribe(client openapi.ConsumerClient, subscriptionId st
 
 /*
 IndividualUeContextDocumentApiService Namf_Communication CreateUEContext service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
 @return UeContextCreatedData
 */
@@ -182,7 +185,8 @@ func CreateUEContext(client openapi.ConsumerClient, ueContextId string, body mod
 
 /*
 IndividualUeContextDocumentApiService Namf_Communication EBI Assignment service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param assignEbiData
 @return AssignedEbiData
@@ -239,7 +243,8 @@ func EBIAssignment(client openapi.ConsumerClient, ueContextId string, body model
 
 /*
 IndividualUeContextDocumentApiService Namf_Communication RegistrationStatusUpdate service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param ueRegStatusUpdateReqData
 @return UeRegStatusUpdateRspData
@@ -294,7 +299,8 @@ func RegistrationStatusUpdate(client openapi.ConsumerClient, ueContextId string,
 
 /*
 IndividualUeContextDocumentApiService Namf_Communication ReleaseUEContext service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param ueContextRelease
 */
@@ -346,7 +352,8 @@ func ReleaseUEContext(client openapi.ConsumerClient, ueContextId string, body mo
 
 /*
 IndividualUeContextDocumentApiService Namf_Communication UEContextTransfer service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param ueContextTransferRequest
 @return UeContextTransferRspData
@@ -453,7 +460,8 @@ func N2InfoNotify(client openapi.ConsumerClient, n2InfoNotifyUrl string, body mo
 
 /*
 N1N2IndividualSubscriptionDocumentApiService Namf_Communication N1N2 Message UnSubscribe (UE Specific) service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param subscriptionId Subscription Identifier
 */
@@ -493,7 +501,8 @@ func N1N2MessageUnSubscribe(client openapi.ConsumerClient, ueContextId string, s
 
 /*
 N1N2MessageCollectionDocumentApiService Namf_Communication N1N2 Message Transfer (UE Specific) service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param n1MessageContainer
  * @param n2InfoContainer
@@ -707,7 +716,8 @@ func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl str
 
 /*
 N1N2MessageTransferStatusNotificationCallbackDocumentApiService Namf_Communication N1N2Transfer Failure Notification service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param subscriptionId Subscription Identifier
 */
@@ -836,7 +846,8 @@ func N1N2TransferFailureNotification(client openapi.ConsumerClient, n1N2MessageT
 
 /*
 N1N2SubscriptionsCollectionForIndividualUEContextsDocumentApiService Namf_Communication N1N2 Message Subscribe (UE Specific) service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
  * @param ueN1N2InfoSubscriptionCreateData
 @return UeN1N2InfoSubscriptionCreatedData
@@ -883,7 +894,8 @@ func N1N2MessageSubscribe(client openapi.ConsumerClient, ueContextId string, bod
 
 /*
 NonUEN2MessageNotificationIndividualSubscriptionDocumentApiService Namf_Communication Non UE N2 Info UnSubscribe service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param n2NotifySubscriptionId N2 info Subscription Identifier
 */
 
@@ -921,7 +933,8 @@ func NonUeN2InfoUnSubscribe(client openapi.ConsumerClient, subId string) (err er
 
 /*
 NonUEN2MessagesCollectionDocumentApiService Namf_Communication Non UE N2 Message Transfer service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
 @return N2InformationTransferRspData
 */
 
@@ -982,7 +995,8 @@ func NonUeN2MessageTransfer(client openapi.ConsumerClient, body models.NonUeN2Me
 
 /*
 NonUEN2MessagesSubscriptionsCollectionDocumentApiService Namf_Communication Non UE N2 Info Subscribe service Operation
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param client openapi.ConsumerClient an abstraction of a connection in the
+ * dataplane of the signaling network
  * @param nonUeN2InfoSubscriptionCreateData
 @return NonUeN2InfoSubscriptionCreatedData
 */
