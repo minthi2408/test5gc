@@ -28,7 +28,6 @@ func AMFStatusChangeSubscribeModfy(client openapi.ConsumerClient, subscriptionId
 		return
 	}
 
-	var prob models.ProblemDetails
 	switch resp.StatusCode {
 	case 202:
 		resp.Body = &result
@@ -48,6 +47,7 @@ func AMFStatusChangeSubscribeModfy(client openapi.ConsumerClient, subscriptionId
 	case 500:
 		fallthrough
 	case 503:
+	    var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)

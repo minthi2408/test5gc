@@ -19,5 +19,9 @@ const (
 	AMF_COMMUNICATION_NONUE_N2_MESSAGES = "non-ue-n2-messages"
 
 	AMF_LOCATION                   = "/namf-loc/v1"
+
 	AMF_MT                   = "/namf-mt/v1"
+	AMF_MT_UE_CONTEXTS                   = "ue-contexts"
+	
+    AMF_EVENTEXPOSURE                   = "/namf-eventexposure/v1"
 )
