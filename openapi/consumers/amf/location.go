@@ -32,23 +32,7 @@ func ProvideLocationInfo(client openapi.ConsumerClient, ueContextId string, body
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 404, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -86,23 +70,7 @@ func ProvidePositioningInfo(client openapi.ConsumerClient, ueContextId string, b
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
-		fallthrough
-	case 504:
+	case 400, 403, 411, 413, 415, 429, 500, 503, 504:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {

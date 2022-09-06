@@ -28,9 +28,7 @@ func EapAuthMethod(client openapi.ConsumerClient, authCtxId string, eapin *model
 	case 200:
 		resp.Body = &eapout
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 500:
+	case 400, 500:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -63,11 +61,7 @@ func UeAuthPost(client openapi.ConsumerClient, info models.AuthenticationInfo) (
 	case 201:
 		resp.Body = &authCtx
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 500:
+	case 400, 403, 500:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -102,9 +96,7 @@ func UeAuthAuthCtxId5gAkaConfirmationPut(client openapi.ConsumerClient, authCtxI
 	case 200:
 		resp.Body = &confirm
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 500:
+	case 400, 500:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {

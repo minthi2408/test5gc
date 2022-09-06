@@ -32,21 +32,7 @@ func AMFStatusChangeSubscribeModfy(client openapi.ConsumerClient, subscriptionId
 	case 202:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -81,15 +67,7 @@ func AMFStatusChangeUnSubscribe(client openapi.ConsumerClient, subscriptionId st
 	switch resp.StatusCode {
 	case 204:
 		return
-	case 400:
-		fallthrough
-	case 404:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 404, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -152,25 +130,13 @@ func CreateUEContext(client openapi.ConsumerClient, ueContextId string, body mod
 	case 201:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 500:
+	case 400, 403, 500:
 		var cErr models.UeContextCreateError
 		resp.Body = &cErr
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &cErr)
 		}
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 503:
+	case 411, 413, 415, 429, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -210,25 +176,13 @@ func EBIAssignment(client openapi.ConsumerClient, ueContextId string, body model
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 500:
+	case 400, 403, 500:
 		var apiErr models.AssignEbiError
 		resp.Body = &apiErr
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &apiErr)
 		}
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 503:
+	case 411, 413, 415, 429, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -268,23 +222,7 @@ func RegistrationStatusUpdate(client openapi.ConsumerClient, ueContextId string,
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -322,23 +260,7 @@ func ReleaseUEContext(client openapi.ConsumerClient, ueContextId string, body mo
 	switch resp.StatusCode {
 	case 204:
 		return
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 404, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -385,21 +307,7 @@ func UEContextTransfer(client openapi.ConsumerClient, ueContextId string, body m
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -434,19 +342,8 @@ func N2InfoNotify(client openapi.ConsumerClient, n2InfoNotifyUrl string, body mo
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
 	case 204:
-	case 400:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+        //Note: strange case, need to check the specifications
+	case 400, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -481,19 +378,7 @@ func N1N2MessageUnSubscribe(client openapi.ConsumerClient, ueContextId string, s
 
 	switch resp.StatusCode {
 	case 204:
-	case 400:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -550,38 +435,16 @@ func N1N2MessageTransfer(client openapi.ConsumerClient, ueContextId string, body
 	}
 
 	switch resp.StatusCode {
-	case 202:
-		fallthrough
-	case 200:
+	case 200, 202:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 307:
-		fallthrough
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 307, 400, 403, 404, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
-	case 409:
-		fallthrough
-	case 504:
+	case 409, 504:
 		var apiErr models.N1N2MessageTransferError
 		resp.Body = &apiErr
 		if err = client.DecodeResponse(resp); err == nil {
@@ -619,19 +482,7 @@ func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl str
 	switch resp.StatusCode {
 	case 204:
 		//do nothing
-	case 400:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 411, 413, 415, 429, 500, 503:
 		var prob *models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -669,19 +520,7 @@ func N1N2TransferFailureNotification(client openapi.ConsumerClient, n1N2MessageT
 	switch resp.StatusCode {
 	case 204:
 		//do nothing
-	case 400:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -717,19 +556,7 @@ func N1N2MessageSubscribe(client openapi.ConsumerClient, ueContextId string, bod
 
 	switch resp.StatusCode {
 	case 201:
-	case 400:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -762,13 +589,7 @@ func NonUeN2InfoUnSubscribe(client openapi.ConsumerClient, subId string) (err er
 
 	//TODO: look strange, no success status code?
 	switch resp.StatusCode {
-	case 400:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -812,25 +633,13 @@ func NonUeN2MessageTransfer(client openapi.ConsumerClient, body models.NonUeN2Me
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 403, 404, 500, 503:
 		var apiErr models.N2InformationTransferError
 		resp.Body = &apiErr
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &apiErr)
 		}
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
+	case 411, 413, 415, 429:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -867,21 +676,7 @@ func NonUeN2InfoSubscribe(client openapi.ConsumerClient, body models.NonUeN2Info
 	case 201:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {

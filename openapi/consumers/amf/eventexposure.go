@@ -30,21 +30,7 @@ func CreateSubscription(client openapi.ConsumerClient, body models.AmfCreateEven
 	case 201:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -79,14 +65,7 @@ func DeleteSubscription(client openapi.ConsumerClient, subscriptionId string) (e
 	switch resp.StatusCode {
 	case 200:
 		//do nothing
-	case 400:
-	case 404:
-	case 411:
-	case 413:
-	case 415:
-	case 429:
-	case 500:
-	case 503:
+	case 400, 404, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
@@ -128,23 +107,7 @@ func ModifySubscription(client openapi.ConsumerClient, subscriptionId string, bo
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 400:
-		fallthrough
-	case 403:
-		fallthrough
-	case 404:
-		fallthrough
-	case 411:
-		fallthrough
-	case 413:
-		fallthrough
-	case 415:
-		fallthrough
-	case 429:
-		fallthrough
-	case 500:
-		fallthrough
-	case 503:
+	case 400, 403, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
