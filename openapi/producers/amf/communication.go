@@ -22,9 +22,7 @@ func AMFStatusChangeSubscribeModify(ctx openapi.RequestContext, handler interfac
 	}
 
 	if prob != nil {
-		resp.Body = prob
-		resp.StatusCode = int(prob.Status)
-		resp.Status = prob.Detail
+		resp.SetProblem(prob)
 	} else {
 		resp.SetBody(202, &result)
 	}

@@ -342,7 +342,7 @@ func N2InfoNotify(client openapi.ConsumerClient, n2InfoNotifyUrl string, body mo
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
 	case 204:
-        //Note: strange case, need to check the specifications
+		//Note: strange case, need to check the specifications
 	case 400, 411, 413, 415, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob

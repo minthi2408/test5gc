@@ -11,9 +11,8 @@ UeContextDocumentApiService Namf_MT Provide Domain Selection Info service Operat
  * @param client openapi.ConsumerClient an abstraction of a connection in the
  * dataplane of the signaling network
  * @param ueContextId UE Context Identifier
- * @param optional nil or *ProvideDomainSelectionInfoParamOpts - Optional Parameters:
- * @param "InfoClass" (optional.Interface of models.UeContextInfoClass) -  UE Context Information Class
- * @param "SupportedFeatures" (optional.String) -  Supported Features
+ * @param "InfoClass" string -  UE Context Information Class
+ * @param "SupportedFeatures" string -  Supported Features
 @return models.UeContextInfo
 */
 
@@ -23,19 +22,17 @@ type ProvideDomainSelectionInfoParamOpts struct {
 	//SupportedFeatures optional.String
 }
 
-func ProvideDomainSelectionInfo(client openapi.ConsumerClient, ueContextId string, params *ProvideDomainSelectionInfoParamOpts) (result models.UeContextInfo, err error) {
+func ProvideDomainSelectionInfo(client openapi.ConsumerClient, ueContextId string, infoclass string, supfeatures string) (result models.UeContextInfo, err error) {
 	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "GET"
 	req.Path = fmt.Sprintf("%s/%s/%s", openapi.AMF_MT, openapi.AMF_MT_UE_CONTEXTS, ueContextId)
-	/*
-		if params != nil && params.InfoClass.IsSet() {
-			req.QueryParams["info-class"] = openapi.ParameterToString(params.InfoClass.Value(), ""))
-		}
-		if params != nil && params.SupportedFeatures.IsSet() && params.SupportedFeatures.Value() != "" {
-			req.QueryParams["supported-features"], openapi.ParameterToString(params.SupportedFeatures.Value(), ""))
-		}
-	*/
+	if len(infoclass) > 0 {
+		req.QueryParams.Add("info-class", infoclass)
+	}
+	if len(supfeatures) > 0 {
+		req.QueryParams.Add("supported-features", supfeatures)
+	}
 	//send the request
 	var resp *openapi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -46,7 +43,7 @@ func ProvideDomainSelectionInfo(client openapi.ConsumerClient, ueContextId strin
 	case 200:
 		resp.Body = &result
 		err = client.DecodeResponse(resp)
-	case 307, 400, 403, 404, 414, 429, 500,503:
+	case 307, 400, 403, 404, 414, 429, 500, 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {

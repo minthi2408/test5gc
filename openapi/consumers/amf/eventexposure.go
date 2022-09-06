@@ -88,13 +88,14 @@ IndividualSubscriptionDocumentApiService Namf_EventExposure Subscribe Modify ser
 @return AmfUpdatedEventSubscription
 */
 
-func ModifySubscription(client openapi.ConsumerClient, subscriptionId string, body interface{}) (result models.AmfUpdatedEventSubscription, err error) {
+func ModifySubscription(client openapi.ConsumerClient, subscriptionId string, body models.ModifySubscriptionRequest) (result models.AmfUpdatedEventSubscription, err error) {
 
 	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "PATCH"
 	req.HeaderParams["Accept"] = "application/problem+json"
 	req.Path = fmt.Sprintf("%s/subscriptions/%s", openapi.AMF_EVENTEXPOSURE, subscriptionId)
+	//TODO: check specifications for the body type
 	req.Body = &body
 
 	//send the request
