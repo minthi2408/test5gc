@@ -29,7 +29,7 @@ func init() {
 	log = logrus.WithFields(logrus.Fields{"mod": "sbi.producer"})
 }
 
-//interface to NAS handler
+// interface to NAS handler
 type NasHandler interface {
 	HandleNAS(*context.RanUe, int64, []byte)
 }
@@ -67,8 +67,8 @@ func New(b Backend, ngap NgapSender, nas NasInf) *Producer {
 	}
 }
 
-//build services to register to the underlying server (http server in service
-//agent)
+// build services to register to the underlying server (http server in service
+// agent)
 func (prod *Producer) Services() []common.Service {
 	services := make([]common.Service, 6, 6)
 	services[0] = httpcallback.MakeService(prod)
@@ -100,7 +100,7 @@ func MakeTestService() (service httpdp.HttpService) {
 			"/subscriptions/:subscriptionId",
 			openapi_http.BuildProducerRequestHandler(amfprod.AMFStatusChangeSubscribeModify, &testamf{}),
 		},
-    	{
+		{
 			"AMFStatusChangeUnSubscribe",
 			strings.ToUpper("Delete"),
 			"/subscriptions/:subscriptionId",
@@ -141,8 +141,6 @@ func MakeTestService() (service httpdp.HttpService) {
 			"/ue-contexts/:ueContextId/transfer",
 			openapi_http.BuildProducerRequestHandler(amfprod.UEContextTransfer, &testamf{}),
 		},
-
-
 	}
 	service.Group = "test"
 	return
@@ -152,62 +150,61 @@ type testamf struct {
 }
 
 func (p *testamf) HandleStatusChangeSubscribeModify(subId string, input *models.SubscriptionData) (result models.SubscriptionData, prob *models.ProblemDetails) {
-    return
+	return
 }
 func (p *testamf) HandleStatusChangeUnSubscribe(subId string) (prob *models.ProblemDetails) {
-    return
+	return
 }
 func (p *testamf) HandleCreateUEContext(ueContextId string, input *models.CreateUeContextRequest) (result models.CreateUeContextResponse, err *openapi.ApiError, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleEBIAssignement(ueContextId string, input *models.AssignEbiData) (result models.AssignedEbiData, err *openapi.ApiError, prob *models.ProblemDetails) {
-    return 
+	return
 }
 
 func (p *testamf) HandleRegistrationStatusUpdate(ueContextId string, input *models.UeRegStatusUpdateReqData) (result models.UeRegStatusUpdateRspData, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleReleaseUEContext(ueContextId string, input *models.UeContextRelease) (prob *models.ProblemDetails) {
-    return
-}
- 
-func (p *testamf) UEContextTransfer(ueContextId string, input *models.UeContextTransferRequest) (result models.UeContextTransferResponse, prob *models.ProblemDetails) {
-    return
+	return
 }
 
+func (p *testamf) UEContextTransfer(ueContextId string, input *models.UeContextTransferRequest) (result models.UeContextTransferResponse, prob *models.ProblemDetails) {
+	return
+}
 
 func (p *testamf) N1N2MessageUnSubscribe(ueContextId string, subscriptionId string) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleN1N2MessageTransfer(ueContextId string, input *models.N1N2MessageTransferRequest) (result models.N1N2MessageTransferRspData, err *openapi.ApiError, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleN1N2MessageSubscribe(ueContextId string, input *models.UeN1N2InfoSubscriptionCreateData) (result models.UeN1N2InfoSubscriptionCreatedData, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleN1N2TransferFailureNotification(input *models.N1N2MsgTxfrFailureNotification) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleN1MessageNotify(input *models.N1MessageNotify) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleNonUeN2InfoUnSubscribe(subId string) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleNonUeN2MessageTransfer(input *models.NonUeN2MessageTransferRequest) (result models.N2InformationTransferRspData, err *openapi.ApiError, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *testamf) HandleNonUeN2InfoSubscribe(input *models.NonUeN2InfoSubscriptionCreateData) (result models.NonUeN2InfoSubscriptionCreatedData, prob *models.ProblemDetails) {
-    return
+	return
 }
 
 /*

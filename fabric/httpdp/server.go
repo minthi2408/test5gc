@@ -26,7 +26,6 @@ type HttpRoute struct {
 
 type HttpRoutes []HttpRoute
 
-
 type HttpService struct {
 	Group  string
 	Routes []HttpRoute
@@ -36,7 +35,7 @@ func (s HttpService) Name() string {
 	return s.Group
 }
 
-//httpServer
+// httpServer
 type httpServer struct {
 	config *ServerConfig
 	server *http.Server
@@ -151,4 +150,3 @@ func addHttpRoutes(engine *gin.Engine, groupname string, routes []HttpRoute) *gi
 func HttpIndexHandler(c *gin.Context) {
 	c.String(http.StatusOK, "Hello from EtriB5GC!")
 }
-

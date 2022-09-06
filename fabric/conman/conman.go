@@ -5,7 +5,7 @@ import (
 	"etri5gc/fabric/httpdp"
 )
 
-//abstraction of protocol-specific service clients
+// abstraction of protocol-specific service clients
 type RemoteConnection interface {
 	Send(common.Request) (common.Response, error)
 	Addr() common.AgentAddr

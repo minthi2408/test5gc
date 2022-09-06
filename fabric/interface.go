@@ -6,8 +6,8 @@ import (
 )
 
 type Application interface {
-    AgentConfig() *config.AgentConfig
-    Services()  []common.Service
+	AgentConfig() *config.AgentConfig
+	Services() []common.Service
 }
 
 // a service abstraction to expose service requesting to upper layers
@@ -25,7 +25,6 @@ type Forwarder interface {
 type ServiceServer common.InternalService
 
 // an abstraction that exposes the agent to the upper layers
-//
 type ServiceAgent interface {
 	// start agent; just once
 	Start() error
@@ -36,8 +35,8 @@ type ServiceAgent interface {
 	Forwarder() Forwarder
 }
 
-///////////////////////
-//Selector
+// /////////////////////
+// Selector
 // selector do the load balancing on the list of agent profiles
 type LoadBalancer interface {
 	Select([]common.AgentProfile) common.AgentProfile

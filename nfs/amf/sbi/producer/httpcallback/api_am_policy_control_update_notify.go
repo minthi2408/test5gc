@@ -15,7 +15,7 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -34,7 +34,7 @@ func (h *Handler) HTTPAmPolicyControlUpdateNotifyUpdate(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CallbackLog.Errorln(problemDetail)
+		//	logger.CallbackLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}

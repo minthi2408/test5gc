@@ -10,23 +10,22 @@
 package mt
 
 import (
-	"strings"
 	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
+	"strings"
 )
 
 const (
-	SERVICE_NAME="/namf-mt/v1"
+	SERVICE_NAME = "/namf-mt/v1"
 )
+
 type Backend interface {
 	HandleProvideDomainSelectionInfoRequest(*httpwrapper.Request) *httpwrapper.Response
 }
 
-
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
-
 
 func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
@@ -55,5 +54,5 @@ func MakeService(p Backend) (service httpdp.HttpService) {
 		},
 	}
 	service.Group = SERVICE_NAME
-	return 
+	return
 }

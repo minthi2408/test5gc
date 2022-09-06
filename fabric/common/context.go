@@ -1,9 +1,9 @@
 package common
 
-//the type of a network function (amf, smf, etc.)
+// the type of a network function (amf, smf, etc.)
 type NetworkFunctionType string
 
-//context field identity: PLMN, NSI, DNN etc (defined by a network operator)
+// context field identity: PLMN, NSI, DNN etc (defined by a network operator)
 type ContextFieldId string
 
 // values of a context field identity (defined by a network operator)
@@ -12,8 +12,8 @@ type ContextFieldValues []ContextFieldValue
 
 type NfContext map[ContextFieldId]ContextFieldValues
 
-//context dicrionaty that enumerate all available ContextFieldId values and
-//corresponding ContextFieldValue values
+// context dicrionaty that enumerate all available ContextFieldId values and
+// corresponding ContextFieldValue values
 type ContextDict NfContext
 
 func (c *NfContext) IsSubset(other *NfContext) bool {

@@ -11,10 +11,8 @@ import (
 	"etri5gc/fabric/telemetry"
 )
 
-
-
 type serviceAgent struct {
-    config     *fabric_config.AgentConfig
+	config    *fabric_config.AgentConfig
 	reporter  telemetry.Writer
 	conmngr   conman.ConnectionManager
 	registry  registrydb.AgentRegistry
@@ -67,9 +65,9 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 // agent to terminate when exiting the application
 
 func NewAgent(nf Application) (ServiceAgent, error) {
-    config := nf.AgentConfig()
+	config := nf.AgentConfig()
 	agent := &serviceAgent{
-        config: config,
+		config:   config,
 		registry: registrydb.NewRegistry(config.Profile, &config.RegistryConfig),
 		reporter: telemetry.NewWriter(),
 		conmngr:  conman.NewConnectionManager(),

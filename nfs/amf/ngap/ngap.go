@@ -1,35 +1,34 @@
 package ngap
 
 import (
-	"net"
 	"etri5gc/nfs/amf"
 	"etri5gc/nfs/amf/nas"
+	"net"
 
-
-	"github.com/sirupsen/logrus"
-	"github.com/free5gc/ngap/ngapType"
-	libngap "github.com/free5gc/ngap"
 	"git.cs.nctu.edu.tw/calee/sctp"
-)	
+	libngap "github.com/free5gc/ngap"
+	"github.com/free5gc/ngap/ngapType"
+	"github.com/sirupsen/logrus"
+)
 
-var log	*logrus.Entry
+var log *logrus.Entry
+
 func init() {
 	log = logrus.WithFields(logrus.Fields{"tag": "ngap"})
 }
 
 type ngapHandler struct {
 	backend amf.Backend
-	sender	*ngapSender
-	nas		*nas.Nas
+	sender  *ngapSender
+	nas     *nas.Nas
 }
 
 type Ngap struct {
-	backend		amf.Backend
-	sender		ngapSender
-	handler 	ngapHandler
-	nas			*nas.Nas
+	backend amf.Backend
+	sender  ngapSender
+	handler ngapHandler
+	nas     *nas.Nas
 }
-
 
 func NewNgap(b amf.Backend) *Ngap {
 	ret := &Ngap{
@@ -48,12 +47,12 @@ func NewNgap(b amf.Backend) *Ngap {
 	return ret
 }
 
-//expose ngap message sender
+// expose ngap message sender
 func (n *Ngap) Sender() *ngapSender {
 	return &n.sender
 }
 
-//expose Nas
+// expose Nas
 func (n *Ngap) Nas() *nas.Nas {
 	return n.nas
 }
@@ -191,7 +190,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 			}
 		case ngapType.ProcedureCodeCellTrafficTrace:
 			if iMsg.Value.CellTrafficTrace != nil {
-					h.handler.handleCellTrafficTrace(ran, iMsg.Value.CellTrafficTrace)
+				h.handler.handleCellTrafficTrace(ran, iMsg.Value.CellTrafficTrace)
 				return
 			}
 		case ngapType.ProcedureCodeUplinkRANStatusTransfer:
@@ -201,7 +200,7 @@ func (h *Ngap) HandleMessage(conn net.Conn, pdu []byte) {
 			}
 		case ngapType.ProcedureCodeUplinkNonUEAssociatedNRPPaTransport:
 			if iMsg.Value.UplinkNonUEAssociatedNRPPaTransport != nil {
-				h.handler.handleUplinkNonUEAssociatedNRPPATransport(ran, iMsg.Value.UplinkNonUEAssociatedNRPPaTransport) 
+				h.handler.handleUplinkNonUEAssociatedNRPPATransport(ran, iMsg.Value.UplinkNonUEAssociatedNRPPaTransport)
 				return
 			}
 		default:

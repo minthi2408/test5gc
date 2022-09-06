@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
-//	"time"
+	//	"time"
 
 	"gopkg.in/yaml.v2"
 
@@ -429,8 +429,6 @@ func (p *PlmnSupportItem) validate() (bool, error) {
 	return true, nil
 }
 
-
-
 func (n *NetworkName) validate() (bool, error) {
 	if _, err := govalidator.ValidateStruct(n); err != nil {
 		return false, sbi.AppendInvalid(err)
@@ -438,7 +436,6 @@ func (n *NetworkName) validate() (bool, error) {
 
 	return true, nil
 }
-
 
 func (t *TimerValue) validate() (bool, error) {
 	if _, err := govalidator.ValidateStruct(t); err != nil {
@@ -455,7 +452,7 @@ func (c *Config) GetVersion() string {
 	return ""
 }
 
-//Load Config from file
+// Load Config from file
 func LoadConfig(f string) (*Config, error) {
 	if content, err := ioutil.ReadFile(f); err != nil {
 		return nil, err

@@ -28,37 +28,36 @@ func ProvideLocationInfo(client openapi.ConsumerClient, ueContextId string, body
 		return
 	}
 
-
 	switch resp.StatusCode {
 	case 200:
-        resp.Body = &result
-        err =  client.DecodeResponse(resp)
+		resp.Body = &result
+		err = client.DecodeResponse(resp)
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 404:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
+		}
 	default:
-        //NOTE: strange
+		//NOTE: strange
 	}
-    return
+	return
 }
 
 /*
@@ -83,35 +82,34 @@ func ProvidePositioningInfo(client openapi.ConsumerClient, ueContextId string, b
 		return
 	}
 
-
 	switch resp.StatusCode {
 	case 200:
-        resp.Body = &result
-        err = client.DecodeResponse(resp)
+		resp.Body = &result
+		err = client.DecodeResponse(resp)
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
-        fallthrough
+		fallthrough
 	case 504:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
+		}
 	default:
-        //NOTE: strange
+		//NOTE: strange
 	}
-    return
+	return
 }

@@ -13,11 +13,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
 )
 
 // EnableUeReachability - Namf_MT EnableUEReachability service Operation
 func (h *Handler) HTTPEnableUeReachability(c *gin.Context) {
-//	logger.MtLog.Warnf("Handle Enable Ue Reachability is not implemented.")
+	//	logger.MtLog.Warnf("Handle Enable Ue Reachability is not implemented.")
 	c.JSON(http.StatusOK, gin.H{})
 }

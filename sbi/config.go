@@ -13,12 +13,12 @@ type Config struct {
 	Tls          *Tls   `yaml:"tls,omitempty" valid:"optional"`
 }
 
-var DefaultConfig = Config {
-	Scheme:			"http",
-	RegisterIPv4: 	"127.0.0.1",
-	BindingIPv4: 	"0.0.0.0",
-	Port:			8000,
-	Tls:			nil,
+var DefaultConfig = Config{
+	Scheme:       "http",
+	RegisterIPv4: "127.0.0.1",
+	BindingIPv4:  "0.0.0.0",
+	Port:         8000,
+	Tls:          nil,
 }
 
 func (c *Config) Validate() (bool, error) {
@@ -63,4 +63,3 @@ func AppendInvalid(err error) error {
 
 	return error(errs)
 }
-

@@ -2,7 +2,7 @@ package registrydb
 
 import "etri5gc/fabric/common"
 
-//centralized registry
+// centralized registry
 type centralizedRegistryClient struct {
 	profile common.AgentProfile
 	server  *HttpAddr

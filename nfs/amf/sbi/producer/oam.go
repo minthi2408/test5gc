@@ -85,7 +85,7 @@ func (h *Producer) doOAMRegisteredUEContext(supi string) (UEContexts, *models.Pr
 	return ueContexts, nil
 }
 
-//NOTE: (by TungTQ) should this method be implemented at AmfUe class?
+// NOTE: (by TungTQ) should this method be implemented at AmfUe class?
 // may be not because UEContext is defined here
 func buildUEContext(ue *context.AmfUe, accessType models.AccessType) *UEContext {
 	if ue.State[accessType].Is(context.Registered) {

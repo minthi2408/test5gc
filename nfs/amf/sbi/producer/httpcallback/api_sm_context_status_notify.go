@@ -15,7 +15,7 @@ func (h *Handler) HTTPSmContextStatusNotify(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CallbackLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -34,7 +34,7 @@ func (h *Handler) HTTPSmContextStatusNotify(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CallbackLog.Errorln(problemDetail)
+		//	logger.CallbackLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -47,7 +47,7 @@ func (h *Handler) HTTPSmContextStatusNotify(c *gin.Context) {
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-//		logger.CallbackLog.Errorln(err)
+		//		logger.CallbackLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",

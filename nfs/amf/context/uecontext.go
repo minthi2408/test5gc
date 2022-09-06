@@ -70,13 +70,13 @@ type LocInfo struct {
 }
 
 /*
-func (ue *AmfUe) updateLoc(ranUe *RanUe) {
-	if ue.loc.Tai != ranUe.Tai {
-		ue.loc.LocationChanged = true
+	func (ue *AmfUe) updateLoc(ranUe *RanUe) {
+		if ue.loc.Tai != ranUe.Tai {
+			ue.loc.LocationChanged = true
+		}
+		ue.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
+		ue.loc.Tai = deepcopy.Copy(*ue.loc.Location.NrLocation.Tai).(models.Tai)
 	}
-	ue.loc.Location = deepcopy.Copy(ranUe.Location).(models.UserLocation)
-	ue.loc.Tai = deepcopy.Copy(*ue.loc.Location.NrLocation.Tai).(models.Tai)
-}
 */
 type AmfUe struct {
 	/* the AMF which serving this AmfUe now */
@@ -344,7 +344,7 @@ func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.Access
 	return false
 }
 
-//TODO: tqtung - need cleaning the long chained object reference
+// TODO: tqtung - need cleaning the long chained object reference
 func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
 	for _, sNssai := range ue.udmcli.info.SubscribedNssai {
 		if reflect.DeepEqual(*sNssai.SubscribedSnssai, targetSNssai) {
@@ -375,7 +375,7 @@ func (ue *AmfUe) TaiListInRegistrationArea(taiList []models.Tai, accessType mode
 	return true
 }
 
-//TODO: tqtung need cleaning the long chained object reference
+// TODO: tqtung need cleaning the long chained object reference
 func (ue *AmfUe) HasWildCardSubscribedDNN() bool {
 	for _, snssaiInfo := range ue.udmcli.info.SmfSelectionData.SubscribedSnssaiInfos {
 		for _, dnnInfo := range snssaiInfo.DnnInfos {

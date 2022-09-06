@@ -149,7 +149,7 @@ func (h *Handler) HTTPRegistrationStatusUpdate(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -168,7 +168,7 @@ func (h *Handler) HTTPRegistrationStatusUpdate(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CommLog.Errorln(problemDetail)
+		//	logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -197,7 +197,7 @@ func (h *Handler) HTTPReleaseUEContext(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -216,7 +216,7 @@ func (h *Handler) HTTPReleaseUEContext(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CommLog.Errorln(problemDetail)
+		//	logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -246,7 +246,7 @@ func (h *Handler) HTTPUEContextTransfer(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -273,7 +273,7 @@ func (h *Handler) HTTPUEContextTransfer(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CommLog.Errorln(problemDetail)
+		//	logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -285,7 +285,7 @@ func (h *Handler) HTTPUEContextTransfer(c *gin.Context) {
 	if rsp.Status == http.StatusOK {
 		responseBody, contentType, err := openapi.MultipartSerialize(rsp.Body)
 		if err != nil {
-		//	logger.CommLog.Errorln(err)
+			//	logger.CommLog.Errorln(err)
 			problemDetails := models.ProblemDetails{
 				Status: http.StatusInternalServerError,
 				Cause:  "SYSTEM_FAILURE",
@@ -298,7 +298,7 @@ func (h *Handler) HTTPUEContextTransfer(c *gin.Context) {
 	} else {
 		responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 		if err != nil {
-		//	logger.CommLog.Errorln(err)
+			//	logger.CommLog.Errorln(err)
 			problemDetails := models.ProblemDetails{
 				Status: http.StatusInternalServerError,
 				Cause:  "SYSTEM_FAILURE",

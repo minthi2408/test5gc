@@ -28,34 +28,34 @@ func CreateSubscription(client openapi.ConsumerClient, body models.AmfCreateEven
 	}
 	switch resp.StatusCode {
 	case 201:
-        resp.Body = &result
-        err = client.DecodeResponse(resp)
+		resp.Body = &result
+		err = client.DecodeResponse(resp)
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &body)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &body)
+		}
 	case 0:
-        //do nothing
+		//do nothing
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
 	}
-    return
+	return
 }
 
 /*
@@ -78,7 +78,7 @@ func DeleteSubscription(client openapi.ConsumerClient, subscriptionId string) (e
 	}
 	switch resp.StatusCode {
 	case 200:
-        //do nothing
+		//do nothing
 	case 400:
 	case 404:
 	case 411:
@@ -88,16 +88,16 @@ func DeleteSubscription(client openapi.ConsumerClient, subscriptionId string) (e
 	case 500:
 	case 503:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
+		}
 	case 0:
-        // do nothing
+		// do nothing
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
 	}
-    return
+	return
 }
 
 /*
@@ -111,12 +111,12 @@ IndividualSubscriptionDocumentApiService Namf_EventExposure Subscribe Modify ser
 
 func ModifySubscription(client openapi.ConsumerClient, subscriptionId string, body interface{}) (result models.AmfUpdatedEventSubscription, err error) {
 
-    //create a request
+	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "PATCH"
 	req.HeaderParams["Accept"] = "application/problem+json"
 	req.Path = fmt.Sprintf("%s/subscriptions/%s", openapi.AMF_EVENTEXPOSURE, subscriptionId)
-    req.Body = &body
+	req.Body = &body
 
 	//send the request
 	var resp *openapi.Response
@@ -126,34 +126,34 @@ func ModifySubscription(client openapi.ConsumerClient, subscriptionId string, bo
 
 	switch resp.StatusCode {
 	case 200:
-        resp.Body = &result
-        err = client.DecodeResponse(resp)
+		resp.Body = &result
+		err = client.DecodeResponse(resp)
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 404:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &body)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &body)
+		}
 	case 0:
-        //do nothing
+		//do nothing
 	default:
 		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
 	}
-    return
+	return
 }

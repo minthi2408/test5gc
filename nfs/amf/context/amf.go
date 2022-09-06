@@ -295,11 +295,11 @@ func (amf *AmfContext) NewAmfUe(supi string) *AmfUe {
 }
 
 /*
-func (amf *AmfContext) RemoveAmfUe(ue *AmfUe) {
-	for _, ranue := range ue.RanUe {
-		amf.RemoveRanUe(ranue)
+	func (amf *AmfContext) RemoveAmfUe(ue *AmfUe) {
+		for _, ranue := range ue.RanUe {
+			amf.RemoveRanUe(ranue)
+		}
 	}
-}
 */
 func (amf *AmfContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateData) *AmfUe {
 	//tungtq: this procedure was written by free5gc, it looks experimential so we have to work on improvements later.
@@ -409,7 +409,7 @@ func (amf *AmfContext) NewAmfRan(conn net.Conn) *AmfRan {
 	return ran
 }
 
-//ran is not nil
+// ran is not nil
 func (amf *AmfContext) RemoveRan(ran *AmfRan) {
 	ran.RemoveAllUe()
 	amf.ranpool.Delete(ran.conn)

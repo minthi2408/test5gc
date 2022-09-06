@@ -16,16 +16,15 @@ import (
 )
 
 type Server struct {
-	connections		sync.Map
-	listener		*sctp.SCTPListener
-	ngap			*Ngap
+	connections sync.Map
+	listener    *sctp.SCTPListener
+	ngap        *Ngap
 }
 
 const readBufSize uint32 = 8192
 
 // set default read timeout to 2 seconds
 var readTimeout syscall.Timeval = syscall.Timeval{Sec: 2, Usec: 0}
-
 
 var sctpConfig sctp.SocketConfig = sctp.SocketConfig{
 	InitMsg:   sctp.InitMsg{NumOstreams: 3, MaxInstreams: 5, MaxAttempts: 2, MaxInitTimeout: 2},
@@ -38,12 +37,13 @@ func NewServer(b amf.Backend) *Server {
 		ngap: NewNgap(b),
 	}
 }
-//expose ngap message sender
+
+// expose ngap message sender
 func (s *Server) Sender() *ngapSender {
 	return &s.ngap.sender
 }
 
-//expose Nas
+// expose Nas
 func (s *Server) Nas() *nas.Nas {
 	return s.ngap.nas
 }
@@ -83,7 +83,6 @@ func (s *Server) serve(addr *sctp.SCTPAddr) {
 	}
 
 	log.Infof("Listen on %s", s.listener.Addr())
-
 
 	for {
 		newConn, err := s.listener.AcceptSCTP()

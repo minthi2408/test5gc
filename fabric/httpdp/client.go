@@ -19,32 +19,32 @@ func (c *remoteAgent) Send(req common.Request) (resp common.Response, err error)
 		return nil, errors.New("only openapi request format is supported")
 	}
 	openapiReq := req.(*openapi.Request)
-    var httpreq *http.Request
-    var httpresp *http.Response
+	var httpreq *http.Request
+	var httpresp *http.Response
 	//now turn an openapi request into a http request
 	if httpreq, err = c.prepareHttpRequest(openapiReq); err != nil {
-        return
-    }
+		return
+	}
 	//send the request and get a response
 	if httpresp, err = c.client.Do(httpreq); err != nil {
 		return
 	} else {
 		//read body of the response and prepare the openapi response
-        openapiResp := &openapi.Response{
-			Response: httpresp,
-            StatusCode: httpresp.StatusCode,
-            Status: httpresp.Status,
+		openapiResp := &openapi.Response{
+			Response:   httpresp,
+			StatusCode: httpresp.StatusCode,
+			Status:     httpresp.Status,
 		}
 		openapiResp.BodyBytes, err = ioutil.ReadAll(httpresp.Body)
 		httpresp.Body.Close()
-        if err == nil {
-            resp = openapiResp
-        }
-		return 
+		if err == nil {
+			resp = openapiResp
+		}
+		return
 	}
 }
 
-//create a http client to send requests to a remote agent
+// create a http client to send requests to a remote agent
 func NewHttpRemoteAgent(addr common.AgentAddr) *remoteAgent {
 	ret := &remoteAgent{
 		addr: addr,
@@ -56,16 +56,16 @@ func NewHttpRemoteAgent(addr common.AgentAddr) *remoteAgent {
 	return ret
 }
 
-//build an http request from openapi request
+// build an http request from openapi request
 func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) (httpreq *http.Request, err error) {
 	//netvision should implement this method (refer to the
 	//free5gc/openapi/client.go)
-    //1. inject the ipaddr:port into the request path
-    //2. encode the request
-    if err = Encoding().EncodeRequest(req); err == nil {
-        httpreq = req.Request.(*http.Request)
-    }
-	return 
+	//1. inject the ipaddr:port into the request path
+	//2. encode the request
+	if err = Encoding().EncodeRequest(req); err == nil {
+		httpreq = req.Request.(*http.Request)
+	}
+	return
 }
 
 func (c *remoteAgent) Addr() common.AgentAddr {

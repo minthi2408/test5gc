@@ -31,7 +31,7 @@ func (h *Handler) HTTPDeleteSubscription(c *gin.Context) {
 	} else {
 		responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 		if err != nil {
-		//	logger.EeLog.Errorln(err)
+			//	logger.EeLog.Errorln(err)
 			problemDetails := models.ProblemDetails{
 				Status: http.StatusInternalServerError,
 				Cause:  "SYSTEM_FAILURE",

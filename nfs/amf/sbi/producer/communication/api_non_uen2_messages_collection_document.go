@@ -17,6 +17,6 @@ import (
 
 // NonUeN2MessageTransfer - Namf_Communication Non UE N2 Message Transfer service Operation
 func (h *Handler) HTTPNonUeN2MessageTransfer(c *gin.Context) {
-//	logger.CommLog.Warnf("Handle Non Ue N2 Message Transfer is not implemented.")
+	//	logger.CommLog.Warnf("Handle Non Ue N2 Message Transfer is not implemented.")
 	c.JSON(http.StatusOK, gin.H{})
 }

@@ -26,14 +26,14 @@ type HttpAddr struct {
 	Port int
 }
 
-//Registry configuration
+// Registry configuration
 type Config struct {
 	RegType int                   //static, centralized, or distributed
 	Addr    *HttpAddr             //address of the server (centralized registry)  or address of the controller (distributed registry)
 	Others  []common.AgentProfile // for static registry
 }
 
-//factory method to create a registry
+// factory method to create a registry
 func NewRegistry(profile common.AgentProfile, config *Config) AgentRegistry {
 	switch config.RegType {
 	case REGISTRY_STATIC:

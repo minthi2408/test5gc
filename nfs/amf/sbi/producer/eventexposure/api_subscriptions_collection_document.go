@@ -25,7 +25,7 @@ func (h *Handler) HTTPCreateSubscription(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-	//	logger.EeLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.EeLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -44,7 +44,7 @@ func (h *Handler) HTTPCreateSubscription(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.EeLog.Errorln(problemDetail)
+		//	logger.EeLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}

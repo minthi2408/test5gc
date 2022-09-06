@@ -1,26 +1,28 @@
 package config
+
 import (
-    "time"
+	fabric_config "etri5gc/fabric/config"
 	"etri5gc/openapi/models"
-    fabric_config "etri5gc/fabric/config"
+	"time"
 )
+
 type AmfConfig struct {
-    Agent       *fabric_config.AgentConfig
+	Agent *fabric_config.AgentConfig
 
-    AmfName     string
-    NgapIpList  []string //should be list of IP address
+	AmfName    string
+	NgapIpList []string //should be list of IP address
 
-    //should go to context?
-    GuarmiList    []models.Guami
-    TaiList    []models.Tai
-    PlmnSupportList     []PlmnItem
-    DnnList     []string
-    Locality    string
+	//should go to context?
+	GuarmiList      []models.Guami
+	TaiList         []models.Tai
+	PlmnSupportList []PlmnItem
+	DnnList         []string
+	Locality        string
 
-    NetworkName     NetworkName
-    Security    *Security
+	NetworkName NetworkName
+	Security    *Security
 
-    T3502Value                      int
+	T3502Value                      int
 	T3512Value                      int
 	Non3gppDeregistrationTimerValue int
 	T3513                           TimerValue
@@ -46,4 +48,3 @@ type TimerValue struct {
 	ExpireTime    time.Duration `yaml:"expireTime" valid:"type(time.Duration)"`
 	MaxRetryTimes int           `yaml:"maxRetryTimes,omitempty" valid:"type(int)"`
 }
-

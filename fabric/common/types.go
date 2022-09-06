@@ -19,9 +19,8 @@ type Marshallable interface {
 	Unmarshal([]byte) error
 }
 
-
-//currently only openapi message format is support, but the fabric should
-//be designed to incorporate other formats in the future.
+// currently only openapi message format is support, but the fabric should
+// be designed to incorporate other formats in the future.
 type ServiceMessage interface {
 	MsgType() ServiceMsgType
 }
@@ -51,15 +50,14 @@ type Service interface {
 	Name() string //just a signature method, no use
 }
 
-
 type AgentProfile interface {
 	NfType() NetworkFunctionType
 	Addr() AgentAddr
 	Load() int //workload - for load balancer to make comparisons
 }
 
-//any service that runs within an agents; for easy initiation and clean
-//termination of the agent
+// any service that runs within an agents; for easy initiation and clean
+// termination of the agent
 type InternalService interface {
 	Start() error
 	Terminate()

@@ -1,13 +1,13 @@
 package main
 
-import ( 
+import (
+	"etri5gc/nfs/amf/config"
+	"etri5gc/nfs/amf/service"
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 	"os"
 	"os/signal"
 	"syscall"
-	"etri5gc/nfs/amf/service"
-	"etri5gc/nfs/amf/config"
-	"github.com/urfave/cli"
-	log "github.com/sirupsen/logrus"
 )
 
 var flags = []cli.Flag{
@@ -32,7 +32,6 @@ func main() {
 	app.Action = action
 	app.Flags = flags
 
-
 	if err := app.Run(os.Args); err != nil {
 		//log
 		log.Fatal("Fail to start application", err)
@@ -41,18 +40,17 @@ func main() {
 		sigch := make(chan os.Signal, 1)
 		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 		go func() {
-			<- sigch
+			<-sigch
 			if nf != nil {
 				nf.Terminate()
 			}
 			log.Info("Received a kill signal")
 			quit <- struct{}{}
 		}()
-		<- quit
+		<-quit
 		log.Info("Good bye the world")
 	}
 }
-
 
 func action(c *cli.Context) (err error) {
 	log.SetLevel(log.InfoLevel)
@@ -69,7 +67,6 @@ func action(c *cli.Context) (err error) {
 		log.Errorf("Fail to create AMF", err)
 		return
 	}
-
 
 	if err = nf.Start(); err != nil {
 		log.Errorf("Fail to start AMF", err)

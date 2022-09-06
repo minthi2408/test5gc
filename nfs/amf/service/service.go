@@ -2,12 +2,12 @@ package service
 
 import (
 	"etri5gc/fabric"
-	fabric_config "etri5gc/fabric/config"
 	fabric_common "etri5gc/fabric/common"
+	fabric_config "etri5gc/fabric/config"
 
 	amf_config "etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
-//	"etri5gc/nfs/amf/nas"
+	//	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/ngap"
 
 	"etri5gc/nfs/amf/sbi/producer"
@@ -30,7 +30,7 @@ type AMF struct {
 	producer *producer.Producer  //handling Sbi requests received at the server
 	ngap     *ngap.Server        //ngap server handling Ran connections and ngap messages
 	context  *context.AmfContext // AMF context
-	config     *amf_config.Config      // loaded AMF config
+	config   *amf_config.Config  // loaded AMF config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
@@ -58,12 +58,12 @@ func New(config *amf_config.Config) (nf *AMF, err error) {
 }
 
 func (nf *AMF) AgentConfig() *fabric_config.AgentConfig {
-    //TODO: get it from the nf config
-    return nil
+	//TODO: get it from the nf config
+	return nil
 }
 
 func (nf *AMF) Services() []fabric_common.Service {
-    return nf.producer.Services()
+	return nf.producer.Services()
 }
 
 func (nf *AMF) Context() *context.AmfContext {
@@ -73,7 +73,6 @@ func (nf *AMF) Context() *context.AmfContext {
 func (nf *AMF) Config() *amf_config.Config {
 	return nf.config
 }
-
 
 func (nf *AMF) Start() (err error) {
 

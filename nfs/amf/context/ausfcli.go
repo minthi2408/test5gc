@@ -274,8 +274,8 @@ func (c *ausfClient) clear() {
 	c.info.IdentityRequestSendTimes = 0
 }
 
-///////////////////////////////////// consumer /////////////////////
-//build a query to select an AUSF producer
+// /////////////////////////////////// consumer /////////////////////
+// build a query to select an AUSF producer
 func (c *ausfClient) Select() {
 	//TODO: forward Forwarder to the constructor
 	c.consumer = openapi_http.NewClient(nil)
@@ -651,7 +651,7 @@ func (c *ausfClient) BuildSecModeCmd(cmd *nasMessage.SecurityModeCommand, eapSuc
 			cmd.ABBA.SetABBAContents(c.info.ABBA)
 		}
 	}
-	amf.N1N2MessageUnSubscribe(nil, "", "") //TODO: just for testing, remove later
+	amf.N1N2MessageUnSubscribe(nil, "", "")                   //TODO: just for testing, remove later
 	amf.ProvideLocationInfo(nil, "", models.RequestLocInfo{}) //TODO: just for testing, remove later
 	return nil
 }

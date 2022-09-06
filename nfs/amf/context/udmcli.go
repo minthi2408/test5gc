@@ -85,7 +85,7 @@ func (c *udmClient) Select() {
 	//TODO: make a query
 }
 
-//subcriber data management
+// subcriber data management
 func (c *udmClient) PutUpuAck(upuMacIue string) error {
 	/*
 		client := udm_sdm_client(ue)

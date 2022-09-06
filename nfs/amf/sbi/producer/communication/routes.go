@@ -1,36 +1,37 @@
 package communication
 
 import (
-	"strings"
 	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
+	"strings"
 )
+
 const (
-	SERVICE_NAME="/namf-comm/v1"
+	SERVICE_NAME = "/namf-comm/v1"
 )
 
 type Backend interface {
 	HandleCreateUEContextRequest(*httpwrapper.Request) *httpwrapper.Response
 	HandleReleaseUEContextRequest(*httpwrapper.Request) *httpwrapper.Response
-	HandleUEContextTransferRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleAssignEbiDataRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleRegistrationStatusUpdateRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleN1N2MessageTransferRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleN1N2MessageTransferStatusRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleN1N2MessageSubscirbeRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleN1N2MessageUnSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleAMFStatusChangeSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleAMFStatusChangeUnSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response 
-	HandleAMFStatusChangeSubscribeModify(*httpwrapper.Request) *httpwrapper.Response 
+	HandleUEContextTransferRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleAssignEbiDataRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleRegistrationStatusUpdateRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleN1N2MessageTransferRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleN1N2MessageTransferStatusRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleN1N2MessageSubscirbeRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleN1N2MessageUnSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleAMFStatusChangeSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleAMFStatusChangeUnSubscribeRequest(*httpwrapper.Request) *httpwrapper.Response
+	HandleAMFStatusChangeSubscribeModify(*httpwrapper.Request) *httpwrapper.Response
 }
 
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
 
 func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
-		prod:	p,
+		prod: p,
 	}
 	service.Routes = httpdp.HttpRoutes{
 		{

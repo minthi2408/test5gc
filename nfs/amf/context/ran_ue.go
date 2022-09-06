@@ -71,9 +71,9 @@ type RanUe struct {
 }
 
 /*
-func (ranUe *RanUe) SetUeNgapId(v int64) {
-	ranUe.RanUeNgapId = v
-}
+	func (ranUe *RanUe) SetUeNgapId(v int64) {
+		ranUe.RanUeNgapId = v
+	}
 */
 func (ranUe *RanUe) Ran() *AmfRan {
 	return ranUe.ran

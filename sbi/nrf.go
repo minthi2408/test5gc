@@ -1,14 +1,15 @@
 package sbi
+
 import (
 	"fmt"
-//	"time"
-	"strings"
-	"net/http"
+	//	"time"
 	"context"
 	"github.com/free5gc/openapi"
-	"github.com/free5gc/openapi/models"
-	"github.com/free5gc/openapi/Nnrf_NFManagement"
 	"github.com/free5gc/openapi/Nnrf_NFDiscovery"
+	"github.com/free5gc/openapi/Nnrf_NFManagement"
+	"github.com/free5gc/openapi/models"
+	"net/http"
+	"strings"
 )
 
 type NrfConsumer interface {
@@ -24,12 +25,12 @@ type NFInterface interface {
 }
 
 type nrfClient struct {
-	nf		NFInterface
+	nf NFInterface
 }
 
 func NewNrfConsumer(nf NFInterface) NrfConsumer {
 	return &nrfClient{
-		nf:	nf,
+		nf: nf,
 	}
 }
 
@@ -50,16 +51,15 @@ func (c *nrfClient) disc_client(uri string) *Nnrf_NFDiscovery.APIClient {
 	return Nnrf_NFDiscovery.NewAPIClient(conf)
 }
 
-
 func (c *nrfClient) SendRegisterNFInstance() (
 	resouceNrfUri string, retrieveNfInstanceId string, err error) {
 
 	// Set client and set url
-	client := c.man_client()	
+	client := c.man_client()
 	var res *http.Response
 	var profile *models.NfProfile
 	if profile, err = c.nf.BuildProfile(); err != nil {
-		return 
+		return
 	}
 
 	log.Info("Sending a registration request")
@@ -70,7 +70,7 @@ func (c *nrfClient) SendRegisterNFInstance() (
 		return
 	}
 
-	if  res == nil {
+	if res == nil {
 		err = fmt.Errorf("NRF response is empty")
 		return
 	}
@@ -92,7 +92,7 @@ func (c *nrfClient) SendRegisterNFInstance() (
 	} else {
 		log.Warnf("NRF return wrong status code %d", status)
 	}
-	return 
+	return
 }
 
 func (c *nrfClient) SendDeregisterNFInstance() (problemDetails *models.ProblemDetails, err error) {
@@ -139,4 +139,3 @@ func (c *nrfClient) SendSearchNFInstances(nrfuri string, targetNfType, requestNf
 	}()
 	return result, err
 }
-

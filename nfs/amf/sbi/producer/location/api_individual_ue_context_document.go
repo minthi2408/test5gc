@@ -31,7 +31,7 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 			Detail: err.Error(),
 			Cause:  "SYSTEM_FAILURE",
 		}
-	//	logger.LocationLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.LocationLog.Errorf("Get Request Body error: %+v", err)
 		c.JSON(http.StatusInternalServerError, problemDetail)
 		return
 	}
@@ -44,7 +44,7 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.LocationLog.Errorln(problemDetail)
+		//	logger.LocationLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}
@@ -70,6 +70,6 @@ func (h *Handler) HTTPProvideLocationInfo(c *gin.Context) {
 
 // ProvidePositioningInfo - Namf_Location ProvidePositioningInfo service Operation
 func (h *Handler) HTTPProvidePositioningInfo(c *gin.Context) {
-//	logger.LocationLog.Warnf("Handle Provide Positioning Info is not implemented.")
+	//	logger.LocationLog.Warnf("Handle Provide Positioning Info is not implemented.")
 	c.JSON(http.StatusOK, gin.H{})
 }

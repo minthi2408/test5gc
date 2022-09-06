@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	SERVICE_NAME="/namf-oam/v1"
+	SERVICE_NAME = "/namf-oam/v1"
 )
 
 type Backend interface {
@@ -14,7 +14,7 @@ type Backend interface {
 }
 
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
 
 func MakeService(p Backend) (service httpdp.HttpService) {
@@ -22,7 +22,7 @@ func MakeService(p Backend) (service httpdp.HttpService) {
 		prod: p,
 	}
 
-	service.Routes  = httpdp.HttpRoutes{
+	service.Routes = httpdp.HttpRoutes{
 		{
 			"Index",
 			"GET",

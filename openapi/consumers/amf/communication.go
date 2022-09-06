@@ -47,7 +47,7 @@ func AMFStatusChangeSubscribeModfy(client openapi.ConsumerClient, subscriptionId
 	case 500:
 		fallthrough
 	case 503:
-	    var prob models.ProblemDetails
+		var prob models.ProblemDetails
 		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
@@ -482,17 +482,17 @@ func N1N2MessageUnSubscribe(client openapi.ConsumerClient, ueContextId string, s
 	switch resp.StatusCode {
 	case 204:
 	case 400:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
@@ -593,24 +593,22 @@ func N1N2MessageTransfer(client openapi.ConsumerClient, ueContextId string, body
 	return
 }
 
-
 func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl string, body models.N1MessageNotify) (err error) {
-    //create a request
+	//create a request
 	req := openapi.DefaultRequest()
-    //TODO: the callback url should be embeded within the client
+	//TODO: the callback url should be embeded within the client
 	//localVarPath := n1MessageNotificationUrl
 	req.Method = "POST"
 	req.HeaderParams["Accept"] = "application/problem+json"
 
-    // to determine is multipart request
+	// to determine is multipart request
 	if body.BinaryDataN1Message != nil {
-			req.HeaderParams["Content-Type"] = "multipart/related"
-			req.Body = &body
+		req.HeaderParams["Content-Type"] = "multipart/related"
+		req.Body = &body
 	} else {
-        req.HeaderParams["Content-Type"] = "application/json"
-	    req.Body = body.JsonData
+		req.HeaderParams["Content-Type"] = "application/json"
+		req.Body = body.JsonData
 	}
-
 
 	//send the request
 	var resp *openapi.Response
@@ -619,23 +617,23 @@ func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl str
 	}
 
 	switch resp.StatusCode {
-    case 204:
-        //do nothing
-    case 400:
-        fallthrough
+	case 204:
+		//do nothing
+	case 400:
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
-        var prob *models.ProblemDetails
-        resp.Body = &prob
+		var prob *models.ProblemDetails
+		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
@@ -648,20 +646,19 @@ func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl str
 
 /*
 N1N2MessageTransferStatusNotificationCallbackDocumentApiService Namf_Communication N1N2Transfer Failure Notification service Operation
- * @param client openapi.ConsumerClient an abstraction of a connection in the
- * dataplane of the signaling network
- * @param ueContextId UE Context Identifier
- * @param subscriptionId Subscription Identifier
+  - @param client openapi.ConsumerClient an abstraction of a connection in the
+  - dataplane of the signaling network
+  - @param ueContextId UE Context Identifier
+  - @param subscriptionId Subscription Identifier
 */
 func N1N2TransferFailureNotification(client openapi.ConsumerClient, n1N2MessageTransferNotificationUrl string, body models.N1N2MsgTxfrFailureNotification) (err error) {
-    //create a request
+	//create a request
 	req := openapi.DefaultRequest()
-    //TODO: the callback url should be embeded within the client
+	//TODO: the callback url should be embeded within the client
 	//localVarPath := n1N2MessageTransferNotificationUrl
 	req.Method = "POST"
 	req.HeaderParams["Accept"] = "application/problem+json"
 	req.Body = &body
-
 
 	//send the request
 	var resp *openapi.Response
@@ -671,22 +668,22 @@ func N1N2TransferFailureNotification(client openapi.ConsumerClient, n1N2MessageT
 
 	switch resp.StatusCode {
 	case 204:
-        //do nothing
+		//do nothing
 	case 400:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
-        var prob models.ProblemDetails
-        resp.Body = &prob
+		var prob models.ProblemDetails
+		resp.Body = &prob
 		if err = client.DecodeResponse(resp); err == nil {
 			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}

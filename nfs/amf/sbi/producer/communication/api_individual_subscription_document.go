@@ -25,7 +25,7 @@ func (h *Handler) HTTPAMFStatusChangeSubscribeModify(c *gin.Context) {
 
 	requestBody, err := c.GetRawData()
 	if err != nil {
-//		logger.CommLog.Errorf("Get Request Body error: %+v", err)
+		//		logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		problemDetail := models.ProblemDetails{
 			Title:  "System failure",
 			Status: http.StatusInternalServerError,
@@ -77,7 +77,7 @@ func (h *Handler) HTTPAMFStatusChangeUnSubscribe(c *gin.Context) {
 
 	responseBody, err := openapi.Serialize(rsp.Body, "application/json")
 	if err != nil {
-//		logger.CommLog.Errorln(err)
+		//		logger.CommLog.Errorln(err)
 		problemDetails := models.ProblemDetails{
 			Status: http.StatusInternalServerError,
 			Cause:  "SYSTEM_FAILURE",

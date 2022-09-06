@@ -1,9 +1,9 @@
-package config 
+package config
 
 import (
-    "etri5gc/fabric/common"
-    "etri5gc/fabric/registrydb"
-    "etri5gc/fabric/httpdp"
+	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
+	"etri5gc/fabric/registrydb"
 )
 
 // configuration parameters for an agent
@@ -13,4 +13,3 @@ type AgentConfig struct {
 	Profile          common.AgentProfile
 	RegistryConfig   registrydb.Config // registry configuration
 }
-

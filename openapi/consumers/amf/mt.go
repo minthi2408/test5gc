@@ -17,61 +17,61 @@ UeContextDocumentApiService Namf_MT Provide Domain Selection Info service Operat
 @return models.UeContextInfo
 */
 
-
-//TODO: review this client API
+// TODO: review this client API
 type ProvideDomainSelectionInfoParamOpts struct {
 	//InfoClass         optional.Interface
 	//SupportedFeatures optional.String
 }
 
-func  ProvideDomainSelectionInfo(client openapi.ConsumerClient, ueContextId string, params *ProvideDomainSelectionInfoParamOpts) (result models.UeContextInfo, err error) {
+func ProvideDomainSelectionInfo(client openapi.ConsumerClient, ueContextId string, params *ProvideDomainSelectionInfoParamOpts) (result models.UeContextInfo, err error) {
 	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "GET"
 	req.Path = fmt.Sprintf("%s/%s/%s", openapi.AMF_MT, openapi.AMF_MT_UE_CONTEXTS, ueContextId)
-/*
-	if params != nil && params.InfoClass.IsSet() {
-		req.QueryParams["info-class"] = openapi.ParameterToString(params.InfoClass.Value(), ""))
-	}
-	if params != nil && params.SupportedFeatures.IsSet() && params.SupportedFeatures.Value() != "" {
-		req.QueryParams["supported-features"], openapi.ParameterToString(params.SupportedFeatures.Value(), ""))
-	}
-*/
+	/*
+		if params != nil && params.InfoClass.IsSet() {
+			req.QueryParams["info-class"] = openapi.ParameterToString(params.InfoClass.Value(), ""))
+		}
+		if params != nil && params.SupportedFeatures.IsSet() && params.SupportedFeatures.Value() != "" {
+			req.QueryParams["supported-features"], openapi.ParameterToString(params.SupportedFeatures.Value(), ""))
+		}
+	*/
 	//send the request
 	var resp *openapi.Response
 	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
-    switch resp.StatusCode {
+	switch resp.StatusCode {
 	case 200:
-        resp.Body = &result
-        err = client.DecodeResponse(resp)
+		resp.Body = &result
+		err = client.DecodeResponse(resp)
 	case 307:
-        fallthrough
+		fallthrough
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 404:
-        fallthrough
+		fallthrough
 	case 414:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
 		var prob models.ProblemDetails
-        resp.Body = &prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
-        }
+		resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
+		}
 	default:
-        //NOTE: strange
+		//NOTE: strange
 	}
-    return
+	return
 }
+
 /*
 UeReachIndDocumentApiService Namf_MT EnableUEReachability service Operation
  * @param client openapi.ConsumerClient an abstraction of a connection in the
@@ -82,49 +82,49 @@ UeReachIndDocumentApiService Namf_MT EnableUEReachability service Operation
 */
 
 func EnableUeReachability(client openapi.ConsumerClient, ueContextId string, body models.EnableUeReachabilityReqData) (result models.EnableUeReachabilityRspData, err error) {
-    //create a request
+	//create a request
 	req := openapi.DefaultRequest()
 	req.Method = "POST"
 	req.Path = fmt.Sprintf("%s/%s/%s/ue-reachind", openapi.AMF_MT, openapi.AMF_MT_UE_CONTEXTS, ueContextId)
 
-    //send the request
+	//send the request
 	var resp *openapi.Response
 	if resp, err = client.Send(req); err != nil {
 		return
 	}
 
-    switch resp.StatusCode {
+	switch resp.StatusCode {
 	case 200:
-        resp.Body = &body
-        err = client.DecodeResponse(resp)
+		resp.Body = &body
+		err = client.DecodeResponse(resp)
 	case 307:
-        fallthrough
+		fallthrough
 	case 400:
-        fallthrough
+		fallthrough
 	case 403:
-        fallthrough
+		fallthrough
 	case 404:
-        fallthrough
+		fallthrough
 	case 411:
-        fallthrough
+		fallthrough
 	case 413:
-        fallthrough
+		fallthrough
 	case 415:
-        fallthrough
+		fallthrough
 	case 429:
-        fallthrough
+		fallthrough
 	case 500:
-        fallthrough
+		fallthrough
 	case 503:
-        fallthrough
+		fallthrough
 	case 504:
 		var prob models.ProblemDetails
-        resp.Body = prob
-        if err = client.DecodeResponse(resp); err == nil {
-            err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
-        }
+		resp.Body = prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
+		}
 	default:
-        //NOTE: strange
+		//NOTE: strange
 	}
-    return
+	return
 }

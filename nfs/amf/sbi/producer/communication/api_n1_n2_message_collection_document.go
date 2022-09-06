@@ -34,7 +34,7 @@ func (h *Handler) HTTPN1N2MessageTransfer(c *gin.Context) {
 			Detail: err.Error(),
 			Cause:  "SYSTEM_FAILURE",
 		}
-	//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
+		//	logger.CommLog.Errorf("Get Request Body error: %+v", err)
 		c.JSON(http.StatusInternalServerError, problemDetail)
 		return
 	}
@@ -57,7 +57,7 @@ func (h *Handler) HTTPN1N2MessageTransfer(c *gin.Context) {
 			Status: http.StatusBadRequest,
 			Detail: problemDetail,
 		}
-	//	logger.CommLog.Errorln(problemDetail)
+		//	logger.CommLog.Errorln(problemDetail)
 		c.JSON(http.StatusBadRequest, rsp)
 		return
 	}

@@ -1,31 +1,29 @@
 package httpcallback
 
 import (
-	"strings"
 	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
+	"strings"
 )
 
 const (
-	SERVICE_NAME="/namf-callback/v1"
+	SERVICE_NAME = "/namf-callback/v1"
 )
 
 type Backend interface {
 	HandleSmContextStatusNotify(*httpwrapper.Request) *httpwrapper.Response
 	HandleAmPolicyControlUpdateNotifyUpdate(*httpwrapper.Request) *httpwrapper.Response
 	HandleAmPolicyControlUpdateNotifyTerminate(*httpwrapper.Request) *httpwrapper.Response
-	HandleN1MessageNotify(*httpwrapper.Request) *httpwrapper.Response 
-
+	HandleN1MessageNotify(*httpwrapper.Request) *httpwrapper.Response
 }
 
-
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
 
 func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
-		prod: 	p,
+		prod: p,
 	}
 	service.Routes = httpdp.HttpRoutes{
 		{

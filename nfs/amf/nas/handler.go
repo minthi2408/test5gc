@@ -1069,7 +1069,7 @@ func (gmm *GmmFsm) communicateWithUDM(ue *context.AmfUe, accessType models.Acces
 	return nil
 }
 
-//NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
+// NOTE: tungtq: a infinite loop for searching UDM has been replace by a one time search
 func (gmm *GmmFsm) getSubscribedNssai(ue *context.AmfUe) error {
 	//TODO: tungtq - looks like there a dupplicated UDM selection (free5gc), need further checked
 

@@ -48,24 +48,24 @@ func (msg *Response) MsgType() common.ServiceMsgType {
 }
 
 func (resp *Response) SetBody(code int, body interface{}) {
-    resp.Body = body
-    resp.StatusCode = code
+	resp.Body = body
+	resp.StatusCode = code
 }
 
 func (resp *Response) SetProblem(prob *models.ProblemDetails) {
-    //panic if prob is nil
+	//panic if prob is nil
 
-    resp.StatusCode = int(prob.Status)
-    resp.Status = prob.Detail
-    resp.Body = prob
+	resp.StatusCode = int(prob.Status)
+	resp.Status = prob.Detail
+	resp.Body = prob
 }
 
 func (resp *Response) SetApiError(err *ApiError) {
-    //panic if prob is nil
+	//panic if prob is nil
 
-    resp.StatusCode = int(err.code)
-    resp.Status = err.status
-    resp.Body = err
+	resp.StatusCode = int(err.code)
+	resp.Status = err.status
+	resp.Body = err
 }
 
 // Abstraction of a consumer client
@@ -91,12 +91,12 @@ type ProducerEncoding interface {
 
 type RequestContext interface {
 	DecodeRequest(body interface{}) *models.ProblemDetails //decode the request to get embeded body
-	Param(string) string            // get a parameter from the request (application handler need it)
-    RequestBody() interface{} 
+	Param(string) string                                   // get a parameter from the request (application handler need it)
+	RequestBody() interface{}
 }
 
-//abstraction for application handlers where signaling procedures are
-//implemented
+// abstraction for application handlers where signaling procedures are
+// implemented
 type AppProducerHandler func(RequestContext) *Response
 
 // abstraction for openapi producer handlers where correct expected

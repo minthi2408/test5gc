@@ -1,9 +1,8 @@
 package sbi
 
 import (
-	"net/http"
 	"github.com/gin-gonic/gin"
-
+	"net/http"
 )
 
 // Route is the information for every URI.
@@ -20,7 +19,7 @@ type Route struct {
 
 type Routes []Route
 
-func AddHttpRoutes(engine *gin.Engine, groupname string, routes Routes) *gin.RouterGroup{
+func AddHttpRoutes(engine *gin.Engine, groupname string, routes Routes) *gin.RouterGroup {
 	group := engine.Group(groupname)
 
 	for _, route := range routes {
@@ -42,4 +41,3 @@ func AddHttpRoutes(engine *gin.Engine, groupname string, routes Routes) *gin.Rou
 func IndexHandler(c *gin.Context) {
 	c.String(http.StatusOK, "Hello from Etri5GC!")
 }
-

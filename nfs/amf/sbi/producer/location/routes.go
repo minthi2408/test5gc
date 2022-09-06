@@ -10,13 +10,13 @@
 package location
 
 import (
-	"strings"
 	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
+	"strings"
 )
 
 const (
-	SERVICE_NAME="/namf-loc/v1"
+	SERVICE_NAME = "/namf-loc/v1"
 )
 
 type Backend interface {
@@ -24,12 +24,12 @@ type Backend interface {
 }
 
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
 
 func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
-		prod:	p,
+		prod: p,
 	}
 	service.Routes = httpdp.HttpRoutes{
 		{
@@ -53,6 +53,6 @@ func MakeService(p Backend) (service httpdp.HttpService) {
 			h.HTTPProvidePositioningInfo,
 		},
 	}
-	service.Group =  SERVICE_NAME
+	service.Group = SERVICE_NAME
 	return
-}	
+}

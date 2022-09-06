@@ -11,13 +11,13 @@ package eventexposure
 
 import (
 	//"net/http"
-	"strings"
 	"etri5gc/fabric/httpdp"
 	"github.com/free5gc/util/httpwrapper"
+	"strings"
 )
 
 const (
-	SERVICE_NAME="/namf-evts/v1"
+	SERVICE_NAME = "/namf-evts/v1"
 )
 
 type Backend interface {
@@ -27,12 +27,12 @@ type Backend interface {
 }
 
 type Handler struct {
-	prod	Backend	
+	prod Backend
 }
 
 func MakeService(p Backend) (service httpdp.HttpService) {
 	h := &Handler{
-		prod:	p,
+		prod: p,
 	}
 	service.Routes = httpdp.HttpRoutes{
 		{
