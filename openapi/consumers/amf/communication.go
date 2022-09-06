@@ -482,11 +482,17 @@ func N1N2MessageUnSubscribe(client openapi.ConsumerClient, ueContextId string, s
 	switch resp.StatusCode {
 	case 204:
 	case 400:
+        fallthrough
 	case 411:
+        fallthrough
 	case 413:
+        fallthrough
 	case 415:
+        fallthrough
 	case 429:
+        fallthrough
 	case 500:
+        fallthrough
 	case 503:
 		var prob models.ProblemDetails
 		resp.Body = &prob
@@ -587,130 +593,56 @@ func N1N2MessageTransfer(client openapi.ConsumerClient, ueContextId string, body
 	return
 }
 
+
 func N1MessageNotify(client openapi.ConsumerClient, n1MessageNotificationUrl string, body models.N1MessageNotify) (err error) {
-	/*
-		var (
-			localVarHttpMethod   = strings.ToUpper("Post")
-			localVarPostBody     interface{}
-			localVarFormFileName string
-			localVarFileName     string
-			localVarFileBytes    []byte
-		)
+    //create a request
+	req := openapi.DefaultRequest()
+    //TODO: the callback url should be embeded within the client
+	//localVarPath := n1MessageNotificationUrl
+	req.Method = "POST"
+	req.HeaderParams["Accept"] = "application/problem+json"
 
-		// create path and map variables
-		localVarPath := n1MessageNotificationUrl
-		localVarHeaderParams := make(map[string]string)
-		localVarQueryParams := url.Values{}
-		localVarFormParams := url.Values{}
+    // to determine is multipart request
+	if body.BinaryDataN1Message != nil {
+			req.HeaderParams["Content-Type"] = "multipart/related"
+			req.Body = &body
+	} else {
+        req.HeaderParams["Content-Type"] = "application/json"
+	    req.Body = body.JsonData
+	}
 
-		// to determine is multipart request
-		if request.BinaryDataN1Message != nil {
-			localVarHeaderParams["Content-Type"] = "multipart/related"
-			localVarPostBody = &request
-		} else {
-			localVarHeaderParams["Content-Type"] = "application/json"
-			localVarPostBody = request.JsonData
+
+	//send the request
+	var resp *openapi.Response
+	if resp, err = client.Send(req); err != nil {
+		return
+	}
+
+	switch resp.StatusCode {
+    case 204:
+        //do nothing
+    case 400:
+        fallthrough
+	case 411:
+        fallthrough
+	case 413:
+        fallthrough
+	case 415:
+        fallthrough
+	case 429:
+        fallthrough
+	case 500:
+        fallthrough
+	case 503:
+        var prob *models.ProblemDetails
+        resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
 
-		// to determine the Accept header
-		localVarHttpHeaderAccepts := []string{"application/json", "multipart/related", "application/problem+json"}
-
-		// set Accept header
-		localVarHttpHeaderAccept := openapi.SelectHeaderAccept(localVarHttpHeaderAccepts)
-		if localVarHttpHeaderAccept != "" {
-			localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
-		}
-
-		r, err := openapi.PrepareRequest(ctx, a.client.cfg, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-		if err != nil {
-			return nil, err
-		}
-
-		localVarHttpResponse, err := openapi.CallAPI(a.client.cfg, r)
-		if err != nil || localVarHttpResponse == nil {
-			return localVarHttpResponse, err
-		}
-
-		localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
-		localVarHttpResponse.Body.Close()
-		if err != nil {
-			return localVarHttpResponse, err
-		}
-
-		apiError := openapi.GenericOpenAPIError{
-			RawBody:     localVarBody,
-			ErrorStatus: localVarHttpResponse.Status,
-		}
-		switch localVarHttpResponse.StatusCode {
-		case 204:
-			return localVarHttpResponse, err
-		case 400:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 411:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 413:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 415:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 429:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 500:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 503:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		default:
-			return localVarHttpResponse, openapi.ReportError("%d is not a valid status code in N1MessageNotify", localVarHttpResponse.StatusCode)
-		}
-	*/
+	default:
+		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
+	}
 	return
 }
 
@@ -722,126 +654,46 @@ N1N2MessageTransferStatusNotificationCallbackDocumentApiService Namf_Communicati
  * @param subscriptionId Subscription Identifier
 */
 func N1N2TransferFailureNotification(client openapi.ConsumerClient, n1N2MessageTransferNotificationUrl string, body models.N1N2MsgTxfrFailureNotification) (err error) {
-	/*
-		var (
-			localVarHttpMethod   = strings.ToUpper("Post")
-			localVarPostBody     interface{}
-			localVarFormFileName string
-			localVarFileName     string
-			localVarFileBytes    []byte
-		)
+    //create a request
+	req := openapi.DefaultRequest()
+    //TODO: the callback url should be embeded within the client
+	//localVarPath := n1N2MessageTransferNotificationUrl
+	req.Method = "POST"
+	req.HeaderParams["Accept"] = "application/problem+json"
+	req.Body = &body
 
-		// create path and map variables
-		localVarPath := n1N2MessageTransferNotificationUrl
 
-		localVarHeaderParams := make(map[string]string)
-		localVarQueryParams := url.Values{}
-		localVarFormParams := url.Values{}
+	//send the request
+	var resp *openapi.Response
+	if resp, err = client.Send(req); err != nil {
+		return
+	}
 
-		localVarHttpContentTypes := []string{"application/json"}
-		localVarHeaderParams["Content-Type"] = localVarHttpContentTypes[0] // use the first content type specified in 'consumes'
-
-		// to determine the Accept header
-		localVarHttpHeaderAccepts := []string{"application/problem+json"}
-
-		// set Accept header
-		localVarHttpHeaderAccept := openapi.SelectHeaderAccept(localVarHttpHeaderAccepts)
-		if localVarHttpHeaderAccept != "" {
-			localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	switch resp.StatusCode {
+	case 204:
+        //do nothing
+	case 400:
+        fallthrough
+	case 411:
+        fallthrough
+	case 413:
+        fallthrough
+	case 415:
+        fallthrough
+	case 429:
+        fallthrough
+	case 500:
+        fallthrough
+	case 503:
+        var prob models.ProblemDetails
+        resp.Body = &prob
+		if err = client.DecodeResponse(resp); err == nil {
+			err = openapi.NewApiError(resp.StatusCode, resp.Status, &prob)
 		}
-
-		r, err := openapi.PrepareRequest(ctx, a.client.cfg, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-		if err != nil {
-			return nil, err
-		}
-
-		localVarHttpResponse, err := openapi.CallAPI(a.client.cfg, r)
-		if err != nil || localVarHttpResponse == nil {
-			return localVarHttpResponse, err
-		}
-
-		localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
-		localVarHttpResponse.Body.Close()
-		if err != nil {
-			return localVarHttpResponse, err
-		}
-
-		apiError := openapi.GenericOpenAPIError{
-			RawBody:     localVarBody,
-			ErrorStatus: localVarHttpResponse.Status,
-		}
-		switch localVarHttpResponse.StatusCode {
-		case 204:
-			return localVarHttpResponse, err
-		case 400:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 411:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 413:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 415:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 429:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 500:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		case 503:
-			var v models.ProblemDetails
-			err = openapi.Deserialize(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
-			if err != nil {
-				apiError.ErrorStatus = err.Error()
-				return localVarHttpResponse, apiError
-			}
-			apiError.ErrorModel = v
-			return localVarHttpResponse, apiError
-		default:
-			return localVarHttpResponse, openapi.ReportError("%d is not a valid status code in N1N2TransferFailureNotification", localVarHttpResponse.StatusCode)
-		}
-	*/
+	default:
+		err = fmt.Errorf("invalid status code: %d", resp.StatusCode)
+	}
 	return
-
 }
 
 /*
