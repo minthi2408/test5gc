@@ -6,12 +6,10 @@ import (
 	"etri5gc/openapi/models"
 	amfprod "etri5gc/openapi/producers/amf"
 	"strings"
-
-	openapi_http "etri5gc/openapi/httpdp"
 )
 
 func eventexposureService(p *Producer) (service httpdp.HttpService) {
-	fn := openapi_http.CreateGinHandler
+	fn := ginHandler
 	service.Routes = httpdp.HttpRoutes{
 		{
 			"Index",

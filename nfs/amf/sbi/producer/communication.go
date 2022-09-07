@@ -3,17 +3,14 @@ package producer
 import (
 	"etri5gc/fabric/httpdp"
 	"etri5gc/openapi"
+	"etri5gc/openapi/models"
 	amfprod "etri5gc/openapi/producers/amf"
 	"fmt"
 	"strings"
-
-	//openapi_http "etri5gc/openapi/httpdp"
-	"etri5gc/openapi/models"
 )
 
-
 func communicationService(p *Producer) (service httpdp.HttpService) {
-    fn := ginHandler
+	fn := ginHandler
 	subscriptions := openapi.AMF_COMMUNICATION_SUBSCRIPTIONS
 	uecontexts := openapi.AMF_COMMUNICATION_UE_CONTEXTS
 	nonuen2 := openapi.AMF_COMMUNICATION_NONUE_N2_MESSAGES

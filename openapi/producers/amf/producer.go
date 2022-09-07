@@ -39,11 +39,11 @@ type AmfProducer interface {
 	HandleProvideDomainSelectionInfo(string, string, string) (models.UeContextInfo, *models.ProblemDetails)
 	HandleEnableUeReachability(string, *models.EnableUeReachabilityReqData) (models.EnableUeReachabilityRspData, *models.ProblemDetails)
 
-    //callback
+	//callback
 	HandleN1MessageNotify(*models.N1MessageNotify) *models.ProblemDetails
 	HandleAmPolicyControlUpdateNotifyTerminate(string, *models.TerminationNotification) *models.ProblemDetails
 	HandleAmPolicyControlUpdateNotifyUpdate(string, *models.PolicyUpdate) *models.ProblemDetails
-    HandleSmContextStatusNotify(string, string, *models.SmContextStatusNotification) *models.ProblemDetails
-    //oam
-    HandleRegisteredUEContext(string) ([]byte, *models.ProblemDetails)
+	HandleSmContextStatusNotify(string, string, *models.SmContextStatusNotification) *models.ProblemDetails
+	//oam
+	HandleRegisteredUEContext(string) ([]byte, *models.ProblemDetails)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 func locationService(p *Producer) (service httpdp.HttpService) {
-	fn := ginHandler 
+	fn := ginHandler
 
 	service.Routes = httpdp.HttpRoutes{
 		{

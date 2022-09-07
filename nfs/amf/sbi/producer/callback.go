@@ -1,17 +1,16 @@
 package producer
 
 import (
+	"etri5gc/fabric/httpdp"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
-    "etri5gc/fabric/httpdp"
 	"etri5gc/openapi"
+	"etri5gc/openapi/models"
 	amfprod "etri5gc/openapi/producers/amf"
 	"strings"
 )
 
-
 func callbackService(p *Producer) (service httpdp.HttpService) {
-    fn := ginHandler
+	fn := ginHandler
 	service.Routes = httpdp.HttpRoutes{
 		{
 			"Index",
@@ -48,24 +47,24 @@ func callbackService(p *Producer) (service httpdp.HttpService) {
 			fn(amfprod.N1MessageNotify, p),
 		},
 	}
-	service.Group = openapi.AMF_CALLBACK 
+	service.Group = openapi.AMF_CALLBACK
 	return
 }
 
 func (p *Producer) HandleN1MessageNotify(input *models.N1MessageNotify) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *Producer) HandleAmPolicyControlUpdateNotifyTerminate(polAssoId string, input *models.TerminationNotification) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *Producer) HandleAmPolicyControlUpdateNotifyUpdate(polAssoId string, input *models.PolicyUpdate) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 func (p *Producer) HandleSmContextStatusNotify(guti string, pduSessionId string, input *models.SmContextStatusNotification) (prob *models.ProblemDetails) {
-    return
+	return
 }
 
 //NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
@@ -200,6 +199,7 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 		}
 	*/
 }
+
 /*
 func (h *Producer) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")

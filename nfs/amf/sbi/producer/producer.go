@@ -7,13 +7,13 @@ import (
 	"etri5gc/fabric/common"
 	"etri5gc/openapi/models"
 
+	"etri5gc/openapi"
+	openapi_http "etri5gc/openapi/httpdp"
+	amfprod "etri5gc/openapi/producers/amf"
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"
-	"github.com/sirupsen/logrus"
-	openapi_http "etri5gc/openapi/httpdp"
 	"github.com/gin-gonic/gin"
-	"etri5gc/openapi"
-	amfprod "etri5gc/openapi/producers/amf"
+	"github.com/sirupsen/logrus"
 )
 
 var log *logrus.Entry
@@ -69,7 +69,7 @@ func (prod *Producer) Services() []common.Service {
 	services[2] = eventexposureService(prod)
 	services[3] = locationService(prod)
 	services[4] = mtService(prod)
-	//services[5] = oam.MakeService(prod)
+	services[5] = oamService(prod)
 	return services
 }
 
@@ -79,5 +79,5 @@ func (prod *Producer) amf() *context.AmfContext {
 }
 
 func ginHandler(fn openapi.OpenApiProducerHandler, p amfprod.AmfProducer) gin.HandlerFunc {
-    return openapi_http.CreateGinHandler(fn, p)
+	return openapi_http.CreateGinHandler(fn, p)
 }

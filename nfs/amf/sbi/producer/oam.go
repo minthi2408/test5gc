@@ -3,8 +3,8 @@ package producer
 import (
 	"etri5gc/fabric/httpdp"
 	"etri5gc/openapi"
-	amfprod "etri5gc/openapi/producers/amf"
 	"etri5gc/openapi/models"
+	amfprod "etri5gc/openapi/producers/amf"
 )
 
 func oamService(p *Producer) (service httpdp.HttpService) {
@@ -35,7 +35,6 @@ func oamService(p *Producer) (service httpdp.HttpService) {
 	return
 }
 
-
 func (p *Producer) HandleRegisteredUEContext(supi string) (result []byte, prob *models.ProblemDetails) {
-    return
+	return
 }

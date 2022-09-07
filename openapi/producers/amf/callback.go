@@ -5,13 +5,12 @@ import (
 	"etri5gc/openapi/models"
 )
 
-
 func SmContextStatusNotify(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
 	amfproducer := handler.(AmfProducer)
 	var prob *models.ProblemDetails
 	var input models.SmContextStatusNotification
-    guti := ctx.Param("guti") 
-    pduSessionId := ctx.Param("pduSessionId") 
+	guti := ctx.Param("guti")
+	pduSessionId := ctx.Param("pduSessionId")
 
 	if prob = ctx.DecodeRequest(&input); prob == nil {
 		prob = amfproducer.HandleSmContextStatusNotify(guti, pduSessionId, &input)
@@ -23,14 +22,14 @@ func SmContextStatusNotify(ctx openapi.RequestContext, handler interface{}) (res
 		resp.SetBody(200, nil) //NOTE: need to check the success code
 	}
 
-    return
+	return
 }
 
 func AmPolicyControlUpdateNotifyUpdate(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
 	amfproducer := handler.(AmfProducer)
 	var prob *models.ProblemDetails
 	var input models.PolicyUpdate
-    polAssoId := ctx.Param("polAssoId") 
+	polAssoId := ctx.Param("polAssoId")
 	if prob = ctx.DecodeRequest(&input); prob == nil {
 		prob = amfproducer.HandleAmPolicyControlUpdateNotifyUpdate(polAssoId, &input)
 	}
@@ -40,14 +39,14 @@ func AmPolicyControlUpdateNotifyUpdate(ctx openapi.RequestContext, handler inter
 	} else {
 		resp.SetBody(200, nil) //NOTE: need to check the success code
 	}
-    return
+	return
 }
 
 func AmPolicyControlUpdateNotifyTerminate(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
-    amfproducer := handler.(AmfProducer)
+	amfproducer := handler.(AmfProducer)
 	var prob *models.ProblemDetails
 	var input models.TerminationNotification
-    polAssoId := ctx.Param("polAssoId") 
+	polAssoId := ctx.Param("polAssoId")
 	if prob = ctx.DecodeRequest(&input); prob == nil {
 		prob = amfproducer.HandleAmPolicyControlUpdateNotifyTerminate(polAssoId, &input)
 	}
@@ -58,7 +57,7 @@ func AmPolicyControlUpdateNotifyTerminate(ctx openapi.RequestContext, handler in
 		resp.SetBody(200, nil) //NOTE: need to check the success code
 	}
 
-    return
+	return
 }
 
 func N1MessageNotify(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
@@ -77,5 +76,3 @@ func N1MessageNotify(ctx openapi.RequestContext, handler interface{}) (resp open
 	return
 
 }
-
-

@@ -9,7 +9,7 @@ func RegisteredUEContext(ctx openapi.RequestContext, handler interface{}) (resp 
 	amfproducer := handler.(AmfProducer)
 
 	var prob *models.ProblemDetails
-    var result []byte
+	var result []byte
 	supi := ctx.Param("supi")
 
 	//call the application handler
@@ -21,6 +21,5 @@ func RegisteredUEContext(ctx openapi.RequestContext, handler interface{}) (resp 
 		resp.SetBody(202, result)
 	}
 
-    return
+	return
 }
-
