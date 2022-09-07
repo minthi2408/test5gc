@@ -32,7 +32,7 @@ type IdGenerator interface {
 }
 
 type AmfContext struct {
-	cfg           *config.Config //Amf configuration
+	cfg           *config.AmfConfig //Amf configuration
 	forwarder      fabric.Forwarder
 	uepool        sync.Map //list of Amf-connected Ue
 	ranpool       sync.Map //list of connected Ran
@@ -70,7 +70,7 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 }
 */
 
-func NewAmfContext(cfg *config.Config, fw fabric.Forwarder) *AmfContext {
+func NewAmfContext(cfg *config.AmfConfig, fw fabric.Forwarder) *AmfContext {
 	ret := &AmfContext{
 		cfg:            cfg,
 		tmsiIdGen:      idgenerator.NewGenerator(1, math.MaxInt32),
@@ -86,44 +86,13 @@ func NewAmfContext(cfg *config.Config, fw fabric.Forwarder) *AmfContext {
 
 func (amf *AmfContext) init() {
 	amf.id = uuid.New().String()
-//	amf.buildNfServices()
-	sec := amf.cfg.Configuration.Security
+	sec := amf.cfg.Security
 	if sec != nil {
 		amf.secAlgo.IntegrityOrder = getIntAlgOrder(sec.IntegrityOrder)
 		amf.secAlgo.CipheringOrder = getEncAlgOrder(sec.CipheringOrder)
 	}
 }
-/*
-func (amf *AmfContext) buildNfServices() {
-	version := amf.cfg.Info.Version
-	tv := strings.Split(version, ".")
-	versionUri := "v" + tv[0]
-	for index, nameString := range amf.cfg.Configuration.ServiceNameList {
-		name := models.ServiceName(nameString)
-		amf.services[name] = models.NfService{
-			ServiceInstanceId: strconv.Itoa(index),
-			ServiceName:       name,
-			Versions: &[]models.NfServiceVersion{
-				{
-					ApiFullVersion:  version,
-					ApiVersionInUri: versionUri,
-				},
-			},
-			Scheme:          amf.UriScheme(),
-			NfServiceStatus: models.NfServiceStatus_REGISTERED,
-			ApiPrefix:       amf.GetIPv4Uri(),
-			IpEndPoints: &[]models.IpEndPoint{
-				{
-					Ipv4Address: amf.RegisterIPv4(),
-					Transport:   models.TransportProtocol_TCP,
-					Port:        int32(amf.Port()),
-				},
-			},
-		}
-	}
-}
-*/
-func (amf *AmfContext) GetConfig() *config.Config {
+func (amf *AmfContext) GetConfig() *config.AmfConfig {
 	return amf.cfg
 }
 
@@ -131,28 +100,20 @@ func (amf *AmfContext) CallbackCli() *amfCallback {
 	return amf.callback
 }
 
-func (amf *AmfContext) NrfUri() string {
-	return amf.cfg.Configuration.NrfUri
-}
-
 func (amf *AmfContext) NfId() string {
 	return amf.id
 }
 
 func (amf *AmfContext) Locality() string {
-	return amf.cfg.Configuration.Locality
+	return amf.cfg.Locality
 }
 
 func (amf *AmfContext) SetNfId(id string) {
 	amf.id = id
 }
 
-func (amf *AmfContext) UriScheme() models.UriScheme {
-	return models.UriScheme(amf.cfg.Configuration.Sbi.Scheme)
-}
-
 func (amf *AmfContext) Name() string {
-	return amf.cfg.Configuration.AmfName
+	return amf.cfg.AmfName
 }
 
 func (amf *AmfContext) HttpIPv6Address() string {
@@ -168,7 +129,7 @@ func (amf *AmfContext) SecurityAlgorithm() *SecurityAlgorithm {
 }
 
 func (amf *AmfContext) NetworkName() *config.NetworkName {
-	return &amf.cfg.Configuration.NetworkName
+	return &amf.cfg.NetworkName
 }
 
 func (amf *AmfContext) RelativeCapacity() int64 {
@@ -176,19 +137,19 @@ func (amf *AmfContext) RelativeCapacity() int64 {
 }
 
 func (amf *AmfContext) SupportTaiList() []models.Tai {
-	return amf.cfg.Configuration.SupportTAIList
+	return amf.cfg.TaiList
 }
 
 func (amf *AmfContext) ServedGuamiList() []models.Guami {
-	return amf.cfg.Configuration.ServedGuamiList
+	return amf.cfg.GuamiList
 }
 
-func (amf *AmfContext) PlmnSupportList() []config.PlmnSupportItem {
-	return amf.cfg.Configuration.PlmnSupportList
+func (amf *AmfContext) PlmnSupportList() []config.PlmnItem {
+	return amf.cfg.PlmnSupportList
 }
 
 func (amf *AmfContext) ServedGuami() *models.Guami {
-	return &amf.cfg.Configuration.ServedGuamiList[0]
+	return &amf.cfg.GuamiList[0]
 }
 
 func (amf *AmfContext) LadnPool() map[string]*LADN {
@@ -204,7 +165,7 @@ func (amf *AmfContext) UePool() sync.Map {
 }
 
 func (amf *AmfContext) T3513Cfg() *config.TimerValue {
-	return &amf.cfg.Configuration.T3513
+	return &amf.cfg.T3513
 }
 
 func (amf *AmfContext) AmfRanPool() sync.Map {
@@ -220,11 +181,13 @@ func (amf *AmfContext) TmsiAllocate() int32 {
 }
 
 func (amf *AmfContext) RegisterIPv4() string {
-	return amf.cfg.Configuration.Sbi.RegisterIPv4
+//	return amf.cfg.Configuration.Sbi.RegisterIPv4
+    return ""
 }
 
 func (amf *AmfContext) Port() int {
-	return amf.cfg.Configuration.Sbi.Port
+	//return amf.cfg.Configuration.Sbi.Port
+    return 0
 }
 func (amf *AmfContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
@@ -235,7 +198,7 @@ func (amf *AmfContext) AllocateAmfUeNgapID() (int64, error) {
 }
 
 func (amf *AmfContext) AllocateGutiToUe(ue *AmfUe) {
-	servedGuami := amf.cfg.Configuration.ServedGuamiList[0]
+	servedGuami := amf.cfg.GuamiList[0]
 	ue.Tmsi = amf.TmsiAllocate()
 
 	plmnID := servedGuami.PlmnId.Mcc + servedGuami.PlmnId.Mnc
@@ -251,7 +214,7 @@ func (amf *AmfContext) AllocateRegistrationArea(ue *AmfUe, anType models.AccessT
 
 	// allocate a new tai list as a registration area to ue
 	// TODO: algorithm to choose TAI list
-	for _, supportTai := range amf.cfg.Configuration.SupportTAIList {
+	for _, supportTai := range amf.cfg.TaiList {
 		if reflect.DeepEqual(supportTai, ue.loc.Tai) {
 			ue.RegistrationArea[anType] = append(ue.RegistrationArea[anType], supportTai)
 			break
@@ -455,11 +418,11 @@ func (amf *AmfContext) AmfRanFindByRanID(ranNodeID models.GlobalRanNodeId) (*Amf
 }
 
 func (amf *AmfContext) SupportDnnList() []string {
-	return amf.cfg.Configuration.SupportDnnList
+	return amf.cfg.DnnList
 }
 
 func (amf *AmfContext) InSupportDnnList(targetDnn string) bool {
-	for _, dnn := range amf.cfg.Configuration.SupportDnnList {
+	for _, dnn := range amf.cfg.DnnList {
 		if dnn == targetDnn {
 			return true
 		}
@@ -468,7 +431,7 @@ func (amf *AmfContext) InSupportDnnList(targetDnn string) bool {
 }
 
 func (amf *AmfContext) InPlmnSupportList(snssai models.Snssai) bool {
-	for _, plmnSupportItem := range amf.cfg.Configuration.PlmnSupportList {
+	for _, plmnSupportItem := range amf.cfg.PlmnSupportList {
 		for _, supportSnssai := range plmnSupportItem.SNssaiList {
 			if reflect.DeepEqual(supportSnssai, snssai) {
 				return true
@@ -511,11 +474,14 @@ func (amf *AmfContext) RanUeFindByAmfUeNgapID(amfUeNgapID int64) *RanUe {
 }
 
 func (amf *AmfContext) GetIPv4Uri() string {
-	return amf.cfg.Configuration.Sbi.GetIPv4Uri()
+	//return amf.cfg.Configuration.Sbi.GetIPv4Uri()
+    return ""
 }
 
 // Build AMF profile to register to NRF
 func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
+	profile := models.NfProfile{}
+    /*
 	var err error
 	profile := models.NfProfile{
 		NfInstanceId: amf.id,
@@ -524,16 +490,16 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	}
 
 	var plmns []models.PlmnId
-	for _, plmnItem := range amf.cfg.Configuration.PlmnSupportList {
+	for _, plmnItem := range amf.cfg.PlmnSupportList {
 		plmns = append(plmns, *plmnItem.PlmnId)
 	}
 	if len(plmns) > 0 {
 		profile.PlmnList = &plmns
 		// TODO: change to Per Plmn Support Snssai List
-		profile.SNssais = &amf.cfg.Configuration.PlmnSupportList[0].SNssaiList
+		profile.SNssais = &amf.cfg.PlmnSupportList[0].SNssaiList
 	}
 	amfInfo := models.AmfInfo{}
-	if len(amf.cfg.Configuration.ServedGuamiList) == 0 {
+	if len(amf.cfg.GuamiList) == 0 {
 		err = fmt.Errorf("Gumai List is Empty in AMF")
 		return nil, err
 	}
@@ -544,19 +510,18 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	}
 	amfInfo.AmfRegionId = regionId
 	amfInfo.AmfSetId = setId
-	amfInfo.GuamiList = &amf.cfg.Configuration.ServedGuamiList
-	if len(amf.cfg.Configuration.SupportTAIList) == 0 {
+	amfInfo.GuamiList = &amf.cfg.GuamiList
+	if len(amf.cfg.TaiList) == 0 {
 		err = fmt.Errorf("SupportTaiList is Empty in AMF")
 		return nil, err
 	}
-	amfInfo.TaiList = &amf.cfg.Configuration.SupportTAIList
+	amfInfo.TaiList = &amf.cfg.TaiList
 	profile.AmfInfo = &amfInfo
 	if amf.cfg.Configuration.Sbi.RegisterIPv4 == "" {
 		err = fmt.Errorf("AMF Address is empty")
 		return nil, err
 	}
 	profile.Ipv4Addresses = append(profile.Ipv4Addresses, amf.cfg.Configuration.Sbi.RegisterIPv4)
-    /*
 	services := []models.NfService{}
 	for _, nfService := range amf.services {
 		services = append(services, nfService)
@@ -564,7 +529,6 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	if len(services) > 0 {
 		profile.NfServices = &services
 	}
-    */
 	defaultNotificationSubscription := models.DefaultNotificationSubscription{
 		CallbackUri:      fmt.Sprintf("%s/namf-callback/v1/n1-message-notify", amf.GetIPv4Uri()),
 		NotificationType: models.NotificationType_N1_MESSAGES,
@@ -572,5 +536,6 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	}
 	profile.DefaultNotificationSubscriptions =
 		append(profile.DefaultNotificationSubscriptions, defaultNotificationSubscription)
-	return &profile, err
+        */
+	return &profile, nil
 }

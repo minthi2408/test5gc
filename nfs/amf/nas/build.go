@@ -366,7 +366,7 @@ func (builder *Nas) BuildRegistrationAccept(
 	registrationAccept.RegistrationAcceptMessageIdentity.SetMessageType(libnas.MsgTypeRegistrationAccept)
 
 	// 5gs network feature support
-	cfg := builder.backend.Config().Configuration
+	cfg := builder.backend.Config()
 	if cfg.Get5gsNwFeatSuppEnable() {
 		registrationAccept.NetworkFeatureSupport5GS =
 			nasType.NewNetworkFeatureSupport5GS(nasMessage.RegistrationAcceptNetworkFeatureSupport5GSType)

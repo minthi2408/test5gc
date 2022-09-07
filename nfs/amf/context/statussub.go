@@ -13,7 +13,7 @@ func (amf *AmfContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) 
 	datres models.SubscriptionData, locheader string, prob *models.ProblemDetails) {
 
 	for _, guami := range datreq.GuamiList {
-		for _, servedGumi := range amf.cfg.Configuration.ServedGuamiList {
+		for _, servedGumi := range amf.cfg.GuamiList {
 			if reflect.DeepEqual(guami, servedGumi) {
 				// AMF status is available
 				datres.GuamiList = append(datres.GuamiList, guami)

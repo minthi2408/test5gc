@@ -55,7 +55,7 @@ func main() {
 func action(c *cli.Context) (err error) {
 	log.SetLevel(log.InfoLevel)
 	//read config
-	var cfg *config.Config
+	var cfg *config.AmfConfig
 	filename := c.String("config")
 	if cfg, err = config.LoadConfig(filename); err != nil {
 		log.Errorf("Fail to parse AMF configuration", err)

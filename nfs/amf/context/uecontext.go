@@ -623,8 +623,8 @@ func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext, reqtype *models.Request
 	dat.SNssai = &snssai
 	dat.Dnn = sm.Dnn()
 	dat.ServingNfId = ue.amf.id
-	dat.Guami = &ue.amf.cfg.Configuration.ServedGuamiList[0]
-	dat.ServingNetwork = ue.amf.cfg.Configuration.ServedGuamiList[0].PlmnId
+	dat.Guami = &ue.amf.cfg.GuamiList[0]
+	dat.ServingNetwork = ue.amf.cfg.GuamiList[0].PlmnId
 	if reqtype != nil {
 		dat.RequestType = *reqtype
 	}

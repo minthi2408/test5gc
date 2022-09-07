@@ -7,5 +7,5 @@ import (
 
 type Backend interface {
 	Context() *context.AmfContext
-	Config() *config.Config
+	Config() *config.AmfConfig
 }

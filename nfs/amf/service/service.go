@@ -30,12 +30,12 @@ type AMF struct {
 	producer *producer.Producer  //handling Sbi requests received at the server
 	ngap     *ngap.Server        //ngap server handling Ran connections and ngap messages
 	context  *context.AmfContext // AMF context
-	config   *amf_config.Config  // loaded AMF config
+	config   *amf_config.AmfConfig  // loaded AMF config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
 
-func New(config *amf_config.Config) (nf *AMF, err error) {
+func New(config *amf_config.AmfConfig) (nf *AMF, err error) {
 	nf = &AMF{
 		config: config,
 	}
@@ -70,7 +70,7 @@ func (nf *AMF) Context() *context.AmfContext {
 	return nf.context
 }
 
-func (nf *AMF) Config() *amf_config.Config {
+func (nf *AMF) Config() *amf_config.AmfConfig {
 	return nf.config
 }
 func (nf *AMF) Profile() fabric_common.NfProfile {
@@ -80,7 +80,7 @@ func (nf *AMF) Start() (err error) {
 
 	// start ngap server
 	log.Info("Starting NGAP server")
-	nf.ngap.Run(nf.config.Configuration.NgapIpList, 38412)
+	nf.ngap.Run(nf.config.NgapIpList, 38412)
 
 	if err != nil {
 		nf.ngap.Stop()

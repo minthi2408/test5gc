@@ -53,8 +53,9 @@ func (addr *HttpAddr) Protocol() common.DataPlaneProtocol {
 }
 
 type ServerConfig struct {
-	BindingIPv4 string
-	Port        int
+    HttpAddr
+//	BindingIPv4 string
+//	Port        int
 	//TODO: add tls
 }
 
@@ -84,7 +85,7 @@ func (s *httpServer) register(services []common.Service) (err error) {
 		MaxAge:           86400,
 	}))
 
-	addr := fmt.Sprintf("%s:%d", s.config.BindingIPv4, s.config.Port)
+	addr := fmt.Sprintf("%s:%d", s.config.IPv4, s.config.Port)
 
 	for _, sv := range services {
 		if httpservice, ok := sv.(*HttpService); !ok {

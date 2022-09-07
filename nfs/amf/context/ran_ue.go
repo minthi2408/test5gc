@@ -291,8 +291,8 @@ func (ranUe *RanUe) UpdateLocation(userLocationInformation *ngapType.UserLocatio
 		// N3GPP TAI is operator-specific
 		// TODO: define N3GPP TAI
 		ranUe.location.N3gaLocation.N3gppTai = &models.Tai{
-			PlmnId: amf.cfg.Configuration.SupportTAIList[0].PlmnId,
-			Tac:    amf.cfg.Configuration.SupportTAIList[0].Tac,
+			PlmnId: amf.cfg.TaiList[0].PlmnId,
+			Tac:    amf.cfg.TaiList[0].Tac,
 		}
 		ranUe.tai = deepcopy.Copy(*ranUe.location.N3gaLocation.N3gppTai).(models.Tai)
 
