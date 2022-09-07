@@ -24,4 +24,6 @@ const (
 	AMF_MT_UE_CONTEXTS = "ue-contexts"
 
 	AMF_EVENTEXPOSURE = "/namf-eventexposure/v1"
+
+	AMF_CALLBACK = "/namf-callback/v1"
 )

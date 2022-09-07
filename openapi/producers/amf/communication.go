@@ -29,6 +29,27 @@ func AMFStatusChangeSubscribeModify(ctx openapi.RequestContext, handler interfac
 	return
 }
 
+func AMFStatusChangeSubscribe(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
+	amfproducer := handler.(AmfProducer)
+
+	var input models.SubscriptionData
+	var result models.SubscriptionData
+	var prob *models.ProblemDetails
+
+	//decode the request (and body)
+	if prob = ctx.DecodeRequest(&input); prob == nil {
+		//call the application handler
+		result, _, prob = amfproducer.HandleStatusChangeSubscribe(&input)
+	}
+
+	if prob != nil {
+		resp.SetProblem(prob)
+	} else {
+		resp.SetBody(202, &result)
+	}
+	return
+}
+
 func AMFStatusChangeUnSubscribe(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
 	amfproducer := handler.(AmfProducer)
 	subId := ctx.Param("subscriptionId")
@@ -188,21 +209,18 @@ func N1N2MessageTransfer(ctx openapi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-func N1MessageNotify(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
+func N1N2MessageTransferStatus(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {
 	amfproducer := handler.(AmfProducer)
+	ueContextId := ctx.Param("ueContextId")
+	reqUri := ctx.Param("reqUri") //TODO: check how this param is decoded
 	var prob *models.ProblemDetails
-	var input models.N1MessageNotify
-	if prob = ctx.DecodeRequest(&input); prob == nil {
-		prob = amfproducer.HandleN1MessageNotify(&input)
-	}
-
+	prob = amfproducer.HandleN1N2MessageTransferStatus(ueContextId, reqUri)
 	if prob != nil {
 		resp.SetProblem(prob)
 	} else {
-		resp.SetBody(200, nil) //NOTE: need to check the success code
+		resp.SetBody(200, nil) //TODO: check the success code
 	}
 	return
-
 }
 
 func N1N2TransferFailureNotification(ctx openapi.RequestContext, handler interface{}) (resp openapi.Response) {

@@ -7,6 +7,7 @@ import (
 
 type AmfProducer interface {
 	//communication
+	HandleStatusChangeSubscribe(*models.SubscriptionData) (models.SubscriptionData, string, *models.ProblemDetails)
 	HandleStatusChangeSubscribeModify(string, *models.SubscriptionData) (models.SubscriptionData, *models.ProblemDetails)
 	HandleStatusChangeUnSubscribe(string) *models.ProblemDetails
 	HandleCreateUEContext(string, *models.CreateUeContextRequest) (models.CreateUeContextResponse, *openapi.ApiError, *models.ProblemDetails)
@@ -18,9 +19,9 @@ type AmfProducer interface {
 	HandleUEContextTransfer(string, *models.UeContextTransferRequest) (models.UeContextTransferResponse, *models.ProblemDetails)
 	HandleN1N2MessageUnSubscribe(string, string) *models.ProblemDetails
 	HandleN1N2MessageTransfer(string, *models.N1N2MessageTransferRequest) (models.N1N2MessageTransferRspData, *openapi.ApiError, *models.ProblemDetails)
+	HandleN1N2MessageTransferStatus(string, string) *models.ProblemDetails
 	HandleN1N2MessageSubscribe(string, *models.UeN1N2InfoSubscriptionCreateData) (models.UeN1N2InfoSubscriptionCreatedData, *models.ProblemDetails)
 	HandleN1N2TransferFailureNotification(*models.N1N2MsgTxfrFailureNotification) *models.ProblemDetails
-	HandleN1MessageNotify(*models.N1MessageNotify) *models.ProblemDetails
 	HandleNonUeN2InfoUnSubscribe(string) *models.ProblemDetails
 	HandleNonUeN2MessageTransfer(*models.NonUeN2MessageTransferRequest) (models.N2InformationTransferRspData, *openapi.ApiError, *models.ProblemDetails)
 	HandleNonUeN2InfoSubscribe(*models.NonUeN2InfoSubscriptionCreateData) (models.NonUeN2InfoSubscriptionCreatedData, *models.ProblemDetails)
@@ -37,4 +38,10 @@ type AmfProducer interface {
 	//mt
 	HandleProvideDomainSelectionInfo(string, string, string) (models.UeContextInfo, *models.ProblemDetails)
 	HandleEnableUeReachability(string, *models.EnableUeReachabilityReqData) (models.EnableUeReachabilityRspData, *models.ProblemDetails)
+
+    //callback
+	HandleN1MessageNotify(*models.N1MessageNotify) *models.ProblemDetails
+	HandleAmPolicyControlUpdateNotifyTerminate(string, *models.TerminationNotification) *models.ProblemDetails
+	HandleAmPolicyControlUpdateNotifyUpdate(string, *models.PolicyUpdate) *models.ProblemDetails
+    HandleSmContextStatusNotify(string, string, *models.SmContextStatusNotification) *models.ProblemDetails
 }

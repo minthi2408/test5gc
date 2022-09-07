@@ -58,6 +58,7 @@ func (c *ginContextEx) DecodeRequest(body interface{}) *models.ProblemDetails {
 }
 
 func (c *ginContextEx) writeResponse() {
+	//encode the body of the response into bytes
 	if err := fabricdp.Encoding().EncodeResponse(&c.response); err != nil {
 		//write the poblem in application/json format
 		c.context.JSON(http.StatusInternalServerError, &models.ProblemDetails{
@@ -66,17 +67,22 @@ func (c *ginContextEx) writeResponse() {
 		})
 	} else {
 		//TODO: how to set the Content-Type?
+		//write to the response writer
 		c.context.Data(c.response.StatusCode, "application/json", c.response.BodyBytes)
 	}
 }
 
 // build a service handler for gin
-func BuildProducerRequestHandler(openapiFn openapi.OpenApiProducerHandler, handler interface{}) gin.HandlerFunc {
+// the first parameter is the openapi handler, the second parameter is an
+// NF specific producer implementation.
+func CreateGinHandler(openapiFn openapi.OpenApiProducerHandler, handler interface{}) gin.HandlerFunc {
 	return func(context *gin.Context) {
 
 		ctx := newGinContextEx(context)
-		//call the openapi producer handler to set the request body to decode
+		//call the openapi producer handler to decode request and call
+		//application handler to process the request
 		ctx.response = openapiFn(ctx, handler)
+		//write the response or error to the dataplane
 		ctx.writeResponse()
 	}
 }

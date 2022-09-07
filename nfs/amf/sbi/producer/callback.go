@@ -1,25 +1,76 @@
 package producer
 
 import (
-	"fmt"
-	"net/http"
-	"strconv"
-
-	//	"github.com/mohae/deepcopy"
-
 	"etri5gc/nfs/amf/context"
 	"etri5gc/openapi/models"
-
-	//	"github.com/free5gc/amf/internal/util"
-	//	"github.com/free5gc/nas/nasConvert"
-	//	"github.com/free5gc/nas/nasMessage"
-	"github.com/free5gc/ngap/ngapType"
-	"github.com/free5gc/util/httpwrapper"
+    "etri5gc/fabric/httpdp"
+	"etri5gc/openapi"
+	amfprod "etri5gc/openapi/producers/amf"
+	"strings"
 )
 
-//NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
 
-func (h *Producer) HandleSmContextStatusNotify(request *httpwrapper.Request) *httpwrapper.Response {
+func callbackService(p *Producer) (service httpdp.HttpService) {
+    fn := ginHandler
+	service.Routes = httpdp.HttpRoutes{
+		{
+			"Index",
+			"GET",
+			"/",
+			httpdp.HttpIndexHandler,
+		},
+
+		{
+			"SmContextStatusNotify",
+			strings.ToUpper("Post"),
+			"/smContextStatus/:guti/:pduSessionId",
+			fn(amfprod.SmContextStatusNotify, p),
+		},
+
+		{
+			"AmPolicyControlUpdateNotifyUpdate",
+			strings.ToUpper("Post"),
+			"/am-policy/:polAssoId/update",
+			fn(amfprod.AmPolicyControlUpdateNotifyUpdate, p),
+		},
+
+		{
+			"AmPolicyControlUpdateNotifyTerminate",
+			strings.ToUpper("Post"),
+			"/am-policy/:polAssoId/terminate",
+			fn(amfprod.AmPolicyControlUpdateNotifyTerminate, p),
+		},
+
+		{
+			"N1MessageNotify",
+			strings.ToUpper("Post"),
+			"/n1-message-notify",
+			fn(amfprod.N1MessageNotify, p),
+		},
+	}
+	service.Group = openapi.AMF_CALLBACK 
+	return
+}
+
+func (p *Producer) HandleN1MessageNotify(input *models.N1MessageNotify) (prob *models.ProblemDetails) {
+    return
+}
+
+func (p *Producer) HandleAmPolicyControlUpdateNotifyTerminate(polAssoId string, input *models.TerminationNotification) (prob *models.ProblemDetails) {
+    return
+}
+
+func (p *Producer) HandleAmPolicyControlUpdateNotifyUpdate(polAssoId string, input *models.PolicyUpdate) (prob *models.ProblemDetails) {
+    return
+}
+
+func (p *Producer) HandleSmContextStatusNotify(guti string, pduSessionId string, input *models.SmContextStatusNotification) (prob *models.ProblemDetails) {
+    return
+}
+
+//NOTE: tungtq: some parts which relate to ngap and nas has been commented out, need more time
+/*
+func (h *Producer) HandleSmContextStatusNotify1(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("[AMF] Handle SmContext Status Notify")
 
 	guti := request.Params["guti"]
@@ -73,7 +124,7 @@ func (h *Producer) doSmContextStatusNotify(guti string, pduId int32, notificatio
 	}
 	return nil
 }
-
+*/
 func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 	/*
 			TungTQ : I do not understand this procedure yet, need more time
@@ -149,7 +200,7 @@ func ResumePduSession(ue *context.AmfUe, sm *context.SmContext) {
 		}
 	*/
 }
-
+/*
 func (h *Producer) HandleAmPolicyControlUpdateNotifyUpdate(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("Handle AM Policy Control Update Notify [Policy update notification]")
 
@@ -262,8 +313,9 @@ func (h *Producer) doAmPolicyControlUpdateNotifyTerminate(polAssoID string,
 	}()
 	return nil
 }
-
+*/
 // TS 23.502 4.2.2.2.3 Registration with AMF re-allocation
+/*
 func (h *Producer) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Infoln("[AMF] Handle N1 Message Notify")
 
@@ -275,7 +327,8 @@ func (h *Producer) HandleN1MessageNotify(request *httpwrapper.Request) *httpwrap
 		return httpwrapper.NewResponse(http.StatusNoContent, nil, nil)
 	}
 }
-
+*/
+/*
 func (h *Producer) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *models.ProblemDetails {
 	log.Debugf("n1MessageNotify: %+v", n1MessageNotify)
 
@@ -329,3 +382,4 @@ func (h *Producer) doN1MessageNotify(n1MessageNotify models.N1MessageNotify) *mo
 	}()
 	return nil
 }
+*/
