@@ -10,6 +10,7 @@ const (
 	REGISTRY_CENTRALIZED
 	REGISTRY_DISTRIBUTED
 )
+
 /*
 type RegistryRecord struct {
     Addr    HttpAddr
@@ -34,8 +35,8 @@ type HttpAddr struct {
 
 // Registry configuration
 type Config struct {
-	RegType int                   //static, centralized, or distributed
-	Addr    *HttpAddr             //address of the server (centralized registry)  or address of the controller (distributed registry)
+	RegType int                //static, centralized, or distributed
+	Addr    *HttpAddr          //address of the server (centralized registry)  or address of the controller (distributed registry)
 	Others  []common.NfProfile // for static registry
 }
 

@@ -8,7 +8,7 @@ import (
 type Application interface {
 	AgentConfig() *config.AgentConfig
 	Services() []common.Service
-    Profile()   common.NfProfile
+	Profile() common.NfProfile
 }
 
 // a service abstraction to expose service requesting to upper layers

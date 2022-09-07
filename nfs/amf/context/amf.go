@@ -33,7 +33,7 @@ type IdGenerator interface {
 
 type AmfContext struct {
 	cfg           *config.AmfConfig //Amf configuration
-	forwarder      fabric.Forwarder
+	forwarder     fabric.Forwarder
 	uepool        sync.Map //list of Amf-connected Ue
 	ranpool       sync.Map //list of connected Ran
 	ruepool       sync.Map //list of contacted Ue
@@ -47,8 +47,8 @@ type AmfContext struct {
 	tmsiIdGen      IdGenerator
 	ngapIdGen      IdGenerator
 
-	relcap   int64                                   //Relative Capacity
-	id       string                                  //nf identity
+	relcap int64  //Relative Capacity
+	id     string //nf identity
 	//services map[models.ServiceName]models.NfService // nfservice that amf support
 
 	httpIPv6Address string
@@ -181,13 +181,13 @@ func (amf *AmfContext) TmsiAllocate() int32 {
 }
 
 func (amf *AmfContext) RegisterIPv4() string {
-//	return amf.cfg.Configuration.Sbi.RegisterIPv4
-    return ""
+	//	return amf.cfg.Configuration.Sbi.RegisterIPv4
+	return ""
 }
 
 func (amf *AmfContext) Port() int {
 	//return amf.cfg.Configuration.Sbi.Port
-    return 0
+	return 0
 }
 func (amf *AmfContext) FreeTmsi(tmsi int64) {
 	amf.tmsiIdGen.FreeID(tmsi)
@@ -475,67 +475,67 @@ func (amf *AmfContext) RanUeFindByAmfUeNgapID(amfUeNgapID int64) *RanUe {
 
 func (amf *AmfContext) GetIPv4Uri() string {
 	//return amf.cfg.Configuration.Sbi.GetIPv4Uri()
-    return ""
+	return ""
 }
 
 // Build AMF profile to register to NRF
 func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	profile := models.NfProfile{}
-    /*
-	var err error
-	profile := models.NfProfile{
-		NfInstanceId: amf.id,
-		NfType:       models.NfType_AMF,
-		NfStatus:     models.NfStatus_REGISTERED,
-	}
+	/*
+		var err error
+		profile := models.NfProfile{
+			NfInstanceId: amf.id,
+			NfType:       models.NfType_AMF,
+			NfStatus:     models.NfStatus_REGISTERED,
+		}
 
-	var plmns []models.PlmnId
-	for _, plmnItem := range amf.cfg.PlmnSupportList {
-		plmns = append(plmns, *plmnItem.PlmnId)
-	}
-	if len(plmns) > 0 {
-		profile.PlmnList = &plmns
-		// TODO: change to Per Plmn Support Snssai List
-		profile.SNssais = &amf.cfg.PlmnSupportList[0].SNssaiList
-	}
-	amfInfo := models.AmfInfo{}
-	if len(amf.cfg.GuamiList) == 0 {
-		err = fmt.Errorf("Gumai List is Empty in AMF")
-		return nil, err
-	}
-	regionId, setId, _, err1 := SeperateAmfId(amf.ServedGuami().AmfId)
-	if err1 != nil {
-		err = err1
-		return nil, err
-	}
-	amfInfo.AmfRegionId = regionId
-	amfInfo.AmfSetId = setId
-	amfInfo.GuamiList = &amf.cfg.GuamiList
-	if len(amf.cfg.TaiList) == 0 {
-		err = fmt.Errorf("SupportTaiList is Empty in AMF")
-		return nil, err
-	}
-	amfInfo.TaiList = &amf.cfg.TaiList
-	profile.AmfInfo = &amfInfo
-	if amf.cfg.Configuration.Sbi.RegisterIPv4 == "" {
-		err = fmt.Errorf("AMF Address is empty")
-		return nil, err
-	}
-	profile.Ipv4Addresses = append(profile.Ipv4Addresses, amf.cfg.Configuration.Sbi.RegisterIPv4)
-	services := []models.NfService{}
-	for _, nfService := range amf.services {
-		services = append(services, nfService)
-	}
-	if len(services) > 0 {
-		profile.NfServices = &services
-	}
-	defaultNotificationSubscription := models.DefaultNotificationSubscription{
-		CallbackUri:      fmt.Sprintf("%s/namf-callback/v1/n1-message-notify", amf.GetIPv4Uri()),
-		NotificationType: models.NotificationType_N1_MESSAGES,
-		N1MessageClass:   models.N1MessageClass__5_GMM,
-	}
-	profile.DefaultNotificationSubscriptions =
-		append(profile.DefaultNotificationSubscriptions, defaultNotificationSubscription)
-        */
+		var plmns []models.PlmnId
+		for _, plmnItem := range amf.cfg.PlmnSupportList {
+			plmns = append(plmns, *plmnItem.PlmnId)
+		}
+		if len(plmns) > 0 {
+			profile.PlmnList = &plmns
+			// TODO: change to Per Plmn Support Snssai List
+			profile.SNssais = &amf.cfg.PlmnSupportList[0].SNssaiList
+		}
+		amfInfo := models.AmfInfo{}
+		if len(amf.cfg.GuamiList) == 0 {
+			err = fmt.Errorf("Gumai List is Empty in AMF")
+			return nil, err
+		}
+		regionId, setId, _, err1 := SeperateAmfId(amf.ServedGuami().AmfId)
+		if err1 != nil {
+			err = err1
+			return nil, err
+		}
+		amfInfo.AmfRegionId = regionId
+		amfInfo.AmfSetId = setId
+		amfInfo.GuamiList = &amf.cfg.GuamiList
+		if len(amf.cfg.TaiList) == 0 {
+			err = fmt.Errorf("SupportTaiList is Empty in AMF")
+			return nil, err
+		}
+		amfInfo.TaiList = &amf.cfg.TaiList
+		profile.AmfInfo = &amfInfo
+		if amf.cfg.Configuration.Sbi.RegisterIPv4 == "" {
+			err = fmt.Errorf("AMF Address is empty")
+			return nil, err
+		}
+		profile.Ipv4Addresses = append(profile.Ipv4Addresses, amf.cfg.Configuration.Sbi.RegisterIPv4)
+		services := []models.NfService{}
+		for _, nfService := range amf.services {
+			services = append(services, nfService)
+		}
+		if len(services) > 0 {
+			profile.NfServices = &services
+		}
+		defaultNotificationSubscription := models.DefaultNotificationSubscription{
+			CallbackUri:      fmt.Sprintf("%s/namf-callback/v1/n1-message-notify", amf.GetIPv4Uri()),
+			NotificationType: models.NotificationType_N1_MESSAGES,
+			N1MessageClass:   models.N1MessageClass__5_GMM,
+		}
+		profile.DefaultNotificationSubscriptions =
+			append(profile.DefaultNotificationSubscriptions, defaultNotificationSubscription)
+	*/
 	return &profile, nil
 }

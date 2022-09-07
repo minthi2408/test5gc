@@ -27,10 +27,10 @@ func init() {
 }
 
 type AMF struct {
-	producer *producer.Producer  //handling Sbi requests received at the server
-	ngap     *ngap.Server        //ngap server handling Ran connections and ngap messages
-	context  *context.AmfContext // AMF context
-	config   *amf_config.AmfConfig  // loaded AMF config
+	producer *producer.Producer    //handling Sbi requests received at the server
+	ngap     *ngap.Server          //ngap server handling Ran connections and ngap messages
+	context  *context.AmfContext   // AMF context
+	config   *amf_config.AmfConfig // loaded AMF config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
@@ -74,7 +74,7 @@ func (nf *AMF) Config() *amf_config.AmfConfig {
 	return nf.config
 }
 func (nf *AMF) Profile() fabric_common.NfProfile {
-    return nil
+	return nil
 }
 func (nf *AMF) Start() (err error) {
 

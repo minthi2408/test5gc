@@ -53,7 +53,7 @@ type Service interface {
 type NfProfile interface {
 	NfType() NetworkFunctionType
 	Addr() AgentAddr //dataplane transport address
-	Load() int //workload - for load balancer to make comparisons
+	Load() int       //workload - for load balancer to make comparisons
 }
 
 // any service that runs within an agents; for easy initiation and clean

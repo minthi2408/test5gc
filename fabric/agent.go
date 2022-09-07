@@ -66,7 +66,7 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 
 func NewAgent(nf Application) (ServiceAgent, error) {
 	config := nf.AgentConfig()
-    profile := nf.Profile()
+	profile := nf.Profile()
 	agent := &serviceAgent{
 		config:   config,
 		registry: registrydb.NewRegistry(profile, &config.RegistryConfig),

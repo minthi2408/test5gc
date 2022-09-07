@@ -4,13 +4,13 @@ import "etri5gc/fabric/common"
 
 // centralized registry
 type centralizedRegistryClient struct {
-    profile common.NfProfile
+	profile common.NfProfile
 	server  *HttpAddr
 }
 
 func newCentralizedRegistry(profile common.NfProfile, server *HttpAddr) *centralizedRegistryClient {
 	ret := &centralizedRegistryClient{
-        profile:   profile,
+		profile: profile,
 		server:  server,
 	}
 	return ret

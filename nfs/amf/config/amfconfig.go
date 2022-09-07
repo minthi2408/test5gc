@@ -1,11 +1,11 @@
 package config
 
 import (
-    "strconv"
-    "fmt"
-    "io/ioutil"
 	fabric_config "etri5gc/fabric/config"
 	"etri5gc/openapi/models"
+	"fmt"
+	"io/ioutil"
+	"strconv"
 	"time"
 )
 
@@ -31,7 +31,6 @@ type PlmnSupportItem struct {
 	SNssaiList []models.Snssai `yaml:"snssaiList,omitempty" valid:"required"`
 }
 
-
 type AmfConfig struct {
 	Agent *fabric_config.AgentConfig
 
@@ -39,7 +38,7 @@ type AmfConfig struct {
 	NgapIpList []string //should be list of IP address
 
 	//should go to context?
-	GuamiList      []models.Guami
+	GuamiList       []models.Guami
 	TaiList         []models.Tai
 	PlmnSupportList []PlmnItem
 	DnnList         []string
@@ -57,8 +56,8 @@ type AmfConfig struct {
 	T3560                           TimerValue
 	T3565                           TimerValue
 	T3570                           TimerValue
-	
-    NetworkFeatureSupport5GS        *NetworkFeatureSupport5GS
+
+	NetworkFeatureSupport5GS *NetworkFeatureSupport5GS
 }
 
 type PlmnItem struct {
@@ -83,21 +82,20 @@ func LoadConfig(f string) (*AmfConfig, error) {
 	} else {
 
 		var amfconf AmfConfig
-        amfconf.AmfName="amf"
-        /*
-		if err := yaml.Unmarshal(content, &amfconf); err != nil {
-			return nil, err
-		}
-		if err := amfconf.setDefaults(); err != nil {
-			return nil, err
-		} else {
-			return &amfconf, nil
-		}
-        */
-        return &amfconf, nil
+		amfconf.AmfName = "amf"
+		/*
+			if err := yaml.Unmarshal(content, &amfconf); err != nil {
+				return nil, err
+			}
+			if err := amfconf.setDefaults(); err != nil {
+				return nil, err
+			} else {
+				return &amfconf, nil
+			}
+		*/
+		return &amfconf, nil
 	}
 }
-
 
 func (c *AmfConfig) Get5gsNwFeatSuppEnable() bool {
 	if c.NetworkFeatureSupport5GS != nil {
@@ -154,7 +152,6 @@ func (c *AmfConfig) Get5gsNwFeatSuppMcsi() uint8 {
 	}
 	return 0
 }
-
 
 func convertTACConfigToModels(intString string) (string, error) {
 	if tmp, err := strconv.ParseUint(intString, 10, 32); err != nil {

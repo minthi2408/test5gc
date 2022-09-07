@@ -53,10 +53,11 @@ func (addr *HttpAddr) Protocol() common.DataPlaneProtocol {
 }
 
 type ServerConfig struct {
-    HttpAddr
-//	BindingIPv4 string
-//	Port        int
-	//TODO: add tls
+	HttpAddr
+	//	BindingIPv4 string
+	//	Port        int
+	//
+	// TODO: add tls
 }
 
 func NewHttpServer(config *ServerConfig, services []common.Service) (*httpServer, error) {
