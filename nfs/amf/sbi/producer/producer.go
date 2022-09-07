@@ -64,10 +64,8 @@ func New(b Backend, ngap NgapSender, nas NasInf) *Producer {
 // agent)
 func (prod *Producer) Services() []common.Service {
 	services := make([]common.Service, 6, 6)
-	//services[0] = httpcallback.MakeService(prod)
 	services[0] = callbackService(prod)
 	services[1] = communicationService(prod)
-	//services[1] = communication.MakeService(prod)
 	services[2] = eventexposureService(prod)
 	services[3] = locationService(prod)
 	services[4] = mtService(prod)

@@ -26,4 +26,6 @@ const (
 	AMF_EVENTEXPOSURE = "/namf-eventexposure/v1"
 
 	AMF_CALLBACK = "/namf-callback/v1"
+
+	AMF_OAM = "/namf-oam/v1"
 )

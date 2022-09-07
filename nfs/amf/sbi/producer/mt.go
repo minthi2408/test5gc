@@ -8,12 +8,10 @@ import (
 	"strings"
 
 	"etri5gc/openapi/models"
-	"github.com/free5gc/util/httpwrapper"
-	"net/http"
 )
 
 func mtService(p *Producer) (service httpdp.HttpService) {
-	fn := ginHandler 
+	fn := ginHandler
 	uecontexts := openapi.AMF_MT_UE_CONTEXTS
 	service.Routes = httpdp.HttpRoutes{
 		{
@@ -50,7 +48,7 @@ func (p *Producer) HandleEnableUeReachability(ueContextId string, input *models.
 }
 
 //Old
-
+/*
 func (h *Producer) HandleProvideDomainSelectionInfoRequest(request *httpwrapper.Request) *httpwrapper.Response {
 	log.Info("Handle Provide Domain Selection Info Request")
 
@@ -79,3 +77,4 @@ func (h *Producer) doProvideDomainSelectionInfo(ueContextID string, infoClassQue
 		return ue.GetContextInfo(infoClassQuery, supportedFeaturesQuery), nil
 	}
 }
+*/

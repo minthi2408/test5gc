@@ -44,4 +44,6 @@ type AmfProducer interface {
 	HandleAmPolicyControlUpdateNotifyTerminate(string, *models.TerminationNotification) *models.ProblemDetails
 	HandleAmPolicyControlUpdateNotifyUpdate(string, *models.PolicyUpdate) *models.ProblemDetails
     HandleSmContextStatusNotify(string, string, *models.SmContextStatusNotification) *models.ProblemDetails
+    //oam
+    HandleRegisteredUEContext(string) ([]byte, *models.ProblemDetails)
 }
