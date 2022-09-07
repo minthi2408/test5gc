@@ -6,11 +6,11 @@ import "etri5gc/fabric/common"
 //list of profiles are loaded from a config file
 
 type staticRegistry struct {
-	profile common.AgentProfile
-	others  []common.AgentProfile
+	profile common.NfProfile
+	others  []common.NfProfile
 }
 
-func newStaticRegistry(profile common.AgentProfile, others []common.AgentProfile) *staticRegistry {
+func newStaticRegistry(profile common.NfProfile, others []common.NfProfile) *staticRegistry {
 	ret := &staticRegistry{
 		profile: profile,
 		others:  others,
@@ -18,11 +18,11 @@ func newStaticRegistry(profile common.AgentProfile, others []common.AgentProfile
 	return ret
 }
 
-func (r *staticRegistry) Search(query common.NfQuery) []common.AgentProfile {
+func (r *staticRegistry) Search(query common.NfQuery) []common.NfProfile {
 	return nil
 }
 
-func (r *staticRegistry) Drop(agent common.AgentProfile) {
+func (r *staticRegistry) Drop(agent common.NfProfile) {
 }
 
 func (r *staticRegistry) Start() error {

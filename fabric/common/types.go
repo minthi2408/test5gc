@@ -50,9 +50,9 @@ type Service interface {
 	Name() string //just a signature method, no use
 }
 
-type AgentProfile interface {
+type NfProfile interface {
 	NfType() NetworkFunctionType
-	Addr() AgentAddr
+	Addr() AgentAddr //dataplane transport address
 	Load() int //workload - for load balancer to make comparisons
 }
 

@@ -4,23 +4,23 @@ import "etri5gc/fabric/common"
 
 // centralized registry
 type centralizedRegistryClient struct {
-	profile common.AgentProfile
+    profile common.NfProfile
 	server  *HttpAddr
 }
 
-func newCentralizedRegistry(profile common.AgentProfile, server *HttpAddr) *centralizedRegistryClient {
+func newCentralizedRegistry(profile common.NfProfile, server *HttpAddr) *centralizedRegistryClient {
 	ret := &centralizedRegistryClient{
-		profile: profile,
+        profile:   profile,
 		server:  server,
 	}
 	return ret
 }
 
-func (r *centralizedRegistryClient) Search(query common.NfQuery) []common.AgentProfile {
+func (r *centralizedRegistryClient) Search(query common.NfQuery) []common.NfProfile {
 	return nil
 }
 
-func (r *centralizedRegistryClient) Drop(agent common.AgentProfile) {
+func (r *centralizedRegistryClient) Drop(agent common.NfProfile) {
 }
 
 func (r *centralizedRegistryClient) Start() error {

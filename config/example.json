@@ -1,0 +1,33 @@
+{
+    agent: {
+        nftype: "amf",
+        context: {
+           PLMN:   "test1",
+           Region:  "Daejeon, Seoul"
+           DNN:    "internet",
+           AppName:    "etri/messager"
+        },
+        queries: [
+            {
+                nftype: "smf",
+                context: {
+                }
+            },
+            {
+                nftype: "ausf",
+                context: {
+                }
+            }
+        ],
+        dataplane: {
+            proto: "http",
+            addr: {
+                ip: "192.168.0.1",
+                port: 8081
+            }
+        }
+    }
+    timer1: 100,
+    timer2: 100,
+}
+

@@ -13,7 +13,7 @@ const (
 )
 
 type LoadBalancer interface {
-	Select([]common.AgentProfile) common.AgentProfile
+	Select([]common.NfProfile) common.NfProfile
 }
 
 type forwarderImpl struct {
@@ -45,7 +45,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 	//worker -> do it later
 	for {
 		//1. discover agents
-		var profiles []common.AgentProfile
+		var profiles []common.NfProfile
 		if profiles = fw.reg.Search(query); len(profiles) == 0 {
 			err = errors.New("Out of hope, no agent reply; can't send the request")
 			return

@@ -5,11 +5,11 @@ import "etri5gc/fabric/common"
 ///distributed registry
 
 type distributedRegistry struct {
-	profile common.AgentProfile
+	profile common.NfProfile
 	broker  *HttpAddr
 }
 
-func newDistributedRegistry(profile common.AgentProfile, broker *HttpAddr) *distributedRegistry {
+func newDistributedRegistry(profile common.NfProfile, broker *HttpAddr) *distributedRegistry {
 	ret := &distributedRegistry{
 		profile: profile,
 		broker:  broker,
@@ -17,11 +17,11 @@ func newDistributedRegistry(profile common.AgentProfile, broker *HttpAddr) *dist
 	return ret
 }
 
-func (r *distributedRegistry) Search(query common.NfQuery) []common.AgentProfile {
+func (r *distributedRegistry) Search(query common.NfQuery) []common.NfProfile {
 	return nil
 }
 
-func (r *distributedRegistry) Drop(agent common.AgentProfile) {
+func (r *distributedRegistry) Drop(agent common.NfProfile) {
 }
 
 func (r *distributedRegistry) Start() error {

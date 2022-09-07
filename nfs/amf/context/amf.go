@@ -33,7 +33,7 @@ type IdGenerator interface {
 
 type AmfContext struct {
 	cfg           *config.Config //Amf configuration
-	fowarder      fabric.Forwarder
+	forwarder      fabric.Forwarder
 	uepool        sync.Map //list of Amf-connected Ue
 	ranpool       sync.Map //list of connected Ran
 	ruepool       sync.Map //list of contacted Ue
@@ -49,7 +49,7 @@ type AmfContext struct {
 
 	relcap   int64                                   //Relative Capacity
 	id       string                                  //nf identity
-	services map[models.ServiceName]models.NfService // nfservice that amf support
+	//services map[models.ServiceName]models.NfService // nfservice that amf support
 
 	httpIPv6Address string
 	tnlWeightFactor int64
@@ -78,7 +78,7 @@ func NewAmfContext(cfg *config.Config, fw fabric.Forwarder) *AmfContext {
 		statussubIdGen: idgenerator.NewGenerator(1, math.MaxInt32),
 		ngapIdGen:      idgenerator.NewGenerator(1, MaxValueOfAmfUeNgapId),
 		ladnpool:       make(map[string]*LADN),
-		services:       make(map[models.ServiceName]models.NfService),
+		//services:       make(map[models.ServiceName]models.NfService),
 	}
 	ret.init()
 	return ret
@@ -86,14 +86,14 @@ func NewAmfContext(cfg *config.Config, fw fabric.Forwarder) *AmfContext {
 
 func (amf *AmfContext) init() {
 	amf.id = uuid.New().String()
-	amf.buildNfServices()
+//	amf.buildNfServices()
 	sec := amf.cfg.Configuration.Security
 	if sec != nil {
 		amf.secAlgo.IntegrityOrder = getIntAlgOrder(sec.IntegrityOrder)
 		amf.secAlgo.CipheringOrder = getEncAlgOrder(sec.CipheringOrder)
 	}
 }
-
+/*
 func (amf *AmfContext) buildNfServices() {
 	version := amf.cfg.Info.Version
 	tv := strings.Split(version, ".")
@@ -122,7 +122,7 @@ func (amf *AmfContext) buildNfServices() {
 		}
 	}
 }
-
+*/
 func (amf *AmfContext) GetConfig() *config.Config {
 	return amf.cfg
 }
@@ -556,6 +556,7 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 		return nil, err
 	}
 	profile.Ipv4Addresses = append(profile.Ipv4Addresses, amf.cfg.Configuration.Sbi.RegisterIPv4)
+    /*
 	services := []models.NfService{}
 	for _, nfService := range amf.services {
 		services = append(services, nfService)
@@ -563,7 +564,7 @@ func (amf *AmfContext) BuildProfile() (*models.NfProfile, error) {
 	if len(services) > 0 {
 		profile.NfServices = &services
 	}
-
+    */
 	defaultNotificationSubscription := models.DefaultNotificationSubscription{
 		CallbackUri:      fmt.Sprintf("%s/namf-callback/v1/n1-message-notify", amf.GetIPv4Uri()),
 		NotificationType: models.NotificationType_N1_MESSAGES,

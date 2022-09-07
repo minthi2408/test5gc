@@ -8,8 +8,10 @@ import (
 
 // configuration parameters for an agent
 type AgentConfig struct {
+    NfType          common.NetworkFunctionType
 	DProto           common.DataPlaneProtocol //dataplane protocol
 	HttpServerConfig *httpdp.ServerConfig     //http-based service server configuration
-	Profile          common.AgentProfile
 	RegistryConfig   registrydb.Config // registry configuration
+    Context         common.NfContext
+    Queries         []common.NfQuery
 }

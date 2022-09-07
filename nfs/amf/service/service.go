@@ -73,7 +73,9 @@ func (nf *AMF) Context() *context.AmfContext {
 func (nf *AMF) Config() *amf_config.Config {
 	return nf.config
 }
-
+func (nf *AMF) Profile() fabric_common.NfProfile {
+    return nil
+}
 func (nf *AMF) Start() (err error) {
 
 	// start ngap server

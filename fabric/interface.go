@@ -8,6 +8,7 @@ import (
 type Application interface {
 	AgentConfig() *config.AgentConfig
 	Services() []common.Service
+    Profile()   common.NfProfile
 }
 
 // a service abstraction to expose service requesting to upper layers
@@ -39,5 +40,5 @@ type ServiceAgent interface {
 // Selector
 // selector do the load balancing on the list of agent profiles
 type LoadBalancer interface {
-	Select([]common.AgentProfile) common.AgentProfile
+	Select([]common.NfProfile) common.NfProfile
 }

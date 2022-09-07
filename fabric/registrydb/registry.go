@@ -10,15 +10,21 @@ const (
 	REGISTRY_CENTRALIZED
 	REGISTRY_DISTRIBUTED
 )
+/*
+type RegistryRecord struct {
+    Addr    HttpAddr
+    Profile common.NfProfile
+}
+*/
 
 // abstraction of a service registry
 type AgentRegistry interface {
 	common.InternalService
 	//search agents which match a query
-	Search(common.NfQuery) []common.AgentProfile
+	Search(common.NfQuery) []common.NfProfile
 
 	//drop a dead agent
-	Drop(common.AgentProfile)
+	Drop(common.NfProfile)
 }
 
 type HttpAddr struct {
@@ -30,11 +36,11 @@ type HttpAddr struct {
 type Config struct {
 	RegType int                   //static, centralized, or distributed
 	Addr    *HttpAddr             //address of the server (centralized registry)  or address of the controller (distributed registry)
-	Others  []common.AgentProfile // for static registry
+	Others  []common.NfProfile // for static registry
 }
 
 // factory method to create a registry
-func NewRegistry(profile common.AgentProfile, config *Config) AgentRegistry {
+func NewRegistry(profile common.NfProfile, config *Config) AgentRegistry {
 	switch config.RegType {
 	case REGISTRY_STATIC:
 		return newStaticRegistry(profile, config.Others)
