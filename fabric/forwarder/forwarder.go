@@ -24,7 +24,7 @@ type forwarderImpl struct {
 	//for creating a connection to a selected remote agent
 	conman conman.ConnectionManager
 	//protocol-sepecific implementation of service client
-	sender conman.RemoteConnection
+//	sender conman.RemoteConnection
 }
 
 func New(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.ConnectionManager) *forwarderImpl {
@@ -41,6 +41,7 @@ func New(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.Connection
 func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.NfQuery) (
 	response common.Response, addr common.AgentAddr, err error) {
 
+    var sender conman.RemoteConnection
 	//TODO: add request timeout (requesting should be non-blocking -> need a
 	//worker -> do it later
 	for {
@@ -56,7 +57,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 		addr = agent.Addr()
 
 		//3. get a connection to the selected one
-		if fw.sender, err = fw.conman.Connect(addr); err != nil {
+		if sender, err = fw.conman.Connect(addr); err != nil {
 			// something serious happens, just stop
 			fw.reg.Drop(agent)
 			return
@@ -64,7 +65,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 
 		//3. send a request
 		for i := 0; i < FORWARDER_MAX_NUM_TRIES; i++ {
-			if response, err = fw.sender.Send(request); err == nil {
+			if response, err = sender.Send(request); err == nil {
 				//done requesting the service, just exit
 				return
 			}
@@ -80,16 +81,11 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 func (fw *forwarderImpl) DirectSend(req common.Request, addr common.AgentAddr) (
 	common.Response, error) {
 
-	// NOTE: addr might have been returned to the caller in a previous call, so
-	// make sure we can reuse the same client
-	if fw.sender != nil && addr == fw.sender.Addr() {
-		return fw.sender.Send(req)
+	// NOTE: conman should return an existing sender (if available) 
+	if sender, err := fw.conman.Connect(addr); err != nil {
+		return nil, err
 	} else {
-		if sender, err := fw.conman.Connect(addr); err != nil {
-			return nil, err
-		} else {
-			return sender.Send(req)
-		}
+		return sender.Send(req)
 	}
 }
 
