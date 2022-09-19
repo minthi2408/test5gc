@@ -5,6 +5,7 @@ import (
 	"etri5gc/openapi/models"
 )
 
+//NF should implement this interface
 type AmfProducer interface {
 	//communication
 	HandleStatusChangeSubscribe(*models.SubscriptionData) (models.SubscriptionData, string, *models.ProblemDetails)
