@@ -2,17 +2,18 @@ package config
 
 import (
 	fabric_config "etri5gc/fabric/config"
-	"etri5gc/openapi/models"
-	"fmt"
+	//	"etri5gc/openapi/models"
+	//	"fmt"
 	"io/ioutil"
-	"strconv"
-	"time"
+	//	"strconv"
+	//	"time"
 )
 
 type UdmConfig struct {
-	Agent *fabric_config.AgentConfig
-	UdmName    string
+	Agent   *fabric_config.AgentConfig
+	UdmName string
 }
+
 func LoadConfig(f string) (*UdmConfig, error) {
 	if _, err := ioutil.ReadFile(f); err != nil {
 		return nil, err
@@ -33,4 +34,3 @@ func LoadConfig(f string) (*UdmConfig, error) {
 		return &udmconf, nil
 	}
 }
-

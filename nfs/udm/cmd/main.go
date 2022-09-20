@@ -3,11 +3,12 @@ package main
 import (
 	"etri5gc/nfs/udm/config"
 	"etri5gc/nfs/udm/service"
-	log "github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
 	"os"
 	"os/signal"
 	"syscall"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 var flags = []cli.Flag{
@@ -21,7 +22,7 @@ var flags = []cli.Flag{
 	},
 }
 
-var nf *service.AMF
+var nf *service.UDM
 
 func main() {
 	log.Println("Hello beautiful world")

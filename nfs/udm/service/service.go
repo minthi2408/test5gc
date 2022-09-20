@@ -6,7 +6,7 @@ import (
 	fabric_config "etri5gc/fabric/config"
 
 	udm_config "etri5gc/nfs/udm/config"
-	"etri5gc/nfs/amf/context"
+	"etri5gc/nfs/udm/context"
 
 	"etri5gc/nfs/udm/sbi/producer"
 	"fmt"
@@ -22,8 +22,8 @@ func init() {
 
 type UDM struct {
 	producer *producer.Producer    //handling Sbi requests received at the server
-	context  *context.UDMContext   // UDM context
-	config   *amf_config.UdmConfig // loaded UDM config
+	context  *context.UdmContext   // UDM context
+	config   *udm_config.UdmConfig // loaded UDM config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
@@ -42,7 +42,7 @@ func New(config *udm_config.UdmConfig) (nf *UDM, err error) {
 	nf.sender = nf.agent.Forwarder()
 
 	// initialize UDM context
-//	nf.context = context.NewUdmContext(config, nf.sender)
+	//	nf.context = context.NewUdmContext(config, nf.sender)
 
 	return
 }
@@ -56,11 +56,11 @@ func (nf *UDM) Services() []fabric_common.Service {
 	return nf.producer.Services()
 }
 
-func (nf *UDM) Context() *context.AmfContext {
+func (nf *UDM) Context() *context.UdmContext {
 	return nf.context
 }
 
-func (nf *UDM) Config() *amf_config.AmfConfig {
+func (nf *UDM) Config() *udm_config.UdmConfig {
 	return nf.config
 }
 func (nf *UDM) Profile() fabric_common.NfProfile {

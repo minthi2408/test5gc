@@ -29,3 +29,9 @@ const (
 
 	AMF_OAM = "/namf-oam/v1"
 )
+
+//udm
+const (
+	UDM_EVENTEXPOSURE    = "/nudm-evenrexposure/v1"
+	UDM_EE_SUBSCRIPTIONS = "ee-subscriptions"
+)

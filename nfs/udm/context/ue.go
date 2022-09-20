@@ -1,7 +1,6 @@
-package udm
+package context
 
 type UdmUe struct {
 }
-
 
 type UdmUeList []UdmUe
