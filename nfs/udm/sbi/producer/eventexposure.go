@@ -3,6 +3,7 @@ package producer
 import (
 	"etri5gc/fabric/httpdp"
 	"etri5gc/openapi"
+	"etri5gc/openapi/models"
 	udmprod "etri5gc/openapi/producers/udm"
 	"fmt"
 	"strings"
@@ -42,3 +43,17 @@ func eventexposureService(p *Producer) (service httpdp.HttpService) {
 	service.Group = openapi.UDM_EVENTEXPOSURE
 	return
 }
+
+func (p *Producer) HandleCreateEeSubscription(ueId string, input *models.EeSubscription) (result models.CreatedEeSubscription, prob *models.ProblemDetails) {
+	return
+}
+
+func (p *Producer) HandleDeleteEeSubscription(ueId string, subId string) (prob *models.ProblemDetails) {
+	return
+}
+
+func (p *Producer) HandleUpdateEeSubscription(ueId string, subId string, items []models.PatchItem) (prob *models.ProblemDetails) {
+	return
+}
+
+

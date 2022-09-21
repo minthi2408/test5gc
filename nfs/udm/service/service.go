@@ -12,6 +12,9 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+	udmcon "etri5gc/openapi/consumers/udm"
+	amfcon "etri5gc/openapi/consumers/amf"
+	ausfcon "etri5gc/openapi/consumers/ausf"
 )
 
 var log *logrus.Entry
@@ -43,7 +46,7 @@ func New(config *udm_config.UdmConfig) (nf *UDM, err error) {
 
 	// initialize UDM context
 	//	nf.context = context.NewUdmContext(config, nf.sender)
-
+	check_consumer_compile()
 	return
 }
 
@@ -77,3 +80,12 @@ func (nf *UDM) Terminate() {
 
 	fmt.Println("Kill it")
 }
+
+
+func check_consumer_compile() {
+	udmcon.GetIdTranslationResult(nil, "", nil)	
+	udmcon.DeleteEeSubscription(nil, "", "")	
+	amfcon.DeleteSubscription(nil,"")
+	ausfcon.EapAuthMethod(nil, "", nil)
+}
+

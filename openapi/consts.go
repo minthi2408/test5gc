@@ -34,4 +34,11 @@ const (
 const (
 	UDM_EVENTEXPOSURE    = "/nudm-evenrexposure/v1"
 	UDM_EE_SUBSCRIPTIONS = "ee-subscriptions"
+
+	UDM_PARAMETERPROVISION="/nudm-parameterprovision/v1"
+	UDM_PP_DATA="pp-data"
+
+	UDM_SUBDATAMANAGEMENT = "/nudm-subsriber-data-management/v1"
+	UDM_SDM_AMDATA = "am-data"
+	UDM_SDM_ID_TRANS_RESULT = "id-translation-result"
 )
