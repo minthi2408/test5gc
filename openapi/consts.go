@@ -35,10 +35,27 @@ const (
 	UDM_EVENTEXPOSURE    = "/nudm-evenrexposure/v1"
 	UDM_EE_SUBSCRIPTIONS = "ee-subscriptions"
 
-	UDM_PARAMETERPROVISION="/nudm-parameterprovision/v1"
-	UDM_PP_DATA="pp-data"
+	UDM_PARAMETERPROVISION = "/nudm-parameterprovision/v1"
+	UDM_PP_DATA            = "pp-data"
 
-	UDM_SUBDATAMANAGEMENT = "/nudm-subsriber-data-management/v1"
-	UDM_SDM_AMDATA = "am-data"
+	UDM_SUBDATAMANAGEMENT   = "/nudm-subsriber-data-management/v1"
+	UDM_SDM_AMDATA          = "am-data"
 	UDM_SDM_ID_TRANS_RESULT = "id-translation-result"
+	UDM_SDM_SHARED_DATA     = "shared-data"
+	UDM_SDM_SM_DATA         = "sm-data"
+	UDM_SDM_NSSAI           = "nssai"
+	UDM_SDM_SMS_MNG_DATA    = "sms-mng-data"
+	UDM_SDM_SMS_DATA        = "sms-data"
+	UDM_SDM_SUBSCRIPTIONS   = "sdm-subscriptions"
+	UDM_SDM_SHARED_DATA_SUB = "shared-data-subscriptions"
+	UDM_SDM_TRACE_DATA      = "trace-data"
+	UDM_SDM_UECONTEXT_SMF   = "ue-context-in-smf-data"
+	UDM_SDM_UECONTEXT_SMSF  = "ue-context-in-smsf-data"
+
+	UDM_UEAUTHENTICATION     = "/nudm-ueau/v1"
+	UDM_UEAUTH_EVENTS        = "auth-events"
+	UDM_UEAUTH_GEN_AUTH_DATA = "security-information/generate-auth-data"
+
+	UDM_UECMAN                 = "/nudm-uecm/v1"
+	UDM_UECMAN_AMF_3GPP_ACCESS = "registrations/amf-3gpp-access"
 )
