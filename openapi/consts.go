@@ -57,5 +57,7 @@ const (
 	UDM_UEAUTH_GEN_AUTH_DATA = "security-information/generate-auth-data"
 
 	UDM_UECMAN                 = "/nudm-uecm/v1"
-	UDM_UECMAN_AMF_3GPP_ACCESS = "registrations/amf-3gpp-access"
+	UDM_UECMAN_REGISTRATIONS = "registrations"
+	UDM_UECMAN_AMF_3GPP_ACCESS = "amf-3gpp-access"
+	UDM_UECMAN_AMF_NON3GPP_ACCESS = "amf-non-3gpp-access"
 )
