@@ -18,6 +18,16 @@ import (
 	//	"github.com/free5gc/openapi/models"
 	//	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	sbimodels "etri5gc/sbi/models"
+	amfcomm "etri5gc/sbi/amf/comm"
+	amfee "etri5gc/sbi/amf/ee"
+	amfmt "etri5gc/sbi/amf/mt"
+	amfloc "etri5gc/sbi/amf/loc"
+	ausfsorp "etri5gc/sbi/ausf/sorp"
+	ausfupup "etri5gc/sbi/ausf/upup"
+	ausfueauth "etri5gc/sbi/ausf/ueauth"
+	udrdr "etri5gc/sbi/udr/dr"
+	udrgroup "etri5gc/sbi/udr/group"
 )
 
 var log *logrus.Entry
@@ -77,7 +87,7 @@ func (nf *AMF) Profile() fabric_common.NfProfile {
 	return nil
 }
 func (nf *AMF) Start() (err error) {
-
+	check_amf_compile()
 	// start ngap server
 	log.Info("Starting NGAP server")
 	nf.ngap.Run(nf.config.NgapIpList, 38412)
@@ -102,4 +112,24 @@ func (nf *AMF) Terminate() {
 	nf.agent.Terminate()
 
 	fmt.Println("Kill it")
+}
+
+
+func check_amf_compile() {
+	body := sbimodels.SubscriptionData{}
+	amfcomm.AMFStatusChangeSubscribeModfy(nil, "", body)
+	amfcomm.AMFStatusChangeUnSubscribe(nil, "")
+	body1 := sbimodels.UeN1N2InfoSubscriptionCreateData{}
+	amfcomm.N1N2MessageSubscribe(nil, "", body1)
+	amfee.DeleteSubscription(nil, "")
+	body3 := sbimodels.CancelPosInfo{}
+	amfloc.CancelLocation(nil,"", body3)
+	amfmt.ProvideDomainSelectionInfo(nil, "", nil, "", nil)
+	body4 := sbimodels.SorInfo{}
+	ausfsorp.SupiUeSorPost(nil, "", body4 )
+	body5 := sbimodels.UpuInfo{}
+	ausfupup.SupiUeUpuPost(nil, "", body5)
+	ausfueauth.Delete5gAkaAuthenticationResult(nil, "")
+	udrdr.
+	udrgroup.
 }
