@@ -27,7 +27,7 @@ import (
 @param supportedFeatures Features required to be supported by the target NF
 @return *models.PatchResult, 
 */
-func ModifysubscriptionDataSubscription(client sbi.ConsumerClient, subsId string, supportedFeatures string, body []PatchItem) (result models.PatchResult, err error) {
+func ModifysubscriptionDataSubscription(client sbi.ConsumerClient, subsId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
@@ -94,7 +94,7 @@ func OnModifysubscriptionDataSubscription(ctx sbi.RequestContext, handler interf
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32

@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -129,9 +130,9 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -148,7 +149,7 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 	var result models.AccessAndMobilityData
 
 	if prob := ctx.DecodeRequest(&input); prob == nil {
-		successCode, result, apierr = prod.DR_HandleCreateOrReplaceSessionManagementData(ueId, pduSessionId, input)
+		successCode, result, apierr = prod.DR_HandleCreateOrReplaceSessionManagementData(ueId, *pduSessionId, input)
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
@@ -258,9 +259,9 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -275,7 +276,7 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 	var apierr *sbi.ApiError
 	var successCode int32
 
-	successCode, apierr = prod.DR_HandleDeleteSessionManagementData(ueId, pduSessionId)
+	successCode, apierr = prod.DR_HandleDeleteSessionManagementData(ueId, *pduSessionId)
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -299,7 +300,7 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 @param suppFeat Supported Features
 @return *models.PduSessionManagementData, 
 */
-func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessionId int32, ipv4Addr string, ipv6Prefix models.Ipv6Prefix, dnn string, fields []string, suppFeat string) (result models.PduSessionManagementData, err error) {
+func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessionId int32, ipv4Addr string, ipv6Prefix string, dnn string, fields []string, suppFeat string) (result models.PduSessionManagementData, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -409,9 +410,9 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -444,7 +445,7 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 	var result models.PduSessionManagementData
 
 
-	successCode, result, apierr = prod.DR_HandleQuerySessionManagementData(ueId, pduSessionId, ipv4Addr, ipv6Prefix, dnn, fields, suppFeat)
+	successCode, result, apierr = prod.DR_HandleQuerySessionManagementData(ueId, *pduSessionId, ipv4Addr, ipv6Prefix, dnn, fields, suppFeat)
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -460,5 +461,5 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 type PduSessionManagementDataApiHandler interface {
 	DR_HandleCreateOrReplaceSessionManagementData(ueId string, pduSessionId int32, body models.PduSessionManagementData) (successCode int32, result models.AccessAndMobilityData, err *sbi.ApiError)
 	DR_HandleDeleteSessionManagementData(ueId string, pduSessionId int32) (successCode int32, err *sbi.ApiError)
-	DR_HandleQuerySessionManagementData(ueId string, pduSessionId int32, ipv4Addr string, ipv6Prefix models.Ipv6Prefix, dnn string, fields []string, suppFeat string) (successCode int32, result models.PduSessionManagementData, err *sbi.ApiError)
+	DR_HandleQuerySessionManagementData(ueId string, pduSessionId int32, ipv4Addr string, ipv6Prefix string, dnn string, fields []string, suppFeat string) (successCode int32, result models.PduSessionManagementData, err *sbi.ApiError)
 }

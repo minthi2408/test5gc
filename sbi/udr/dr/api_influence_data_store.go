@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -27,9 +28,9 @@ import (
 @param internalGroupIds Each element identifies a group of users.
 @param supis Each element identifies the user.
 @param suppFeat Supported Features
-@return []TrafficInfluData, 
+@return []models.TrafficInfluData, 
 */
-func ReadInfluenceData(client sbi.ConsumerClient, influenceIds []string, dnns []string, snssais []Snssai, internalGroupIds []string, supis []string, suppFeat string) (result []models.TrafficInfluData, err error) {
+func ReadInfluenceData(client sbi.ConsumerClient, influenceIds []string, dnns []string, snssais []models.Snssai, internalGroupIds []string, supis []string, suppFeat string) (result []models.TrafficInfluData, err error) {
 						
 	//create a request
 	req := sbi.DefaultRequest()
@@ -140,7 +141,7 @@ func OnReadInfluenceData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	
 	snssaisStr := ctx.Param("snssais")
-	var snssais []Snssai
+	var snssais []models.Snssai
 	var snssaisErr error
 	if snssais, snssaisErr = utils.String2ArrayOfSnssai(snssaisStr); snssaisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -181,7 +182,7 @@ func OnReadInfluenceData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []TrafficInfluData
+	var result []models.TrafficInfluData
 
 
 	successCode, result, apierr = prod.DR_HandleReadInfluenceData(influenceIds, dnns, snssais, internalGroupIds, supis, suppFeat)

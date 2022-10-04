@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -30,7 +31,7 @@ import (
 @param ueIpv6s Each element identifies the user.
 @param ueMacs Each element identifies the user.
 @param suppFeat Supported Features
-@return []ServiceParameterData, 
+@return []models.ServiceParameterData, 
 */
 func ReadServiceParameterData(client sbi.ConsumerClient, serviceParamIds []string, dnns []string, snssais []models.Snssai, internalGroupIds []string, supis []string, ueIpv4s []string, ueIpv6s []models.Ipv6Addr, ueMacs []string, suppFeat string) (result []models.ServiceParameterData, err error) {
 									
@@ -155,7 +156,7 @@ func OnReadServiceParameterData(ctx sbi.RequestContext, handler interface{}) (re
 	}
 	
 	snssaisStr := ctx.Param("snssais")
-	var snssais []Snssai
+	var snssais []models.Snssai
 	var snssaisErr error
 	if snssais, snssaisErr = utils.String2ArrayOfSnssai(snssaisStr); snssaisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -203,7 +204,7 @@ func OnReadServiceParameterData(ctx sbi.RequestContext, handler interface{}) (re
 	}
 	
 	ueIpv6sStr := ctx.Param("ue-ipv6s")
-	var ueIpv6s []Ipv6Addr
+	var ueIpv6s []models.Ipv6Addr
 	var ueIpv6sErr error
 	if ueIpv6s, ueIpv6sErr = utils.String2ArrayOfIpv6Addr(ueIpv6sStr); ueIpv6sErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -232,7 +233,7 @@ func OnReadServiceParameterData(ctx sbi.RequestContext, handler interface{}) (re
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []ServiceParameterData
+	var result []models.ServiceParameterData
 
 
 	successCode, result, apierr = prod.DR_HandleReadServiceParameterData(serviceParamIds, dnns, snssais, internalGroupIds, supis, ueIpv4s, ueIpv6s, ueMacs, suppFeat)

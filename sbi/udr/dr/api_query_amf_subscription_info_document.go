@@ -25,7 +25,7 @@ import (
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param subsId
-@return []AmfSubscriptionInfo, 
+@return []models.AmfSubscriptionInfo, 
 */
 func GetAmfSubscriptionInfo(client sbi.ConsumerClient, ueId string, subsId string) (result []models.AmfSubscriptionInfo, err error) {
 	
@@ -101,7 +101,7 @@ func OnGetAmfSubscriptionInfo(ctx sbi.RequestContext, handler interface{}) (resp
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []AmfSubscriptionInfo
+	var result []models.AmfSubscriptionInfo
 
 
 	successCode, result, apierr = prod.DR_HandleGetAmfSubscriptionInfo(ueId, subsId)

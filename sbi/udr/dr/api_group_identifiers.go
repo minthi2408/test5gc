@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -84,7 +85,7 @@ func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sb
 	ueIdIndStr := ctx.Param("ue-id-ind")
 	var ueIdInd *bool
 	var ueIdIndErr error
-	if ueIdInd, ueIdIndErr = utils.String2(ueIdIndStr); ueIdIndErr != nil {
+	if ueIdInd, ueIdIndErr = utils.String2Bool(ueIdIndStr); ueIdIndErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,

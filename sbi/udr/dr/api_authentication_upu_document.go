@@ -89,7 +89,7 @@ func OnCreateAuthenticationUPU(ctx sbi.RequestContext, handler interface{}) (res
 	var apierr *sbi.ApiError
 	var successCode int32
 	if prob := ctx.DecodeRequest(&input); prob == nil {
-		successCode, apierr = prod.DR_HandleCreateAuthenticationUPU(ueId, supportedFeatures, input)
+		successCode, apierr = prod.DR_HandleCreateAuthenticationUPU(ueId, supportedFeatures, &input)
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}

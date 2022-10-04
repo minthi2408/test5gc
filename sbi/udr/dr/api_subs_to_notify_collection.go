@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -89,7 +90,7 @@ func OnQuerySubsToNotify(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []SubscriptionDataSubscriptions
+	var result []models.SubscriptionDataSubscriptions
 
 
 	successCode, result, apierr = prod.DR_HandleQuerySubsToNotify(ueId, supportedFeatures)
@@ -179,7 +180,7 @@ func OnRemoveMultipleSubscriptionDataSubscriptions(ctx sbi.RequestContext, handl
 	deleteAllNfsStr := ctx.Param("delete-all-nfs")
 	var deleteAllNfs *bool
 	var deleteAllNfsErr error
-	if deleteAllNfs, deleteAllNfsErr = utils.String2(deleteAllNfsStr); deleteAllNfsErr != nil {
+	if deleteAllNfs, deleteAllNfsErr = utils.String2Bool(deleteAllNfsStr); deleteAllNfsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -191,7 +192,7 @@ func OnRemoveMultipleSubscriptionDataSubscriptions(ctx sbi.RequestContext, handl
 	implicitUnsubscribeIndicationStr := ctx.Param("implicit-unsubscribe-indication")
 	var implicitUnsubscribeIndication *bool
 	var implicitUnsubscribeIndicationErr error
-	if implicitUnsubscribeIndication, implicitUnsubscribeIndicationErr = utils.String2(implicitUnsubscribeIndicationStr); implicitUnsubscribeIndicationErr != nil {
+	if implicitUnsubscribeIndication, implicitUnsubscribeIndicationErr = utils.String2Bool(implicitUnsubscribeIndicationStr); implicitUnsubscribeIndicationErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,

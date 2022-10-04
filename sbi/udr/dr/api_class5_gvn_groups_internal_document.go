@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -24,7 +25,7 @@ import (
 @param internalGroupIds List of Internal Group IDs
 @return map[string]Model5GVnGroupConfiguration, 
 */
-func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string) (result map[string]Model5GVnGroupConfiguration, err error) {
+func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string) (result map[string]models.Model5GVnGroupConfiguration, err error) {
 	
 	internalGroupIdsStr := utils.Param2String(internalGroupIds)
 	if len(internalGroupIdsStr) == 0 {
@@ -96,7 +97,7 @@ func OnQuery5GVnGroupInternal(ctx sbi.RequestContext, handler interface{}) (resp
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result map[string]Model5GVnGroupConfiguration
+	var result map[string]models.Model5GVnGroupConfiguration
 
 
 	successCode, result, apierr = prod.DR_HandleQuery5GVnGroupInternal(internalGroupIds)

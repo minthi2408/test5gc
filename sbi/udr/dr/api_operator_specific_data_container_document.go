@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -122,7 +123,7 @@ func OnModifyOperSpecData(ctx sbi.RequestContext, handler interface{}) (resp sbi
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return map[string]OperatorSpecificDataContainer, 
+@return map[string]models.OperatorSpecificDataContainer, 
 */
 func QueryOperSpecData(client sbi.ConsumerClient, ueId string, fields []string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result map[string]models.OperatorSpecificDataContainer, err error) {
 	
@@ -211,7 +212,7 @@ func OnQueryOperSpecData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result map[string]OperatorSpecificDataContainer
+	var result map[string]models.OperatorSpecificDataContainer
 
 
 	successCode, result, apierr = prod.DR_HandleQueryOperSpecData(ueId, fields, supportedFeatures, ifNoneMatch, ifModifiedSince)

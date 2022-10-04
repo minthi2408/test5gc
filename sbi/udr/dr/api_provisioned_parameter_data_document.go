@@ -27,7 +27,7 @@ import (
 @param supportedFeatures Features required to be supported by the target NF
 @return *models.PatchResult, 
 */
-func ModifyPpData(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []PatchItem) (result models.PatchResult, err error) {
+func ModifyPpData(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -91,7 +91,7 @@ func OnModifyPpData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -116,5 +116,5 @@ func OnModifyPpData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 
 
 type ProvisionedParameterDataDocumentApiHandler interface {
-	DR_HandleModifyPpData(ueId string, supportedFeatures string, body []PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
+	DR_HandleModifyPpData(ueId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
 }

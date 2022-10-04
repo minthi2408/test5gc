@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -99,9 +100,9 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -118,7 +119,7 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 	var result models.SmfRegistration
 
 	if prob := ctx.DecodeRequest(&input); prob == nil {
-		successCode, result, apierr = prod.DR_HandleCreateOrUpdateSmfRegistration(ueId, pduSessionId, input)
+		successCode, result, apierr = prod.DR_HandleCreateOrUpdateSmfRegistration(ueId, *pduSessionId, input)
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
@@ -207,9 +208,9 @@ func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -224,7 +225,7 @@ func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 	var apierr *sbi.ApiError
 	var successCode int32
 
-	successCode, apierr = prod.DR_HandleDeleteSmfRegistration(ueId, pduSessionId)
+	successCode, apierr = prod.DR_HandleDeleteSmfRegistration(ueId, *pduSessionId)
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -322,9 +323,9 @@ func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 		}))
 		return
 	}
-	var pduSessionId int32
+	var pduSessionId *int32
 	var pduSessionIdErr error
-	if pduSessionId, pduSessionIdErr = utils.String2(pduSessionIdStr); pduSessionIdErr != nil {
+	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
 			Title: "Bad request",
 			Status: http.StatusBadRequest,
@@ -354,7 +355,7 @@ func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	var result models.SmfRegistration
 
 
-	successCode, result, apierr = prod.DR_HandleQuerySmfRegistration(ueId, pduSessionId, fields, supportedFeatures)
+	successCode, result, apierr = prod.DR_HandleQuerySmfRegistration(ueId, *pduSessionId, fields, supportedFeatures)
 
 	if apierr != nil {
 		resp.SetApiError(apierr)

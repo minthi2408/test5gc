@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ import (
 @param contextDatasetNames List of context dataset names
 @return *models.ContextDataSets, 
 */
-func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetNames []ContextDataSetName) (result models.ContextDataSets, err error) {
+func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetNames []models.ContextDataSetName) (result models.ContextDataSets, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -98,7 +99,7 @@ func OnQueryContextData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 		}))
 		return
 	}
-	var contextDatasetNames []ContextDataSetName
+	var contextDatasetNames []models.ContextDataSetName
 	var contextDatasetNamesErr error
 	if contextDatasetNames, contextDatasetNamesErr = utils.String2ArrayOfContextDataSetName(contextDatasetNamesStr); contextDatasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{

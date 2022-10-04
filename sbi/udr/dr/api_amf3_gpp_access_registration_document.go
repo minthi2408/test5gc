@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -91,7 +92,7 @@ func OnAmfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32

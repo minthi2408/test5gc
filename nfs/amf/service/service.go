@@ -7,6 +7,7 @@ import (
 
 	amf_config "etri5gc/nfs/amf/config"
 	"etri5gc/nfs/amf/context"
+
 	//	"etri5gc/nfs/amf/nas"
 	"etri5gc/nfs/amf/ngap"
 
@@ -17,17 +18,18 @@ import (
 
 	//	"github.com/free5gc/openapi/models"
 	//	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-	sbimodels "etri5gc/sbi/models"
 	amfcomm "etri5gc/sbi/amf/comm"
 	amfee "etri5gc/sbi/amf/ee"
-	amfmt "etri5gc/sbi/amf/mt"
 	amfloc "etri5gc/sbi/amf/loc"
+	amfmt "etri5gc/sbi/amf/mt"
 	ausfsorp "etri5gc/sbi/ausf/sorp"
-	ausfupup "etri5gc/sbi/ausf/upup"
 	ausfueauth "etri5gc/sbi/ausf/ueauth"
+	ausfupup "etri5gc/sbi/ausf/upup"
+	sbimodels "etri5gc/sbi/models"
 	udrdr "etri5gc/sbi/udr/dr"
 	udrgroup "etri5gc/sbi/udr/group"
+
+	"github.com/sirupsen/logrus"
 )
 
 var log *logrus.Entry
@@ -114,7 +116,6 @@ func (nf *AMF) Terminate() {
 	fmt.Println("Kill it")
 }
 
-
 func check_amf_compile() {
 	body := sbimodels.SubscriptionData{}
 	amfcomm.AMFStatusChangeSubscribeModfy(nil, "", body)
@@ -123,13 +124,13 @@ func check_amf_compile() {
 	amfcomm.N1N2MessageSubscribe(nil, "", body1)
 	amfee.DeleteSubscription(nil, "")
 	body3 := sbimodels.CancelPosInfo{}
-	amfloc.CancelLocation(nil,"", body3)
+	amfloc.CancelLocation(nil, "", body3)
 	amfmt.ProvideDomainSelectionInfo(nil, "", nil, "", nil)
 	body4 := sbimodels.SorInfo{}
-	ausfsorp.SupiUeSorPost(nil, "", body4 )
+	ausfsorp.SupiUeSorPost(nil, "", body4)
 	body5 := sbimodels.UpuInfo{}
 	ausfupup.SupiUeUpuPost(nil, "", body5)
 	ausfueauth.Delete5gAkaAuthenticationResult(nil, "")
-	udrdr.
-	udrgroup.
+	udrdr.QuerySubsToNotify(nil, "", "")
+	udrgroup.GetNfGroupIDs(nil, nil, "")
 }

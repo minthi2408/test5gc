@@ -25,7 +25,7 @@ import (
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return []SmfRegistration, 
+@return []models.SmfRegistration, 
 */
 func QuerySmfRegList(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result []models.SmfRegistration, err error) {
 	
@@ -90,7 +90,7 @@ func OnQuerySmfRegList(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []SmfRegistration
+	var result []models.SmfRegistration
 
 
 	successCode, result, apierr = prod.DR_HandleQuerySmfRegList(ueId, supportedFeatures)

@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -26,9 +27,9 @@ import (
 @param snssais Each element identifies a slice.
 @param supis Each element identifies the user.
 @param interGroupIds Each element identifies a group of users.
-@return []IptvConfigData, 
+@return []models.IptvConfigData, 
 */
-func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dnns []string, snssais []Snssai, supis []string, interGroupIds []string) (result []models.IptvConfigData, err error) {
+func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dnns []string, snssais []models.Snssai, supis []string, interGroupIds []string) (result []models.IptvConfigData, err error) {
 					
 	//create a request
 	req := sbi.DefaultRequest()
@@ -136,7 +137,7 @@ func OnReadIPTVCongifurationData(ctx sbi.RequestContext, handler interface{}) (r
 	}
 	
 	snssaisStr := ctx.Param("snssais")
-	var snssais []Snssai
+	var snssais []models.Snssai
 	var snssaisErr error
 	if snssais, snssaisErr = utils.String2ArrayOfSnssai(snssaisStr); snssaisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -176,7 +177,7 @@ func OnReadIPTVCongifurationData(ctx sbi.RequestContext, handler interface{}) (r
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []IptvConfigData
+	var result []models.IptvConfigData
 
 
 	successCode, result, apierr = prod.DR_HandleReadIPTVCongifurationData(configIds, dnns, snssais, supis, interGroupIds)

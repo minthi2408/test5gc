@@ -27,7 +27,7 @@ import (
 @param supportedFeatures Features required to be supported by the target NF
 @return *models.PatchResult, 
 */
-func ModifyAuthenticationSubscription(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []PatchItem) (result models.PatchResult, err error) {
+func ModifyAuthenticationSubscription(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -91,7 +91,7 @@ func OnModifyAuthenticationSubscription(ctx sbi.RequestContext, handler interfac
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32

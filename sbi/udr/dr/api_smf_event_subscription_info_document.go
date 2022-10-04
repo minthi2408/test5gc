@@ -220,7 +220,7 @@ func OnGetSmfSubscriptionInfo(ctx sbi.RequestContext, handler interface{}) (resp
 @param supportedFeatures Features required to be supported by the target NF
 @return *models.PatchResult, 
 */
-func ModifySmfSubscriptionInfo(client sbi.ConsumerClient, ueId string, subsId string, supportedFeatures string, body []PatchItem) (result models.PatchResult, err error) {
+func ModifySmfSubscriptionInfo(client sbi.ConsumerClient, ueId string, subsId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -299,7 +299,7 @@ func OnModifySmfSubscriptionInfo(ctx sbi.RequestContext, handler interface{}) (r
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -416,6 +416,6 @@ func OnRemoveSmfSubscriptionsInfo(ctx sbi.RequestContext, handler interface{}) (
 type SMFEventSubscriptionInfoDocumentApiHandler interface {
 	DR_HandleCreateSMFSubscriptions(ueId string, subsId string, body models.SmfSubscriptionInfo) (successCode int32, err *sbi.ApiError)
 	DR_HandleGetSmfSubscriptionInfo(ueId string, subsId string) (successCode int32, result models.SmfSubscriptionInfo, err *sbi.ApiError)
-	DR_HandleModifySmfSubscriptionInfo(ueId string, subsId string, supportedFeatures string, body []PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
+	DR_HandleModifySmfSubscriptionInfo(ueId string, subsId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
 	DR_HandleRemoveSmfSubscriptionsInfo(ueId string, subsId string) (successCode int32, err *sbi.ApiError)
 }

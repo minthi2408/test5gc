@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -26,7 +27,7 @@ import (
 @param ueId UE Id
 @param fields attributes to be retrieved
 @param suppFeat Supported Features
-@return map[string]OperatorSpecificDataContainer, 
+@return map[string]models.OperatorSpecificDataContainer, 
 */
 func ReadOperatorSpecificData(client sbi.ConsumerClient, ueId string, fields []string, suppFeat string) (result map[string]models.OperatorSpecificDataContainer, err error) {
 	
@@ -131,7 +132,7 @@ func OnReadOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (re
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result map[string]OperatorSpecificDataContainer
+	var result map[string]models.OperatorSpecificDataContainer
 
 
 	successCode, result, apierr = prod.DR_HandleReadOperatorSpecificData(ueId, fields, suppFeat)
@@ -150,9 +151,9 @@ func OnReadOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (re
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE Id
-@return map[string]OperatorSpecificDataContainer, 
+@return map[string]models.OperatorSpecificDataContainer, 
 */
-func ReplaceOperatorSpecificData(client sbi.ConsumerClient, ueId string, body map[string]OperatorSpecificDataContainer) (result map[string]models.OperatorSpecificDataContainer, err error) {
+func ReplaceOperatorSpecificData(client sbi.ConsumerClient, ueId string, body map[string]models.OperatorSpecificDataContainer) (result map[string]models.OperatorSpecificDataContainer, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -239,11 +240,11 @@ func OnReplaceOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) 
 		return
 	}
 
-	var input map[string]OperatorSpecificDataContainer
+	var input map[string]models.OperatorSpecificDataContainer
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result map[string]OperatorSpecificDataContainer
+	var result map[string]models.OperatorSpecificDataContainer
 
 	if prob := ctx.DecodeRequest(&input); prob == nil {
 		successCode, result, apierr = prod.DR_HandleReplaceOperatorSpecificData(ueId, input)
@@ -268,7 +269,7 @@ func OnReplaceOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) 
 @param ueId UE Id
 @return *models.PatchResult, 
 */
-func UpdateOperatorSpecificData(client sbi.ConsumerClient, ueId string, body []PatchItem) (result models.PatchResult, err error) {
+func UpdateOperatorSpecificData(client sbi.ConsumerClient, ueId string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -355,7 +356,7 @@ func OnUpdateOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (
 		return
 	}
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -381,6 +382,6 @@ func OnUpdateOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (
 
 type OperatorSpecificDataDocumentApiHandler interface {
 	DR_HandleReadOperatorSpecificData(ueId string, fields []string, suppFeat string) (successCode int32, result map[string]models.OperatorSpecificDataContainer, err *sbi.ApiError)
-	DR_HandleReplaceOperatorSpecificData(ueId string, body map[string]OperatorSpecificDataContainer) (successCode int32, result map[string]models.OperatorSpecificDataContainer, err *sbi.ApiError)
-	DR_HandleUpdateOperatorSpecificData(ueId string, body []PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
+	DR_HandleReplaceOperatorSpecificData(ueId string, body map[string]models.OperatorSpecificDataContainer) (successCode int32, result map[string]models.OperatorSpecificDataContainer, err *sbi.ApiError)
+	DR_HandleUpdateOperatorSpecificData(ueId string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)
 }

@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -23,7 +24,7 @@ import (
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param sharedDataIds List of shared data ids
 @param supportedFeatures Supported Features
-@return []SharedData, 
+@return []models.SharedData, 
 */
 func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedFeatures string) (result []models.SharedData, err error) {
 	
@@ -113,7 +114,7 @@ func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []SharedData
+	var result []models.SharedData
 
 
 	successCode, result, apierr = prod.DR_HandleGetSharedData(sharedDataIds, supportedFeatures)

@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -125,7 +126,7 @@ func OnCreateIndividualInfluenceDataSubscription(ctx sbi.RequestContext, handler
 @param snssai Identifies a slice.
 @param internalGroupId Identifies a group of users.
 @param supi Identifies a user.
-@return []TrafficInfluSub, 
+@return []models.TrafficInfluSub, 
 */
 func ReadInfluenceDataSubscriptions(client sbi.ConsumerClient, dnn string, snssai *models.Snssai, internalGroupId string, supi string) (result []models.TrafficInfluSub, err error) {
 				
@@ -223,7 +224,7 @@ func OnReadInfluenceDataSubscriptions(ctx sbi.RequestContext, handler interface{
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []TrafficInfluSub
+	var result []models.TrafficInfluSub
 
 
 	successCode, result, apierr = prod.DR_HandleReadInfluenceDataSubscriptions(dnn, snssai, internalGroupId, supi)

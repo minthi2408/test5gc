@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -120,7 +121,7 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 		}))
 		return
 	}
-	var singleNssai models.Snssai
+	var singleNssai *models.Snssai
 	var singleNssaiErr error
 	if singleNssai, singleNssaiErr = utils.String2Snssai(singleNssaiStr); singleNssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -161,7 +162,7 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var result models.AuthorizationData
 
 
-	successCode, result, apierr = prod.DR_HandleGetNiddAuData(ueId, singleNssai, dnn, mtcProviderInformation, ifNoneMatch, ifModifiedSince)
+	successCode, result, apierr = prod.DR_HandleGetNiddAuData(ueId, *singleNssai, dnn, mtcProviderInformation, ifNoneMatch, ifModifiedSince)
 
 	if apierr != nil {
 		resp.SetApiError(apierr)

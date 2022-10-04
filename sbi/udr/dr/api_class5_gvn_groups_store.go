@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -24,7 +25,7 @@ import (
 @param gpsis List of GPSIs
 @return map[string]Model5GVnGroupConfiguration, 
 */
-func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result [string]models.Model5GVnGroupConfiguration, err error) {
+func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result map[string]models.Model5GVnGroupConfiguration, err error) {
 	
 	//create a request
 	req := sbi.DefaultRequest()
@@ -84,7 +85,7 @@ func OnQuery5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result map[string]Model5GVnGroupConfiguration
+	var result map[string]models.Model5GVnGroupConfiguration
 
 
 	successCode, result, apierr = prod.DR_HandleQuery5GVnGroup(gpsis)

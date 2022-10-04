@@ -111,7 +111,7 @@ func OnCreateEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueGroupId Group of UEs or any UE
 @param supportedFeatures Supported Features
-@return []EeSubscription, 
+@return []models.EeSubscription, 
 */
 func QueryEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, supportedFeatures string) (result []models.EeSubscription, err error) {
 	
@@ -176,7 +176,7 @@ func OnQueryEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (r
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []EeSubscription
+	var result []models.EeSubscription
 
 
 	successCode, result, apierr = prod.DR_HandleQueryEeGroupSubscriptions(ueGroupId, supportedFeatures)

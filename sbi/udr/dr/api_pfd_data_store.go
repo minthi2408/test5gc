@@ -16,13 +16,14 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appId Contains the information of the application identifier(s) for the querying PFD Data resource. If none appId is included in the URI, it applies to all application identifier(s) for the querying PFD Data resource.
-@return []PfdDataForAppExt, 
+@return []models.PfdDataForAppExt, 
 */
 func ReadPFDData(client sbi.ConsumerClient, appId []string) (result []models.PfdDataForAppExt, err error) {
 	
@@ -108,7 +109,7 @@ func OnReadPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []PfdDataForAppExt
+	var result []models.PfdDataForAppExt
 
 
 	successCode, result, apierr = prod.DR_HandleReadPFDData(appId)

@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -28,7 +29,7 @@ import (
 @param datasetNames List of dataset names
 @return *models.ProvisionedDataSets, 
 */
-func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId string, datasetNames []DataSetName) (result models.ProvisionedDataSets, err error) {
+func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId string, datasetNames []models.DataSetName) (result models.ProvisionedDataSets, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -102,7 +103,7 @@ func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp s
 		return
 	}
 	datasetNamesStr := ctx.Param("dataset-names")
-	var datasetNames []DataSetName
+	var datasetNames []models.DataSetName
 	var datasetNamesErr error
 	if datasetNames, datasetNamesErr = utils.String2ArrayOfDataSetName(datasetNamesStr); datasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
@@ -135,5 +136,5 @@ func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp s
 
 
 type ProvisionedDataDocumentApiHandler interface {
-	DR_HandleQueryProvisionedData(ueId string, servingPlmnId string, datasetNames []DataSetName) (successCode int32, result models.ProvisionedDataSets, err *sbi.ApiError)
+	DR_HandleQueryProvisionedData(ueId string, servingPlmnId string, datasetNames []models.DataSetName) (successCode int32, result models.ProvisionedDataSets, err *sbi.ApiError)
 }

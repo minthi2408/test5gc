@@ -111,7 +111,7 @@ func OnCreateSdmSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return []SdmSubscription, 
+@return []models.SdmSubscription, 
 */
 func Querysdmsubscriptions(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result []models.SdmSubscription, err error) {
 	
@@ -176,7 +176,7 @@ func OnQuerysdmsubscriptions(ctx sbi.RequestContext, handler interface{}) (resp 
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []SdmSubscription
+	var result []models.SdmSubscription
 
 
 	successCode, result, apierr = prod.DR_HandleQuerysdmsubscriptions(ueId, supportedFeatures)

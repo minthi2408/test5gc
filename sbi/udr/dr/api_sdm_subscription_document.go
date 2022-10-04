@@ -110,7 +110,7 @@ func OnModifysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp 
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32

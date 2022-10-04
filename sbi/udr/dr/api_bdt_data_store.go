@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -23,7 +24,7 @@ import (
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtRefIds List of the BDT reference identifiers.
 @param suppFeat Supported Features
-@return []BdtData, 
+@return []models.BdtData, 
 */
 func ReadBdtData(client sbi.ConsumerClient, bdtRefIds []string, suppFeat string) (result []models.BdtData, err error) {
 		
@@ -110,7 +111,7 @@ func OnReadBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []BdtData
+	var result []models.BdtData
 
 
 	successCode, result, apierr = prod.DR_HandleReadBdtData(bdtRefIds, suppFeat)

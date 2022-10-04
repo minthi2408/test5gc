@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 )
 
 
@@ -24,7 +25,7 @@ import (
 @param bdtPolicyIds Each element identifies a service.
 @param internalGroupIds Each element identifies a group of users.
 @param supis Each element identifies the user.
-@return []BdtPolicyData, 
+@return []models.BdtPolicyData, 
 */
 func ReadBdtPolicyData(client sbi.ConsumerClient, bdtPolicyIds []string, internalGroupIds []string, supis []string) (result []models.BdtPolicyData, err error) {
 			
@@ -142,7 +143,7 @@ func OnReadBdtPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []BdtPolicyData
+	var result []models.BdtPolicyData
 
 
 	successCode, result, apierr = prod.DR_HandleReadBdtPolicyData(bdtPolicyIds, internalGroupIds, supis)

@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ import (
 @param supportedFeatures Features required to be supported by the target NF
 @return *models.PatchResult, 
 */
-func AmfContextNon3gpp(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []PatchItem) (result models.PatchResult, err error) {
+func AmfContextNon3gpp(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
 	
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
@@ -91,7 +92,7 @@ func OnAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	var input []PatchItem
+	var input []models.PatchItem
 
 	var apierr *sbi.ApiError
 	var successCode int32

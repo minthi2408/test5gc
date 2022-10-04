@@ -17,6 +17,7 @@ import (
 	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"strings"
 )
 
@@ -31,7 +32,7 @@ import (
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return []SessionManagementSubscriptionData, 
+@return []models.SessionManagementSubscriptionData, 
 */
 func QuerySmData(client sbi.ConsumerClient, ueId string, servingPlmnId string, singleNssai *models.Snssai, dnn string, fields []string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result []models.SessionManagementSubscriptionData, err error) {
 	
@@ -155,7 +156,7 @@ func OnQuerySmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 
 	var apierr *sbi.ApiError
 	var successCode int32
-	var result []SessionManagementSubscriptionData
+	var result []models.SessionManagementSubscriptionData
 
 
 	successCode, result, apierr = prod.DR_HandleQuerySmData(ueId, servingPlmnId, singleNssai, dnn, fields, supportedFeatures, ifNoneMatch, ifModifiedSince)
