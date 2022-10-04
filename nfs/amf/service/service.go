@@ -22,10 +22,14 @@ import (
 	amfee "etri5gc/sbi/amf/ee"
 	amfloc "etri5gc/sbi/amf/loc"
 	amfmt "etri5gc/sbi/amf/mt"
-	ausfsorp "etri5gc/sbi/ausf/sorp"
-	ausfueauth "etri5gc/sbi/ausf/ueauth"
-	ausfupup "etri5gc/sbi/ausf/upup"
+	ausfsor "etri5gc/sbi/ausf/sor"
+	ausfuea "etri5gc/sbi/ausf/uea"
+	ausfupu "etri5gc/sbi/ausf/upu"
+	"etri5gc/sbi/models"
 	sbimodels "etri5gc/sbi/models"
+	smfee "etri5gc/sbi/smf/ee"
+	smfnidd "etri5gc/sbi/smf/nidd"
+	smfpdu "etri5gc/sbi/smf/pdu"
 	udrdr "etri5gc/sbi/udr/dr"
 	udrgroup "etri5gc/sbi/udr/group"
 
@@ -127,10 +131,14 @@ func check_amf_compile() {
 	amfloc.CancelLocation(nil, "", body3)
 	amfmt.ProvideDomainSelectionInfo(nil, "", nil, "", nil)
 	body4 := sbimodels.SorInfo{}
-	ausfsorp.SupiUeSorPost(nil, "", body4)
+	ausfsor.SupiUeSorPost(nil, "", body4)
 	body5 := sbimodels.UpuInfo{}
-	ausfupup.SupiUeUpuPost(nil, "", body5)
-	ausfueauth.Delete5gAkaAuthenticationResult(nil, "")
+	ausfupu.SupiUeUpuPost(nil, "", body5)
+	ausfuea.Delete5gAkaAuthenticationResult(nil, "")
 	udrdr.QuerySubsToNotify(nil, "", "")
 	udrgroup.GetNfGroupIDs(nil, nil, "")
+	smfpdu.ReleasePduSession(nil, "", nil)
+	smfee.DeleteIndividualSubcription(nil, "")
+	body6 := models.DeliverRequest{}
+	smfnidd.Deliver(nil, "", body6)
 }
