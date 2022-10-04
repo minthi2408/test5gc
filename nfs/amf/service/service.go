@@ -27,6 +27,12 @@ import (
 	ausfupu "etri5gc/sbi/ausf/upu"
 	"etri5gc/sbi/models"
 	sbimodels "etri5gc/sbi/models"
+	pcfampc "etri5gc/sbi/pcf/ampc"
+	pcfbtdpc "etri5gc/sbi/pcf/btdpc"
+	pcfee "etri5gc/sbi/pcf/ee"
+	pcfpa "etri5gc/sbi/pcf/pa"
+	pcfsmpc "etri5gc/sbi/pcf/smpc"
+	pcfuepc "etri5gc/sbi/pcf/uepc"
 	smfee "etri5gc/sbi/smf/ee"
 	smfnidd "etri5gc/sbi/smf/nidd"
 	smfpdu "etri5gc/sbi/smf/pdu"
@@ -141,4 +147,14 @@ func check_amf_compile() {
 	smfee.DeleteIndividualSubcription(nil, "")
 	body6 := models.DeliverRequest{}
 	smfnidd.Deliver(nil, "", body6)
+
+	pcfee.DeletePcEventExposureSubsc(nil, "")
+	pcfampc.DeleteIndividualAMPolicyAssociation(nil, "")
+	body7 := models.SmPolicyDeleteData{}
+	pcfsmpc.DeleteSMPolicy(nil, "", body7)
+	pcfuepc.DeleteIndividualUEPolicyAssociation(nil, "")
+	body8 := models.BdtReqData{}
+	pcfbtdpc.CreateBDTPolicy(nil, body8)
+	body9 := models.AppSessionContext{}
+	pcfpa.PostAppSessions(nil, body9)
 }
