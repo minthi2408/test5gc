@@ -1,7 +1,7 @@
 /*
 Npcf_AMPolicyControl
 
-Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,6 +15,6 @@ type RestrictionTypeAnyOf string
 
 // List of RestrictionTypeAnyOf
 const (
-	RESTRICTIONTYPEANYOF_ALLOWED_AREAS RestrictionTypeAnyOf = "ALLOWED_AREAS"
+	RESTRICTIONTYPEANYOF_ALLOWED_AREAS     RestrictionTypeAnyOf = "ALLOWED_AREAS"
 	RESTRICTIONTYPEANYOF_NOT_ALLOWED_AREAS RestrictionTypeAnyOf = "NOT_ALLOWED_AREAS"
 )

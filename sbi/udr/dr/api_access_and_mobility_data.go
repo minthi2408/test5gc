@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return *models.AccessAndMobilityData, 
+@return *models.AccessAndMobilityData,
 */
 func CreateOrReplaceAccessAndMobilityData(client sbi.ConsumerClient, ueId string, body models.AccessAndMobilityData) (result models.AccessAndMobilityData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -81,7 +80,7 @@ func CreateOrReplaceAccessAndMobilityData(client sbi.ConsumerClient, ueId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -92,21 +91,20 @@ func CreateOrReplaceAccessAndMobilityData(client sbi.ConsumerClient, ueId string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceAccessAndMobilityData
 func OnCreateOrReplaceAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AccessAndMobilityDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -124,7 +122,6 @@ func OnCreateOrReplaceAccessAndMobilityData(ctx sbi.RequestContext, handler inte
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -134,16 +131,13 @@ func OnCreateOrReplaceAccessAndMobilityData(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func DeleteAccessAndMobilityData(client sbi.ConsumerClient, ueId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
@@ -153,7 +147,7 @@ func DeleteAccessAndMobilityData(client sbi.ConsumerClient, ueId string) (err er
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/exposure-data/{ueId}/access-and-mobility-data", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -186,7 +180,7 @@ func DeleteAccessAndMobilityData(client sbi.ConsumerClient, ueId string) (err er
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -195,26 +189,23 @@ func DeleteAccessAndMobilityData(client sbi.ConsumerClient, ueId string) (err er
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteAccessAndMobilityData
 func OnDeleteAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AccessAndMobilityDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -229,21 +220,18 @@ func OnDeleteAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param suppFeat Supported Features
-@return *models.AccessAndMobilityData, 
+@return *models.AccessAndMobilityData,
 */
 func QueryAccessAndMobilityData(client sbi.ConsumerClient, ueId string, suppFeat string) (result models.AccessAndMobilityData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -252,7 +240,7 @@ func QueryAccessAndMobilityData(client sbi.ConsumerClient, ueId string, suppFeat
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -288,7 +276,7 @@ func QueryAccessAndMobilityData(client sbi.ConsumerClient, ueId string, suppFeat
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -299,21 +287,20 @@ func QueryAccessAndMobilityData(client sbi.ConsumerClient, ueId string, suppFeat
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryAccessAndMobilityData
 func OnQueryAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AccessAndMobilityDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -321,12 +308,9 @@ func OnQueryAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (
 	}
 	suppFeat := ctx.Param("supp-feat")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AccessAndMobilityData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryAccessAndMobilityData(ueId, suppFeat)
 
@@ -338,20 +322,17 @@ func OnQueryAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func UpdateAccessAndMobilityData(client sbi.ConsumerClient, ueId string, body models.AccessAndMobilityData) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -401,7 +382,7 @@ func UpdateAccessAndMobilityData(client sbi.ConsumerClient, ueId string, body mo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -410,19 +391,18 @@ func UpdateAccessAndMobilityData(client sbi.ConsumerClient, ueId string, body mo
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateAccessAndMobilityData
 func OnUpdateAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AccessAndMobilityDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -438,7 +418,6 @@ func OnUpdateAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -447,9 +426,6 @@ func OnUpdateAccessAndMobilityData(ctx sbi.RequestContext, handler interface{}) 
 	}
 	return
 }
-
-
-
 
 type AccessAndMobilityDataApiHandler interface {
 	DR_HandleCreateOrReplaceAccessAndMobilityData(ueId string, body models.AccessAndMobilityData) (successCode int32, result models.AccessAndMobilityData, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,7 +15,7 @@ type LocationPrivacyVerResultAnyOf string
 
 // List of LocationPrivacyVerResultAnyOf
 const (
-	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_ALLOWED LocationPrivacyVerResultAnyOf = "LOCATION_ALLOWED"
+	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_ALLOWED     LocationPrivacyVerResultAnyOf = "LOCATION_ALLOWED"
 	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_NOT_ALLOWED LocationPrivacyVerResultAnyOf = "LOCATION_NOT_ALLOWED"
-	LOCATIONPRIVACYVERRESULTANYOF_RESPONSE_TIME_OUT LocationPrivacyVerResultAnyOf = "RESPONSE_TIME_OUT"
+	LOCATIONPRIVACYVERRESULTANYOF_RESPONSE_TIME_OUT    LocationPrivacyVerResultAnyOf = "RESPONSE_TIME_OUT"
 )

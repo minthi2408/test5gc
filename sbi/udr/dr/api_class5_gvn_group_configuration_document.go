@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param externalGroupId
-@return *models.Model5GVnGroupConfiguration, 
+@return *models.Model5GVnGroupConfiguration,
 */
 func Create5GVnGroup(client sbi.ConsumerClient, externalGroupId string, body models.Model5GVnGroupConfiguration) (result models.Model5GVnGroupConfiguration, err error) {
-	
+
 	if len(externalGroupId) == 0 {
 		err = fmt.Errorf("externalGroupId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -54,7 +53,7 @@ func Create5GVnGroup(client sbi.ConsumerClient, externalGroupId string, body mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -65,21 +64,20 @@ func Create5GVnGroup(client sbi.ConsumerClient, externalGroupId string, body mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for Create5GVnGroup
 func OnCreate5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Class5GVnGroupConfigurationDocumentApiHandler)
-	
+
 	externalGroupId := ctx.Param("externalGroupId")
 	if len(externalGroupId) == 0 {
 		//externalGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "externalGroupId is required",
 		}))
@@ -97,7 +95,6 @@ func OnCreate5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -106,9 +103,6 @@ func OnCreate5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	return
 }
-
-
-
 
 type Class5GVnGroupConfigurationDocumentApiHandler interface {
 	DR_HandleCreate5GVnGroup(externalGroupId string, body models.Model5GVnGroupConfiguration) (successCode int32, result models.Model5GVnGroupConfiguration, err *sbi.ApiError)

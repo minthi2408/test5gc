@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,19 +12,18 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.PolicyDataSubscription, 
+@return *models.PolicyDataSubscription,
 */
 func CreateIndividualPolicyDataSubscription(client sbi.ConsumerClient, body models.PolicyDataSubscription) (result models.PolicyDataSubscription, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -73,7 +72,7 @@ func CreateIndividualPolicyDataSubscription(client sbi.ConsumerClient, body mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -84,16 +83,14 @@ func CreateIndividualPolicyDataSubscription(client sbi.ConsumerClient, body mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateIndividualPolicyDataSubscription
 func OnCreateIndividualPolicyDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(PolicyDataSubscriptionsCollectionApiHandler)
-	
 
 	var input models.PolicyDataSubscription
 
@@ -106,7 +103,6 @@ func OnCreateIndividualPolicyDataSubscription(ctx sbi.RequestContext, handler in
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -115,9 +111,6 @@ func OnCreateIndividualPolicyDataSubscription(ctx sbi.RequestContext, handler in
 	}
 	return
 }
-
-
-
 
 type PolicyDataSubscriptionsCollectionApiHandler interface {
 	DR_HandleCreateIndividualPolicyDataSubscription(body models.PolicyDataSubscription) (successCode int32, result models.PolicyDataSubscription, err *sbi.ApiError)

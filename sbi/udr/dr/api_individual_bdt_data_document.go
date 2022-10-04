@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtReferenceId
-@return *models.BdtData, 
+@return *models.BdtData,
 */
 func CreateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, body models.BdtData) (result models.BdtData, err error) {
-	
+
 	if len(bdtReferenceId) == 0 {
 		err = fmt.Errorf("bdtReferenceId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, b
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, b
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateIndividualBdtData
 func OnCreateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualBdtDataDocumentApiHandler)
-	
+
 	bdtReferenceId := ctx.Param("bdtReferenceId")
 	if len(bdtReferenceId) == 0 {
 		//bdtReferenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtReferenceId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtReferenceId
-@return 
+@return
 */
 func DeleteIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string) (err error) {
-	
+
 	if len(bdtReferenceId) == 0 {
 		err = fmt.Errorf("bdtReferenceId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string) (
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/policy-data/bdt-data/{bdtReferenceId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"bdtReferenceId"+"}", url.PathEscape(bdtReferenceId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"bdtReferenceId"+"}", url.PathEscape(bdtReferenceId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string) (
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string) (
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualBdtData
 func OnDeleteIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualBdtDataDocumentApiHandler)
-	
+
 	bdtReferenceId := ctx.Param("bdtReferenceId")
 	if len(bdtReferenceId) == 0 {
 		//bdtReferenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtReferenceId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -232,21 +223,18 @@ func OnDeleteIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtReferenceId
 @param suppFeat Supported Features
-@return *models.BdtData, 
+@return *models.BdtData,
 */
 func ReadIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, suppFeat string) (result models.BdtData, err error) {
-	
+
 	if len(bdtReferenceId) == 0 {
 		err = fmt.Errorf("bdtReferenceId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -255,7 +243,7 @@ func ReadIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, sup
 	req.Path = strings.Replace(req.Path, "{"+"bdtReferenceId"+"}", url.PathEscape(bdtReferenceId), -1)
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -288,7 +276,7 @@ func ReadIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, sup
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -299,21 +287,20 @@ func ReadIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, sup
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadIndividualBdtData
 func OnReadIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualBdtDataDocumentApiHandler)
-	
+
 	bdtReferenceId := ctx.Param("bdtReferenceId")
 	if len(bdtReferenceId) == 0 {
 		//bdtReferenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtReferenceId is required",
 		}))
@@ -321,12 +308,9 @@ func OnReadIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp 
 	}
 	suppFeat := ctx.Param("supp-feat")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.BdtData
-
 
 	successCode, result, apierr = prod.DR_HandleReadIndividualBdtData(bdtReferenceId, suppFeat)
 
@@ -338,20 +322,17 @@ func OnReadIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtReferenceId
-@return *models.BdtData, 
+@return *models.BdtData,
 */
 func UpdateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, body models.BdtDataPatch) (result models.BdtData, err error) {
-	
+
 	if len(bdtReferenceId) == 0 {
 		err = fmt.Errorf("bdtReferenceId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -401,7 +382,7 @@ func UpdateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, b
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -412,21 +393,20 @@ func UpdateIndividualBdtData(client sbi.ConsumerClient, bdtReferenceId string, b
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateIndividualBdtData
 func OnUpdateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualBdtDataDocumentApiHandler)
-	
+
 	bdtReferenceId := ctx.Param("bdtReferenceId")
 	if len(bdtReferenceId) == 0 {
 		//bdtReferenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtReferenceId is required",
 		}))
@@ -444,7 +424,6 @@ func OnUpdateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -453,9 +432,6 @@ func OnUpdateIndividualBdtData(ctx sbi.RequestContext, handler interface{}) (res
 	}
 	return
 }
-
-
-
 
 type IndividualBdtDataDocumentApiHandler interface {
 	DR_HandleCreateIndividualBdtData(bdtReferenceId string, body models.BdtData) (successCode int32, result models.BdtData, err *sbi.ApiError)

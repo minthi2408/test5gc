@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,28 +12,27 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func AmfContextNon3gpp(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -59,7 +58,7 @@ func AmfContextNon3gpp(client sbi.ConsumerClient, ueId string, supportedFeatures
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -70,21 +69,20 @@ func AmfContextNon3gpp(client sbi.ConsumerClient, ueId string, supportedFeatures
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for AmfContextNon3gpp
 func OnAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AMFNon3GPPAccessRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -103,7 +101,6 @@ func OnAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -113,20 +110,17 @@ func OnAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return *models.Amf3GppAccessRegistration, 
+@return *models.Amf3GppAccessRegistration,
 */
 func CreateAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, body models.AmfNon3GppAccessRegistration) (result models.Amf3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -146,7 +140,7 @@ func CreateAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, body models
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -157,21 +151,20 @@ func CreateAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, body models
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateAmfContextNon3gpp
 func OnCreateAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AMFNon3GPPAccessRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -189,7 +182,6 @@ func OnCreateAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -199,22 +191,19 @@ func OnCreateAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.AmfNon3GppAccessRegistration, 
+@return *models.AmfNon3GppAccessRegistration,
 */
 func QueryAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, fields []string, supportedFeatures string) (result models.AmfNon3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -227,7 +216,7 @@ func QueryAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, fields []str
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -239,7 +228,7 @@ func QueryAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, fields []str
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -250,21 +239,20 @@ func QueryAmfContextNon3gpp(client sbi.ConsumerClient, ueId string, fields []str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryAmfContextNon3gpp
 func OnQueryAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AMFNon3GPPAccessRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -275,21 +263,18 @@ func OnQueryAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AmfNon3GppAccessRegistration
-
 
 	successCode, result, apierr = prod.DR_HandleQueryAmfContextNon3gpp(ueId, fields, supportedFeatures)
 
@@ -300,9 +285,6 @@ func OnQueryAmfContextNon3gpp(ctx sbi.RequestContext, handler interface{}) (resp
 	}
 	return
 }
-
-
-
 
 type AMFNon3GPPAccessRegistrationDocumentApiHandler interface {
 	DR_HandleAmfContextNon3gpp(ueId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)

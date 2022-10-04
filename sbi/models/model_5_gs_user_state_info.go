@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -12,7 +12,6 @@ API version: 1.1.7
 package models
 
 type Model5GsUserStateInfo struct {
-
 	Var5gsUserState Model5GsUserState `json:"5gsUserState"`
 
 	AccessType AccessType `json:"accessType"`

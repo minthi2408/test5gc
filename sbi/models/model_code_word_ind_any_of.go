@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,6 +15,6 @@ type CodeWordIndAnyOf string
 
 // List of CodeWordIndAnyOf
 const (
-	CODEWORDINDANYOF_UE CodeWordIndAnyOf = "CODEWORD_CHECK_IN_UE"
+	CODEWORDINDANYOF_UE   CodeWordIndAnyOf = "CODEWORD_CHECK_IN_UE"
 	CODEWORDINDANYOF_GMLC CodeWordIndAnyOf = "CODEWORD_CHECK_IN_GMLC"
 )

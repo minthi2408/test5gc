@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,9 +15,9 @@ type AtsssCapabilityAnyOf string
 
 // List of AtsssCapabilityAnyOf
 const (
-	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_UL AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL_WITH_ASMODE_UL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_UL             AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL_WITH_ASMODE_UL"
 	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL"
-	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_DLUL AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL_WITH_ASMODE_DLUL"
-	ATSSSCAPABILITYANYOF_ATSSS_LL AtsssCapabilityAnyOf = "ATSSS_LL"
-	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_DLUL           AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL_WITH_ASMODE_DLUL"
+	ATSSSCAPABILITYANYOF_ATSSS_LL                                  AtsssCapabilityAnyOf = "ATSSS_LL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL                            AtsssCapabilityAnyOf = "MPTCP_ATSSS_LL"
 )

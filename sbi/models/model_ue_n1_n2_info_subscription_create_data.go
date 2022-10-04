@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,7 +12,6 @@ API version: 1.1.8
 package models
 
 type UeN1N2InfoSubscriptionCreateData struct {
-
 	N2InformationClass N2InformationClass `json:"n2InformationClass,omitempty"`
 
 	N2NotifyCallbackUri string `json:"n2NotifyCallbackUri,omitempty"`

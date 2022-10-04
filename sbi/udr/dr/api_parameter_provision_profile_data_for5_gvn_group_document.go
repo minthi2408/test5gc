@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,22 +12,21 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param extGroupIds List of external VN group identifiers
 @param supportedFeatures Supported Features
-@return *models.Pp5gVnGroupProfileData, 
+@return *models.Pp5gVnGroupProfileData,
 */
 func Query5GVNGroupPPData(client sbi.ConsumerClient, extGroupIds []string, supportedFeatures string) (result models.Pp5gVnGroupProfileData, err error) {
-		
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -39,7 +38,7 @@ func Query5GVNGroupPPData(client sbi.ConsumerClient, extGroupIds []string, suppo
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -51,7 +50,7 @@ func Query5GVNGroupPPData(client sbi.ConsumerClient, extGroupIds []string, suppo
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -62,36 +61,32 @@ func Query5GVNGroupPPData(client sbi.ConsumerClient, extGroupIds []string, suppo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for Query5GVNGroupPPData
 func OnQuery5GVNGroupPPData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(ParameterProvisionProfileDataFor5GVNGroupDocumentApiHandler)
-	
+
 	extGroupIdsStr := ctx.Param("ext-group-ids")
 	var extGroupIds []string
 	var extGroupIdsErr error
 	if extGroupIds, extGroupIdsErr = utils.String2ArrayOfstring(extGroupIdsStr); extGroupIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: extGroupIdsErr.Error(), 
+			Detail: extGroupIdsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.Pp5gVnGroupProfileData
-
 
 	successCode, result, apierr = prod.DR_HandleQuery5GVNGroupPPData(extGroupIds, supportedFeatures)
 
@@ -102,9 +97,6 @@ func OnQuery5GVNGroupPPData(ctx sbi.RequestContext, handler interface{}) (resp s
 	}
 	return
 }
-
-
-
 
 type ParameterProvisionProfileDataFor5GVNGroupDocumentApiHandler interface {
 	DR_HandleQuery5GVNGroupPPData(extGroupIds []string, supportedFeatures string) (successCode int32, result models.Pp5gVnGroupProfileData, err *sbi.ApiError)

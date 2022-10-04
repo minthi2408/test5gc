@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,6 +16,6 @@ type ReportingFrequencyAnyOf string
 // List of ReportingFrequencyAnyOf
 const (
 	REPORTINGFREQUENCYANYOF_EVENT_TRIGGERED ReportingFrequencyAnyOf = "EVENT_TRIGGERED"
-	REPORTINGFREQUENCYANYOF_PERIODIC ReportingFrequencyAnyOf = "PERIODIC"
+	REPORTINGFREQUENCYANYOF_PERIODIC        ReportingFrequencyAnyOf = "PERIODIC"
 	REPORTINGFREQUENCYANYOF_SESSION_RELEASE ReportingFrequencyAnyOf = "SESSION_RELEASE"
 )

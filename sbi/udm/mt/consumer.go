@@ -1,7 +1,7 @@
 /*
 Nudm_MT
 
-UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,33 +12,30 @@ API version: 1.0.2
 package mt
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nudm-mt/v1"
+	SERVICE_PATH = "{apiRoot}/nudm-mt/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return *models.LocationInfoResult, 
+@return *models.LocationInfoResult,
 */
 func ProvideLocationInfo(client sbi.ConsumerClient, supi string, body models.LocationInfoRequest) (result models.LocationInfoResult, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -73,7 +70,7 @@ func ProvideLocationInfo(client sbi.ConsumerClient, supi string, body models.Loc
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -84,9 +81,9 @@ func ProvideLocationInfo(client sbi.ConsumerClient, supi string, body models.Loc
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -94,19 +91,19 @@ func ProvideLocationInfo(client sbi.ConsumerClient, supi string, body models.Loc
 @param supi Identifier of the UE
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.UeInfo, 
+@return *models.UeInfo,
 */
 func QueryUeInfo(client sbi.ConsumerClient, supi string, fields []string, supportedFeatures string) (result models.UeInfo, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	fieldsStr := utils.Param2String(fields)
 	if len(fieldsStr) == 0 {
 		err = fmt.Errorf("fields is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -117,7 +114,7 @@ func QueryUeInfo(client sbi.ConsumerClient, supi string, fields []string, suppor
 
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -144,7 +141,7 @@ func QueryUeInfo(client sbi.ConsumerClient, supi string, fields []string, suppor
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -155,9 +152,7 @@ func QueryUeInfo(client sbi.ConsumerClient, supi string, fields []string, suppor
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

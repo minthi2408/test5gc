@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // MediaSubComponent - Identifies a media subcomponent
 type MediaSubComponent struct {
-
 	AfSigProtocol AfSigProtocol `json:"afSigProtocol,omitempty"`
 
 	EthfDescs []EthFlowDescription `json:"ethfDescs,omitempty"`

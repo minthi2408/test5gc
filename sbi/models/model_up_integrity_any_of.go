@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,7 +15,7 @@ type UpIntegrityAnyOf string
 
 // List of UpIntegrityAnyOf
 const (
-	UPINTEGRITYANYOF_REQUIRED UpIntegrityAnyOf = "REQUIRED"
-	UPINTEGRITYANYOF_PREFERRED UpIntegrityAnyOf = "PREFERRED"
+	UPINTEGRITYANYOF_REQUIRED   UpIntegrityAnyOf = "REQUIRED"
+	UPINTEGRITYANYOF_PREFERRED  UpIntegrityAnyOf = "PREFERRED"
 	UPINTEGRITYANYOF_NOT_NEEDED UpIntegrityAnyOf = "NOT_NEEDED"
 )

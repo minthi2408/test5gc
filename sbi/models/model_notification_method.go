@@ -1,7 +1,7 @@
 /*
 Npcf_EventExposure
 
-PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.2
 */
@@ -11,6 +11,6 @@ API version: 1.1.2
 
 package models
 
-// NotificationMethod - Possible values are - PERIODIC - ONE_TIME - ON_EVENT_DETECTION 
+// NotificationMethod - Possible values are - PERIODIC - ONE_TIME - ON_EVENT_DETECTION
 type NotificationMethod struct {
 }

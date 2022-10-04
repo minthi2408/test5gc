@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func CreateAuthenticationStatus(client sbi.ConsumerClient, ueId string, body models.AuthEvent) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -40,7 +39,7 @@ func CreateAuthenticationStatus(client sbi.ConsumerClient, ueId string, body mod
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.Body = &body
 	req.HeaderParams["Content-Type"] = "application/json"
-	
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -51,7 +50,7 @@ func CreateAuthenticationStatus(client sbi.ConsumerClient, ueId string, body mod
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -60,19 +59,18 @@ func CreateAuthenticationStatus(client sbi.ConsumerClient, ueId string, body mod
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateAuthenticationStatus
 func OnCreateAuthenticationStatus(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AuthenticationStatusDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -88,7 +86,6 @@ func OnCreateAuthenticationStatus(ctx sbi.RequestContext, handler interface{}) (
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -97,9 +94,6 @@ func OnCreateAuthenticationStatus(ctx sbi.RequestContext, handler interface{}) (
 	}
 	return
 }
-
-
-
 
 type AuthenticationStatusDocumentApiHandler interface {
 	DR_HandleCreateAuthenticationStatus(ueId string, body models.AuthEvent) (successCode int32, err *sbi.ApiError)

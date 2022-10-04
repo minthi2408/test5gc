@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -17,7 +17,7 @@ type CreditManagementStatusAnyOf string
 const (
 	CREDITMANAGEMENTSTATUSANYOF_END_USER_SER_DENIED CreditManagementStatusAnyOf = "END_USER_SER_DENIED"
 	CREDITMANAGEMENTSTATUSANYOF_CREDIT_CTRL_NOT_APP CreditManagementStatusAnyOf = "CREDIT_CTRL_NOT_APP"
-	CREDITMANAGEMENTSTATUSANYOF_AUTH_REJECTED CreditManagementStatusAnyOf = "AUTH_REJECTED"
-	CREDITMANAGEMENTSTATUSANYOF_USER_UNKNOWN CreditManagementStatusAnyOf = "USER_UNKNOWN"
-	CREDITMANAGEMENTSTATUSANYOF_RATING_FAILED CreditManagementStatusAnyOf = "RATING_FAILED"
+	CREDITMANAGEMENTSTATUSANYOF_AUTH_REJECTED       CreditManagementStatusAnyOf = "AUTH_REJECTED"
+	CREDITMANAGEMENTSTATUSANYOF_USER_UNKNOWN        CreditManagementStatusAnyOf = "USER_UNKNOWN"
+	CREDITMANAGEMENTSTATUSANYOF_RATING_FAILED       CreditManagementStatusAnyOf = "RATING_FAILED"
 )

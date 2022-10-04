@@ -1,7 +1,7 @@
 /*
 Nudm_EE
 
-Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.4
 */
@@ -15,7 +15,7 @@ type CnTypeAnyOf string
 
 // List of CnTypeAnyOf
 const (
-	CNTYPEANYOF_SINGLE_4_G CnTypeAnyOf = "SINGLE_4G"
-	CNTYPEANYOF_SINGLE_5_G CnTypeAnyOf = "SINGLE_5G"
+	CNTYPEANYOF_SINGLE_4_G  CnTypeAnyOf = "SINGLE_4G"
+	CNTYPEANYOF_SINGLE_5_G  CnTypeAnyOf = "SINGLE_5G"
 	CNTYPEANYOF_DUAL_4_G5_G CnTypeAnyOf = "DUAL_4G5G"
 )

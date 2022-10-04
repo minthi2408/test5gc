@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,9 +16,9 @@ type PolicyDecisionFailureCodeAnyOf string
 // List of PolicyDecisionFailureCodeAnyOf
 const (
 	POLICYDECISIONFAILURECODEANYOF_TRA_CTRL_DECS_ERR PolicyDecisionFailureCodeAnyOf = "TRA_CTRL_DECS_ERR"
-	POLICYDECISIONFAILURECODEANYOF_QOS_DECS_ERR PolicyDecisionFailureCodeAnyOf = "QOS_DECS_ERR"
-	POLICYDECISIONFAILURECODEANYOF_CHG_DECS_ERR PolicyDecisionFailureCodeAnyOf = "CHG_DECS_ERR"
-	POLICYDECISIONFAILURECODEANYOF_USA_MON_DECS_ERR PolicyDecisionFailureCodeAnyOf = "USA_MON_DECS_ERR"
-	POLICYDECISIONFAILURECODEANYOF_QOS_MON_DECS_ERR PolicyDecisionFailureCodeAnyOf = "QOS_MON_DECS_ERR"
-	POLICYDECISIONFAILURECODEANYOF_CON_DATA_ERR PolicyDecisionFailureCodeAnyOf = "CON_DATA_ERR"
+	POLICYDECISIONFAILURECODEANYOF_QOS_DECS_ERR      PolicyDecisionFailureCodeAnyOf = "QOS_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_CHG_DECS_ERR      PolicyDecisionFailureCodeAnyOf = "CHG_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_USA_MON_DECS_ERR  PolicyDecisionFailureCodeAnyOf = "USA_MON_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_QOS_MON_DECS_ERR  PolicyDecisionFailureCodeAnyOf = "QOS_MON_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_CON_DATA_ERR      PolicyDecisionFailureCodeAnyOf = "CON_DATA_ERR"
 )

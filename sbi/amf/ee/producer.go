@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -12,27 +12,25 @@ API version: 1.1.7
 package ee
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for DeleteSubscription
 func OnDeleteSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -47,16 +45,15 @@ func OnDeleteSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for ModifySubscription
 func OnModifySubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
@@ -74,7 +71,6 @@ func OnModifySubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -84,11 +80,9 @@ func OnModifySubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for CreateSubscription
 func OnCreateSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.AmfCreateEventSubscription
 
@@ -101,7 +95,6 @@ func OnCreateSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -111,11 +104,8 @@ func OnCreateSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 type Producer interface {
 	EE_HandleDeleteSubscription(subscriptionId string) (successCode int32, err *sbi.ApiError)
 	EE_HandleModifySubscription(subscriptionId string, body models.ModifySubscriptionRequest) (successCode int32, result models.AmfUpdatedEventSubscription, err *sbi.ApiError)
 	EE_HandleCreateSubscription(body models.AmfCreateEventSubscription) (successCode int32, result models.AmfCreatedEventSubscription, err *sbi.ApiError)
 }
-
-

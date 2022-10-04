@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,22 +12,21 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subsId
-@return 
+@return
 */
 func DeleteIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId string) (err error) {
-	
+
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
@@ -37,7 +36,7 @@ func DeleteIndividualApplicationDataSubscription(client sbi.ConsumerClient, subs
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/subs-to-notify/{subsId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -70,7 +69,7 @@ func DeleteIndividualApplicationDataSubscription(client sbi.ConsumerClient, subs
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -79,26 +78,23 @@ func DeleteIndividualApplicationDataSubscription(client sbi.ConsumerClient, subs
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualApplicationDataSubscription
 func OnDeleteIndividualApplicationDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualApplicationDataSubscriptionDocumentApiHandler)
-	
+
 	subsId := ctx.Param("subsId")
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -113,16 +109,13 @@ func OnDeleteIndividualApplicationDataSubscription(ctx sbi.RequestContext, handl
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subsId String identifying a subscription to the Individual Application Data Subscription
-@return *models.ApplicationDataSubs, 
+@return *models.ApplicationDataSubs,
 */
 func ReadIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId string) (result models.ApplicationDataSubs, err error) {
-	
+
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
@@ -132,7 +125,7 @@ func ReadIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/application-data/subs-to-notify/{subsId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -168,7 +161,7 @@ func ReadIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -179,33 +172,29 @@ func ReadIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadIndividualApplicationDataSubscription
 func OnReadIndividualApplicationDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualApplicationDataSubscriptionDocumentApiHandler)
-	
+
 	subsId := ctx.Param("subsId")
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.ApplicationDataSubs
-
 
 	successCode, result, apierr = prod.DR_HandleReadIndividualApplicationDataSubscription(subsId)
 
@@ -217,20 +206,17 @@ func OnReadIndividualApplicationDataSubscription(ctx sbi.RequestContext, handler
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subsId
-@return *models.ApplicationDataSubs, 
+@return *models.ApplicationDataSubs,
 */
 func ReplaceIndividualApplicationDataSubscription(client sbi.ConsumerClient, subsId string, body models.ApplicationDataSubs) (result models.ApplicationDataSubs, err error) {
-	
+
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -280,7 +266,7 @@ func ReplaceIndividualApplicationDataSubscription(client sbi.ConsumerClient, sub
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -291,21 +277,20 @@ func ReplaceIndividualApplicationDataSubscription(client sbi.ConsumerClient, sub
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReplaceIndividualApplicationDataSubscription
 func OnReplaceIndividualApplicationDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualApplicationDataSubscriptionDocumentApiHandler)
-	
+
 	subsId := ctx.Param("subsId")
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
@@ -323,7 +308,6 @@ func OnReplaceIndividualApplicationDataSubscription(ctx sbi.RequestContext, hand
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -332,9 +316,6 @@ func OnReplaceIndividualApplicationDataSubscription(ctx sbi.RequestContext, hand
 	}
 	return
 }
-
-
-
 
 type IndividualApplicationDataSubscriptionDocumentApiHandler interface {
 	DR_HandleDeleteIndividualApplicationDataSubscription(subsId string) (successCode int32, err *sbi.ApiError)

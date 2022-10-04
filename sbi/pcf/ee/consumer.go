@@ -1,7 +1,7 @@
 /*
 Npcf_EventExposure
 
-PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.2
 */
@@ -12,28 +12,25 @@ API version: 1.1.2
 package ee
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/npcf-eventexposure/v1"
+	SERVICE_PATH = "{apiRoot}/npcf-eventexposure/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Policy Control Event Subscription ID
-@return 
+@return
 */
 func DeletePcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string) (err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -43,7 +40,7 @@ func DeletePcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/subscriptions/{subscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -82,7 +79,7 @@ func DeletePcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -91,16 +88,16 @@ func DeletePcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Policy Control Event Subscription ID
-@return *models.PcEventExposureSubsc, 
+@return *models.PcEventExposureSubsc,
 */
 func GetPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string) (result models.PcEventExposureSubsc, err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -110,7 +107,7 @@ func GetPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string) (
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/subscriptions/{subscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -149,7 +146,7 @@ func GetPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string) (
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -160,22 +157,22 @@ func GetPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string) (
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Policy Control Event Subscription ID
-@return *models.PcEventExposureSubsc, 
+@return *models.PcEventExposureSubsc,
 */
 func PutPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string, body models.PcEventExposureSubsc) (result models.PcEventExposureSubsc, err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -231,7 +228,7 @@ func PutPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string, b
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -242,17 +239,17 @@ func PutPcEventExposureSubsc(client sbi.ConsumerClient, subscriptionId string, b
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.PcEventExposureSubsc, 
+@return *models.PcEventExposureSubsc,
 */
 func PostPcEventExposureSubsc(client sbi.ConsumerClient, body models.PcEventExposureSubsc) (result models.PcEventExposureSubsc, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -301,7 +298,7 @@ func PostPcEventExposureSubsc(client sbi.ConsumerClient, body models.PcEventExpo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -312,9 +309,7 @@ func PostPcEventExposureSubsc(client sbi.ConsumerClient, body models.PcEventExpo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

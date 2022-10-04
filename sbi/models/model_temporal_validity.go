@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -17,7 +17,6 @@ import (
 
 // TemporalValidity - Indicates the time interval(s) during which the AF request is to be applied
 type TemporalValidity struct {
-
 	StartTime time.Time `json:"startTime,omitempty"`
 
 	StopTime time.Time `json:"stopTime,omitempty"`

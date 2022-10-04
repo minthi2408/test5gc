@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,7 +15,7 @@ type ReportingLevelAnyOf string
 
 // List of ReportingLevelAnyOf
 const (
-	REPORTINGLEVELANYOF_SER_ID_LEVEL ReportingLevelAnyOf = "SER_ID_LEVEL"
-	REPORTINGLEVELANYOF_RAT_GR_LEVEL ReportingLevelAnyOf = "RAT_GR_LEVEL"
+	REPORTINGLEVELANYOF_SER_ID_LEVEL   ReportingLevelAnyOf = "SER_ID_LEVEL"
+	REPORTINGLEVELANYOF_RAT_GR_LEVEL   ReportingLevelAnyOf = "RAT_GR_LEVEL"
 	REPORTINGLEVELANYOF_SPON_CON_LEVEL ReportingLevelAnyOf = "SPON_CON_LEVEL"
 )

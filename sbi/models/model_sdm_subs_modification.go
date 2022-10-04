@@ -1,7 +1,7 @@
 /*
 Nudm_SDM
 
-Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 2.1.7
 */
@@ -16,7 +16,6 @@ import (
 )
 
 type SdmSubsModification struct {
-
 	Expires time.Time `json:"expires,omitempty"`
 
 	MonitoredResourceUris []string `json:"monitoredResourceUris,omitempty"`

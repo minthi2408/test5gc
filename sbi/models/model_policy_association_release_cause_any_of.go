@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,7 +15,7 @@ type PolicyAssociationReleaseCauseAnyOf string
 
 // List of PolicyAssociationReleaseCauseAnyOf
 const (
-	POLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED PolicyAssociationReleaseCauseAnyOf = "UNSPECIFIED"
-	POLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION PolicyAssociationReleaseCauseAnyOf = "UE_SUBSCRIPTION"
+	POLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED      PolicyAssociationReleaseCauseAnyOf = "UNSPECIFIED"
+	POLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION  PolicyAssociationReleaseCauseAnyOf = "UE_SUBSCRIPTION"
 	POLICYASSOCIATIONRELEASECAUSEANYOF_INSUFFICIENT_RES PolicyAssociationReleaseCauseAnyOf = "INSUFFICIENT_RES"
 )

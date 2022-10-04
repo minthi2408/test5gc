@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,6 +15,6 @@ type AccuracyFulfilmentIndicatorAnyOf string
 
 // List of AccuracyFulfilmentIndicatorAnyOf
 const (
-	ACCURACYFULFILMENTINDICATORANYOF_FULFILLED AccuracyFulfilmentIndicatorAnyOf = "REQUESTED_ACCURACY_FULFILLED"
+	ACCURACYFULFILMENTINDICATORANYOF_FULFILLED     AccuracyFulfilmentIndicatorAnyOf = "REQUESTED_ACCURACY_FULFILLED"
 	ACCURACYFULFILMENTINDICATORANYOF_NOT_FULFILLED AccuracyFulfilmentIndicatorAnyOf = "REQUESTED_ACCURACY_NOT_FULFILLED"
 )

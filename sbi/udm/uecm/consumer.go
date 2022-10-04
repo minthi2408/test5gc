@@ -1,7 +1,7 @@
 /*
 Nudm_UECM
 
-Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.5
 */
@@ -12,34 +12,31 @@ API version: 1.1.5
 package uecm
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nudm-uecm/v1"
+	SERVICE_PATH = "{apiRoot}/nudm-uecm/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures
-@return *models.Amf3GppAccessRegistration, 
+@return *models.Amf3GppAccessRegistration,
 */
 func Get3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.Amf3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -48,7 +45,7 @@ func Get3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatur
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -75,7 +72,7 @@ func Get3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatur
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -86,23 +83,23 @@ func Get3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatur
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures
-@return *models.AmfNon3GppAccessRegistration, 
+@return *models.AmfNon3GppAccessRegistration,
 */
 func GetNon3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.AmfNon3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -111,7 +108,7 @@ func GetNon3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFea
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -138,7 +135,7 @@ func GetNon3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFea
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -149,22 +146,22 @@ func GetNon3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFea
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.Amf3GppAccessRegistration, 
+@return *models.Amf3GppAccessRegistration,
 */
 func Call3GppRegistration(client sbi.ConsumerClient, ueId string, body models.Amf3GppAccessRegistration) (result models.Amf3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -199,7 +196,7 @@ func Call3GppRegistration(client sbi.ConsumerClient, ueId string, body models.Am
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -210,22 +207,22 @@ func Call3GppRegistration(client sbi.ConsumerClient, ueId string, body models.Am
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.AmfNon3GppAccessRegistration, 
+@return *models.AmfNon3GppAccessRegistration,
 */
 func Non3GppRegistration(client sbi.ConsumerClient, ueId string, body models.AmfNon3GppAccessRegistration) (result models.AmfNon3GppAccessRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -260,7 +257,7 @@ func Non3GppRegistration(client sbi.ConsumerClient, ueId string, body models.Amf
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -271,18 +268,18 @@ func Non3GppRegistration(client sbi.ConsumerClient, ueId string, body models.Amf
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return 
+@return
 */
 func IpSmGwDeregistration(client sbi.ConsumerClient, ueId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
@@ -292,7 +289,7 @@ func IpSmGwDeregistration(client sbi.ConsumerClient, ueId string) (err error) {
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/{ueId}/registrations/ip-sm-gw", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -316,7 +313,7 @@ func IpSmGwDeregistration(client sbi.ConsumerClient, ueId string) (err error) {
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -325,20 +322,20 @@ func IpSmGwDeregistration(client sbi.ConsumerClient, ueId string) (err error) {
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.IpSmGwRegistration, 
+@return *models.IpSmGwRegistration,
 */
 func IpSmGwRegistration(client sbi.ConsumerClient, ueId string, body models.IpSmGwRegistration) (result models.IpSmGwRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -373,7 +370,7 @@ func IpSmGwRegistration(client sbi.ConsumerClient, ueId string, body models.IpSm
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -384,18 +381,18 @@ func IpSmGwRegistration(client sbi.ConsumerClient, ueId string, body models.IpSm
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.IpSmGwRegistration, 
+@return *models.IpSmGwRegistration,
 */
 func GetIpSmGwRegistration(client sbi.ConsumerClient, ueId string) (result models.IpSmGwRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
@@ -405,7 +402,7 @@ func GetIpSmGwRegistration(client sbi.ConsumerClient, ueId string) (result model
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/{ueId}/registrations/ip-sm-gw", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -432,7 +429,7 @@ func GetIpSmGwRegistration(client sbi.ConsumerClient, ueId string) (result model
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -443,22 +440,22 @@ func GetIpSmGwRegistration(client sbi.ConsumerClient, ueId string) (result model
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return 
+@return
 */
 func PeiUpdate(client sbi.ConsumerClient, ueId string, body models.PeiUpdateInfo) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -493,7 +490,7 @@ func PeiUpdate(client sbi.ConsumerClient, ueId string, body models.PeiUpdateInfo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -502,21 +499,21 @@ func PeiUpdate(client sbi.ConsumerClient, ueId string, body models.PeiUpdateInfo
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func Update3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string, body models.Amf3GppAccessRegistrationModification) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -557,7 +554,7 @@ func Update3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFea
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -568,23 +565,23 @@ func Update3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFea
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func UpdateNon3GppRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string, body models.AmfNon3GppAccessRegistrationModification) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -625,7 +622,7 @@ func UpdateNon3GppRegistration(client sbi.ConsumerClient, ueId string, supported
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -636,23 +633,23 @@ func UpdateNon3GppRegistration(client sbi.ConsumerClient, ueId string, supported
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param pduSessionId Identifier of the PDU session
-@return *models.SmfRegistration, 
+@return *models.SmfRegistration,
 */
 func RetrieveSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId int32) (result models.SmfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
@@ -664,7 +661,7 @@ func RetrieveSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionI
 
 	req.Path = fmt.Sprintf("%s/{ueId}/registrations/smf-registrations/{pduSessionId}", SERVICE_PATH)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -691,7 +688,7 @@ func RetrieveSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionI
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -702,9 +699,9 @@ func RetrieveSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionI
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -713,19 +710,19 @@ func RetrieveSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionI
 @param pduSessionId Identifier of the PDU session
 @param smfSetId
 @param smfInstanceId
-@return 
+@return
 */
 func SmfDeregistration(client sbi.ConsumerClient, ueId string, pduSessionId int32, smfSetId string, smfInstanceId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodDelete
@@ -738,7 +735,7 @@ func SmfDeregistration(client sbi.ConsumerClient, ueId string, pduSessionId int3
 	}
 	if len(smfInstanceId) > 0 {
 		req.QueryParams.Add("smf-instance-id", smfInstanceId)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -765,7 +762,7 @@ func SmfDeregistration(client sbi.ConsumerClient, ueId string, pduSessionId int3
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -774,7 +771,7 @@ func SmfDeregistration(client sbi.ConsumerClient, ueId string, pduSessionId int3
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -783,14 +780,14 @@ func SmfDeregistration(client sbi.ConsumerClient, ueId string, pduSessionId int3
 @param singleNssai
 @param dnn
 @param supportedFeatures
-@return *models.SmfRegistrationInfo, 
+@return *models.SmfRegistrationInfo,
 */
 func GetSmfRegistration(client sbi.ConsumerClient, ueId string, singleNssai *models.Snssai, dnn string, supportedFeatures string) (result models.SmfRegistrationInfo, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -806,7 +803,7 @@ func GetSmfRegistration(client sbi.ConsumerClient, ueId string, singleNssai *mod
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -833,7 +830,7 @@ func GetSmfRegistration(client sbi.ConsumerClient, ueId string, singleNssai *mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -844,28 +841,28 @@ func GetSmfRegistration(client sbi.ConsumerClient, ueId string, singleNssai *mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param pduSessionId Identifier of the PDU session
-@return *models.SmfRegistration, 
+@return *models.SmfRegistration,
 */
 func Registration(client sbi.ConsumerClient, ueId string, pduSessionId int32, body models.SmfRegistration) (result models.SmfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -901,7 +898,7 @@ func Registration(client sbi.ConsumerClient, ueId string, pduSessionId int32, bo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -912,23 +909,23 @@ func Registration(client sbi.ConsumerClient, ueId string, pduSessionId int32, bo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func Get3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -937,7 +934,7 @@ func Get3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supportedFe
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -964,7 +961,7 @@ func Get3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supportedFe
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -975,23 +972,23 @@ func Get3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supportedFe
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param smsfSetId
-@return 
+@return
 */
 func Call3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodDelete
@@ -1000,7 +997,7 @@ func Call3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetI
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(smsfSetId) > 0 {
 		req.QueryParams.Add("smsf-set-id", smsfSetId)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1027,7 +1024,7 @@ func Call3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetI
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1036,21 +1033,21 @@ func Call3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetI
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param smsfSetId
-@return 
+@return
 */
 func Non3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodDelete
@@ -1059,7 +1056,7 @@ func Non3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetId
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(smsfSetId) > 0 {
 		req.QueryParams.Add("smsf-set-id", smsfSetId)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1086,7 +1083,7 @@ func Non3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetId
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1095,21 +1092,21 @@ func Non3GppSmsfDeregistration(client sbi.ConsumerClient, ueId string, smsfSetId
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func GetNon3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1118,7 +1115,7 @@ func GetNon3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supporte
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1145,7 +1142,7 @@ func GetNon3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supporte
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1156,22 +1153,22 @@ func GetNon3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, supporte
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func Call3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body models.SmsfRegistration) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -1206,7 +1203,7 @@ func Call3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body model
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1217,22 +1214,22 @@ func Call3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body model
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func Non3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body models.SmsfRegistration) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -1267,7 +1264,7 @@ func Non3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body models
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1278,22 +1275,22 @@ func Non3GppSmsfRegistration(client sbi.ConsumerClient, ueId string, body models
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
-@return 
+@return
 */
 func DeregAMF(client sbi.ConsumerClient, ueId string, body models.AmfDeregInfo) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1328,7 +1325,7 @@ func DeregAMF(client sbi.ConsumerClient, ueId string, body models.AmfDeregInfo) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1337,15 +1334,15 @@ func DeregAMF(client sbi.ConsumerClient, ueId string, body models.AmfDeregInfo) 
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return 
+@return
 */
 func TriggerPCSCFRestoration(client sbi.ConsumerClient, body models.TriggerRequest) (err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1382,7 +1379,7 @@ func TriggerPCSCFRestoration(client sbi.ConsumerClient, body models.TriggerReque
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1391,7 +1388,7 @@ func TriggerPCSCFRestoration(client sbi.ConsumerClient, body models.TriggerReque
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -1401,19 +1398,19 @@ func TriggerPCSCFRestoration(client sbi.ConsumerClient, body models.TriggerReque
 @param supportedFeatures
 @param singleNssai
 @param dnn
-@return *models.RegistrationDataSets, 
+@return *models.RegistrationDataSets,
 */
 func GetRegistrations(client sbi.ConsumerClient, ueId string, registrationDatasetNames []models.RegistrationDataSetName, supportedFeatures string, singleNssai *models.Snssai, dnn string) (result models.RegistrationDataSets, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	registrationDatasetNamesStr := utils.Param2String(registrationDatasetNames)
 	if len(registrationDatasetNamesStr) == 0 {
 		err = fmt.Errorf("registrationDatasetNames is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1431,7 +1428,7 @@ func GetRegistrations(client sbi.ConsumerClient, ueId string, registrationDatase
 	}
 	if len(dnn) > 0 {
 		req.QueryParams.Add("dnn", dnn)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1458,7 +1455,7 @@ func GetRegistrations(client sbi.ConsumerClient, ueId string, registrationDatase
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1469,23 +1466,23 @@ func GetRegistrations(client sbi.ConsumerClient, ueId string, registrationDatase
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures
-@return *models.LocationInfo, 
+@return *models.LocationInfo,
 */
 func GetLocationInfo(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.LocationInfo, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1494,7 +1491,7 @@ func GetLocationInfo(client sbi.ConsumerClient, ueId string, supportedFeatures s
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1521,7 +1518,7 @@ func GetLocationInfo(client sbi.ConsumerClient, ueId string, supportedFeatures s
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1532,9 +1529,7 @@ func GetLocationInfo(client sbi.ConsumerClient, ueId string, supportedFeatures s
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

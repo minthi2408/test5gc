@@ -1,7 +1,7 @@
 /*
 Nsmf_NIDD
 
-SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,7 +12,6 @@ API version: 1.0.2
 package models
 
 type DeliverRequest struct {
-
 	JsonData DeliverReqData `json:"jsonData,omitempty"`
 
 	BinaryMtData []byte `json:"binaryMtData,omitempty"`

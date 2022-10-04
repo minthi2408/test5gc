@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -11,6 +11,6 @@ API version: 1.1.8
 
 package models
 
-// AuthStatus - Possible values are - \"EAP_SUCCESS\": The NSSAA status is EAP-Success. - \"EAP_FAILURE\": The NSSAA status is EAP-Failure. - \"PENDING\": The NSSAA status is Pending. 
+// AuthStatus - Possible values are - \"EAP_SUCCESS\": The NSSAA status is EAP-Success. - \"EAP_FAILURE\": The NSSAA status is EAP-Failure. - \"PENDING\": The NSSAA status is Pending.
 type AuthStatus struct {
 }

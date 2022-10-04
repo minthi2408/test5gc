@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func CreateMessageWaitingData(client sbi.ConsumerClient, ueId string, body models.MessageWaitingData) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -41,7 +40,7 @@ func CreateMessageWaitingData(client sbi.ConsumerClient, ueId string, body model
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.Body = &body
 	req.HeaderParams["Content-Type"] = "application/json"
-	
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -52,7 +51,7 @@ func CreateMessageWaitingData(client sbi.ConsumerClient, ueId string, body model
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -61,19 +60,18 @@ func CreateMessageWaitingData(client sbi.ConsumerClient, ueId string, body model
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateMessageWaitingData
 func OnCreateMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(MessageWaitingDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -89,7 +87,6 @@ func OnCreateMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -99,16 +96,13 @@ func OnCreateMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func DeleteMessageWaitingData(client sbi.ConsumerClient, ueId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
@@ -118,8 +112,8 @@ func DeleteMessageWaitingData(client sbi.ConsumerClient, ueId string) (err error
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data/mwd", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)	
-	
+	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -130,7 +124,7 @@ func DeleteMessageWaitingData(client sbi.ConsumerClient, ueId string) (err error
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -139,26 +133,23 @@ func DeleteMessageWaitingData(client sbi.ConsumerClient, ueId string) (err error
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteMessageWaitingData
 func OnDeleteMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(MessageWaitingDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -173,20 +164,17 @@ func OnDeleteMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func ModifyMessageWaitingData(client sbi.ConsumerClient, ueId string, body []models.PatchItem) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -212,7 +200,7 @@ func ModifyMessageWaitingData(client sbi.ConsumerClient, ueId string, body []mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -221,19 +209,18 @@ func ModifyMessageWaitingData(client sbi.ConsumerClient, ueId string, body []mod
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for ModifyMessageWaitingData
 func OnModifyMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(MessageWaitingDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -249,7 +236,6 @@ func OnModifyMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -259,22 +245,19 @@ func OnModifyMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.MessageWaitingData, 
+@return *models.MessageWaitingData,
 */
 func QueryMessageWaitingData(client sbi.ConsumerClient, ueId string, fields []string, supportedFeatures string) (result models.MessageWaitingData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -287,7 +270,7 @@ func QueryMessageWaitingData(client sbi.ConsumerClient, ueId string, fields []st
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -299,7 +282,7 @@ func QueryMessageWaitingData(client sbi.ConsumerClient, ueId string, fields []st
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -310,21 +293,20 @@ func QueryMessageWaitingData(client sbi.ConsumerClient, ueId string, fields []st
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryMessageWaitingData
 func OnQueryMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(MessageWaitingDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -335,21 +317,18 @@ func OnQueryMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (res
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.MessageWaitingData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryMessageWaitingData(ueId, fields, supportedFeatures)
 
@@ -360,9 +339,6 @@ func OnQueryMessageWaitingData(ctx sbi.RequestContext, handler interface{}) (res
 	}
 	return
 }
-
-
-
 
 type MessageWaitingDataDocumentApiHandler interface {
 	DR_HandleCreateMessageWaitingData(ueId string, body models.MessageWaitingData) (successCode int32, err *sbi.ApiError)

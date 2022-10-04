@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param serviceParamId The Identifier of an Individual Service Parameter Data to be created or updated. It shall apply the format of Data type string.
-@return *models.ServiceParameterData, 
+@return *models.ServiceParameterData,
 */
 func CreateOrReplaceServiceParameterData(client sbi.ConsumerClient, serviceParamId string, body models.ServiceParameterData) (result models.ServiceParameterData, err error) {
-	
+
 	if len(serviceParamId) == 0 {
 		err = fmt.Errorf("serviceParamId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateOrReplaceServiceParameterData(client sbi.ConsumerClient, serviceParam
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateOrReplaceServiceParameterData(client sbi.ConsumerClient, serviceParam
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceServiceParameterData
 func OnCreateOrReplaceServiceParameterData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualServiceParameterDataDocumentApiHandler)
-	
+
 	serviceParamId := ctx.Param("serviceParamId")
 	if len(serviceParamId) == 0 {
 		//serviceParamId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "serviceParamId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateOrReplaceServiceParameterData(ctx sbi.RequestContext, handler inter
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateOrReplaceServiceParameterData(ctx sbi.RequestContext, handler inter
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param serviceParamId The Identifier of an Individual Service Parameter Data to be updated. It shall apply the format of Data type string.
-@return 
+@return
 */
 func DeleteIndividualServiceParameterData(client sbi.ConsumerClient, serviceParamId string) (err error) {
-	
+
 	if len(serviceParamId) == 0 {
 		err = fmt.Errorf("serviceParamId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualServiceParameterData(client sbi.ConsumerClient, servicePara
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/serviceParamData/{serviceParamId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"serviceParamId"+"}", url.PathEscape(serviceParamId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"serviceParamId"+"}", url.PathEscape(serviceParamId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualServiceParameterData(client sbi.ConsumerClient, servicePara
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualServiceParameterData(client sbi.ConsumerClient, servicePara
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualServiceParameterData
 func OnDeleteIndividualServiceParameterData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualServiceParameterDataDocumentApiHandler)
-	
+
 	serviceParamId := ctx.Param("serviceParamId")
 	if len(serviceParamId) == 0 {
 		//serviceParamId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "serviceParamId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -232,20 +223,17 @@ func OnDeleteIndividualServiceParameterData(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param serviceParamId The Identifier of an Individual Service Parameter Data to be updated. It shall apply the format of Data type string.
-@return *models.ServiceParameterData, 
+@return *models.ServiceParameterData,
 */
 func UpdateIndividualServiceParameterData(client sbi.ConsumerClient, serviceParamId string, body models.ServiceParameterDataPatch) (result models.ServiceParameterData, err error) {
-	
+
 	if len(serviceParamId) == 0 {
 		err = fmt.Errorf("serviceParamId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -295,7 +283,7 @@ func UpdateIndividualServiceParameterData(client sbi.ConsumerClient, servicePara
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -306,21 +294,20 @@ func UpdateIndividualServiceParameterData(client sbi.ConsumerClient, servicePara
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateIndividualServiceParameterData
 func OnUpdateIndividualServiceParameterData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualServiceParameterDataDocumentApiHandler)
-	
+
 	serviceParamId := ctx.Param("serviceParamId")
 	if len(serviceParamId) == 0 {
 		//serviceParamId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "serviceParamId is required",
 		}))
@@ -338,7 +325,6 @@ func OnUpdateIndividualServiceParameterData(ctx sbi.RequestContext, handler inte
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -347,9 +333,6 @@ func OnUpdateIndividualServiceParameterData(ctx sbi.RequestContext, handler inte
 	}
 	return
 }
-
-
-
 
 type IndividualServiceParameterDataDocumentApiHandler interface {
 	DR_HandleCreateOrReplaceServiceParameterData(serviceParamId string, body models.ServiceParameterData) (successCode int32, result models.ServiceParameterData, err *sbi.ApiError)

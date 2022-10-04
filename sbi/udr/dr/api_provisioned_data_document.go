@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,33 +12,32 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param servingPlmnId PLMN ID
 @param datasetNames List of dataset names
-@return *models.ProvisionedDataSets, 
+@return *models.ProvisionedDataSets,
 */
 func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId string, datasetNames []models.DataSetName) (result models.ProvisionedDataSets, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(servingPlmnId) == 0 {
 		err = fmt.Errorf("servingPlmnId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -49,7 +48,7 @@ func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId 
 	datasetNamesStr := utils.Param2String(datasetNames)
 	if len(datasetNamesStr) > 0 {
 		req.QueryParams.Add("dataset-names", datasetNamesStr)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -61,7 +60,7 @@ func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId 
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -72,21 +71,20 @@ func QueryProvisionedData(client sbi.ConsumerClient, ueId string, servingPlmnId 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryProvisionedData
 func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(ProvisionedDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -96,7 +94,7 @@ func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp s
 	if len(servingPlmnId) == 0 {
 		//servingPlmnId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "servingPlmnId is required",
 		}))
@@ -107,20 +105,16 @@ func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp s
 	var datasetNamesErr error
 	if datasetNames, datasetNamesErr = utils.String2ArrayOfDataSetName(datasetNamesStr); datasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: datasetNamesErr.Error(), 
+			Detail: datasetNamesErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.ProvisionedDataSets
-
 
 	successCode, result, apierr = prod.DR_HandleQueryProvisionedData(ueId, servingPlmnId, datasetNames)
 
@@ -131,9 +125,6 @@ func OnQueryProvisionedData(ctx sbi.RequestContext, handler interface{}) (resp s
 	}
 	return
 }
-
-
-
 
 type ProvisionedDataDocumentApiHandler interface {
 	DR_HandleQueryProvisionedData(ueId string, servingPlmnId string, datasetNames []models.DataSetName) (successCode int32, result models.ProvisionedDataSets, err *sbi.ApiError)

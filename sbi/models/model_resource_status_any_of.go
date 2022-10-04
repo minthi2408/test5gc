@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,9 +15,9 @@ type ResourceStatusAnyOf string
 
 // List of ResourceStatusAnyOf
 const (
-	RESOURCESTATUSANYOF_RELEASED ResourceStatusAnyOf = "RELEASED"
-	RESOURCESTATUSANYOF_UNCHANGED ResourceStatusAnyOf = "UNCHANGED"
-	RESOURCESTATUSANYOF_TRANSFERRED ResourceStatusAnyOf = "TRANSFERRED"
-	RESOURCESTATUSANYOF_UPDATED ResourceStatusAnyOf = "UPDATED"
+	RESOURCESTATUSANYOF_RELEASED       ResourceStatusAnyOf = "RELEASED"
+	RESOURCESTATUSANYOF_UNCHANGED      ResourceStatusAnyOf = "UNCHANGED"
+	RESOURCESTATUSANYOF_TRANSFERRED    ResourceStatusAnyOf = "TRANSFERRED"
+	RESOURCESTATUSANYOF_UPDATED        ResourceStatusAnyOf = "UPDATED"
 	RESOURCESTATUSANYOF_ALT_ANCHOR_SMF ResourceStatusAnyOf = "ALT_ANCHOR_SMF"
 )

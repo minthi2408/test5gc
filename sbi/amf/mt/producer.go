@@ -1,7 +1,7 @@
 /*
 Namf_MT
 
-AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,21 +12,21 @@ API version: 1.1.3
 package mt
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for ProvideDomainSelectionInfo
 func OnProvideDomainSelectionInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -37,33 +37,29 @@ func OnProvideDomainSelectionInfo(ctx sbi.RequestContext, handler interface{}) (
 	var infoClassErr error
 	if infoClass, infoClassErr = utils.String2UeContextInfoClass(infoClassStr); infoClassErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: infoClassErr.Error(), 
+			Detail: infoClassErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 	oldGuamiStr := ctx.Param("old-guami")
 	var oldGuami *models.Guami
 	var oldGuamiErr error
 	if oldGuami, oldGuamiErr = utils.String2Guami(oldGuamiStr); oldGuamiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: oldGuamiErr.Error(), 
+			Detail: oldGuamiErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UeContextInfo
-
 
 	successCode, result, apierr = prod.MT_HandleProvideDomainSelectionInfo(ueContextId, infoClass, supportedFeatures, oldGuami)
 
@@ -75,16 +71,15 @@ func OnProvideDomainSelectionInfo(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
 //sbi producer handler for EnableUeReachability
 func OnEnableUeReachability(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -102,7 +97,6 @@ func OnEnableUeReachability(ctx sbi.RequestContext, handler interface{}) (resp s
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -112,10 +106,7 @@ func OnEnableUeReachability(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 type Producer interface {
 	MT_HandleProvideDomainSelectionInfo(ueContextId string, infoClass *models.UeContextInfoClass, supportedFeatures string, oldGuami *models.Guami) (successCode int32, result models.UeContextInfo, err *sbi.ApiError)
 	MT_HandleEnableUeReachability(ueContextId string, body models.EnableUeReachabilityReqData) (successCode int32, result models.EnableUeReachabilityRspData, err *sbi.ApiError)
 }
-
-

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return 
+@return
 */
 func CreateAuthenticationUPU(client sbi.ConsumerClient, ueId string, supportedFeatures string, body *models.UpuData) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -44,7 +43,7 @@ func CreateAuthenticationUPU(client sbi.ConsumerClient, ueId string, supportedFe
 	}
 	req.Body = body
 	req.HeaderParams["Content-Type"] = "application/json"
-	
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -55,7 +54,7 @@ func CreateAuthenticationUPU(client sbi.ConsumerClient, ueId string, supportedFe
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,19 +63,18 @@ func CreateAuthenticationUPU(client sbi.ConsumerClient, ueId string, supportedFe
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateAuthenticationUPU
 func OnCreateAuthenticationUPU(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AuthenticationUPUDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -93,7 +91,6 @@ func OnCreateAuthenticationUPU(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -103,21 +100,18 @@ func OnCreateAuthenticationUPU(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return *models.UpuData, 
+@return *models.UpuData,
 */
 func QueryAuthUPU(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.UpuData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -126,7 +120,7 @@ func QueryAuthUPU(client sbi.ConsumerClient, ueId string, supportedFeatures stri
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -138,7 +132,7 @@ func QueryAuthUPU(client sbi.ConsumerClient, ueId string, supportedFeatures stri
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -149,21 +143,20 @@ func QueryAuthUPU(client sbi.ConsumerClient, ueId string, supportedFeatures stri
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryAuthUPU
 func OnQueryAuthUPU(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AuthenticationUPUDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -171,12 +164,9 @@ func OnQueryAuthUPU(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UpuData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryAuthUPU(ueId, supportedFeatures)
 
@@ -187,9 +177,6 @@ func OnQueryAuthUPU(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	}
 	return
 }
-
-
-
 
 type AuthenticationUPUDocumentApiHandler interface {
 	DR_HandleCreateAuthenticationUPU(ueId string, supportedFeatures string, body *models.UpuData) (successCode int32, err *sbi.ApiError)

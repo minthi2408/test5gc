@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,7 +15,7 @@ type SqnSchemeAnyOf string
 
 // List of SqnSchemeAnyOf
 const (
-	SQNSCHEMEANYOF_GENERAL SqnSchemeAnyOf = "GENERAL"
+	SQNSCHEMEANYOF_GENERAL        SqnSchemeAnyOf = "GENERAL"
 	SQNSCHEMEANYOF_NON_TIME_BASED SqnSchemeAnyOf = "NON_TIME_BASED"
-	SQNSCHEMEANYOF_TIME_BASED SqnSchemeAnyOf = "TIME_BASED"
+	SQNSCHEMEANYOF_TIME_BASED     SqnSchemeAnyOf = "TIME_BASED"
 )

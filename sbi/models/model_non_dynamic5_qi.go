@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,7 +12,6 @@ API version: 1.1.8
 package models
 
 type NonDynamic5Qi struct {
-
 	PriorityLevel int32 `json:"priorityLevel,omitempty"`
 
 	AverWindow int32 `json:"averWindow,omitempty"`

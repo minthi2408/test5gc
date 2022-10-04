@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -13,7 +13,6 @@ package models
 
 // UpdpSubscriptionData - UE policy delivery related N1 message notification subscription data.
 type UpdpSubscriptionData struct {
-
 	UpdpNotifySubscriptionId string `json:"updpNotifySubscriptionId"`
 
 	UpdpNotifyCallbackUri string `json:"updpNotifyCallbackUri"`

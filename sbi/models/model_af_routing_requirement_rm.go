@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // AfRoutingRequirementRm - this data type is defined in the same way as the AfRoutingRequirement data type, but with the OpenAPI nullable property set to true and the spVal and tempVals attributes defined as removable.
 type AfRoutingRequirementRm struct {
-
 	AppReloc bool `json:"appReloc,omitempty"`
 
 	RouteToLocs *[]RouteToLocation `json:"routeToLocs,omitempty"`

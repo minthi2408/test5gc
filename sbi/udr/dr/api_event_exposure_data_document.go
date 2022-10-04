@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,29 +12,28 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.EeProfileData, 
+@return *models.EeProfileData,
 */
 func QueryEEData(client sbi.ConsumerClient, ueId string, fields []string, supportedFeatures string) (result models.EeProfileData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -47,7 +46,7 @@ func QueryEEData(client sbi.ConsumerClient, ueId string, fields []string, suppor
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -59,7 +58,7 @@ func QueryEEData(client sbi.ConsumerClient, ueId string, fields []string, suppor
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -70,21 +69,20 @@ func QueryEEData(client sbi.ConsumerClient, ueId string, fields []string, suppor
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryEEData
 func OnQueryEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(EventExposureDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -95,21 +93,18 @@ func OnQueryEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.EeProfileData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryEEData(ueId, fields, supportedFeatures)
 
@@ -120,9 +115,6 @@ func OnQueryEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	}
 	return
 }
-
-
-
 
 type EventExposureDataDocumentApiHandler interface {
 	DR_HandleQueryEEData(ueId string, fields []string, supportedFeatures string) (successCode int32, result models.EeProfileData, err *sbi.ApiError)

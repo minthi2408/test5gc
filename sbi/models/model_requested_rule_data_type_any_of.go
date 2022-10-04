@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,10 +15,10 @@ type RequestedRuleDataTypeAnyOf string
 
 // List of RequestedRuleDataTypeAnyOf
 const (
-	REQUESTEDRULEDATATYPEANYOF_CH_ID RequestedRuleDataTypeAnyOf = "CH_ID"
-	REQUESTEDRULEDATATYPEANYOF_MS_TIME_ZONE RequestedRuleDataTypeAnyOf = "MS_TIME_ZONE"
+	REQUESTEDRULEDATATYPEANYOF_CH_ID         RequestedRuleDataTypeAnyOf = "CH_ID"
+	REQUESTEDRULEDATATYPEANYOF_MS_TIME_ZONE  RequestedRuleDataTypeAnyOf = "MS_TIME_ZONE"
 	REQUESTEDRULEDATATYPEANYOF_USER_LOC_INFO RequestedRuleDataTypeAnyOf = "USER_LOC_INFO"
-	REQUESTEDRULEDATATYPEANYOF_RES_RELEASE RequestedRuleDataTypeAnyOf = "RES_RELEASE"
+	REQUESTEDRULEDATATYPEANYOF_RES_RELEASE   RequestedRuleDataTypeAnyOf = "RES_RELEASE"
 	REQUESTEDRULEDATATYPEANYOF_SUCC_RES_ALLO RequestedRuleDataTypeAnyOf = "SUCC_RES_ALLO"
-	REQUESTEDRULEDATATYPEANYOF_EPS_FALLBACK RequestedRuleDataTypeAnyOf = "EPS_FALLBACK"
+	REQUESTEDRULEDATATYPEANYOF_EPS_FALLBACK  RequestedRuleDataTypeAnyOf = "EPS_FALLBACK"
 )

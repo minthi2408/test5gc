@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,27 +12,25 @@ API version: 1.1.6
 package uepc
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for DeleteIndividualUEPolicyAssociation
 func OnDeleteIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	polAssoId := ctx.Param("polAssoId")
 	if len(polAssoId) == 0 {
 		//polAssoId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "polAssoId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -47,28 +45,24 @@ func OnDeleteIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler inter
 	return
 }
 
-
 //sbi producer handler for ReadIndividualUEPolicyAssociation
 func OnReadIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	polAssoId := ctx.Param("polAssoId")
 	if len(polAssoId) == 0 {
 		//polAssoId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "polAssoId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.PolicyAssociation
-
 
 	successCode, result, apierr = prod.UEPC_HandleReadIndividualUEPolicyAssociation(polAssoId)
 
@@ -80,16 +74,15 @@ func OnReadIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler interfa
 	return
 }
 
-
 //sbi producer handler for ReportObservedEventTriggersForIndividualUEPolicyAssociation
 func OnReportObservedEventTriggersForIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	polAssoId := ctx.Param("polAssoId")
 	if len(polAssoId) == 0 {
 		//polAssoId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "polAssoId is required",
 		}))
@@ -107,7 +100,6 @@ func OnReportObservedEventTriggersForIndividualUEPolicyAssociation(ctx sbi.Reque
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -117,11 +109,9 @@ func OnReportObservedEventTriggersForIndividualUEPolicyAssociation(ctx sbi.Reque
 	return
 }
 
-
 //sbi producer handler for CreateIndividualUEPolicyAssociation
 func OnCreateIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.PolicyAssociationRequest
 
@@ -134,7 +124,6 @@ func OnCreateIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler inter
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -144,12 +133,9 @@ func OnCreateIndividualUEPolicyAssociation(ctx sbi.RequestContext, handler inter
 	return
 }
 
-
 type Producer interface {
 	UEPC_HandleDeleteIndividualUEPolicyAssociation(polAssoId string) (successCode int32, err *sbi.ApiError)
 	UEPC_HandleReadIndividualUEPolicyAssociation(polAssoId string) (successCode int32, result models.PolicyAssociation, err *sbi.ApiError)
 	UEPC_HandleReportObservedEventTriggersForIndividualUEPolicyAssociation(polAssoId string, body models.PolicyAssociationUpdateRequest) (successCode int32, result models.PolicyUpdate, err *sbi.ApiError)
 	UEPC_HandleCreateIndividualUEPolicyAssociation(body models.PolicyAssociationRequest) (successCode int32, result models.PolicyAssociation, err *sbi.ApiError)
 }
-
-

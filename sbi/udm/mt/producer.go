@@ -1,7 +1,7 @@
 /*
 Nudm_MT
 
-UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,21 +12,21 @@ API version: 1.0.2
 package mt
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for ProvideLocationInfo
 func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -44,7 +44,6 @@ func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sb
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -54,16 +53,15 @@ func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for QueryUeInfo
 func OnQueryUeInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -73,7 +71,7 @@ func OnQueryUeInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	if len(fieldsStr) == 0 {
 		//fields is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "fields is required",
 		}))
@@ -83,21 +81,18 @@ func OnQueryUeInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UeInfo
-
 
 	successCode, result, apierr = prod.MT_HandleQueryUeInfo(supi, fields, supportedFeatures)
 
@@ -109,10 +104,7 @@ func OnQueryUeInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	return
 }
 
-
 type Producer interface {
 	MT_HandleProvideLocationInfo(supi string, body models.LocationInfoRequest) (successCode int32, result models.LocationInfoResult, err *sbi.ApiError)
 	MT_HandleQueryUeInfo(supi string, fields []string, supportedFeatures string) (successCode int32, result models.UeInfo, err *sbi.ApiError)
 }
-
-

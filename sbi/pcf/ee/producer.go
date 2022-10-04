@@ -1,7 +1,7 @@
 /*
 Npcf_EventExposure
 
-PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.2
 */
@@ -12,27 +12,25 @@ API version: 1.1.2
 package ee
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for DeletePcEventExposureSubsc
 func OnDeletePcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -47,28 +45,24 @@ func OnDeletePcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
 //sbi producer handler for GetPcEventExposureSubsc
 func OnGetPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.PcEventExposureSubsc
-
 
 	successCode, result, apierr = prod.EE_HandleGetPcEventExposureSubsc(subscriptionId)
 
@@ -80,16 +74,15 @@ func OnGetPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for PutPcEventExposureSubsc
 func OnPutPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
@@ -107,7 +100,6 @@ func OnPutPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -117,11 +109,9 @@ func OnPutPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for PostPcEventExposureSubsc
 func OnPostPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.PcEventExposureSubsc
 
@@ -134,7 +124,6 @@ func OnPostPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -144,12 +133,9 @@ func OnPostPcEventExposureSubsc(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
 type Producer interface {
 	EE_HandleDeletePcEventExposureSubsc(subscriptionId string) (successCode int32, err *sbi.ApiError)
 	EE_HandleGetPcEventExposureSubsc(subscriptionId string) (successCode int32, result models.PcEventExposureSubsc, err *sbi.ApiError)
 	EE_HandlePutPcEventExposureSubsc(subscriptionId string, body models.PcEventExposureSubsc) (successCode int32, result models.PcEventExposureSubsc, err *sbi.ApiError)
 	EE_HandlePostPcEventExposureSubsc(body models.PcEventExposureSubsc) (successCode int32, result models.PcEventExposureSubsc, err *sbi.ApiError)
 }
-
-

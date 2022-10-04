@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,8 +15,8 @@ type PsaIndicationAnyOf string
 
 // List of PsaIndicationAnyOf
 const (
-	PSAINDICATIONANYOF_INSERTED PsaIndicationAnyOf = "PSA_INSERTED"
-	PSAINDICATIONANYOF_REMOVED PsaIndicationAnyOf = "PSA_REMOVED"
+	PSAINDICATIONANYOF_INSERTED      PsaIndicationAnyOf = "PSA_INSERTED"
+	PSAINDICATIONANYOF_REMOVED       PsaIndicationAnyOf = "PSA_REMOVED"
 	PSAINDICATIONANYOF_INSERTED_ONLY PsaIndicationAnyOf = "PSA_INSERTED_ONLY"
-	PSAINDICATIONANYOF_REMOVED_ONLY PsaIndicationAnyOf = "PSA_REMOVED_ONLY"
+	PSAINDICATIONANYOF_REMOVED_ONLY  PsaIndicationAnyOf = "PSA_REMOVED_ONLY"
 )

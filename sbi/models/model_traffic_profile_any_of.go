@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,9 +15,9 @@ type TrafficProfileAnyOf string
 
 // List of TrafficProfileAnyOf
 const (
-	TRAFFICPROFILEANYOF_SINGLE_TRANS_UL TrafficProfileAnyOf = "SINGLE_TRANS_UL"
-	TRAFFICPROFILEANYOF_SINGLE_TRANS_DL TrafficProfileAnyOf = "SINGLE_TRANS_DL"
+	TRAFFICPROFILEANYOF_SINGLE_TRANS_UL     TrafficProfileAnyOf = "SINGLE_TRANS_UL"
+	TRAFFICPROFILEANYOF_SINGLE_TRANS_DL     TrafficProfileAnyOf = "SINGLE_TRANS_DL"
 	TRAFFICPROFILEANYOF_DUAL_TRANS_UL_FIRST TrafficProfileAnyOf = "DUAL_TRANS_UL_FIRST"
 	TRAFFICPROFILEANYOF_DUAL_TRANS_DL_FIRST TrafficProfileAnyOf = "DUAL_TRANS_DL_FIRST"
-	TRAFFICPROFILEANYOF_MULTI_TRANS TrafficProfileAnyOf = "MULTI_TRANS"
+	TRAFFICPROFILEANYOF_MULTI_TRANS         TrafficProfileAnyOf = "MULTI_TRANS"
 )

@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,6 +15,6 @@ type OccurrenceInfoAnyOf string
 
 // List of OccurrenceInfoAnyOf
 const (
-	OCCURRENCEINFOANYOF_ONE_TIME_EVENT OccurrenceInfoAnyOf = "ONE_TIME_EVENT"
+	OCCURRENCEINFOANYOF_ONE_TIME_EVENT      OccurrenceInfoAnyOf = "ONE_TIME_EVENT"
 	OCCURRENCEINFOANYOF_MULTIPLE_TIME_EVENT OccurrenceInfoAnyOf = "MULTIPLE_TIME_EVENT"
 )

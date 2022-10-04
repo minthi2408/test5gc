@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,13 +12,12 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -27,10 +26,10 @@ import (
 @param snssais Each element identifies a slice.
 @param supis Each element identifies the user.
 @param interGroupIds Each element identifies a group of users.
-@return []models.IptvConfigData, 
+@return []models.IptvConfigData,
 */
 func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dnns []string, snssais []models.Snssai, supis []string, interGroupIds []string) (result []models.IptvConfigData, err error) {
-					
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -55,7 +54,7 @@ func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dn
 	interGroupIdsStr := utils.Param2String(interGroupIds)
 	if len(interGroupIdsStr) > 0 {
 		req.QueryParams.Add("inter-group-ids", interGroupIdsStr)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -91,7 +90,7 @@ func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dn
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -102,83 +101,78 @@ func ReadIPTVCongifurationData(client sbi.ConsumerClient, configIds []string, dn
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadIPTVCongifurationData
 func OnReadIPTVCongifurationData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IPTVConfigurationDataStoreApiHandler)
-	
+
 	configIdsStr := ctx.Param("config-ids")
 	var configIds []string
 	var configIdsErr error
 	if configIds, configIdsErr = utils.String2ArrayOfstring(configIdsStr); configIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: configIdsErr.Error(), 
+			Detail: configIdsErr.Error(),
 		}))
 		return
 	}
-	
+
 	dnnsStr := ctx.Param("dnns")
 	var dnns []string
 	var dnnsErr error
 	if dnns, dnnsErr = utils.String2ArrayOfstring(dnnsStr); dnnsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: dnnsErr.Error(), 
+			Detail: dnnsErr.Error(),
 		}))
 		return
 	}
-	
+
 	snssaisStr := ctx.Param("snssais")
 	var snssais []models.Snssai
 	var snssaisErr error
 	if snssais, snssaisErr = utils.String2ArrayOfSnssai(snssaisStr); snssaisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: snssaisErr.Error(), 
+			Detail: snssaisErr.Error(),
 		}))
 		return
 	}
-	
+
 	supisStr := ctx.Param("supis")
 	var supis []string
 	var supisErr error
 	if supis, supisErr = utils.String2ArrayOfstring(supisStr); supisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: supisErr.Error(), 
+			Detail: supisErr.Error(),
 		}))
 		return
 	}
-	
+
 	interGroupIdsStr := ctx.Param("inter-group-ids")
 	var interGroupIds []string
 	var interGroupIdsErr error
 	if interGroupIds, interGroupIdsErr = utils.String2ArrayOfstring(interGroupIdsStr); interGroupIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: interGroupIdsErr.Error(), 
+			Detail: interGroupIdsErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.IptvConfigData
-
 
 	successCode, result, apierr = prod.DR_HandleReadIPTVCongifurationData(configIds, dnns, snssais, supis, interGroupIds)
 
@@ -189,9 +183,6 @@ func OnReadIPTVCongifurationData(ctx sbi.RequestContext, handler interface{}) (r
 	}
 	return
 }
-
-
-
 
 type IPTVConfigurationDataStoreApiHandler interface {
 	DR_HandleReadIPTVCongifurationData(configIds []string, dnns []string, snssais []models.Snssai, supis []string, interGroupIds []string) (successCode int32, result []models.IptvConfigData, err *sbi.ApiError)

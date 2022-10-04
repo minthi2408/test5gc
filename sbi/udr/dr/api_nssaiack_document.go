@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return *models.NssaiAckData, 
+@return *models.NssaiAckData,
 */
 func QueryNssaiAck(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.NssaiAckData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -41,7 +40,7 @@ func QueryNssaiAck(client sbi.ConsumerClient, ueId string, supportedFeatures str
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -53,7 +52,7 @@ func QueryNssaiAck(client sbi.ConsumerClient, ueId string, supportedFeatures str
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,21 +63,20 @@ func QueryNssaiAck(client sbi.ConsumerClient, ueId string, supportedFeatures str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryNssaiAck
 func OnQueryNssaiAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(NSSAIACKDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -86,12 +84,9 @@ func OnQueryNssaiAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.NssaiAckData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryNssaiAck(ueId, supportedFeatures)
 
@@ -102,9 +97,6 @@ func OnQueryNssaiAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	}
 	return
 }
-
-
-
 
 type NSSAIACKDocumentApiHandler interface {
 	DR_HandleQueryNssaiAck(ueId string, supportedFeatures string) (successCode int32, result models.NssaiAckData, err *sbi.ApiError)

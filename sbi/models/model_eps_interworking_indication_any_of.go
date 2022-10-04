@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,8 +15,8 @@ type EpsInterworkingIndicationAnyOf string
 
 // List of EpsInterworkingIndicationAnyOf
 const (
-	EPSINTERWORKINGINDICATIONANYOF_NONE EpsInterworkingIndicationAnyOf = "NONE"
-	EPSINTERWORKINGINDICATIONANYOF_WITH_N26 EpsInterworkingIndicationAnyOf = "WITH_N26"
-	EPSINTERWORKINGINDICATIONANYOF_WITHOUT_N26 EpsInterworkingIndicationAnyOf = "WITHOUT_N26"
+	EPSINTERWORKINGINDICATIONANYOF_NONE          EpsInterworkingIndicationAnyOf = "NONE"
+	EPSINTERWORKINGINDICATIONANYOF_WITH_N26      EpsInterworkingIndicationAnyOf = "WITH_N26"
+	EPSINTERWORKINGINDICATIONANYOF_WITHOUT_N26   EpsInterworkingIndicationAnyOf = "WITHOUT_N26"
 	EPSINTERWORKINGINDICATIONANYOF_IWK_NON_3_GPP EpsInterworkingIndicationAnyOf = "IWK_NON_3GPP"
 )

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,11 +15,11 @@ type CollectionPeriodRmmLteMdtAnyOf string
 
 // List of CollectionPeriodRmmLteMdtAnyOf
 const (
-	COLLECTIONPERIODRMMLTEMDTANYOF__1024 CollectionPeriodRmmLteMdtAnyOf = "1024"
-	COLLECTIONPERIODRMMLTEMDTANYOF__1280 CollectionPeriodRmmLteMdtAnyOf = "1280"
-	COLLECTIONPERIODRMMLTEMDTANYOF__2048 CollectionPeriodRmmLteMdtAnyOf = "2048"
-	COLLECTIONPERIODRMMLTEMDTANYOF__2560 CollectionPeriodRmmLteMdtAnyOf = "2560"
-	COLLECTIONPERIODRMMLTEMDTANYOF__5120 CollectionPeriodRmmLteMdtAnyOf = "5120"
+	COLLECTIONPERIODRMMLTEMDTANYOF__1024  CollectionPeriodRmmLteMdtAnyOf = "1024"
+	COLLECTIONPERIODRMMLTEMDTANYOF__1280  CollectionPeriodRmmLteMdtAnyOf = "1280"
+	COLLECTIONPERIODRMMLTEMDTANYOF__2048  CollectionPeriodRmmLteMdtAnyOf = "2048"
+	COLLECTIONPERIODRMMLTEMDTANYOF__2560  CollectionPeriodRmmLteMdtAnyOf = "2560"
+	COLLECTIONPERIODRMMLTEMDTANYOF__5120  CollectionPeriodRmmLteMdtAnyOf = "5120"
 	COLLECTIONPERIODRMMLTEMDTANYOF__10240 CollectionPeriodRmmLteMdtAnyOf = "10240"
 	COLLECTIONPERIODRMMLTEMDTANYOF__60000 CollectionPeriodRmmLteMdtAnyOf = "60000"
 )

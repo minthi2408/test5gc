@@ -1,7 +1,7 @@
 /*
 Nudm_PP
 
-Nudm Parameter Provision Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Nudm Parameter Provision Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,21 +12,21 @@ API version: 1.1.3
 package pp
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for Create5GVNGroup
 func OnCreate5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	extGroupId := ctx.Param("extGroupId")
 	if len(extGroupId) == 0 {
 		//extGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "extGroupId is required",
 		}))
@@ -42,7 +42,6 @@ func OnCreate5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -52,16 +51,15 @@ func OnCreate5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for Delete5GVNGroup
 func OnDelete5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	extGroupId := ctx.Param("extGroupId")
 	if len(extGroupId) == 0 {
 		//extGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "extGroupId is required",
 		}))
@@ -69,8 +67,6 @@ func OnDelete5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	mtcProviderInfo := ctx.Param("mtc-provider-info")
 	afId := ctx.Param("af-id")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -85,28 +81,24 @@ func OnDelete5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for Get5GVNGroup
 func OnGet5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	extGroupId := ctx.Param("extGroupId")
 	if len(extGroupId) == 0 {
 		//extGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "extGroupId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.Model5GVnGroupConfiguration
-
 
 	successCode, result, apierr = prod.PP_HandleGet5GVNGroup(extGroupId)
 
@@ -118,16 +110,15 @@ func OnGet5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	return
 }
 
-
 //sbi producer handler for Modify5GVNGroup
 func OnModify5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	extGroupId := ctx.Param("extGroupId")
 	if len(extGroupId) == 0 {
 		//extGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "extGroupId is required",
 		}))
@@ -146,7 +137,6 @@ func OnModify5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -156,16 +146,15 @@ func OnModify5GVNGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for Update
 func OnUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueIdStr := ctx.Param("ueId")
 	if len(ueIdStr) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -175,13 +164,13 @@ func OnUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	var ueIdErr error
 	if ueId, ueIdErr = utils.String2UpdateUeIdParameter(ueIdStr); ueIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: ueIdErr.Error(), 
+			Detail: ueIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 
 	var input models.PpData
@@ -195,7 +184,6 @@ func OnUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -205,7 +193,6 @@ func OnUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	return
 }
 
-
 type Producer interface {
 	PP_HandleCreate5GVNGroup(extGroupId string, body models.Model5GVnGroupConfiguration) (successCode int32, err *sbi.ApiError)
 	PP_HandleDelete5GVNGroup(extGroupId string, mtcProviderInfo string, afId string) (successCode int32, err *sbi.ApiError)
@@ -213,5 +200,3 @@ type Producer interface {
 	PP_HandleModify5GVNGroup(extGroupId string, supportedFeatures string, body models.Model5GVnGroupConfiguration) (successCode int32, result models.PatchResult, err *sbi.ApiError)
 	PP_HandleUpdate(ueId models.UpdateUeIdParameter, supportedFeatures string, body models.PpData) (successCode int32, result models.PatchResult, err *sbi.ApiError)
 }
-
-

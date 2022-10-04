@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -17,7 +17,6 @@ import (
 
 // EventsSubscPutData - Identifies the events the application subscribes to within an Events Subscription sub-resource data. It may contain the notification of the already met events
 type EventsSubscPutData struct {
-
 	Events []AfEventSubscription `json:"events"`
 
 	NotifUri string `json:"notifUri,omitempty"`

@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // MediaSubComponentRm - This data type is defined in the same way as the MediaSubComponent data type, but with the OpenAPI nullable property set to true. Removable attributes marBwDl and marBwUl are defined with the corresponding removable data type.
 type MediaSubComponentRm struct {
-
 	AfSigProtocol AfSigProtocol `json:"afSigProtocol,omitempty"`
 
 	EthfDescs *[]EthFlowDescription `json:"ethfDescs,omitempty"`

@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -16,5 +16,5 @@ type VelocityRequestedAnyOf string
 // List of VelocityRequestedAnyOf
 const (
 	VELOCITYREQUESTEDANYOF_NOT_REQUESTED VelocityRequestedAnyOf = "VELOCITY_IS_NOT_REQUESTED"
-	VELOCITYREQUESTEDANYOF_REQUESTED VelocityRequestedAnyOf = "VELOCITY_IS_REQUESTED"
+	VELOCITYREQUESTEDANYOF_REQUESTED     VelocityRequestedAnyOf = "VELOCITY_IS_REQUESTED"
 )

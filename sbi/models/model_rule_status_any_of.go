@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,6 +15,6 @@ type RuleStatusAnyOf string
 
 // List of RuleStatusAnyOf
 const (
-	RULESTATUSANYOF_ACTIVE RuleStatusAnyOf = "ACTIVE"
+	RULESTATUSANYOF_ACTIVE   RuleStatusAnyOf = "ACTIVE"
 	RULESTATUSANYOF_INACTIVE RuleStatusAnyOf = "INACTIVE"
 )

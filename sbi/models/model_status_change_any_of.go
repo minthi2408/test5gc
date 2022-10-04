@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,5 +16,5 @@ type StatusChangeAnyOf string
 // List of StatusChangeAnyOf
 const (
 	STATUSCHANGEANYOF_UNAVAILABLE StatusChangeAnyOf = "AMF_UNAVAILABLE"
-	STATUSCHANGEANYOF_AVAILABLE StatusChangeAnyOf = "AMF_AVAILABLE"
+	STATUSCHANGEANYOF_AVAILABLE   StatusChangeAnyOf = "AMF_AVAILABLE"
 )

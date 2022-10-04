@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // AccNetChargingAddress - Describes the network entity within the access network performing charging
 type AccNetChargingAddress struct {
-
 	AnChargIpv4Addr string `json:"anChargIpv4Addr,omitempty"`
 
 	AnChargIpv6Addr Ipv6Addr `json:"anChargIpv6Addr,omitempty"`

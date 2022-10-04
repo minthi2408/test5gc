@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -11,6 +11,6 @@ API version: 2.1.7
 
 package models
 
-// SubscribedEvent - Possible values are - UP_PATH_CHANGE: The AF requests to be notified when the UP path changes for the PDU session. 
+// SubscribedEvent - Possible values are - UP_PATH_CHANGE: The AF requests to be notified when the UP path changes for the PDU session.
 type SubscribedEvent struct {
 }

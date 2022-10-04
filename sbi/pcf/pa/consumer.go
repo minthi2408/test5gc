@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,27 +12,24 @@ API version: 1.1.6
 package pa
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/npcf-policyauthorization/v1"
+	SERVICE_PATH = "{apiRoot}/npcf-policyauthorization/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.AppSessionContext, 
+@return *models.AppSessionContext,
 */
 func PostAppSessions(client sbi.ConsumerClient, body models.AppSessionContext) (result models.AppSessionContext, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -81,7 +78,7 @@ func PostAppSessions(client sbi.ConsumerClient, body models.AppSessionContext) (
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -92,18 +89,18 @@ func PostAppSessions(client sbi.ConsumerClient, body models.AppSessionContext) (
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appSessionId string identifying the Individual Application Session Context resource
-@return 
+@return
 */
 func DeleteEventsSubsc(client sbi.ConsumerClient, appSessionId string) (err error) {
-	
+
 	if len(appSessionId) == 0 {
 		err = fmt.Errorf("appSessionId is required")
 		return
@@ -113,7 +110,7 @@ func DeleteEventsSubsc(client sbi.ConsumerClient, appSessionId string) (err erro
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/app-sessions/{appSessionId}/events-subscription", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"appSessionId"+"}", url.PathEscape(appSessionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"appSessionId"+"}", url.PathEscape(appSessionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -152,7 +149,7 @@ func DeleteEventsSubsc(client sbi.ConsumerClient, appSessionId string) (err erro
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -161,20 +158,20 @@ func DeleteEventsSubsc(client sbi.ConsumerClient, appSessionId string) (err erro
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appSessionId string identifying the Events Subscription resource
-@return *models.EventsSubscPutData, 
+@return *models.EventsSubscPutData,
 */
 func UpdateEventsSubsc(client sbi.ConsumerClient, appSessionId string, body models.EventsSubscReqData) (result models.EventsSubscPutData, err error) {
-	
+
 	if len(appSessionId) == 0 {
 		err = fmt.Errorf("appSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -230,7 +227,7 @@ func UpdateEventsSubsc(client sbi.ConsumerClient, appSessionId string, body mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -241,22 +238,22 @@ func UpdateEventsSubsc(client sbi.ConsumerClient, appSessionId string, body mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appSessionId string identifying the Individual Application Session Context resource
-@return *models.AppSessionContext, 
+@return *models.AppSessionContext,
 */
 func DeleteAppSession(client sbi.ConsumerClient, appSessionId string, body *models.EventsSubscReqData) (result models.AppSessionContext, err error) {
-	
+
 	if len(appSessionId) == 0 {
 		err = fmt.Errorf("appSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -312,7 +309,7 @@ func DeleteAppSession(client sbi.ConsumerClient, appSessionId string, body *mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -323,18 +320,18 @@ func DeleteAppSession(client sbi.ConsumerClient, appSessionId string, body *mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appSessionId string identifying the resource
-@return *models.AppSessionContext, 
+@return *models.AppSessionContext,
 */
 func GetAppSession(client sbi.ConsumerClient, appSessionId string) (result models.AppSessionContext, err error) {
-	
+
 	if len(appSessionId) == 0 {
 		err = fmt.Errorf("appSessionId is required")
 		return
@@ -344,7 +341,7 @@ func GetAppSession(client sbi.ConsumerClient, appSessionId string) (result model
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/app-sessions/{appSessionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"appSessionId"+"}", url.PathEscape(appSessionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"appSessionId"+"}", url.PathEscape(appSessionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -383,7 +380,7 @@ func GetAppSession(client sbi.ConsumerClient, appSessionId string) (result model
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -394,22 +391,22 @@ func GetAppSession(client sbi.ConsumerClient, appSessionId string) (result model
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appSessionId string identifying the resource
-@return *models.AppSessionContext, 
+@return *models.AppSessionContext,
 */
 func ModAppSession(client sbi.ConsumerClient, appSessionId string, body models.AppSessionContextUpdateDataPatch) (result models.AppSessionContext, err error) {
-	
+
 	if len(appSessionId) == 0 {
 		err = fmt.Errorf("appSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -465,7 +462,7 @@ func ModAppSession(client sbi.ConsumerClient, appSessionId string, body models.A
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -476,17 +473,17 @@ func ModAppSession(client sbi.ConsumerClient, appSessionId string, body models.A
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return 
+@return
 */
 func PcscfRestoration(client sbi.ConsumerClient, body models.PcscfRestorationRequestData) (err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -541,7 +538,7 @@ func PcscfRestoration(client sbi.ConsumerClient, body models.PcscfRestorationReq
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -550,7 +547,5 @@ func PcscfRestoration(client sbi.ConsumerClient, body models.PcscfRestorationReq
 		}
 	}
 
-	return 
+	return
 }
-
-

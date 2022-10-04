@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func ModifyAuthenticationSubscription(client sbi.ConsumerClient, ueId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -58,7 +57,7 @@ func ModifyAuthenticationSubscription(client sbi.ConsumerClient, ueId string, su
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -69,21 +68,20 @@ func ModifyAuthenticationSubscription(client sbi.ConsumerClient, ueId string, su
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ModifyAuthenticationSubscription
 func OnModifyAuthenticationSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(AuthenticationSubscriptionDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -102,7 +100,6 @@ func OnModifyAuthenticationSubscription(ctx sbi.RequestContext, handler interfac
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -111,9 +108,6 @@ func OnModifyAuthenticationSubscription(ctx sbi.RequestContext, handler interfac
 	}
 	return
 }
-
-
-
 
 type AuthenticationSubscriptionDocumentApiHandler interface {
 	DR_HandleModifyAuthenticationSubscription(ueId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)

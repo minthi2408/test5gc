@@ -1,7 +1,7 @@
 /*
 Nudm_SDM
 
-Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,21 +12,21 @@ API version: 2.1.7
 package sdm
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for GetAmData
 func OnGetAmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -38,22 +38,19 @@ func OnGetAmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AccessAndMobilitySubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetAmData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -65,16 +62,15 @@ func OnGetAmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	return
 }
 
-
 //sbi producer handler for GetEcrData
 func OnGetEcrData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -84,12 +80,9 @@ func OnGetEcrData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.EnhancedCoverageRestrictionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetEcrData(supi, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -101,16 +94,15 @@ func OnGetEcrData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for GetSupiOrGpsi
 func OnGetSupiOrGpsi(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -122,22 +114,19 @@ func OnGetSupiOrGpsi(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var appPortIdErr error
 	if appPortId, appPortIdErr = utils.String2AppPortId(appPortIdStr); appPortIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: appPortIdErr.Error(), 
+			Detail: appPortIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.IdTranslationResult
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSupiOrGpsi(ueId, supportedFeatures, appPortId, ifNoneMatch, ifModifiedSince)
 
@@ -149,11 +138,10 @@ func OnGetSupiOrGpsi(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for GetGroupIdentifiers
 func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	extGroupId := ctx.Param("ext-group-id")
 	intGroupId := ctx.Param("int-group-id")
 	ueIdIndStr := ctx.Param("ue-id-ind")
@@ -161,23 +149,20 @@ func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sb
 	var ueIdIndErr error
 	if ueIdInd, ueIdIndErr = utils.String2Bool(ueIdIndStr); ueIdIndErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: ueIdIndErr.Error(), 
+			Detail: ueIdIndErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.GroupIdentifiers
-
 
 	successCode, result, apierr = prod.SDM_HandleGetGroupIdentifiers(extGroupId, intGroupId, ueIdInd, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -189,16 +174,15 @@ func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for GetLcsBcaData
 func OnGetLcsBcaData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -210,22 +194,19 @@ func OnGetLcsBcaData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.LcsBroadcastAssistanceTypesData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetLcsBcaData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -237,16 +218,15 @@ func OnGetLcsBcaData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for GetLcsMoData
 func OnGetLcsMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -256,12 +236,9 @@ func OnGetLcsMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.LcsMoData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetLcsMoData(supi, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -273,16 +250,15 @@ func OnGetLcsMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	return
 }
 
-
 //sbi producer handler for GetLcsPrivacyData
 func OnGetLcsPrivacyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -292,12 +268,9 @@ func OnGetLcsPrivacyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.LcsPrivacyData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetLcsPrivacyData(ueId, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -309,16 +282,15 @@ func OnGetLcsPrivacyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for CAGAck
 func OnCAGAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -334,7 +306,6 @@ func OnCAGAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -344,16 +315,15 @@ func OnCAGAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	return
 }
 
-
 //sbi producer handler for SNSSAIsAck
 func OnSNSSAIsAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -369,7 +339,6 @@ func OnSNSSAIsAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -379,16 +348,15 @@ func OnSNSSAIsAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for SorAckInfo
 func OnSorAckInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -404,7 +372,6 @@ func OnSorAckInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -414,16 +381,15 @@ func OnSorAckInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for UpuAck
 func OnUpuAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -439,7 +405,6 @@ func OnUpuAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -449,16 +414,15 @@ func OnUpuAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	return
 }
 
-
 //sbi producer handler for GetDataSets
 func OnGetDataSets(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -468,7 +432,7 @@ func OnGetDataSets(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	if len(datasetNamesStr) == 0 {
 		//datasetNames is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "datasetNames is required",
 		}))
@@ -478,35 +442,32 @@ func OnGetDataSets(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	var datasetNamesErr error
 	if datasetNames, datasetNamesErr = utils.String2ArrayOfDataSetName(datasetNamesStr); datasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: datasetNamesErr.Error(), 
+			Detail: datasetNamesErr.Error(),
 		}))
 		return
 	}
-	
+
 	plmnIdStr := ctx.Param("plmn-id")
 	var plmnId *models.PlmnId
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SubscriptionDataSets
-
 
 	successCode, result, apierr = prod.SDM_HandleGetDataSets(supi, datasetNames, plmnId, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -518,16 +479,15 @@ func OnGetDataSets(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	return
 }
 
-
 //sbi producer handler for GetSharedData
 func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	sharedDataIdsStr := ctx.Param("shared-data-ids")
 	if len(sharedDataIdsStr) == 0 {
 		//sharedDataIds is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "sharedDataIds is required",
 		}))
@@ -537,24 +497,21 @@ func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var sharedDataIdsErr error
 	if sharedDataIds, sharedDataIdsErr = utils.String2ArrayOfstring(sharedDataIdsStr); sharedDataIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: sharedDataIdsErr.Error(), 
+			Detail: sharedDataIdsErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supportedFeatures")
 	supportedFeatures2 := ctx.Param("supported-features")
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.SharedData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSharedData(sharedDataIds, supportedFeatures, supportedFeatures2, ifNoneMatch, ifModifiedSince)
 
@@ -566,16 +523,15 @@ func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for GetIndividualSharedData
 func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	sharedDataIdStr := ctx.Param("sharedDataId")
 	if len(sharedDataIdStr) == 0 {
 		//sharedDataId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "sharedDataId is required",
 		}))
@@ -585,22 +541,19 @@ func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (res
 	var sharedDataIdErr error
 	if sharedDataId, sharedDataIdErr = utils.String2ArrayOfstring(sharedDataIdStr); sharedDataIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: sharedDataIdErr.Error(), 
+			Detail: sharedDataIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SharedData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetIndividualSharedData(sharedDataId, ifNoneMatch, ifModifiedSince)
 
@@ -612,16 +565,15 @@ func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for GetSmfSelData
 func OnGetSmfSelData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -633,22 +585,19 @@ func OnGetSmfSelData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmfSelectionSubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSmfSelData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -660,16 +609,15 @@ func OnGetSmfSelData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for GetSmsMngtData
 func OnGetSmsMngtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -681,22 +629,19 @@ func OnGetSmsMngtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmsManagementSubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSmsMngtData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -708,16 +653,15 @@ func OnGetSmsMngtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 //sbi producer handler for GetSmsData
 func OnGetSmsData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -729,22 +673,19 @@ func OnGetSmsData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmsSubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSmsData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -756,16 +697,15 @@ func OnGetSmsData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for GetSmData
 func OnGetSmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -777,35 +717,32 @@ func OnGetSmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	var singleNssaiErr error
 	if singleNssai, singleNssaiErr = utils.String2Snssai(singleNssaiStr); singleNssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: singleNssaiErr.Error(), 
+			Detail: singleNssaiErr.Error(),
 		}))
 		return
 	}
-	
+
 	dnn := ctx.Param("dnn")
 	plmnIdStr := ctx.Param("plmn-id")
 	var plmnId *models.PlmnId
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.SessionManagementSubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetSmData(supi, supportedFeatures, singleNssai, dnn, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -817,16 +754,15 @@ func OnGetSmData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	return
 }
 
-
 //sbi producer handler for GetNSSAI
 func OnGetNSSAI(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -838,22 +774,19 @@ func OnGetNSSAI(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response)
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.Nssai
-
 
 	successCode, result, apierr = prod.SDM_HandleGetNSSAI(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -865,16 +798,15 @@ func OnGetNSSAI(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response)
 	return
 }
 
-
 //sbi producer handler for Subscribe
 func OnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -892,7 +824,6 @@ func OnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -902,11 +833,9 @@ func OnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	return
 }
 
-
 //sbi producer handler for SubscribeToSharedData
 func OnSubscribeToSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.SdmSubscription
 
@@ -919,7 +848,6 @@ func OnSubscribeToSharedData(ctx sbi.RequestContext, handler interface{}) (resp 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -929,16 +857,15 @@ func OnSubscribeToSharedData(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
 //sbi producer handler for Unsubscribe
 func OnUnsubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -948,14 +875,12 @@ func OnUnsubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -970,23 +895,20 @@ func OnUnsubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	return
 }
 
-
 //sbi producer handler for UnsubscribeForSharedData
 func OnUnsubscribeForSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -1001,16 +923,15 @@ func OnUnsubscribeForSharedData(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
 //sbi producer handler for Modify
 func OnModify(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -1020,7 +941,7 @@ func OnModify(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
@@ -1039,7 +960,6 @@ func OnModify(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -1049,16 +969,15 @@ func OnModify(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	return
 }
 
-
 //sbi producer handler for ModifySharedDataSubs
 func OnModifySharedDataSubs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
@@ -1077,7 +996,6 @@ func OnModifySharedDataSubs(ctx sbi.RequestContext, handler interface{}) (resp s
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -1087,16 +1005,15 @@ func OnModifySharedDataSubs(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 //sbi producer handler for GetTraceConfigData
 func OnGetTraceConfigData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1108,22 +1025,19 @@ func OnGetTraceConfigData(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.TraceDataResponse
-
 
 	successCode, result, apierr = prod.SDM_HandleGetTraceConfigData(supi, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -1135,16 +1049,15 @@ func OnGetTraceConfigData(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for UpdateSORInfo
 func OnUpdateSORInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1162,7 +1075,6 @@ func OnUpdateSORInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -1172,16 +1084,15 @@ func OnUpdateSORInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for GetUeCtxInAmfData
 func OnGetUeCtxInAmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1189,12 +1100,9 @@ func OnGetUeCtxInAmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UeContextInAmfData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetUeCtxInAmfData(supi, supportedFeatures)
 
@@ -1206,16 +1114,15 @@ func OnGetUeCtxInAmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for GetUeCtxInSmfData
 func OnGetUeCtxInSmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1223,12 +1130,9 @@ func OnGetUeCtxInSmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UeContextInSmfData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetUeCtxInSmfData(supi, supportedFeatures)
 
@@ -1240,16 +1144,15 @@ func OnGetUeCtxInSmfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for GetUeCtxInSmsfData
 func OnGetUeCtxInSmsfData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1257,12 +1160,9 @@ func OnGetUeCtxInSmsfData(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UeContextInSmsfData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetUeCtxInSmsfData(supi, supportedFeatures)
 
@@ -1274,16 +1174,15 @@ func OnGetUeCtxInSmsfData(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for GetV2xData
 func OnGetV2xData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -1293,12 +1192,9 @@ func OnGetV2xData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.V2xSubscriptionData
-
 
 	successCode, result, apierr = prod.SDM_HandleGetV2xData(supi, supportedFeatures, ifNoneMatch, ifModifiedSince)
 
@@ -1309,7 +1205,6 @@ func OnGetV2xData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	}
 	return
 }
-
 
 type Producer interface {
 	SDM_HandleGetAmData(supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (successCode int32, result models.AccessAndMobilitySubscriptionData, err *sbi.ApiError)
@@ -1344,5 +1239,3 @@ type Producer interface {
 	SDM_HandleGetUeCtxInSmsfData(supi string, supportedFeatures string) (successCode int32, result models.UeContextInSmsfData, err *sbi.ApiError)
 	SDM_HandleGetV2xData(supi string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (successCode int32, result models.V2xSubscriptionData, err *sbi.ApiError)
 }
-
-

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,7 +12,6 @@ API version: 2.1.7
 package models
 
 type UeContextInSmsfData1 struct {
-
 	SmsfInfo3GppAccess SmsfInfo1 `json:"smsfInfo3GppAccess,omitempty"`
 
 	SmsfInfoNon3GppAccess SmsfInfo1 `json:"smsfInfoNon3GppAccess,omitempty"`

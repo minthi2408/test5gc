@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
-@return *models.UePolicySet, 
+@return *models.UePolicySet,
 */
 func CreateOrReplaceUEPolicySet(client sbi.ConsumerClient, ueId string, body models.UePolicySet) (result models.UePolicySet, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -81,7 +80,7 @@ func CreateOrReplaceUEPolicySet(client sbi.ConsumerClient, ueId string, body mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -92,21 +91,20 @@ func CreateOrReplaceUEPolicySet(client sbi.ConsumerClient, ueId string, body mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceUEPolicySet
 func OnCreateOrReplaceUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UEPolicySetDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -124,7 +122,6 @@ func OnCreateOrReplaceUEPolicySet(ctx sbi.RequestContext, handler interface{}) (
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -134,21 +131,18 @@ func OnCreateOrReplaceUEPolicySet(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param suppFeat Supported Features
-@return *models.UePolicySet, 
+@return *models.UePolicySet,
 */
 func ReadUEPolicySet(client sbi.ConsumerClient, ueId string, suppFeat string) (result models.UePolicySet, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -157,7 +151,7 @@ func ReadUEPolicySet(client sbi.ConsumerClient, ueId string, suppFeat string) (r
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -190,7 +184,7 @@ func ReadUEPolicySet(client sbi.ConsumerClient, ueId string, suppFeat string) (r
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -201,21 +195,20 @@ func ReadUEPolicySet(client sbi.ConsumerClient, ueId string, suppFeat string) (r
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadUEPolicySet
 func OnReadUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UEPolicySetDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -223,12 +216,9 @@ func OnReadUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	suppFeat := ctx.Param("supp-feat")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UePolicySet
-
 
 	successCode, result, apierr = prod.DR_HandleReadUEPolicySet(ueId, suppFeat)
 
@@ -240,20 +230,17 @@ func OnReadUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
-@return 
+@return
 */
 func UpdateUEPolicySet(client sbi.ConsumerClient, ueId string, body models.UePolicySetPatch) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -303,7 +290,7 @@ func UpdateUEPolicySet(client sbi.ConsumerClient, ueId string, body models.UePol
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -312,19 +299,18 @@ func UpdateUEPolicySet(client sbi.ConsumerClient, ueId string, body models.UePol
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateUEPolicySet
 func OnUpdateUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UEPolicySetDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -340,7 +326,6 @@ func OnUpdateUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -349,9 +334,6 @@ func OnUpdateUEPolicySet(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	return
 }
-
-
-
 
 type UEPolicySetDocumentApiHandler interface {
 	DR_HandleCreateOrReplaceUEPolicySet(ueId string, body models.UePolicySet) (successCode int32, result models.UePolicySet, err *sbi.ApiError)

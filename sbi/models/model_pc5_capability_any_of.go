@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,7 +15,7 @@ type Pc5CapabilityAnyOf string
 
 // List of Pc5CapabilityAnyOf
 const (
-	PC5CAPABILITYANYOF_LTE_PC5 Pc5CapabilityAnyOf = "LTE_PC5"
-	PC5CAPABILITYANYOF_NR_PC5 Pc5CapabilityAnyOf = "NR_PC5"
+	PC5CAPABILITYANYOF_LTE_PC5    Pc5CapabilityAnyOf = "LTE_PC5"
+	PC5CAPABILITYANYOF_NR_PC5     Pc5CapabilityAnyOf = "NR_PC5"
 	PC5CAPABILITYANYOF_LTE_NR_PC5 Pc5CapabilityAnyOf = "LTE_NR_PC5"
 )

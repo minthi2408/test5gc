@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param sharedDataIds List of shared data ids
 @param supportedFeatures Supported Features
-@return []models.SharedData, 
+@return []models.SharedData,
 */
 func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedFeatures string) (result []models.SharedData, err error) {
-	
+
 	sharedDataIdsStr := utils.Param2String(sharedDataIds)
 	if len(sharedDataIdsStr) == 0 {
 		err = fmt.Errorf("sharedDataIds is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -42,7 +41,7 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -66,7 +65,7 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -77,21 +76,20 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for GetSharedData
 func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(RetrievalOfSharedDataApiHandler)
-	
+
 	sharedDataIdsStr := ctx.Param("shared-data-ids")
 	if len(sharedDataIdsStr) == 0 {
 		//sharedDataIds is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "sharedDataIds is required",
 		}))
@@ -101,21 +99,18 @@ func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var sharedDataIdsErr error
 	if sharedDataIds, sharedDataIdsErr = utils.String2ArrayOfstring(sharedDataIdsStr); sharedDataIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: sharedDataIdsErr.Error(), 
+			Detail: sharedDataIdsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.SharedData
-
 
 	successCode, result, apierr = prod.DR_HandleGetSharedData(sharedDataIds, supportedFeatures)
 
@@ -126,9 +121,6 @@ func OnGetSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	}
 	return
 }
-
-
-
 
 type RetrievalOfSharedDataApiHandler interface {
 	DR_HandleGetSharedData(sharedDataIds []string, supportedFeatures string) (successCode int32, result []models.SharedData, err *sbi.ApiError)

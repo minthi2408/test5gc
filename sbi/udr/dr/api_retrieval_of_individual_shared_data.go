@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,28 +12,27 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param sharedDataId Id of the Shared Data
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SharedData, 
+@return *models.SharedData,
 */
 func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId string, ifNoneMatch string, ifModifiedSince string) (result models.SharedData, err error) {
-	
+
 	if len(sharedDataId) == 0 {
 		err = fmt.Errorf("sharedDataId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -45,7 +44,7 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId string, ifN
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -69,7 +68,7 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId string, ifN
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -80,21 +79,20 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId string, ifN
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for GetIndividualSharedData
 func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(RetrievalOfIndividualSharedDataApiHandler)
-	
+
 	sharedDataId := ctx.Param("sharedDataId")
 	if len(sharedDataId) == 0 {
 		//sharedDataId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "sharedDataId is required",
 		}))
@@ -103,12 +101,9 @@ func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (res
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SharedData
-
 
 	successCode, result, apierr = prod.DR_HandleGetIndividualSharedData(sharedDataId, ifNoneMatch, ifModifiedSince)
 
@@ -119,9 +114,6 @@ func OnGetIndividualSharedData(ctx sbi.RequestContext, handler interface{}) (res
 	}
 	return
 }
-
-
-
 
 type RetrievalOfIndividualSharedDataApiHandler interface {
 	DR_HandleGetIndividualSharedData(sharedDataId string, ifNoneMatch string, ifModifiedSince string) (successCode int32, result models.SharedData, err *sbi.ApiError)

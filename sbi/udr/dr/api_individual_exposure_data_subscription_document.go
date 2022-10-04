@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,22 +12,21 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subId Subscription id
-@return 
+@return
 */
 func DeleteIndividualExposureDataSubscription(client sbi.ConsumerClient, subId string) (err error) {
-	
+
 	if len(subId) == 0 {
 		err = fmt.Errorf("subId is required")
 		return
@@ -37,7 +36,7 @@ func DeleteIndividualExposureDataSubscription(client sbi.ConsumerClient, subId s
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/exposure-data/subs-to-notify/{subId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"subId"+"}", url.PathEscape(subId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subId"+"}", url.PathEscape(subId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -70,7 +69,7 @@ func DeleteIndividualExposureDataSubscription(client sbi.ConsumerClient, subId s
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -79,26 +78,23 @@ func DeleteIndividualExposureDataSubscription(client sbi.ConsumerClient, subId s
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualExposureDataSubscription
 func OnDeleteIndividualExposureDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualExposureDataSubscriptionDocumentApiHandler)
-	
+
 	subId := ctx.Param("subId")
 	if len(subId) == 0 {
 		//subId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -113,20 +109,17 @@ func OnDeleteIndividualExposureDataSubscription(ctx sbi.RequestContext, handler 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subId Subscription id
-@return *models.ExposureDataSubscription, 
+@return *models.ExposureDataSubscription,
 */
 func ReplaceIndividualExposureDataSubscription(client sbi.ConsumerClient, subId string, body models.ExposureDataSubscription) (result models.ExposureDataSubscription, err error) {
-	
+
 	if len(subId) == 0 {
 		err = fmt.Errorf("subId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -176,7 +169,7 @@ func ReplaceIndividualExposureDataSubscription(client sbi.ConsumerClient, subId 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -187,21 +180,20 @@ func ReplaceIndividualExposureDataSubscription(client sbi.ConsumerClient, subId 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReplaceIndividualExposureDataSubscription
 func OnReplaceIndividualExposureDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualExposureDataSubscriptionDocumentApiHandler)
-	
+
 	subId := ctx.Param("subId")
 	if len(subId) == 0 {
 		//subId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subId is required",
 		}))
@@ -219,7 +211,6 @@ func OnReplaceIndividualExposureDataSubscription(ctx sbi.RequestContext, handler
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -228,9 +219,6 @@ func OnReplaceIndividualExposureDataSubscription(ctx sbi.RequestContext, handler
 	}
 	return
 }
-
-
-
 
 type IndividualExposureDataSubscriptionDocumentApiHandler interface {
 	DR_HandleDeleteIndividualExposureDataSubscription(subId string) (successCode int32, err *sbi.ApiError)

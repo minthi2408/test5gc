@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,21 +12,20 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param gpsis List of GPSIs
-@return map[string]Model5GVnGroupConfiguration, 
+@return map[string]Model5GVnGroupConfiguration,
 */
 func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result map[string]models.Model5GVnGroupConfiguration, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -35,7 +34,7 @@ func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result map[strin
 	gpsisStr := utils.Param2String(gpsis)
 	if len(gpsisStr) > 0 {
 		req.QueryParams.Add("gpsis", gpsisStr)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -47,7 +46,7 @@ func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result map[strin
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -58,35 +57,30 @@ func Query5GVnGroup(client sbi.ConsumerClient, gpsis []string) (result map[strin
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for Query5GVnGroup
 func OnQuery5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Class5GVNGroupsStoreApiHandler)
-	
+
 	gpsisStr := ctx.Param("gpsis")
 	var gpsis []string
 	var gpsisErr error
 	if gpsis, gpsisErr = utils.String2ArrayOfstring(gpsisStr); gpsisErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: gpsisErr.Error(), 
+			Detail: gpsisErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result map[string]models.Model5GVnGroupConfiguration
-
 
 	successCode, result, apierr = prod.DR_HandleQuery5GVnGroup(gpsis)
 
@@ -97,9 +91,6 @@ func OnQuery5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	}
 	return
 }
-
-
-
 
 type Class5GVNGroupsStoreApiHandler interface {
 	DR_HandleQuery5GVnGroup(gpsis []string) (successCode int32, result map[string]models.Model5GVnGroupConfiguration, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,32 +12,29 @@ API version: 1.1.8
 package comm
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/namf-comm/v1"
+	SERVICE_PATH = "{apiRoot}/namf-comm/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId AMF Status Change Subscription Identifier
-@return *models.SubscriptionData, 
+@return *models.SubscriptionData,
 */
 func AMFStatusChangeSubscribeModfy(client sbi.ConsumerClient, subscriptionId string, body models.SubscriptionData) (result models.SubscriptionData, err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -87,7 +84,7 @@ func AMFStatusChangeSubscribeModfy(client sbi.ConsumerClient, subscriptionId str
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -98,18 +95,18 @@ func AMFStatusChangeSubscribeModfy(client sbi.ConsumerClient, subscriptionId str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId AMF Status Change Subscription Identifier
-@return 
+@return
 */
 func AMFStatusChangeUnSubscribe(client sbi.ConsumerClient, subscriptionId string) (err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -119,7 +116,7 @@ func AMFStatusChangeUnSubscribe(client sbi.ConsumerClient, subscriptionId string
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/subscriptions/{subscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -152,7 +149,7 @@ func AMFStatusChangeUnSubscribe(client sbi.ConsumerClient, subscriptionId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -161,20 +158,20 @@ func AMFStatusChangeUnSubscribe(client sbi.ConsumerClient, subscriptionId string
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return 
+@return
 */
 func CancelRelocateUEContext(client sbi.ConsumerClient, ueContextId string, body models.CancelRelocateUEContextRequest) (err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -227,7 +224,7 @@ func CancelRelocateUEContext(client sbi.ConsumerClient, ueContextId string, body
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -236,20 +233,20 @@ func CancelRelocateUEContext(client sbi.ConsumerClient, ueContextId string, body
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.UeContextCreatedData, 
+@return *models.UeContextCreatedData,
 */
 func CreateUEContext(client sbi.ConsumerClient, ueContextId string, body models.CreateUEContextRequest) (result models.UeContextCreatedData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -299,7 +296,7 @@ func CreateUEContext(client sbi.ConsumerClient, ueContextId string, body models.
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -310,22 +307,22 @@ func CreateUEContext(client sbi.ConsumerClient, ueContextId string, body models.
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.AssignedEbiData, 
+@return *models.AssignedEbiData,
 */
 func EBIAssignment(client sbi.ConsumerClient, ueContextId string, body models.AssignEbiData) (result models.AssignedEbiData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -378,7 +375,7 @@ func EBIAssignment(client sbi.ConsumerClient, ueContextId string, body models.As
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -389,22 +386,22 @@ func EBIAssignment(client sbi.ConsumerClient, ueContextId string, body models.As
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.UeRegStatusUpdateRspData, 
+@return *models.UeRegStatusUpdateRspData,
 */
 func RegistrationStatusUpdate(client sbi.ConsumerClient, ueContextId string, body models.UeRegStatusUpdateReqData) (result models.UeRegStatusUpdateRspData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -457,7 +454,7 @@ func RegistrationStatusUpdate(client sbi.ConsumerClient, ueContextId string, bod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -468,22 +465,22 @@ func RegistrationStatusUpdate(client sbi.ConsumerClient, ueContextId string, bod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return 
+@return
 */
 func ReleaseUEContext(client sbi.ConsumerClient, ueContextId string, body models.UEContextRelease) (err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -536,7 +533,7 @@ func ReleaseUEContext(client sbi.ConsumerClient, ueContextId string, body models
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -545,20 +542,20 @@ func ReleaseUEContext(client sbi.ConsumerClient, ueContextId string, body models
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.UeContextRelocatedData, 
+@return *models.UeContextRelocatedData,
 */
 func RelocateUEContext(client sbi.ConsumerClient, ueContextId string, body models.RelocateUEContextRequest) (result models.UeContextRelocatedData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -608,7 +605,7 @@ func RelocateUEContext(client sbi.ConsumerClient, ueContextId string, body model
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -619,22 +616,22 @@ func RelocateUEContext(client sbi.ConsumerClient, ueContextId string, body model
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.UeContextTransferRspData, 
+@return *models.UeContextTransferRspData,
 */
 func UEContextTransfer(client sbi.ConsumerClient, ueContextId string, body models.UeContextTransferReqData) (result models.UeContextTransferRspData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -687,7 +684,7 @@ func UEContextTransfer(client sbi.ConsumerClient, ueContextId string, body model
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -698,23 +695,23 @@ func UEContextTransfer(client sbi.ConsumerClient, ueContextId string, body model
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
 @param subscriptionId Subscription Identifier
-@return 
+@return
 */
 func N1N2MessageUnSubscribe(client sbi.ConsumerClient, ueContextId string, subscriptionId string) (err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -725,7 +722,7 @@ func N1N2MessageUnSubscribe(client sbi.ConsumerClient, ueContextId string, subsc
 
 	req.Path = fmt.Sprintf("%s/ue-contexts/{ueContextId}/n1-n2-messages/subscriptions/{subscriptionId}", SERVICE_PATH)
 	req.Path = strings.Replace(req.Path, "{"+"ueContextId"+"}", url.PathEscape(ueContextId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -764,7 +761,7 @@ func N1N2MessageUnSubscribe(client sbi.ConsumerClient, ueContextId string, subsc
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -773,20 +770,20 @@ func N1N2MessageUnSubscribe(client sbi.ConsumerClient, ueContextId string, subsc
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.N1N2MessageTransferRspData, 
+@return *models.N1N2MessageTransferRspData,
 */
 func N1N2MessageTransfer(client sbi.ConsumerClient, ueContextId string, body models.N1N2MessageTransferReqData) (result models.N1N2MessageTransferRspData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -845,7 +842,7 @@ func N1N2MessageTransfer(client sbi.ConsumerClient, ueContextId string, body mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -856,22 +853,22 @@ func N1N2MessageTransfer(client sbi.ConsumerClient, ueContextId string, body mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.UeN1N2InfoSubscriptionCreatedData, 
+@return *models.UeN1N2InfoSubscriptionCreatedData,
 */
 func N1N2MessageSubscribe(client sbi.ConsumerClient, ueContextId string, body models.UeN1N2InfoSubscriptionCreateData) (result models.UeN1N2InfoSubscriptionCreatedData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -918,7 +915,7 @@ func N1N2MessageSubscribe(client sbi.ConsumerClient, ueContextId string, body mo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -929,18 +926,18 @@ func N1N2MessageSubscribe(client sbi.ConsumerClient, ueContextId string, body mo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param n2NotifySubscriptionId N2 info Subscription Identifier
-@return 
+@return
 */
 func NonUeN2InfoUnSubscribe(client sbi.ConsumerClient, n2NotifySubscriptionId string) (err error) {
-	
+
 	if len(n2NotifySubscriptionId) == 0 {
 		err = fmt.Errorf("n2NotifySubscriptionId is required")
 		return
@@ -950,7 +947,7 @@ func NonUeN2InfoUnSubscribe(client sbi.ConsumerClient, n2NotifySubscriptionId st
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/non-ue-n2-messages/subscriptions/{n2NotifySubscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"n2NotifySubscriptionId"+"}", url.PathEscape(n2NotifySubscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"n2NotifySubscriptionId"+"}", url.PathEscape(n2NotifySubscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -980,7 +977,7 @@ func NonUeN2InfoUnSubscribe(client sbi.ConsumerClient, n2NotifySubscriptionId st
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -989,15 +986,15 @@ func NonUeN2InfoUnSubscribe(client sbi.ConsumerClient, n2NotifySubscriptionId st
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.N2InformationTransferRspData, 
+@return *models.N2InformationTransferRspData,
 */
 func NonUeN2MessageTransfer(client sbi.ConsumerClient, body models.N2InformationTransferReqData) (result models.N2InformationTransferRspData, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1049,7 +1046,7 @@ func NonUeN2MessageTransfer(client sbi.ConsumerClient, body models.N2Information
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1060,17 +1057,17 @@ func NonUeN2MessageTransfer(client sbi.ConsumerClient, body models.N2Information
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.NonUeN2InfoSubscriptionCreatedData, 
+@return *models.NonUeN2InfoSubscriptionCreatedData,
 */
 func NonUeN2InfoSubscribe(client sbi.ConsumerClient, body models.NonUeN2InfoSubscriptionCreateData) (result models.NonUeN2InfoSubscriptionCreatedData, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1119,7 +1116,7 @@ func NonUeN2InfoSubscribe(client sbi.ConsumerClient, body models.NonUeN2InfoSubs
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1130,17 +1127,17 @@ func NonUeN2InfoSubscribe(client sbi.ConsumerClient, body models.NonUeN2InfoSubs
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.SubscriptionData, 
+@return *models.SubscriptionData,
 */
 func AMFStatusChangeSubscribe(client sbi.ConsumerClient, body models.SubscriptionData) (result models.SubscriptionData, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1189,7 +1186,7 @@ func AMFStatusChangeSubscribe(client sbi.ConsumerClient, body models.Subscriptio
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1200,9 +1197,7 @@ func AMFStatusChangeSubscribe(client sbi.ConsumerClient, body models.Subscriptio
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

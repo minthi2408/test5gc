@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,7 +15,7 @@ type LoggingDurationMdtAnyOf string
 
 // List of LoggingDurationMdtAnyOf
 const (
-	LOGGINGDURATIONMDTANYOF__600 LoggingDurationMdtAnyOf = "600"
+	LOGGINGDURATIONMDTANYOF__600  LoggingDurationMdtAnyOf = "600"
 	LOGGINGDURATIONMDTANYOF__1200 LoggingDurationMdtAnyOf = "1200"
 	LOGGINGDURATIONMDTANYOF__2400 LoggingDurationMdtAnyOf = "2400"
 	LOGGINGDURATIONMDTANYOF__3600 LoggingDurationMdtAnyOf = "3600"

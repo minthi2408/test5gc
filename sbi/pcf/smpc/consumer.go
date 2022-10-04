@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,32 +12,29 @@ API version: 1.1.8
 package smpc
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/npcf-smpolicycontrol/v1"
+	SERVICE_PATH = "{apiRoot}/npcf-smpolicycontrol/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smPolicyId Identifier of a policy association
-@return 
+@return
 */
 func DeleteSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.SmPolicyDeleteData) (err error) {
-	
+
 	if len(smPolicyId) == 0 {
 		err = fmt.Errorf("smPolicyId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -93,7 +90,7 @@ func DeleteSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.Sm
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -102,16 +99,16 @@ func DeleteSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.Sm
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smPolicyId Identifier of a policy association
-@return *models.SmPolicyControl, 
+@return *models.SmPolicyControl,
 */
 func GetSMPolicy(client sbi.ConsumerClient, smPolicyId string) (result models.SmPolicyControl, err error) {
-	
+
 	if len(smPolicyId) == 0 {
 		err = fmt.Errorf("smPolicyId is required")
 		return
@@ -121,7 +118,7 @@ func GetSMPolicy(client sbi.ConsumerClient, smPolicyId string) (result models.Sm
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/sm-policies/{smPolicyId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"smPolicyId"+"}", url.PathEscape(smPolicyId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"smPolicyId"+"}", url.PathEscape(smPolicyId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -160,7 +157,7 @@ func GetSMPolicy(client sbi.ConsumerClient, smPolicyId string) (result models.Sm
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -171,22 +168,22 @@ func GetSMPolicy(client sbi.ConsumerClient, smPolicyId string) (result models.Sm
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smPolicyId Identifier of a policy association
-@return *models.SmPolicyDecision, 
+@return *models.SmPolicyDecision,
 */
 func UpdateSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.SmPolicyUpdateContextData) (result models.SmPolicyDecision, err error) {
-	
+
 	if len(smPolicyId) == 0 {
 		err = fmt.Errorf("smPolicyId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -242,7 +239,7 @@ func UpdateSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.Sm
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -253,17 +250,17 @@ func UpdateSMPolicy(client sbi.ConsumerClient, smPolicyId string, body models.Sm
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.SmPolicyDecision, 
+@return *models.SmPolicyDecision,
 */
 func CreateSMPolicy(client sbi.ConsumerClient, body models.SmPolicyContextData) (result models.SmPolicyDecision, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -309,7 +306,7 @@ func CreateSMPolicy(client sbi.ConsumerClient, body models.SmPolicyContextData) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -320,9 +317,7 @@ func CreateSMPolicy(client sbi.ConsumerClient, body models.SmPolicyContextData) 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

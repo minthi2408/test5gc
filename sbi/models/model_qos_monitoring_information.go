@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // QosMonitoringInformation - Indicates the QoS Monitoring information to report, i.e. UL and/or DL and or round trip delay.
 type QosMonitoringInformation struct {
-
 	RepThreshDl int32 `json:"repThreshDl,omitempty"`
 
 	RepThreshUl int32 `json:"repThreshUl,omitempty"`

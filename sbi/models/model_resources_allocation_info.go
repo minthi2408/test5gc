@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // ResourcesAllocationInfo - describes the status of the PCC rule(s) related to certain media components.
 type ResourcesAllocationInfo struct {
-
 	McResourcStatus MediaComponentResourcesStatus `json:"mcResourcStatus,omitempty"`
 
 	Flows []Flows `json:"flows,omitempty"`

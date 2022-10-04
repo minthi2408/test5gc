@@ -1,7 +1,7 @@
 /*
 Nudm_SDM
 
-Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Subscriber Data Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,21 +12,18 @@ API version: 2.1.7
 package sdm
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nudm-sdm/v2"
+	SERVICE_PATH = "{apiRoot}/nudm-sdm/v2"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -35,14 +32,14 @@ const (
 @param plmnId serving PLMN ID
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.AccessAndMobilitySubscriptionData, 
+@return *models.AccessAndMobilitySubscriptionData,
 */
 func GetAmData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.AccessAndMobilitySubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -61,7 +58,7 @@ func GetAmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -85,7 +82,7 @@ func GetAmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -96,9 +93,9 @@ func GetAmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -107,14 +104,14 @@ func GetAmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.EnhancedCoverageRestrictionData, 
+@return *models.EnhancedCoverageRestrictionData,
 */
 func GetEcrData(client sbi.ConsumerClient, supi string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.EnhancedCoverageRestrictionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -129,7 +126,7 @@ func GetEcrData(client sbi.ConsumerClient, supi string, supportedFeatures string
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -153,7 +150,7 @@ func GetEcrData(client sbi.ConsumerClient, supi string, supportedFeatures string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -164,9 +161,9 @@ func GetEcrData(client sbi.ConsumerClient, supi string, supportedFeatures string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -176,14 +173,14 @@ func GetEcrData(client sbi.ConsumerClient, supi string, supportedFeatures string
 @param appPortId Application port identifier
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.IdTranslationResult, 
+@return *models.IdTranslationResult,
 */
 func GetSupiOrGpsi(client sbi.ConsumerClient, ueId string, supportedFeatures string, appPortId *models.AppPortId, ifNoneMatch string, ifModifiedSince string) (result models.IdTranslationResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -202,7 +199,7 @@ func GetSupiOrGpsi(client sbi.ConsumerClient, ueId string, supportedFeatures str
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -226,7 +223,7 @@ func GetSupiOrGpsi(client sbi.ConsumerClient, ueId string, supportedFeatures str
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -237,9 +234,9 @@ func GetSupiOrGpsi(client sbi.ConsumerClient, ueId string, supportedFeatures str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -250,10 +247,10 @@ func GetSupiOrGpsi(client sbi.ConsumerClient, ueId string, supportedFeatures str
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.GroupIdentifiers, 
+@return *models.GroupIdentifiers,
 */
 func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupId string, ueIdInd *bool, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.GroupIdentifiers, err error) {
-						
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -277,7 +274,7 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -301,7 +298,7 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -312,9 +309,9 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -324,14 +321,14 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 @param plmnId
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.LcsBroadcastAssistanceTypesData, 
+@return *models.LcsBroadcastAssistanceTypesData,
 */
 func GetLcsBcaData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.LcsBroadcastAssistanceTypesData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -350,7 +347,7 @@ func GetLcsBcaData(client sbi.ConsumerClient, supi string, supportedFeatures str
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -374,7 +371,7 @@ func GetLcsBcaData(client sbi.ConsumerClient, supi string, supportedFeatures str
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -385,9 +382,9 @@ func GetLcsBcaData(client sbi.ConsumerClient, supi string, supportedFeatures str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -396,14 +393,14 @@ func GetLcsBcaData(client sbi.ConsumerClient, supi string, supportedFeatures str
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.LcsMoData, 
+@return *models.LcsMoData,
 */
 func GetLcsMoData(client sbi.ConsumerClient, supi string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.LcsMoData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -418,7 +415,7 @@ func GetLcsMoData(client sbi.ConsumerClient, supi string, supportedFeatures stri
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -442,7 +439,7 @@ func GetLcsMoData(client sbi.ConsumerClient, supi string, supportedFeatures stri
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -453,9 +450,9 @@ func GetLcsMoData(client sbi.ConsumerClient, supi string, supportedFeatures stri
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -464,14 +461,14 @@ func GetLcsMoData(client sbi.ConsumerClient, supi string, supportedFeatures stri
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.LcsPrivacyData, 
+@return *models.LcsPrivacyData,
 */
 func GetLcsPrivacyData(client sbi.ConsumerClient, ueId string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.LcsPrivacyData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -486,7 +483,7 @@ func GetLcsPrivacyData(client sbi.ConsumerClient, ueId string, supportedFeatures
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -510,7 +507,7 @@ func GetLcsPrivacyData(client sbi.ConsumerClient, ueId string, supportedFeatures
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -521,22 +518,22 @@ func GetLcsPrivacyData(client sbi.ConsumerClient, ueId string, supportedFeatures
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return 
+@return
 */
 func CAGAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo) (err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -565,7 +562,7 @@ func CAGAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -574,20 +571,20 @@ func CAGAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return 
+@return
 */
 func SNSSAIsAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo) (err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -616,7 +613,7 @@ func SNSSAIsAck(client sbi.ConsumerClient, supi string, body *models.Acknowledge
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -625,20 +622,20 @@ func SNSSAIsAck(client sbi.ConsumerClient, supi string, body *models.Acknowledge
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return 
+@return
 */
 func SorAckInfo(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo) (err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -667,7 +664,7 @@ func SorAckInfo(client sbi.ConsumerClient, supi string, body *models.Acknowledge
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -676,20 +673,20 @@ func SorAckInfo(client sbi.ConsumerClient, supi string, body *models.Acknowledge
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return 
+@return
 */
 func UpuAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo) (err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -718,7 +715,7 @@ func UpuAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -727,7 +724,7 @@ func UpuAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -738,19 +735,19 @@ func UpuAck(client sbi.ConsumerClient, supi string, body *models.AcknowledgeInfo
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SubscriptionDataSets, 
+@return *models.SubscriptionDataSets,
 */
 func GetDataSets(client sbi.ConsumerClient, supi string, datasetNames []models.DataSetName, plmnId *models.PlmnId, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.SubscriptionDataSets, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	datasetNamesStr := utils.Param2String(datasetNames)
 	if len(datasetNamesStr) == 0 {
 		err = fmt.Errorf("datasetNames is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -771,7 +768,7 @@ func GetDataSets(client sbi.ConsumerClient, supi string, datasetNames []models.D
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -795,7 +792,7 @@ func GetDataSets(client sbi.ConsumerClient, supi string, datasetNames []models.D
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -806,9 +803,9 @@ func GetDataSets(client sbi.ConsumerClient, supi string, datasetNames []models.D
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -818,15 +815,15 @@ func GetDataSets(client sbi.ConsumerClient, supi string, datasetNames []models.D
 @param supportedFeatures2 Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return []models.SharedData, 
+@return []models.SharedData,
 */
 func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedFeatures string, supportedFeatures2 string, ifNoneMatch string, ifModifiedSince string) (result []models.SharedData, err error) {
-	
+
 	sharedDataIdsStr := utils.Param2String(sharedDataIds)
 	if len(sharedDataIdsStr) == 0 {
 		err = fmt.Errorf("sharedDataIds is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -845,7 +842,7 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -869,7 +866,7 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -880,9 +877,9 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -890,15 +887,15 @@ func GetSharedData(client sbi.ConsumerClient, sharedDataIds []string, supportedF
 @param sharedDataId Id of the Shared data
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SharedData, 
+@return *models.SharedData,
 */
 func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId []string, ifNoneMatch string, ifModifiedSince string) (result models.SharedData, err error) {
-	
+
 	sharedDataIdStr := utils.Param2String(sharedDataId)
 	if len(sharedDataIdStr) == 0 {
 		err = fmt.Errorf("sharedDataId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -910,7 +907,7 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId []string, i
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -934,7 +931,7 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId []string, i
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -945,9 +942,9 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId []string, i
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -957,14 +954,14 @@ func GetIndividualSharedData(client sbi.ConsumerClient, sharedDataId []string, i
 @param plmnId serving PLMN ID
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SmfSelectionSubscriptionData, 
+@return *models.SmfSelectionSubscriptionData,
 */
 func GetSmfSelData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.SmfSelectionSubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -983,7 +980,7 @@ func GetSmfSelData(client sbi.ConsumerClient, supi string, supportedFeatures str
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1007,7 +1004,7 @@ func GetSmfSelData(client sbi.ConsumerClient, supi string, supportedFeatures str
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1018,9 +1015,9 @@ func GetSmfSelData(client sbi.ConsumerClient, supi string, supportedFeatures str
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1030,14 +1027,14 @@ func GetSmfSelData(client sbi.ConsumerClient, supi string, supportedFeatures str
 @param plmnId
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SmsManagementSubscriptionData, 
+@return *models.SmsManagementSubscriptionData,
 */
 func GetSmsMngtData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.SmsManagementSubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1056,7 +1053,7 @@ func GetSmsMngtData(client sbi.ConsumerClient, supi string, supportedFeatures st
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1080,7 +1077,7 @@ func GetSmsMngtData(client sbi.ConsumerClient, supi string, supportedFeatures st
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1091,9 +1088,9 @@ func GetSmsMngtData(client sbi.ConsumerClient, supi string, supportedFeatures st
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1103,14 +1100,14 @@ func GetSmsMngtData(client sbi.ConsumerClient, supi string, supportedFeatures st
 @param plmnId
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.SmsSubscriptionData, 
+@return *models.SmsSubscriptionData,
 */
 func GetSmsData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.SmsSubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1129,7 +1126,7 @@ func GetSmsData(client sbi.ConsumerClient, supi string, supportedFeatures string
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1153,7 +1150,7 @@ func GetSmsData(client sbi.ConsumerClient, supi string, supportedFeatures string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1164,9 +1161,9 @@ func GetSmsData(client sbi.ConsumerClient, supi string, supportedFeatures string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1178,14 +1175,14 @@ func GetSmsData(client sbi.ConsumerClient, supi string, supportedFeatures string
 @param plmnId
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return []models.SessionManagementSubscriptionData, 
+@return []models.SessionManagementSubscriptionData,
 */
 func GetSmData(client sbi.ConsumerClient, supi string, supportedFeatures string, singleNssai *models.Snssai, dnn string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result []models.SessionManagementSubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}						
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1211,7 +1208,7 @@ func GetSmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1235,7 +1232,7 @@ func GetSmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1246,9 +1243,9 @@ func GetSmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1258,14 +1255,14 @@ func GetSmData(client sbi.ConsumerClient, supi string, supportedFeatures string,
 @param plmnId serving PLMN ID
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.Nssai, 
+@return *models.Nssai,
 */
 func GetNSSAI(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.Nssai, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1284,7 +1281,7 @@ func GetNSSAI(client sbi.ConsumerClient, supi string, supportedFeatures string, 
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1308,7 +1305,7 @@ func GetNSSAI(client sbi.ConsumerClient, supi string, supportedFeatures string, 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1319,22 +1316,22 @@ func GetNSSAI(client sbi.ConsumerClient, supi string, supportedFeatures string, 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identity of the user
-@return *models.SdmSubscription, 
+@return *models.SdmSubscription,
 */
 func Subscribe(client sbi.ConsumerClient, ueId string, body models.SdmSubscription) (result models.SdmSubscription, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1369,7 +1366,7 @@ func Subscribe(client sbi.ConsumerClient, ueId string, body models.SdmSubscripti
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1380,17 +1377,17 @@ func Subscribe(client sbi.ConsumerClient, ueId string, body models.SdmSubscripti
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.SdmSubscription, 
+@return *models.SdmSubscription,
 */
 func SubscribeToSharedData(client sbi.ConsumerClient, body models.SdmSubscription) (result models.SdmSubscription, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1415,7 +1412,7 @@ func SubscribeToSharedData(client sbi.ConsumerClient, body models.SdmSubscriptio
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1426,23 +1423,23 @@ func SubscribeToSharedData(client sbi.ConsumerClient, body models.SdmSubscriptio
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identity of the user
 @param subscriptionId Id of the SDM Subscription
-@return 
+@return
 */
 func Unsubscribe(client sbi.ConsumerClient, ueId string, subscriptionId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -1453,7 +1450,7 @@ func Unsubscribe(client sbi.ConsumerClient, ueId string, subscriptionId string) 
 
 	req.Path = fmt.Sprintf("%s/{ueId}/sdm-subscriptions/{subscriptionId}", SERVICE_PATH)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1477,7 +1474,7 @@ func Unsubscribe(client sbi.ConsumerClient, ueId string, subscriptionId string) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1486,16 +1483,16 @@ func Unsubscribe(client sbi.ConsumerClient, ueId string, subscriptionId string) 
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Id of the Shared data Subscription
-@return 
+@return
 */
 func UnsubscribeForSharedData(client sbi.ConsumerClient, subscriptionId string) (err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -1505,7 +1502,7 @@ func UnsubscribeForSharedData(client sbi.ConsumerClient, subscriptionId string) 
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/shared-data-subscriptions/{subscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1529,7 +1526,7 @@ func UnsubscribeForSharedData(client sbi.ConsumerClient, subscriptionId string) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1538,7 +1535,7 @@ func UnsubscribeForSharedData(client sbi.ConsumerClient, subscriptionId string) 
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -1546,18 +1543,18 @@ func UnsubscribeForSharedData(client sbi.ConsumerClient, subscriptionId string) 
 @param ueId Identity of the user
 @param subscriptionId Id of the SDM Subscription
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.Modify200Response, 
+@return *models.Modify200Response,
 */
 func Modify(client sbi.ConsumerClient, ueId string, subscriptionId string, supportedFeatures string, body models.SdmSubsModification) (result models.Modify200Response, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -1596,7 +1593,7 @@ func Modify(client sbi.ConsumerClient, ueId string, subscriptionId string, suppo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1607,23 +1604,23 @@ func Modify(client sbi.ConsumerClient, ueId string, subscriptionId string, suppo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Id of the SDM Subscription
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.Modify200Response, 
+@return *models.Modify200Response,
 */
 func ModifySharedDataSubs(client sbi.ConsumerClient, subscriptionId string, supportedFeatures string, body models.SdmSubsModification) (result models.Modify200Response, err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -1661,7 +1658,7 @@ func ModifySharedDataSubs(client sbi.ConsumerClient, subscriptionId string, supp
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1672,9 +1669,9 @@ func ModifySharedDataSubs(client sbi.ConsumerClient, subscriptionId string, supp
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1684,14 +1681,14 @@ func ModifySharedDataSubs(client sbi.ConsumerClient, subscriptionId string, supp
 @param plmnId serving PLMN ID
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.TraceDataResponse, 
+@return *models.TraceDataResponse,
 */
 func GetTraceConfigData(client sbi.ConsumerClient, supi string, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (result models.TraceDataResponse, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1710,7 +1707,7 @@ func GetTraceConfigData(client sbi.ConsumerClient, supi string, supportedFeature
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1734,7 +1731,7 @@ func GetTraceConfigData(client sbi.ConsumerClient, supi string, supportedFeature
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1745,22 +1742,22 @@ func GetTraceConfigData(client sbi.ConsumerClient, supi string, supportedFeature
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return *models.SorInfo, 
+@return *models.SorInfo,
 */
 func UpdateSORInfo(client sbi.ConsumerClient, supi string, body *models.SorUpdateInfo) (result models.SorInfo, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -1792,7 +1789,7 @@ func UpdateSORInfo(client sbi.ConsumerClient, supi string, body *models.SorUpdat
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1803,23 +1800,23 @@ func UpdateSORInfo(client sbi.ConsumerClient, supi string, body *models.SorUpdat
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
 @param supportedFeatures Supported Features
-@return *models.UeContextInAmfData, 
+@return *models.UeContextInAmfData,
 */
 func GetUeCtxInAmfData(client sbi.ConsumerClient, supi string, supportedFeatures string) (result models.UeContextInAmfData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1828,7 +1825,7 @@ func GetUeCtxInAmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 	req.Path = strings.Replace(req.Path, "{"+"supi"+"}", url.PathEscape(supi), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1852,7 +1849,7 @@ func GetUeCtxInAmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1863,23 +1860,23 @@ func GetUeCtxInAmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
 @param supportedFeatures Supported Features
-@return *models.UeContextInSmfData, 
+@return *models.UeContextInSmfData,
 */
 func GetUeCtxInSmfData(client sbi.ConsumerClient, supi string, supportedFeatures string) (result models.UeContextInSmfData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1888,7 +1885,7 @@ func GetUeCtxInSmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 	req.Path = strings.Replace(req.Path, "{"+"supi"+"}", url.PathEscape(supi), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1912,7 +1909,7 @@ func GetUeCtxInSmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1923,23 +1920,23 @@ func GetUeCtxInSmfData(client sbi.ConsumerClient, supi string, supportedFeatures
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
 @param supportedFeatures Supported Features
-@return *models.UeContextInSmsfData, 
+@return *models.UeContextInSmsfData,
 */
 func GetUeCtxInSmsfData(client sbi.ConsumerClient, supi string, supportedFeatures string) (result models.UeContextInSmsfData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -1948,7 +1945,7 @@ func GetUeCtxInSmsfData(client sbi.ConsumerClient, supi string, supportedFeature
 	req.Path = strings.Replace(req.Path, "{"+"supi"+"}", url.PathEscape(supi), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -1972,7 +1969,7 @@ func GetUeCtxInSmsfData(client sbi.ConsumerClient, supi string, supportedFeature
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -1983,9 +1980,9 @@ func GetUeCtxInSmsfData(client sbi.ConsumerClient, supi string, supportedFeature
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
@@ -1994,14 +1991,14 @@ func GetUeCtxInSmsfData(client sbi.ConsumerClient, supi string, supportedFeature
 @param supportedFeatures Supported Features
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.V2xSubscriptionData, 
+@return *models.V2xSubscriptionData,
 */
 func GetV2xData(client sbi.ConsumerClient, supi string, supportedFeatures string, ifNoneMatch string, ifModifiedSince string) (result models.V2xSubscriptionData, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -2016,7 +2013,7 @@ func GetV2xData(client sbi.ConsumerClient, supi string, supportedFeatures string
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -2040,7 +2037,7 @@ func GetV2xData(client sbi.ConsumerClient, supi string, supportedFeatures string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -2051,9 +2048,7 @@ func GetV2xData(client sbi.ConsumerClient, supi string, supportedFeatures string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

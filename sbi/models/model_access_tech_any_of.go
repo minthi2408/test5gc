@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,15 +15,15 @@ type AccessTechAnyOf string
 
 // List of AccessTechAnyOf
 const (
-	ACCESSTECHANYOF_NR AccessTechAnyOf = "NR"
+	ACCESSTECHANYOF_NR                                AccessTechAnyOf = "NR"
 	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE AccessTechAnyOf = "EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE"
-	ACCESSTECHANYOF_EUTRAN_IN_NBS1_MODE_ONLY AccessTechAnyOf = "EUTRAN_IN_NBS1_MODE_ONLY"
-	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_ONLY AccessTechAnyOf = "EUTRAN_IN_WBS1_MODE_ONLY"
-	ACCESSTECHANYOF_UTRAN AccessTechAnyOf = "UTRAN"
-	ACCESSTECHANYOF_GSM_AND_ECGSM_IO_T AccessTechAnyOf = "GSM_AND_ECGSM_IoT"
-	ACCESSTECHANYOF_GSM_WITHOUT_ECGSM_IO_T AccessTechAnyOf = "GSM_WITHOUT_ECGSM_IoT"
-	ACCESSTECHANYOF_ECGSM_IO_T_ONLY AccessTechAnyOf = "ECGSM_IoT_ONLY"
-	ACCESSTECHANYOF_CDMA_1X_RTT AccessTechAnyOf = "CDMA_1xRTT"
-	ACCESSTECHANYOF_CDMA_HRPD AccessTechAnyOf = "CDMA_HRPD"
-	ACCESSTECHANYOF_GSM_COMPACT AccessTechAnyOf = "GSM_COMPACT"
+	ACCESSTECHANYOF_EUTRAN_IN_NBS1_MODE_ONLY          AccessTechAnyOf = "EUTRAN_IN_NBS1_MODE_ONLY"
+	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_ONLY          AccessTechAnyOf = "EUTRAN_IN_WBS1_MODE_ONLY"
+	ACCESSTECHANYOF_UTRAN                             AccessTechAnyOf = "UTRAN"
+	ACCESSTECHANYOF_GSM_AND_ECGSM_IO_T                AccessTechAnyOf = "GSM_AND_ECGSM_IoT"
+	ACCESSTECHANYOF_GSM_WITHOUT_ECGSM_IO_T            AccessTechAnyOf = "GSM_WITHOUT_ECGSM_IoT"
+	ACCESSTECHANYOF_ECGSM_IO_T_ONLY                   AccessTechAnyOf = "ECGSM_IoT_ONLY"
+	ACCESSTECHANYOF_CDMA_1X_RTT                       AccessTechAnyOf = "CDMA_1xRTT"
+	ACCESSTECHANYOF_CDMA_HRPD                         AccessTechAnyOf = "CDMA_HRPD"
+	ACCESSTECHANYOF_GSM_COMPACT                       AccessTechAnyOf = "GSM_COMPACT"
 )

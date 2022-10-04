@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,33 +12,32 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param pduSessionId PDU session id
-@return *models.AccessAndMobilityData, 
+@return *models.AccessAndMobilityData,
 */
 func CreateOrReplaceSessionManagementData(client sbi.ConsumerClient, ueId string, pduSessionId int32, body models.PduSessionManagementData) (result models.AccessAndMobilityData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -89,7 +88,7 @@ func CreateOrReplaceSessionManagementData(client sbi.ConsumerClient, ueId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -100,21 +99,20 @@ func CreateOrReplaceSessionManagementData(client sbi.ConsumerClient, ueId string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceSessionManagementData
 func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(PduSessionManagementDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -124,7 +122,7 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -134,13 +132,12 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
 
 	var input models.PduSessionManagementData
 
@@ -153,7 +150,6 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -163,21 +159,18 @@ func OnCreateOrReplaceSessionManagementData(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param pduSessionId PDU session id
-@return 
+@return
 */
 func DeleteSessionManagementData(client sbi.ConsumerClient, ueId string, pduSessionId int32) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
@@ -189,7 +182,7 @@ func DeleteSessionManagementData(client sbi.ConsumerClient, ueId string, pduSess
 
 	req.Path = fmt.Sprintf("%s/exposure-data/{ueId}/session-management-data/{pduSessionId}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -222,7 +215,7 @@ func DeleteSessionManagementData(client sbi.ConsumerClient, ueId string, pduSess
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -231,19 +224,18 @@ func DeleteSessionManagementData(client sbi.ConsumerClient, ueId string, pduSess
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteSessionManagementData
 func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(PduSessionManagementDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -253,7 +245,7 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -263,15 +255,12 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -286,9 +275,6 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
@@ -298,19 +284,19 @@ func OnDeleteSessionManagementData(ctx sbi.RequestContext, handler interface{}) 
 @param dnn DNN of the UE
 @param fields attributes to be retrieved
 @param suppFeat Supported Features
-@return *models.PduSessionManagementData, 
+@return *models.PduSessionManagementData,
 */
 func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessionId int32, ipv4Addr string, ipv6Prefix string, dnn string, fields []string, suppFeat string) (result models.PduSessionManagementData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}					
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -333,7 +319,7 @@ func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessi
 	}
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -369,7 +355,7 @@ func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessi
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -380,21 +366,20 @@ func QuerySessionManagementData(client sbi.ConsumerClient, ueId string, pduSessi
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QuerySessionManagementData
 func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(PduSessionManagementDataApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -404,7 +389,7 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -414,13 +399,13 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ipv4Addr := ctx.Param("ipv4-addr")
 	ipv6Prefix := ctx.Param("ipv6-prefix")
 	dnn := ctx.Param("dnn")
@@ -429,21 +414,18 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	suppFeat := ctx.Param("supp-feat")
 
-	
+	suppFeat := ctx.Param("supp-feat")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.PduSessionManagementData
-
 
 	successCode, result, apierr = prod.DR_HandleQuerySessionManagementData(ueId, *pduSessionId, ipv4Addr, ipv6Prefix, dnn, fields, suppFeat)
 
@@ -454,9 +436,6 @@ func OnQuerySessionManagementData(ctx sbi.RequestContext, handler interface{}) (
 	}
 	return
 }
-
-
-
 
 type PduSessionManagementDataApiHandler interface {
 	DR_HandleCreateOrReplaceSessionManagementData(ueId string, pduSessionId int32, body models.PduSessionManagementData) (successCode int32, result models.AccessAndMobilityData, err *sbi.ApiError)

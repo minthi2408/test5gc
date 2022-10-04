@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,6 +15,6 @@ type PrioritySharingIndicatorAnyOf string
 
 // List of PrioritySharingIndicatorAnyOf
 const (
-	PRIORITYSHARINGINDICATORANYOF_ENABLED PrioritySharingIndicatorAnyOf = "ENABLED"
+	PRIORITYSHARINGINDICATORANYOF_ENABLED  PrioritySharingIndicatorAnyOf = "ENABLED"
 	PRIORITYSHARINGINDICATORANYOF_DISABLED PrioritySharingIndicatorAnyOf = "DISABLED"
 )

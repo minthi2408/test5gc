@@ -1,7 +1,7 @@
 /*
 Nudm_MT
 
-UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UDM MT Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -16,7 +16,6 @@ import (
 )
 
 type UeContextInfo struct {
-
 	SupportVoPS bool `json:"supportVoPS,omitempty"`
 
 	SupportVoPSn3gpp bool `json:"supportVoPSn3gpp,omitempty"`

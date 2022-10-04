@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,8 +15,8 @@ type FlowDirectionAnyOf string
 
 // List of FlowDirectionAnyOf
 const (
-	FLOWDIRECTIONANYOF_DOWNLINK FlowDirectionAnyOf = "DOWNLINK"
-	FLOWDIRECTIONANYOF_UPLINK FlowDirectionAnyOf = "UPLINK"
+	FLOWDIRECTIONANYOF_DOWNLINK      FlowDirectionAnyOf = "DOWNLINK"
+	FLOWDIRECTIONANYOF_UPLINK        FlowDirectionAnyOf = "UPLINK"
 	FLOWDIRECTIONANYOF_BIDIRECTIONAL FlowDirectionAnyOf = "BIDIRECTIONAL"
-	FLOWDIRECTIONANYOF_UNSPECIFIED FlowDirectionAnyOf = "UNSPECIFIED"
+	FLOWDIRECTIONANYOF_UNSPECIFIED   FlowDirectionAnyOf = "UNSPECIFIED"
 )

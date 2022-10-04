@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,6 +15,6 @@ type MaPduIndicationAnyOf string
 
 // List of MaPduIndicationAnyOf
 const (
-	MAPDUINDICATIONANYOF_REQUEST MaPduIndicationAnyOf = "MA_PDU_REQUEST"
+	MAPDUINDICATIONANYOF_REQUEST                 MaPduIndicationAnyOf = "MA_PDU_REQUEST"
 	MAPDUINDICATIONANYOF_NETWORK_UPGRADE_ALLOWED MaPduIndicationAnyOf = "MA_PDU_NETWORK_UPGRADE_ALLOWED"
 )

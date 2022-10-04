@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,8 +15,8 @@ type DataIndAnyOf string
 
 // List of DataIndAnyOf
 const (
-	DATAINDANYOF_PFD DataIndAnyOf = "PFD"
-	DATAINDANYOF_IPTV DataIndAnyOf = "IPTV"
-	DATAINDANYOF_BDT DataIndAnyOf = "BDT"
+	DATAINDANYOF_PFD       DataIndAnyOf = "PFD"
+	DATAINDANYOF_IPTV      DataIndAnyOf = "IPTV"
+	DATAINDANYOF_BDT       DataIndAnyOf = "BDT"
 	DATAINDANYOF_SVC_PARAM DataIndAnyOf = "SVC_PARAM"
 )

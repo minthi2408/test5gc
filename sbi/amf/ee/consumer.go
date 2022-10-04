@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -12,28 +12,25 @@ API version: 1.1.7
 package ee
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/namf-evts/v1"
+	SERVICE_PATH = "{apiRoot}/namf-evts/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Unique ID of the subscription to be deleted
-@return 
+@return
 */
 func DeleteSubscription(client sbi.ConsumerClient, subscriptionId string) (err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -43,7 +40,7 @@ func DeleteSubscription(client sbi.ConsumerClient, subscriptionId string) (err e
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/subscriptions/{subscriptionId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -85,7 +82,7 @@ func DeleteSubscription(client sbi.ConsumerClient, subscriptionId string) (err e
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -94,20 +91,20 @@ func DeleteSubscription(client sbi.ConsumerClient, subscriptionId string) (err e
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param subscriptionId Unique ID of the subscription to be modified
-@return *models.AmfUpdatedEventSubscription, 
+@return *models.AmfUpdatedEventSubscription,
 */
 func ModifySubscription(client sbi.ConsumerClient, subscriptionId string, body models.ModifySubscriptionRequest) (result models.AmfUpdatedEventSubscription, err error) {
-	
+
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -160,7 +157,7 @@ func ModifySubscription(client sbi.ConsumerClient, subscriptionId string, body m
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -171,17 +168,17 @@ func ModifySubscription(client sbi.ConsumerClient, subscriptionId string, body m
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.AmfCreatedEventSubscription, 
+@return *models.AmfCreatedEventSubscription,
 */
 func CreateSubscription(client sbi.ConsumerClient, body models.AmfCreateEventSubscription) (result models.AmfCreatedEventSubscription, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -230,7 +227,7 @@ func CreateSubscription(client sbi.ConsumerClient, body models.AmfCreateEventSub
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -241,9 +238,7 @@ func CreateSubscription(client sbi.ConsumerClient, body models.AmfCreateEventSub
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

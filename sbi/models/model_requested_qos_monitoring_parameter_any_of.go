@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,7 +15,7 @@ type RequestedQosMonitoringParameterAnyOf string
 
 // List of RequestedQosMonitoringParameterAnyOf
 const (
-	REQUESTEDQOSMONITORINGPARAMETERANYOF_DOWNLINK RequestedQosMonitoringParameterAnyOf = "DOWNLINK"
-	REQUESTEDQOSMONITORINGPARAMETERANYOF_UPLINK RequestedQosMonitoringParameterAnyOf = "UPLINK"
+	REQUESTEDQOSMONITORINGPARAMETERANYOF_DOWNLINK   RequestedQosMonitoringParameterAnyOf = "DOWNLINK"
+	REQUESTEDQOSMONITORINGPARAMETERANYOF_UPLINK     RequestedQosMonitoringParameterAnyOf = "UPLINK"
 	REQUESTEDQOSMONITORINGPARAMETERANYOF_ROUND_TRIP RequestedQosMonitoringParameterAnyOf = "ROUND_TRIP"
 )

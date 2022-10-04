@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,7 +15,7 @@ type PreemptionControlInformationAnyOf string
 
 // List of PreemptionControlInformationAnyOf
 const (
-	PREEMPTIONCONTROLINFORMATIONANYOF_MOST_RECENT PreemptionControlInformationAnyOf = "MOST_RECENT"
+	PREEMPTIONCONTROLINFORMATIONANYOF_MOST_RECENT  PreemptionControlInformationAnyOf = "MOST_RECENT"
 	PREEMPTIONCONTROLINFORMATIONANYOF_LEAST_RECENT PreemptionControlInformationAnyOf = "LEAST_RECENT"
-	PREEMPTIONCONTROLINFORMATIONANYOF_HIGHEST_BW PreemptionControlInformationAnyOf = "HIGHEST_BW"
+	PREEMPTIONCONTROLINFORMATIONANYOF_HIGHEST_BW   PreemptionControlInformationAnyOf = "HIGHEST_BW"
 )

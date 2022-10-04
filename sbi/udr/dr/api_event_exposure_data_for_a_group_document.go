@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueGroupId Group of UEs or any UE
 @param supportedFeatures Supported Features
-@return *models.EeGroupProfileData, 
+@return *models.EeGroupProfileData,
 */
 func QueryGroupEEData(client sbi.ConsumerClient, ueGroupId string, supportedFeatures string) (result models.EeGroupProfileData, err error) {
-	
+
 	if len(ueGroupId) == 0 {
 		err = fmt.Errorf("ueGroupId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -41,7 +40,7 @@ func QueryGroupEEData(client sbi.ConsumerClient, ueGroupId string, supportedFeat
 	req.Path = strings.Replace(req.Path, "{"+"ueGroupId"+"}", url.PathEscape(ueGroupId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -53,7 +52,7 @@ func QueryGroupEEData(client sbi.ConsumerClient, ueGroupId string, supportedFeat
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,21 +63,20 @@ func QueryGroupEEData(client sbi.ConsumerClient, ueGroupId string, supportedFeat
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryGroupEEData
 func OnQueryGroupEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(EventExposureDataForAGroupDocumentApiHandler)
-	
+
 	ueGroupId := ctx.Param("ueGroupId")
 	if len(ueGroupId) == 0 {
 		//ueGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueGroupId is required",
 		}))
@@ -86,12 +84,9 @@ func OnQueryGroupEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.EeGroupProfileData
-
 
 	successCode, result, apierr = prod.DR_HandleQueryGroupEEData(ueGroupId, supportedFeatures)
 
@@ -102,9 +97,6 @@ func OnQueryGroupEEData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	}
 	return
 }
-
-
-
 
 type EventExposureDataForAGroupDocumentApiHandler interface {
 	DR_HandleQueryGroupEEData(ueGroupId string, supportedFeatures string) (successCode int32, result models.EeGroupProfileData, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,7 +15,7 @@ type ImsVoPsAnyOf string
 
 // List of ImsVoPsAnyOf
 const (
-	IMSVOPSANYOF_HOMOGENEOUS_SUPPORT ImsVoPsAnyOf = "HOMOGENEOUS_SUPPORT"
-	IMSVOPSANYOF_HOMOGENEOUS_NON_SUPPORT ImsVoPsAnyOf = "HOMOGENEOUS_NON_SUPPORT"
+	IMSVOPSANYOF_HOMOGENEOUS_SUPPORT        ImsVoPsAnyOf = "HOMOGENEOUS_SUPPORT"
+	IMSVOPSANYOF_HOMOGENEOUS_NON_SUPPORT    ImsVoPsAnyOf = "HOMOGENEOUS_NON_SUPPORT"
 	IMSVOPSANYOF_NON_HOMOGENEOUS_OR_UNKNOWN ImsVoPsAnyOf = "NON_HOMOGENEOUS_OR_UNKNOWN"
 )

@@ -1,7 +1,7 @@
 /*
 Nsmf_NIDD
 
-SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,32 +12,29 @@ API version: 1.0.2
 package nidd
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nsmf-nidd/v1"
+	SERVICE_PATH = "{apiRoot}/nsmf-nidd/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param pduSessionRef PDU session reference
-@return 
+@return
 */
 func Deliver(client sbi.ConsumerClient, pduSessionRef string, body models.DeliverRequest) (err error) {
-	
+
 	if len(pduSessionRef) == 0 {
 		err = fmt.Errorf("pduSessionRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -96,7 +93,7 @@ func Deliver(client sbi.ConsumerClient, pduSessionRef string, body models.Delive
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -105,7 +102,5 @@ func Deliver(client sbi.ConsumerClient, pduSessionRef string, body models.Delive
 		}
 	}
 
-	return 
+	return
 }
-
-

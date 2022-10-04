@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param influenceId The Identifier of an Individual Influence Data to be created or updated. It shall apply the format of Data type string.
-@return *models.TrafficInfluData, 
+@return *models.TrafficInfluData,
 */
 func CreateOrReplaceIndividualInfluenceData(client sbi.ConsumerClient, influenceId string, body models.TrafficInfluData) (result models.TrafficInfluData, err error) {
-	
+
 	if len(influenceId) == 0 {
 		err = fmt.Errorf("influenceId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateOrReplaceIndividualInfluenceData(client sbi.ConsumerClient, influence
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateOrReplaceIndividualInfluenceData(client sbi.ConsumerClient, influence
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceIndividualInfluenceData
 func OnCreateOrReplaceIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualInfluenceDataDocumentApiHandler)
-	
+
 	influenceId := ctx.Param("influenceId")
 	if len(influenceId) == 0 {
 		//influenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "influenceId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateOrReplaceIndividualInfluenceData(ctx sbi.RequestContext, handler in
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateOrReplaceIndividualInfluenceData(ctx sbi.RequestContext, handler in
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param influenceId The Identifier of an Individual Influence Data to be updated. It shall apply the format of Data type string.
-@return 
+@return
 */
 func DeleteIndividualInfluenceData(client sbi.ConsumerClient, influenceId string) (err error) {
-	
+
 	if len(influenceId) == 0 {
 		err = fmt.Errorf("influenceId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualInfluenceData(client sbi.ConsumerClient, influenceId string
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/influenceData/{influenceId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"influenceId"+"}", url.PathEscape(influenceId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"influenceId"+"}", url.PathEscape(influenceId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualInfluenceData(client sbi.ConsumerClient, influenceId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualInfluenceData(client sbi.ConsumerClient, influenceId string
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualInfluenceData
 func OnDeleteIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualInfluenceDataDocumentApiHandler)
-	
+
 	influenceId := ctx.Param("influenceId")
 	if len(influenceId) == 0 {
 		//influenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "influenceId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -232,20 +223,17 @@ func OnDeleteIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param influenceId The Identifier of an Individual Influence Data to be updated. It shall apply the format of Data type string.
-@return *models.TrafficInfluData, 
+@return *models.TrafficInfluData,
 */
 func UpdateIndividualInfluenceData(client sbi.ConsumerClient, influenceId string, body models.TrafficInfluDataPatch) (result models.TrafficInfluData, err error) {
-	
+
 	if len(influenceId) == 0 {
 		err = fmt.Errorf("influenceId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -295,7 +283,7 @@ func UpdateIndividualInfluenceData(client sbi.ConsumerClient, influenceId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -306,21 +294,20 @@ func UpdateIndividualInfluenceData(client sbi.ConsumerClient, influenceId string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateIndividualInfluenceData
 func OnUpdateIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualInfluenceDataDocumentApiHandler)
-	
+
 	influenceId := ctx.Param("influenceId")
 	if len(influenceId) == 0 {
 		//influenceId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "influenceId is required",
 		}))
@@ -338,7 +325,6 @@ func OnUpdateIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -347,9 +333,6 @@ func OnUpdateIndividualInfluenceData(ctx sbi.RequestContext, handler interface{}
 	}
 	return
 }
-
-
-
 
 type IndividualInfluenceDataDocumentApiHandler interface {
 	DR_HandleCreateOrReplaceIndividualInfluenceData(influenceId string, body models.TrafficInfluData) (successCode int32, result models.TrafficInfluData, err *sbi.ApiError)

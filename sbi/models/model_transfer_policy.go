@@ -1,7 +1,7 @@
 /*
 Npcf_BDTPolicyControl Service API
 
-PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -13,7 +13,6 @@ package models
 
 // TransferPolicy - Describes a transfer policy.
 type TransferPolicy struct {
-
 	MaxBitRateDl string `json:"maxBitRateDl,omitempty"`
 
 	MaxBitRateUl string `json:"maxBitRateUl,omitempty"`

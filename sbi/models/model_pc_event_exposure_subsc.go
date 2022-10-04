@@ -1,7 +1,7 @@
 /*
 Npcf_EventExposure
 
-PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.2
 */
@@ -12,7 +12,6 @@ API version: 1.1.2
 package models
 
 type PcEventExposureSubsc struct {
-
 	EventSubs []PcEvent `json:"eventSubs"`
 
 	EventsRepInfo ReportingInformation `json:"eventsRepInfo,omitempty"`

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,9 +15,9 @@ type MeasurementLteForMdtAnyOf string
 
 // List of MeasurementLteForMdtAnyOf
 const (
-	MEASUREMENTLTEFORMDTANYOF_M1 MeasurementLteForMdtAnyOf = "M1"
-	MEASUREMENTLTEFORMDTANYOF_M2 MeasurementLteForMdtAnyOf = "M2"
-	MEASUREMENTLTEFORMDTANYOF_M3 MeasurementLteForMdtAnyOf = "M3"
+	MEASUREMENTLTEFORMDTANYOF_M1    MeasurementLteForMdtAnyOf = "M1"
+	MEASUREMENTLTEFORMDTANYOF_M2    MeasurementLteForMdtAnyOf = "M2"
+	MEASUREMENTLTEFORMDTANYOF_M3    MeasurementLteForMdtAnyOf = "M3"
 	MEASUREMENTLTEFORMDTANYOF_M4_DL MeasurementLteForMdtAnyOf = "M4_DL"
 	MEASUREMENTLTEFORMDTANYOF_M4_UL MeasurementLteForMdtAnyOf = "M4_UL"
 	MEASUREMENTLTEFORMDTANYOF_M5_DL MeasurementLteForMdtAnyOf = "M5_DL"
@@ -26,6 +26,6 @@ const (
 	MEASUREMENTLTEFORMDTANYOF_M6_UL MeasurementLteForMdtAnyOf = "M6_UL"
 	MEASUREMENTLTEFORMDTANYOF_M7_DL MeasurementLteForMdtAnyOf = "M7_DL"
 	MEASUREMENTLTEFORMDTANYOF_M7_UL MeasurementLteForMdtAnyOf = "M7_UL"
-	MEASUREMENTLTEFORMDTANYOF_M8 MeasurementLteForMdtAnyOf = "M8"
-	MEASUREMENTLTEFORMDTANYOF_M9 MeasurementLteForMdtAnyOf = "M9"
+	MEASUREMENTLTEFORMDTANYOF_M8    MeasurementLteForMdtAnyOf = "M8"
+	MEASUREMENTLTEFORMDTANYOF_M9    MeasurementLteForMdtAnyOf = "M9"
 )

@@ -1,7 +1,7 @@
 /*
 Namf_MT
 
-AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,6 +12,5 @@ API version: 1.1.3
 package models
 
 type AdditionInfoEnableUeReachability struct {
-
 	MaxWaitingTime int32 `json:"maxWaitingTime,omitempty"`
 }

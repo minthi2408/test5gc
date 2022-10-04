@@ -1,7 +1,7 @@
 /*
 AUSF API
 
-AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -15,7 +15,7 @@ type AuthTypeAnyOf string
 
 // List of AuthTypeAnyOf
 const (
-	AUTHTYPEANYOF__5_G_AKA AuthTypeAnyOf = "5G_AKA"
+	AUTHTYPEANYOF__5_G_AKA      AuthTypeAnyOf = "5G_AKA"
 	AUTHTYPEANYOF_EAP_AKA_PRIME AuthTypeAnyOf = "EAP_AKA_PRIME"
-	AUTHTYPEANYOF_EAP_TLS AuthTypeAnyOf = "EAP_TLS"
+	AUTHTYPEANYOF_EAP_TLS       AuthTypeAnyOf = "EAP_TLS"
 )

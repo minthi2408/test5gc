@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,7 +15,7 @@ type AuthMethodAnyOf string
 
 // List of AuthMethodAnyOf
 const (
-	AUTHMETHODANYOF__5_G_AKA AuthMethodAnyOf = "5G_AKA"
+	AUTHMETHODANYOF__5_G_AKA      AuthMethodAnyOf = "5G_AKA"
 	AUTHMETHODANYOF_EAP_AKA_PRIME AuthMethodAnyOf = "EAP_AKA_PRIME"
-	AUTHMETHODANYOF_EAP_TLS AuthMethodAnyOf = "EAP_TLS"
+	AUTHMETHODANYOF_EAP_TLS       AuthMethodAnyOf = "EAP_TLS"
 )

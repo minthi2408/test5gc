@@ -1,7 +1,7 @@
 /*
 Nausf_UPUProtection Service
 
-AUSF UPU Protection Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF UPU Protection Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.4
 */
@@ -12,20 +12,20 @@ API version: 1.1.4
 package upu
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for SupiUeUpuPost
 func OnSupiUeUpuPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -43,7 +43,6 @@ func OnSupiUeUpuPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -53,9 +52,6 @@ func OnSupiUeUpuPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 type Producer interface {
 	UPU_HandleSupiUeUpuPost(supi string, body models.UpuInfo) (successCode int32, result models.UpuSecurityInfo, err *sbi.ApiError)
 }
-
-

@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -12,20 +12,20 @@ API version: 1.1.7
 package loc
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for CancelLocation
 func OnCancelLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -41,7 +41,6 @@ func OnCancelLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -51,16 +50,15 @@ func OnCancelLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 //sbi producer handler for ProvideLocationInfo
 func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -78,7 +76,6 @@ func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sb
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -88,16 +85,15 @@ func OnProvideLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for ProvidePositioningInfo
 func OnProvidePositioningInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -115,7 +111,6 @@ func OnProvidePositioningInfo(ctx sbi.RequestContext, handler interface{}) (resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -125,11 +120,8 @@ func OnProvidePositioningInfo(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 type Producer interface {
 	LOC_HandleCancelLocation(ueContextId string, body models.CancelPosInfo) (successCode int32, err *sbi.ApiError)
 	LOC_HandleProvideLocationInfo(ueContextId string, body models.RequestLocInfo) (successCode int32, result models.ProvideLocInfo, err *sbi.ApiError)
 	LOC_HandleProvidePositioningInfo(ueContextId string, body models.RequestPosInfo) (successCode int32, result models.ProvidePosInfo, err *sbi.ApiError)
 }
-
-

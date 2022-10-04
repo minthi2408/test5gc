@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtPolicyId The Identifier of an Individual Applied BDT Policy Data to be created or updated. It shall apply the format of Data type string.
-@return *models.BdtPolicyData, 
+@return *models.BdtPolicyData,
 */
 func CreateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId string, body models.BdtPolicyData) (result models.BdtPolicyData, err error) {
-	
+
 	if len(bdtPolicyId) == 0 {
 		err = fmt.Errorf("bdtPolicyId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateIndividualAppliedBdtPolicyData
 func OnCreateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualAppliedBDTPolicyDataDocumentApiHandler)
-	
+
 	bdtPolicyId := ctx.Param("bdtPolicyId")
 	if len(bdtPolicyId) == 0 {
 		//bdtPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtPolicyId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler inte
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtPolicyId The Identifier of an Individual Applied BDT Policy Data to be updated. It shall apply the format of Data type string.
-@return 
+@return
 */
 func DeleteIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId string) (err error) {
-	
+
 	if len(bdtPolicyId) == 0 {
 		err = fmt.Errorf("bdtPolicyId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/bdtPolicyData/{bdtPolicyId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"bdtPolicyId"+"}", url.PathEscape(bdtPolicyId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"bdtPolicyId"+"}", url.PathEscape(bdtPolicyId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualAppliedBdtPolicyData
 func OnDeleteIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualAppliedBDTPolicyDataDocumentApiHandler)
-	
+
 	bdtPolicyId := ctx.Param("bdtPolicyId")
 	if len(bdtPolicyId) == 0 {
 		//bdtPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtPolicyId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -232,20 +223,17 @@ func OnDeleteIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtPolicyId The Identifier of an Individual Applied BDT Policy Data to be updated. It shall apply the format of Data type string.
-@return *models.BdtPolicyData, 
+@return *models.BdtPolicyData,
 */
 func UpdateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId string, body models.BdtPolicyDataPatch) (result models.BdtPolicyData, err error) {
-	
+
 	if len(bdtPolicyId) == 0 {
 		err = fmt.Errorf("bdtPolicyId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -295,7 +283,7 @@ func UpdateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -306,21 +294,20 @@ func UpdateIndividualAppliedBdtPolicyData(client sbi.ConsumerClient, bdtPolicyId
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateIndividualAppliedBdtPolicyData
 func OnUpdateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualAppliedBDTPolicyDataDocumentApiHandler)
-	
+
 	bdtPolicyId := ctx.Param("bdtPolicyId")
 	if len(bdtPolicyId) == 0 {
 		//bdtPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtPolicyId is required",
 		}))
@@ -338,7 +325,6 @@ func OnUpdateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler inte
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -347,9 +333,6 @@ func OnUpdateIndividualAppliedBdtPolicyData(ctx sbi.RequestContext, handler inte
 	}
 	return
 }
-
-
-
 
 type IndividualAppliedBDTPolicyDataDocumentApiHandler interface {
 	DR_HandleCreateIndividualAppliedBdtPolicyData(bdtPolicyId string, body models.BdtPolicyData) (successCode int32, result models.BdtPolicyData, err *sbi.ApiError)

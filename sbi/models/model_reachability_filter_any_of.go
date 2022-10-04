@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -16,5 +16,5 @@ type ReachabilityFilterAnyOf string
 // List of ReachabilityFilterAnyOf
 const (
 	REACHABILITYFILTERANYOF_REACHABILITY_STATUS_CHANGE ReachabilityFilterAnyOf = "UE_REACHABILITY_STATUS_CHANGE"
-	REACHABILITYFILTERANYOF_REACHABLE_DL_TRAFFIC ReachabilityFilterAnyOf = "UE_REACHABLE_DL_TRAFFIC"
+	REACHABILITYFILTERANYOF_REACHABLE_DL_TRAFFIC       ReachabilityFilterAnyOf = "UE_REACHABLE_DL_TRAFFIC"
 )

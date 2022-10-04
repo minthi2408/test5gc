@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,7 +12,6 @@ API version: 1.1.6
 package models
 
 type N2InfoContent struct {
-
 	NgapMessageType int32 `json:"ngapMessageType,omitempty"`
 
 	NgapIeType NgapIeType `json:"ngapIeType,omitempty"`

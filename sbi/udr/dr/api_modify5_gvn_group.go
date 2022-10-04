@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param externalGroupId
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func Modify5GVnGroup(client sbi.ConsumerClient, externalGroupId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(externalGroupId) == 0 {
 		err = fmt.Errorf("externalGroupId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -58,7 +57,7 @@ func Modify5GVnGroup(client sbi.ConsumerClient, externalGroupId string, supporte
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -69,21 +68,20 @@ func Modify5GVnGroup(client sbi.ConsumerClient, externalGroupId string, supporte
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for Modify5GVnGroup
 func OnModify5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Modify5GVnGroupApiHandler)
-	
+
 	externalGroupId := ctx.Param("externalGroupId")
 	if len(externalGroupId) == 0 {
 		//externalGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "externalGroupId is required",
 		}))
@@ -102,7 +100,6 @@ func OnModify5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -111,9 +108,6 @@ func OnModify5GVnGroup(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	return
 }
-
-
-
 
 type Modify5GVnGroupApiHandler interface {
 	DR_HandleModify5GVnGroup(externalGroupId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)

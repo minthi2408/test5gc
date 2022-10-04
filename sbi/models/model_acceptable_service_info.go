@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // AcceptableServiceInfo - Indicates the maximum bandwidth that shall be authorized by the PCF.
 type AcceptableServiceInfo struct {
-
 	AccBwMedComps map[string]MediaComponent `json:"accBwMedComps,omitempty"`
 
 	MarBwUl string `json:"marBwUl,omitempty"`

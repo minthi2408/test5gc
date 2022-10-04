@@ -1,7 +1,7 @@
 /*
 Nudm_NIDDAU
 
-Nudm NIDD Authorization Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Nudm NIDD Authorization Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,7 +12,6 @@ API version: 1.0.2
 package models
 
 type AuthorizationInfo struct {
-
 	Snssai Snssai `json:"snssai"`
 
 	Dnn string `json:"dnn"`

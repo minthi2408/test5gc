@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,7 +13,6 @@ package models
 
 // PduSessionTsnBridge - Contains the new 5GS Bridge information and may contain the DS-TT port and/or NW-TT port management information.
 type PduSessionTsnBridge struct {
-
 	TsnBridgeInfo TsnBridgeInfo `json:"tsnBridgeInfo"`
 
 	TsnBridgeManCont BridgeManagementContainer `json:"tsnBridgeManCont,omitempty"`

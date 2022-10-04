@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,6 +15,6 @@ type QosNotifTypeAnyOf string
 
 // List of QosNotifTypeAnyOf
 const (
-	QOSNOTIFTYPEANYOF_GUARANTEED QosNotifTypeAnyOf = "GUARANTEED"
+	QOSNOTIFTYPEANYOF_GUARANTEED     QosNotifTypeAnyOf = "GUARANTEED"
 	QOSNOTIFTYPEANYOF_NOT_GUARANTEED QosNotifTypeAnyOf = "NOT_GUARANTEED"
 )

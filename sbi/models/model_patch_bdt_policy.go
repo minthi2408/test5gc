@@ -1,7 +1,7 @@
 /*
 Npcf_BDTPolicyControl Service API
 
-PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -13,7 +13,6 @@ package models
 
 // PatchBdtPolicy - Describes the updates in authorization data of an Individual BDT Policy created by the PCF.
 type PatchBdtPolicy struct {
-
 	BdtPolData BdtPolicyDataPatch `json:"bdtPolData,omitempty"`
 
 	BdtReqData BdtReqDataPatch `json:"bdtReqData,omitempty"`

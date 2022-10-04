@@ -1,7 +1,7 @@
 /*
 Npcf_AMPolicyControl
 
-Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,27 +12,24 @@ API version: 1.1.6
 package ampc
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/npcf-am-policy-control/v1"
+	SERVICE_PATH = "{apiRoot}/npcf-am-policy-control/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.PolicyAssociation, 
+@return *models.PolicyAssociation,
 */
 func CreateIndividualAMPolicyAssociation(client sbi.ConsumerClient, body models.PolicyAssociationRequest) (result models.PolicyAssociation, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -81,7 +78,7 @@ func CreateIndividualAMPolicyAssociation(client sbi.ConsumerClient, body models.
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -92,18 +89,18 @@ func CreateIndividualAMPolicyAssociation(client sbi.ConsumerClient, body models.
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param polAssoId Identifier of a policy association
-@return 
+@return
 */
 func DeleteIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId string) (err error) {
-	
+
 	if len(polAssoId) == 0 {
 		err = fmt.Errorf("polAssoId is required")
 		return
@@ -113,7 +110,7 @@ func DeleteIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId st
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/policies/{polAssoId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"polAssoId"+"}", url.PathEscape(polAssoId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"polAssoId"+"}", url.PathEscape(polAssoId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -152,7 +149,7 @@ func DeleteIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId st
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -161,16 +158,16 @@ func DeleteIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId st
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param polAssoId Identifier of a policy association
-@return *models.PolicyAssociation, 
+@return *models.PolicyAssociation,
 */
 func ReadIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId string) (result models.PolicyAssociation, err error) {
-	
+
 	if len(polAssoId) == 0 {
 		err = fmt.Errorf("polAssoId is required")
 		return
@@ -180,7 +177,7 @@ func ReadIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId stri
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/policies/{polAssoId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"polAssoId"+"}", url.PathEscape(polAssoId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"polAssoId"+"}", url.PathEscape(polAssoId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -219,7 +216,7 @@ func ReadIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId stri
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -230,22 +227,22 @@ func ReadIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId stri
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param polAssoId Identifier of a policy association
-@return *models.PolicyUpdate, 
+@return *models.PolicyUpdate,
 */
 func ReportObservedEventTriggersForIndividualAMPolicyAssociation(client sbi.ConsumerClient, polAssoId string, body models.PolicyAssociationUpdateRequest) (result models.PolicyUpdate, err error) {
-	
+
 	if len(polAssoId) == 0 {
 		err = fmt.Errorf("polAssoId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -301,7 +298,7 @@ func ReportObservedEventTriggersForIndividualAMPolicyAssociation(client sbi.Cons
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -312,9 +309,7 @@ func ReportObservedEventTriggersForIndividualAMPolicyAssociation(client sbi.Cons
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -12,32 +12,29 @@ API version: 1.1.7
 package loc
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/namf-loc/v1"
+	SERVICE_PATH = "{apiRoot}/namf-loc/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return 
+@return
 */
 func CancelLocation(client sbi.ConsumerClient, ueContextId string, body models.CancelPosInfo) (err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -96,7 +93,7 @@ func CancelLocation(client sbi.ConsumerClient, ueContextId string, body models.C
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -105,20 +102,20 @@ func CancelLocation(client sbi.ConsumerClient, ueContextId string, body models.C
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.ProvideLocInfo, 
+@return *models.ProvideLocInfo,
 */
 func ProvideLocationInfo(client sbi.ConsumerClient, ueContextId string, body models.RequestLocInfo) (result models.ProvideLocInfo, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -171,7 +168,7 @@ func ProvideLocationInfo(client sbi.ConsumerClient, ueContextId string, body mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -182,22 +179,22 @@ func ProvideLocationInfo(client sbi.ConsumerClient, ueContextId string, body mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.ProvidePosInfo, 
+@return *models.ProvidePosInfo,
 */
 func ProvidePositioningInfo(client sbi.ConsumerClient, ueContextId string, body models.RequestPosInfo) (result models.ProvidePosInfo, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -250,7 +247,7 @@ func ProvidePositioningInfo(client sbi.ConsumerClient, ueContextId string, body 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -261,9 +258,7 @@ func ProvidePositioningInfo(client sbi.ConsumerClient, ueContextId string, body 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,8 +15,8 @@ type MeteringMethodAnyOf string
 
 // List of MeteringMethodAnyOf
 const (
-	METERINGMETHODANYOF_DURATION MeteringMethodAnyOf = "DURATION"
-	METERINGMETHODANYOF_VOLUME MeteringMethodAnyOf = "VOLUME"
+	METERINGMETHODANYOF_DURATION        MeteringMethodAnyOf = "DURATION"
+	METERINGMETHODANYOF_VOLUME          MeteringMethodAnyOf = "VOLUME"
 	METERINGMETHODANYOF_DURATION_VOLUME MeteringMethodAnyOf = "DURATION_VOLUME"
-	METERINGMETHODANYOF_EVENT MeteringMethodAnyOf = "EVENT"
+	METERINGMETHODANYOF_EVENT           MeteringMethodAnyOf = "EVENT"
 )

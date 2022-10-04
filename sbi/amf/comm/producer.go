@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,20 +12,20 @@ API version: 1.1.8
 package comm
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for AMFStatusChangeSubscribeModfy
 func OnAMFStatusChangeSubscribeModfy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
@@ -43,7 +43,6 @@ func OnAMFStatusChangeSubscribeModfy(ctx sbi.RequestContext, handler interface{}
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -53,23 +52,20 @@ func OnAMFStatusChangeSubscribeModfy(ctx sbi.RequestContext, handler interface{}
 	return
 }
 
-
 //sbi producer handler for AMFStatusChangeUnSubscribe
 func OnAMFStatusChangeUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subscriptionId := ctx.Param("subscriptionId")
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -84,16 +80,15 @@ func OnAMFStatusChangeUnSubscribe(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
 //sbi producer handler for CancelRelocateUEContext
 func OnCancelRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -109,7 +104,6 @@ func OnCancelRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -119,16 +113,15 @@ func OnCancelRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for CreateUEContext
 func OnCreateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -146,7 +139,6 @@ func OnCreateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -156,16 +148,15 @@ func OnCreateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for EBIAssignment
 func OnEBIAssignment(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -183,7 +174,6 @@ func OnEBIAssignment(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -193,16 +183,15 @@ func OnEBIAssignment(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for RegistrationStatusUpdate
 func OnRegistrationStatusUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -220,7 +209,6 @@ func OnRegistrationStatusUpdate(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -230,16 +218,15 @@ func OnRegistrationStatusUpdate(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
 //sbi producer handler for ReleaseUEContext
 func OnReleaseUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -255,7 +242,6 @@ func OnReleaseUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -265,16 +251,15 @@ func OnReleaseUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for RelocateUEContext
 func OnRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -292,7 +277,6 @@ func OnRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -302,16 +286,15 @@ func OnRelocateUEContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for UEContextTransfer
 func OnUEContextTransfer(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -329,7 +312,6 @@ func OnUEContextTransfer(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -339,16 +321,15 @@ func OnUEContextTransfer(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for N1N2MessageUnSubscribe
 func OnN1N2MessageUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -358,14 +339,12 @@ func OnN1N2MessageUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp
 	if len(subscriptionId) == 0 {
 		//subscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -380,16 +359,15 @@ func OnN1N2MessageUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 //sbi producer handler for N1N2MessageTransfer
 func OnN1N2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -407,7 +385,6 @@ func OnN1N2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp sb
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -417,16 +394,15 @@ func OnN1N2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for N1N2MessageSubscribe
 func OnN1N2MessageSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueContextId := ctx.Param("ueContextId")
 	if len(ueContextId) == 0 {
 		//ueContextId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueContextId is required",
 		}))
@@ -444,7 +420,6 @@ func OnN1N2MessageSubscribe(ctx sbi.RequestContext, handler interface{}) (resp s
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -454,23 +429,20 @@ func OnN1N2MessageSubscribe(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 //sbi producer handler for NonUeN2InfoUnSubscribe
 func OnNonUeN2InfoUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	n2NotifySubscriptionId := ctx.Param("n2NotifySubscriptionId")
 	if len(n2NotifySubscriptionId) == 0 {
 		//n2NotifySubscriptionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "n2NotifySubscriptionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -485,11 +457,9 @@ func OnNonUeN2InfoUnSubscribe(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 //sbi producer handler for NonUeN2MessageTransfer
 func OnNonUeN2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.N2InformationTransferReqData
 
@@ -502,7 +472,6 @@ func OnNonUeN2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -512,11 +481,9 @@ func OnNonUeN2MessageTransfer(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 //sbi producer handler for NonUeN2InfoSubscribe
 func OnNonUeN2InfoSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.NonUeN2InfoSubscriptionCreateData
 
@@ -529,7 +496,6 @@ func OnNonUeN2InfoSubscribe(ctx sbi.RequestContext, handler interface{}) (resp s
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -539,11 +505,9 @@ func OnNonUeN2InfoSubscribe(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 //sbi producer handler for AMFStatusChangeSubscribe
 func OnAMFStatusChangeSubscribe(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.SubscriptionData
 
@@ -556,7 +520,6 @@ func OnAMFStatusChangeSubscribe(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -565,7 +528,6 @@ func OnAMFStatusChangeSubscribe(ctx sbi.RequestContext, handler interface{}) (re
 	}
 	return
 }
-
 
 type Producer interface {
 	COMM_HandleAMFStatusChangeSubscribeModfy(subscriptionId string, body models.SubscriptionData) (successCode int32, result models.SubscriptionData, err *sbi.ApiError)
@@ -585,5 +547,3 @@ type Producer interface {
 	COMM_HandleNonUeN2InfoSubscribe(body models.NonUeN2InfoSubscriptionCreateData) (successCode int32, result models.NonUeN2InfoSubscriptionCreatedData, err *sbi.ApiError)
 	COMM_HandleAMFStatusChangeSubscribe(body models.SubscriptionData) (successCode int32, result models.SubscriptionData, err *sbi.ApiError)
 }
-
-

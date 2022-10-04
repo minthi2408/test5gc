@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return *models.LocationInfo, 
+@return *models.LocationInfo,
 */
 func QueryUeLocation(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result models.LocationInfo, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -41,7 +40,7 @@ func QueryUeLocation(client sbi.ConsumerClient, ueId string, supportedFeatures s
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -53,7 +52,7 @@ func QueryUeLocation(client sbi.ConsumerClient, ueId string, supportedFeatures s
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,21 +63,20 @@ func QueryUeLocation(client sbi.ConsumerClient, ueId string, supportedFeatures s
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryUeLocation
 func OnQueryUeLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UEsLocationInformationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -86,12 +84,9 @@ func OnQueryUeLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.LocationInfo
-
 
 	successCode, result, apierr = prod.DR_HandleQueryUeLocation(ueId, supportedFeatures)
 
@@ -102,9 +97,6 @@ func OnQueryUeLocation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	return
 }
-
-
-
 
 type UEsLocationInformationDocumentApiHandler interface {
 	DR_HandleQueryUeLocation(ueId string, supportedFeatures string) (successCode int32, result models.LocationInfo, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,7 +15,7 @@ type DlDataDeliveryStatusAnyOf string
 
 // List of DlDataDeliveryStatusAnyOf
 const (
-	DLDATADELIVERYSTATUSANYOF_BUFFERED DlDataDeliveryStatusAnyOf = "BUFFERED"
+	DLDATADELIVERYSTATUSANYOF_BUFFERED    DlDataDeliveryStatusAnyOf = "BUFFERED"
 	DLDATADELIVERYSTATUSANYOF_TRANSMITTED DlDataDeliveryStatusAnyOf = "TRANSMITTED"
-	DLDATADELIVERYSTATUSANYOF_DISCARDED DlDataDeliveryStatusAnyOf = "DISCARDED"
+	DLDATADELIVERYSTATUSANYOF_DISCARDED   DlDataDeliveryStatusAnyOf = "DISCARDED"
 )

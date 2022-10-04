@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,15 +15,15 @@ type ReservPriorityAnyOf string
 
 // List of ReservPriorityAnyOf
 const (
-	RESERVPRIORITYANYOF__1 ReservPriorityAnyOf = "PRIO_1"
-	RESERVPRIORITYANYOF__2 ReservPriorityAnyOf = "PRIO_2"
-	RESERVPRIORITYANYOF__3 ReservPriorityAnyOf = "PRIO_3"
-	RESERVPRIORITYANYOF__4 ReservPriorityAnyOf = "PRIO_4"
-	RESERVPRIORITYANYOF__5 ReservPriorityAnyOf = "PRIO_5"
-	RESERVPRIORITYANYOF__6 ReservPriorityAnyOf = "PRIO_6"
-	RESERVPRIORITYANYOF__7 ReservPriorityAnyOf = "PRIO_7"
-	RESERVPRIORITYANYOF__8 ReservPriorityAnyOf = "PRIO_8"
-	RESERVPRIORITYANYOF__9 ReservPriorityAnyOf = "PRIO_9"
+	RESERVPRIORITYANYOF__1  ReservPriorityAnyOf = "PRIO_1"
+	RESERVPRIORITYANYOF__2  ReservPriorityAnyOf = "PRIO_2"
+	RESERVPRIORITYANYOF__3  ReservPriorityAnyOf = "PRIO_3"
+	RESERVPRIORITYANYOF__4  ReservPriorityAnyOf = "PRIO_4"
+	RESERVPRIORITYANYOF__5  ReservPriorityAnyOf = "PRIO_5"
+	RESERVPRIORITYANYOF__6  ReservPriorityAnyOf = "PRIO_6"
+	RESERVPRIORITYANYOF__7  ReservPriorityAnyOf = "PRIO_7"
+	RESERVPRIORITYANYOF__8  ReservPriorityAnyOf = "PRIO_8"
+	RESERVPRIORITYANYOF__9  ReservPriorityAnyOf = "PRIO_9"
 	RESERVPRIORITYANYOF__10 ReservPriorityAnyOf = "PRIO_10"
 	RESERVPRIORITYANYOF__11 ReservPriorityAnyOf = "PRIO_11"
 	RESERVPRIORITYANYOF__12 ReservPriorityAnyOf = "PRIO_12"

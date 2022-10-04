@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,6 +15,6 @@ type RoamingOdbAnyOf string
 
 // List of RoamingOdbAnyOf
 const (
-	ROAMINGODBANYOF_PLMN RoamingOdbAnyOf = "OUTSIDE_HOME_PLMN"
+	ROAMINGODBANYOF_PLMN         RoamingOdbAnyOf = "OUTSIDE_HOME_PLMN"
 	ROAMINGODBANYOF_PLMN_COUNTRY RoamingOdbAnyOf = "OUTSIDE_HOME_PLMN_COUNTRY"
 )

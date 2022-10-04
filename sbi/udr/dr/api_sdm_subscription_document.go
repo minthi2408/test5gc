@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,32 +12,31 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param subsId
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func ModifysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -67,7 +66,7 @@ func ModifysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -78,21 +77,20 @@ func ModifysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ModifysdmSubscription
 func OnModifysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SDMSubscriptionDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -102,7 +100,7 @@ func OnModifysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp 
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
@@ -121,7 +119,6 @@ func OnModifysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -131,21 +128,18 @@ func OnModifysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param subsId Unique ID of the subscription to retrieve
-@return map[string]interface{}, 
+@return map[string]interface{},
 */
 func QuerysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string) (result map[string]interface{}, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
@@ -156,7 +150,7 @@ func QuerysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string)
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data/sdm-subscriptions/{subsId}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -168,7 +162,7 @@ func QuerysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string)
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -179,21 +173,20 @@ func QuerysdmSubscription(client sbi.ConsumerClient, ueId string, subsId string)
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QuerysdmSubscription
 func OnQuerysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SDMSubscriptionDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -203,19 +196,16 @@ func OnQuerysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp s
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result map[string]interface{}
-
 
 	successCode, result, apierr = prod.DR_HandleQuerysdmSubscription(ueId, subsId)
 
@@ -227,21 +217,18 @@ func OnQuerysdmSubscription(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param subsId Unique ID of the subscription to remove
-@return 
+@return
 */
 func RemovesdmSubscriptions(client sbi.ConsumerClient, ueId string, subsId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
@@ -252,7 +239,7 @@ func RemovesdmSubscriptions(client sbi.ConsumerClient, ueId string, subsId strin
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data/sdm-subscriptions/{subsId}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subsId"+"}", url.PathEscape(subsId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -267,7 +254,7 @@ func RemovesdmSubscriptions(client sbi.ConsumerClient, ueId string, subsId strin
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -276,19 +263,18 @@ func RemovesdmSubscriptions(client sbi.ConsumerClient, ueId string, subsId strin
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for RemovesdmSubscriptions
 func OnRemovesdmSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SDMSubscriptionDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -298,14 +284,12 @@ func OnRemovesdmSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -320,25 +304,22 @@ func OnRemovesdmSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param subsId
-@return 
+@return
 */
 func Updatesdmsubscriptions(client sbi.ConsumerClient, ueId string, subsId string, body models.SdmSubscription) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(subsId) == 0 {
 		err = fmt.Errorf("subsId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -362,7 +343,7 @@ func Updatesdmsubscriptions(client sbi.ConsumerClient, ueId string, subsId strin
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -371,19 +352,18 @@ func Updatesdmsubscriptions(client sbi.ConsumerClient, ueId string, subsId strin
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for Updatesdmsubscriptions
 func OnUpdatesdmsubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SDMSubscriptionDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -393,7 +373,7 @@ func OnUpdatesdmsubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 	if len(subsId) == 0 {
 		//subsId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subsId is required",
 		}))
@@ -409,7 +389,6 @@ func OnUpdatesdmsubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -418,9 +397,6 @@ func OnUpdatesdmsubscriptions(ctx sbi.RequestContext, handler interface{}) (resp
 	}
 	return
 }
-
-
-
 
 type SDMSubscriptionDocumentApiHandler interface {
 	DR_HandleModifysdmSubscription(ueId string, subsId string, supportedFeatures string, body []models.PatchItem) (successCode int32, result models.PatchResult, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param configurationId The Identifier of an Individual IPTV Configuration Data to be updated. It shall apply the format of Data type string.
-@return *models.IptvConfigData, 
+@return *models.IptvConfigData,
 */
 func PartialReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurationId string, body models.IptvConfigDataPatch) (result models.IptvConfigData, err error) {
-	
+
 	if len(configurationId) == 0 {
 		err = fmt.Errorf("configurationId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -84,7 +83,7 @@ func PartialReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, co
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func PartialReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, co
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for PartialReplaceIndividualIPTVConfigurationData
 func OnPartialReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualIPTVConfigurationDataApiHandler)
-	
+
 	configurationId := ctx.Param("configurationId")
 	if len(configurationId) == 0 {
 		//configurationId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "configurationId is required",
 		}))
@@ -127,7 +125,6 @@ func OnPartialReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, han
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -136,9 +133,6 @@ func OnPartialReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, han
 	}
 	return
 }
-
-
-
 
 type IndividualIPTVConfigurationDataApiHandler interface {
 	DR_HandlePartialReplaceIndividualIPTVConfigurationData(configurationId string, body models.IptvConfigDataPatch) (successCode int32, result models.IptvConfigData, err *sbi.ApiError)

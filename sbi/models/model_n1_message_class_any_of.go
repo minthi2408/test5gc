@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,9 +16,9 @@ type N1MessageClassAnyOf string
 // List of N1MessageClassAnyOf
 const (
 	N1MESSAGECLASSANYOF__5_GMM N1MessageClassAnyOf = "5GMM"
-	N1MESSAGECLASSANYOF_SM N1MessageClassAnyOf = "SM"
-	N1MESSAGECLASSANYOF_LPP N1MessageClassAnyOf = "LPP"
-	N1MESSAGECLASSANYOF_SMS N1MessageClassAnyOf = "SMS"
-	N1MESSAGECLASSANYOF_UPDP N1MessageClassAnyOf = "UPDP"
-	N1MESSAGECLASSANYOF_LCS N1MessageClassAnyOf = "LCS"
+	N1MESSAGECLASSANYOF_SM     N1MessageClassAnyOf = "SM"
+	N1MESSAGECLASSANYOF_LPP    N1MessageClassAnyOf = "LPP"
+	N1MESSAGECLASSANYOF_SMS    N1MessageClassAnyOf = "SMS"
+	N1MESSAGECLASSANYOF_UPDP   N1MessageClassAnyOf = "UPDP"
+	N1MESSAGECLASSANYOF_LCS    N1MessageClassAnyOf = "LCS"
 )

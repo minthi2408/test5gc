@@ -1,7 +1,7 @@
 /*
 Nsmf_NIDD
 
-SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,6 +12,5 @@ API version: 1.0.2
 package models
 
 type DeliverAddInfo struct {
-
 	MaxWaitingTime int32 `json:"maxWaitingTime,omitempty"`
 }

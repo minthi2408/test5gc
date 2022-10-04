@@ -1,7 +1,7 @@
 /*
 Nudm_EE
 
-Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.4
 */
@@ -15,7 +15,7 @@ type LossOfConnectivityReasonAnyOf string
 
 // List of LossOfConnectivityReasonAnyOf
 const (
-	LOSSOFCONNECTIVITYREASONANYOF_DEREGISTERED LossOfConnectivityReasonAnyOf = "DEREGISTERED"
+	LOSSOFCONNECTIVITYREASONANYOF_DEREGISTERED               LossOfConnectivityReasonAnyOf = "DEREGISTERED"
 	LOSSOFCONNECTIVITYREASONANYOF_MAX_DETECTION_TIME_EXPIRED LossOfConnectivityReasonAnyOf = "MAX_DETECTION_TIME_EXPIRED"
-	LOSSOFCONNECTIVITYREASONANYOF_PURGED LossOfConnectivityReasonAnyOf = "PURGED"
+	LOSSOFCONNECTIVITYREASONANYOF_PURGED                     LossOfConnectivityReasonAnyOf = "PURGED"
 )

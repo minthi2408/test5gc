@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,32 +12,29 @@ API version: 1.1.8
 package pdu
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nsmf-pdusession/v1"
+	SERVICE_PATH = "{apiRoot}/nsmf-pdusession/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param pduSessionRef PDU session reference
-@return *models.ReleasedData, 
+@return *models.ReleasedData,
 */
 func ReleasePduSession(client sbi.ConsumerClient, pduSessionRef string, body *models.ReleaseData) (result models.ReleasedData, err error) {
-	
+
 	if len(pduSessionRef) == 0 {
 		err = fmt.Errorf("pduSessionRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -90,7 +87,7 @@ func ReleasePduSession(client sbi.ConsumerClient, pduSessionRef string, body *mo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -101,22 +98,22 @@ func ReleasePduSession(client sbi.ConsumerClient, pduSessionRef string, body *mo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param pduSessionRef PDU session reference
-@return *models.RetrievedData, 
+@return *models.RetrievedData,
 */
 func RetrievePduSession(client sbi.ConsumerClient, pduSessionRef string, body models.RetrieveData) (result models.RetrievedData, err error) {
-	
+
 	if len(pduSessionRef) == 0 {
 		err = fmt.Errorf("pduSessionRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -172,7 +169,7 @@ func RetrievePduSession(client sbi.ConsumerClient, pduSessionRef string, body mo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -183,22 +180,22 @@ func RetrievePduSession(client sbi.ConsumerClient, pduSessionRef string, body mo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param pduSessionRef PDU session reference
-@return 
+@return
 */
 func TransferMoData(client sbi.ConsumerClient, pduSessionRef string, body models.TransferMoDataRequest) (err error) {
-	
+
 	if len(pduSessionRef) == 0 {
 		err = fmt.Errorf("pduSessionRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -254,7 +251,7 @@ func TransferMoData(client sbi.ConsumerClient, pduSessionRef string, body models
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -263,20 +260,20 @@ func TransferMoData(client sbi.ConsumerClient, pduSessionRef string, body models
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param pduSessionRef PDU session reference
-@return *models.HsmfUpdatedData, 
+@return *models.HsmfUpdatedData,
 */
 func UpdatePduSession(client sbi.ConsumerClient, pduSessionRef string, body models.HsmfUpdateData) (result models.HsmfUpdatedData, err error) {
-	
+
 	if len(pduSessionRef) == 0 {
 		err = fmt.Errorf("pduSessionRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -329,7 +326,7 @@ func UpdatePduSession(client sbi.ConsumerClient, pduSessionRef string, body mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -340,22 +337,22 @@ func UpdatePduSession(client sbi.ConsumerClient, pduSessionRef string, body mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smContextRef SM context reference
-@return *models.SmContextReleasedData, 
+@return *models.SmContextReleasedData,
 */
 func ReleaseSmContext(client sbi.ConsumerClient, smContextRef string, body *models.SmContextReleaseData) (result models.SmContextReleasedData, err error) {
-	
+
 	if len(smContextRef) == 0 {
 		err = fmt.Errorf("smContextRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -408,7 +405,7 @@ func ReleaseSmContext(client sbi.ConsumerClient, smContextRef string, body *mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -419,22 +416,22 @@ func ReleaseSmContext(client sbi.ConsumerClient, smContextRef string, body *mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smContextRef SM context reference
-@return *models.SmContextRetrievedData, 
+@return *models.SmContextRetrievedData,
 */
 func RetrieveSmContext(client sbi.ConsumerClient, smContextRef string, body *models.SmContextRetrieveData) (result models.SmContextRetrievedData, err error) {
-	
+
 	if len(smContextRef) == 0 {
 		err = fmt.Errorf("smContextRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -490,7 +487,7 @@ func RetrieveSmContext(client sbi.ConsumerClient, smContextRef string, body *mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -501,22 +498,22 @@ func RetrieveSmContext(client sbi.ConsumerClient, smContextRef string, body *mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smContextRef SM context reference
-@return 
+@return
 */
 func SendMoData(client sbi.ConsumerClient, smContextRef string, body models.SendMoDataRequest) (err error) {
-	
+
 	if len(smContextRef) == 0 {
 		err = fmt.Errorf("smContextRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -572,7 +569,7 @@ func SendMoData(client sbi.ConsumerClient, smContextRef string, body models.Send
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -581,20 +578,20 @@ func SendMoData(client sbi.ConsumerClient, smContextRef string, body models.Send
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param smContextRef SM context reference
-@return *models.SmContextUpdatedData, 
+@return *models.SmContextUpdatedData,
 */
 func UpdateSmContext(client sbi.ConsumerClient, smContextRef string, body models.SmContextUpdateData) (result models.SmContextUpdatedData, err error) {
-	
+
 	if len(smContextRef) == 0 {
 		err = fmt.Errorf("smContextRef is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -647,7 +644,7 @@ func UpdateSmContext(client sbi.ConsumerClient, smContextRef string, body models
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -658,17 +655,17 @@ func UpdateSmContext(client sbi.ConsumerClient, smContextRef string, body models
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.PduSessionCreatedData, 
+@return *models.PduSessionCreatedData,
 */
 func PostPduSessions(client sbi.ConsumerClient, body models.PduSessionCreateData) (result models.PduSessionCreatedData, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -720,7 +717,7 @@ func PostPduSessions(client sbi.ConsumerClient, body models.PduSessionCreateData
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -731,17 +728,17 @@ func PostPduSessions(client sbi.ConsumerClient, body models.PduSessionCreateData
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.SmContextCreatedData, 
+@return *models.SmContextCreatedData,
 */
 func PostSmContexts(client sbi.ConsumerClient, body models.PostSmContextsRequest) (result models.SmContextCreatedData, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -796,7 +793,7 @@ func PostSmContexts(client sbi.ConsumerClient, body models.PostSmContextsRequest
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -807,9 +804,7 @@ func PostSmContexts(client sbi.ConsumerClient, body models.PostSmContextsRequest
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

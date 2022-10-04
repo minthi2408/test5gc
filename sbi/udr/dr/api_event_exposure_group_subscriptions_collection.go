@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueGroupId Group of UEs or any UE
-@return *models.EeSubscription, 
+@return *models.EeSubscription,
 */
 func CreateEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, body models.EeSubscription) (result models.EeSubscription, err error) {
-	
+
 	if len(ueGroupId) == 0 {
 		err = fmt.Errorf("ueGroupId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -51,7 +50,7 @@ func CreateEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, bod
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -62,21 +61,20 @@ func CreateEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, bod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateEeGroupSubscriptions
 func OnCreateEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(EventExposureGroupSubscriptionsCollectionApiHandler)
-	
+
 	ueGroupId := ctx.Param("ueGroupId")
 	if len(ueGroupId) == 0 {
 		//ueGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueGroupId is required",
 		}))
@@ -94,7 +92,6 @@ func OnCreateEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -104,21 +101,18 @@ func OnCreateEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueGroupId Group of UEs or any UE
 @param supportedFeatures Supported Features
-@return []models.EeSubscription, 
+@return []models.EeSubscription,
 */
 func QueryEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, supportedFeatures string) (result []models.EeSubscription, err error) {
-	
+
 	if len(ueGroupId) == 0 {
 		err = fmt.Errorf("ueGroupId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -127,7 +121,7 @@ func QueryEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, supp
 	req.Path = strings.Replace(req.Path, "{"+"ueGroupId"+"}", url.PathEscape(ueGroupId), -1)
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -139,7 +133,7 @@ func QueryEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, supp
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -150,21 +144,20 @@ func QueryEeGroupSubscriptions(client sbi.ConsumerClient, ueGroupId string, supp
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryEeGroupSubscriptions
 func OnQueryEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(EventExposureGroupSubscriptionsCollectionApiHandler)
-	
+
 	ueGroupId := ctx.Param("ueGroupId")
 	if len(ueGroupId) == 0 {
 		//ueGroupId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueGroupId is required",
 		}))
@@ -172,12 +165,9 @@ func OnQueryEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (r
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.EeSubscription
-
 
 	successCode, result, apierr = prod.DR_HandleQueryEeGroupSubscriptions(ueGroupId, supportedFeatures)
 
@@ -188,9 +178,6 @@ func OnQueryEeGroupSubscriptions(ctx sbi.RequestContext, handler interface{}) (r
 	}
 	return
 }
-
-
-
 
 type EventExposureGroupSubscriptionsCollectionApiHandler interface {
 	DR_HandleCreateEeGroupSubscriptions(ueGroupId string, body models.EeSubscription) (successCode int32, result models.EeSubscription, err *sbi.ApiError)

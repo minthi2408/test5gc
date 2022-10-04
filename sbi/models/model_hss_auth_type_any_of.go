@@ -1,7 +1,7 @@
 /*
 Nudm_UEAU
 
-UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.3
 */
@@ -15,10 +15,10 @@ type HssAuthTypeAnyOf string
 
 // List of HssAuthTypeAnyOf
 const (
-	HSSAUTHTYPEANYOF_EPS_AKA HssAuthTypeAnyOf = "EPS_AKA"
-	HSSAUTHTYPEANYOF_EAP_AKA HssAuthTypeAnyOf = "EAP_AKA"
+	HSSAUTHTYPEANYOF_EPS_AKA       HssAuthTypeAnyOf = "EPS_AKA"
+	HSSAUTHTYPEANYOF_EAP_AKA       HssAuthTypeAnyOf = "EAP_AKA"
 	HSSAUTHTYPEANYOF_EAP_AKA_PRIME HssAuthTypeAnyOf = "EAP_AKA_PRIME"
-	HSSAUTHTYPEANYOF_IMS_AKA HssAuthTypeAnyOf = "IMS_AKA"
-	HSSAUTHTYPEANYOF_GBA_AKA HssAuthTypeAnyOf = "GBA_AKA"
-	HSSAUTHTYPEANYOF_UMTS_AKA HssAuthTypeAnyOf = "UMTS_AKA"
+	HSSAUTHTYPEANYOF_IMS_AKA       HssAuthTypeAnyOf = "IMS_AKA"
+	HSSAUTHTYPEANYOF_GBA_AKA       HssAuthTypeAnyOf = "GBA_AKA"
+	HSSAUTHTYPEANYOF_UMTS_AKA      HssAuthTypeAnyOf = "UMTS_AKA"
 )

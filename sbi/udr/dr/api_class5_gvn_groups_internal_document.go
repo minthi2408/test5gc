@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,21 +12,20 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param internalGroupIds List of Internal Group IDs
-@return map[string]Model5GVnGroupConfiguration, 
+@return map[string]Model5GVnGroupConfiguration,
 */
 func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string) (result map[string]models.Model5GVnGroupConfiguration, err error) {
-	
+
 	internalGroupIdsStr := utils.Param2String(internalGroupIds)
 	if len(internalGroupIdsStr) == 0 {
 		err = fmt.Errorf("internalGroupIds is required")
@@ -38,7 +37,7 @@ func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string
 
 	req.Path = fmt.Sprintf("%s/subscription-data/group-data/5g-vn-groups/internal", ServicePath)
 	req.QueryParams.Add("internal-group-ids", internalGroupIdsStr)
-	
+
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -50,7 +49,7 @@ func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -61,21 +60,20 @@ func Query5GVnGroupInternal(client sbi.ConsumerClient, internalGroupIds []string
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for Query5GVnGroupInternal
 func OnQuery5GVnGroupInternal(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Class5GVNGroupsInternalDocumentApiHandler)
-	
+
 	internalGroupIdsStr := ctx.Param("internal-group-ids")
 	if len(internalGroupIdsStr) == 0 {
 		//internalGroupIds is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "internalGroupIds is required",
 		}))
@@ -85,20 +83,16 @@ func OnQuery5GVnGroupInternal(ctx sbi.RequestContext, handler interface{}) (resp
 	var internalGroupIdsErr error
 	if internalGroupIds, internalGroupIdsErr = utils.String2ArrayOfstring(internalGroupIdsStr); internalGroupIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: internalGroupIdsErr.Error(), 
+			Detail: internalGroupIdsErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result map[string]models.Model5GVnGroupConfiguration
-
 
 	successCode, result, apierr = prod.DR_HandleQuery5GVnGroupInternal(internalGroupIds)
 
@@ -109,9 +103,6 @@ func OnQuery5GVnGroupInternal(ctx sbi.RequestContext, handler interface{}) (resp
 	}
 	return
 }
-
-
-
 
 type Class5GVNGroupsInternalDocumentApiHandler interface {
 	DR_HandleQuery5GVnGroupInternal(internalGroupIds []string) (successCode int32, result map[string]models.Model5GVnGroupConfiguration, err *sbi.ApiError)

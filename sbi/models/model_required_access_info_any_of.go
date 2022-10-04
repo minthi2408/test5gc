@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -16,5 +16,5 @@ type RequiredAccessInfoAnyOf string
 // List of RequiredAccessInfoAnyOf
 const (
 	REQUIREDACCESSINFOANYOF_USER_LOCATION RequiredAccessInfoAnyOf = "USER_LOCATION"
-	REQUIREDACCESSINFOANYOF_UE_TIME_ZONE RequiredAccessInfoAnyOf = "UE_TIME_ZONE"
+	REQUIREDACCESSINFOANYOF_UE_TIME_ZONE  RequiredAccessInfoAnyOf = "UE_TIME_ZONE"
 )

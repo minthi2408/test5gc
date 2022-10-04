@@ -1,7 +1,7 @@
 /*
 AUSF API
 
-AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,28 +12,25 @@ API version: 1.1.3
 package uea
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nausf-auth/v1"
+	SERVICE_PATH = "{apiRoot}/nausf-auth/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param authCtxId
-@return 
+@return
 */
 func Delete5gAkaAuthenticationResult(client sbi.ConsumerClient, authCtxId string) (err error) {
-	
+
 	if len(authCtxId) == 0 {
 		err = fmt.Errorf("authCtxId is required")
 		return
@@ -43,7 +40,7 @@ func Delete5gAkaAuthenticationResult(client sbi.ConsumerClient, authCtxId string
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/ue-authentications/{authCtxId}/5g-aka-confirmation", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"authCtxId"+"}", url.PathEscape(authCtxId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"authCtxId"+"}", url.PathEscape(authCtxId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -73,7 +70,7 @@ func Delete5gAkaAuthenticationResult(client sbi.ConsumerClient, authCtxId string
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -82,16 +79,16 @@ func Delete5gAkaAuthenticationResult(client sbi.ConsumerClient, authCtxId string
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param authCtxId
-@return 
+@return
 */
 func DeleteEapAuthenticationResult(client sbi.ConsumerClient, authCtxId string) (err error) {
-	
+
 	if len(authCtxId) == 0 {
 		err = fmt.Errorf("authCtxId is required")
 		return
@@ -101,7 +98,7 @@ func DeleteEapAuthenticationResult(client sbi.ConsumerClient, authCtxId string) 
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/ue-authentications/{authCtxId}/eap-session", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"authCtxId"+"}", url.PathEscape(authCtxId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"authCtxId"+"}", url.PathEscape(authCtxId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -131,7 +128,7 @@ func DeleteEapAuthenticationResult(client sbi.ConsumerClient, authCtxId string) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -140,20 +137,20 @@ func DeleteEapAuthenticationResult(client sbi.ConsumerClient, authCtxId string) 
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param authCtxId
-@return *models.EapSession, 
+@return *models.EapSession,
 */
 func EapAuthMethod(client sbi.ConsumerClient, authCtxId string, body *models.EapSession) (result models.EapSession, err error) {
-	
+
 	if len(authCtxId) == 0 {
 		err = fmt.Errorf("authCtxId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -185,7 +182,7 @@ func EapAuthMethod(client sbi.ConsumerClient, authCtxId string, body *models.Eap
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -196,17 +193,17 @@ func EapAuthMethod(client sbi.ConsumerClient, authCtxId string, body *models.Eap
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.RgAuthCtx, 
+@return *models.RgAuthCtx,
 */
 func RgAuthenticationsPost(client sbi.ConsumerClient, body models.RgAuthenticationInfo) (result models.RgAuthCtx, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -240,7 +237,7 @@ func RgAuthenticationsPost(client sbi.ConsumerClient, body models.RgAuthenticati
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -251,22 +248,22 @@ func RgAuthenticationsPost(client sbi.ConsumerClient, body models.RgAuthenticati
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param authCtxId
-@return *models.ConfirmationDataResponse, 
+@return *models.ConfirmationDataResponse,
 */
 func UeAuthenticationsAuthCtxId5gAkaConfirmationPut(client sbi.ConsumerClient, authCtxId string, body *models.ConfirmationData) (result models.ConfirmationDataResponse, err error) {
-	
+
 	if len(authCtxId) == 0 {
 		err = fmt.Errorf("authCtxId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -298,7 +295,7 @@ func UeAuthenticationsAuthCtxId5gAkaConfirmationPut(client sbi.ConsumerClient, a
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -309,17 +306,17 @@ func UeAuthenticationsAuthCtxId5gAkaConfirmationPut(client sbi.ConsumerClient, a
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return 
+@return
 */
 func UeAuthenticationsDeregisterPost(client sbi.ConsumerClient, body models.DeregistrationInfo) (err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -347,7 +344,7 @@ func UeAuthenticationsDeregisterPost(client sbi.ConsumerClient, body models.Dere
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -356,15 +353,15 @@ func UeAuthenticationsDeregisterPost(client sbi.ConsumerClient, body models.Dere
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.UEAuthenticationCtx, 
+@return *models.UEAuthenticationCtx,
 */
 func UeAuthenticationsPost(client sbi.ConsumerClient, body models.AuthenticationInfo) (result models.UEAuthenticationCtx, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -404,7 +401,7 @@ func UeAuthenticationsPost(client sbi.ConsumerClient, body models.Authentication
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -415,9 +412,7 @@ func UeAuthenticationsPost(client sbi.ConsumerClient, body models.Authentication
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

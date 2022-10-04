@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,21 +12,20 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appId Contains the information of the application identifier(s) for the querying PFD Data resource. If none appId is included in the URI, it applies to all application identifier(s) for the querying PFD Data resource.
-@return []models.PfdDataForAppExt, 
+@return []models.PfdDataForAppExt,
 */
 func ReadPFDData(client sbi.ConsumerClient, appId []string) (result []models.PfdDataForAppExt, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -35,7 +34,7 @@ func ReadPFDData(client sbi.ConsumerClient, appId []string) (result []models.Pfd
 	appIdStr := utils.Param2String(appId)
 	if len(appIdStr) > 0 {
 		req.QueryParams.Add("appId", appIdStr)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -71,7 +70,7 @@ func ReadPFDData(client sbi.ConsumerClient, appId []string) (result []models.Pfd
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -82,35 +81,30 @@ func ReadPFDData(client sbi.ConsumerClient, appId []string) (result []models.Pfd
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadPFDData
 func OnReadPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(PFDDataStoreApiHandler)
-	
+
 	appIdStr := ctx.Param("appId")
 	var appId []string
 	var appIdErr error
 	if appId, appIdErr = utils.String2ArrayOfstring(appIdStr); appIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: appIdErr.Error(), 
+			Detail: appIdErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.PfdDataForAppExt
-
 
 	successCode, result, apierr = prod.DR_HandleReadPFDData(appId)
 
@@ -121,9 +115,6 @@ func OnReadPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	}
 	return
 }
-
-
-
 
 type PFDDataStoreApiHandler interface {
 	DR_HandleReadPFDData(appId []string) (successCode int32, result []models.PfdDataForAppExt, err *sbi.ApiError)

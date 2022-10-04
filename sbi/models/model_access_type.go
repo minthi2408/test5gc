@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,6 +15,6 @@ type AccessType string
 
 // List of AccessType
 const (
-	ACCESSTYPE__3_GPP_ACCESS AccessType = "3GPP_ACCESS"
+	ACCESSTYPE__3_GPP_ACCESS    AccessType = "3GPP_ACCESS"
 	ACCESSTYPE_NON_3_GPP_ACCESS AccessType = "NON_3GPP_ACCESS"
 )

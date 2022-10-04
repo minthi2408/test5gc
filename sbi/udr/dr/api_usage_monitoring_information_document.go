@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,31 +12,30 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param usageMonId
-@return *models.UsageMonData, 
+@return *models.UsageMonData,
 */
 func CreateUsageMonitoringResource(client sbi.ConsumerClient, ueId string, usageMonId string, body models.UsageMonData) (result models.UsageMonData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(usageMonId) == 0 {
 		err = fmt.Errorf("usageMonId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -90,7 +89,7 @@ func CreateUsageMonitoringResource(client sbi.ConsumerClient, ueId string, usage
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -101,21 +100,20 @@ func CreateUsageMonitoringResource(client sbi.ConsumerClient, ueId string, usage
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateUsageMonitoringResource
 func OnCreateUsageMonitoringResource(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UsageMonitoringInformationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -125,7 +123,7 @@ func OnCreateUsageMonitoringResource(ctx sbi.RequestContext, handler interface{}
 	if len(usageMonId) == 0 {
 		//usageMonId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "usageMonId is required",
 		}))
@@ -143,7 +141,6 @@ func OnCreateUsageMonitoringResource(ctx sbi.RequestContext, handler interface{}
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -153,21 +150,18 @@ func OnCreateUsageMonitoringResource(ctx sbi.RequestContext, handler interface{}
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param usageMonId
-@return 
+@return
 */
 func DeleteUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, usageMonId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(usageMonId) == 0 {
 		err = fmt.Errorf("usageMonId is required")
 		return
@@ -178,7 +172,7 @@ func DeleteUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, us
 
 	req.Path = fmt.Sprintf("%s/policy-data/ues/{ueId}/sm-data/{usageMonId}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"usageMonId"+"}", url.PathEscape(usageMonId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"usageMonId"+"}", url.PathEscape(usageMonId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -211,7 +205,7 @@ func DeleteUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, us
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -220,19 +214,18 @@ func DeleteUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, us
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteUsageMonitoringInformation
 func OnDeleteUsageMonitoringInformation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UsageMonitoringInformationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -242,14 +235,12 @@ func OnDeleteUsageMonitoringInformation(ctx sbi.RequestContext, handler interfac
 	if len(usageMonId) == 0 {
 		//usageMonId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "usageMonId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -264,26 +255,23 @@ func OnDeleteUsageMonitoringInformation(ctx sbi.RequestContext, handler interfac
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
 @param usageMonId
 @param suppFeat Supported Features
-@return *models.UsageMonData, 
+@return *models.UsageMonData,
 */
 func ReadUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, usageMonId string, suppFeat string) (result models.UsageMonData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(usageMonId) == 0 {
 		err = fmt.Errorf("usageMonId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -293,7 +281,7 @@ func ReadUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, usag
 	req.Path = strings.Replace(req.Path, "{"+"usageMonId"+"}", url.PathEscape(usageMonId), -1)
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -329,7 +317,7 @@ func ReadUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, usag
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -340,21 +328,20 @@ func ReadUsageMonitoringInformation(client sbi.ConsumerClient, ueId string, usag
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadUsageMonitoringInformation
 func OnReadUsageMonitoringInformation(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(UsageMonitoringInformationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -364,7 +351,7 @@ func OnReadUsageMonitoringInformation(ctx sbi.RequestContext, handler interface{
 	if len(usageMonId) == 0 {
 		//usageMonId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "usageMonId is required",
 		}))
@@ -372,12 +359,9 @@ func OnReadUsageMonitoringInformation(ctx sbi.RequestContext, handler interface{
 	}
 	suppFeat := ctx.Param("supp-feat")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.UsageMonData
-
 
 	successCode, result, apierr = prod.DR_HandleReadUsageMonitoringInformation(ueId, usageMonId, suppFeat)
 
@@ -388,9 +372,6 @@ func OnReadUsageMonitoringInformation(ctx sbi.RequestContext, handler interface{
 	}
 	return
 }
-
-
-
 
 type UsageMonitoringInformationDocumentApiHandler interface {
 	DR_HandleCreateUsageMonitoringResource(ueId string, usageMonId string, body models.UsageMonData) (successCode int32, result models.UsageMonData, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -17,6 +17,6 @@ type RedirectAddressTypeAnyOf string
 const (
 	REDIRECTADDRESSTYPEANYOF_IPV4_ADDR RedirectAddressTypeAnyOf = "IPV4_ADDR"
 	REDIRECTADDRESSTYPEANYOF_IPV6_ADDR RedirectAddressTypeAnyOf = "IPV6_ADDR"
-	REDIRECTADDRESSTYPEANYOF_URL RedirectAddressTypeAnyOf = "URL"
-	REDIRECTADDRESSTYPEANYOF_SIP_URI RedirectAddressTypeAnyOf = "SIP_URI"
+	REDIRECTADDRESSTYPEANYOF_URL       RedirectAddressTypeAnyOf = "URL"
+	REDIRECTADDRESSTYPEANYOF_SIP_URI   RedirectAddressTypeAnyOf = "SIP_URI"
 )

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param configurationId The Identifier of an Individual IPTV Configuration Data to be created or updated. It shall apply the format of Data type string.
-@return *models.IptvConfigData, 
+@return *models.IptvConfigData,
 */
 func CreateOrReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurationId string, body models.IptvConfigData) (result models.IptvConfigData, err error) {
-	
+
 	if len(configurationId) == 0 {
 		err = fmt.Errorf("configurationId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateOrReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, c
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateOrReplaceIndividualIPTVConfigurationData(client sbi.ConsumerClient, c
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceIndividualIPTVConfigurationData
 func OnCreateOrReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualIPTVConfigurationDataDocumentApiHandler)
-	
+
 	configurationId := ctx.Param("configurationId")
 	if len(configurationId) == 0 {
 		//configurationId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "configurationId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateOrReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, ha
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateOrReplaceIndividualIPTVConfigurationData(ctx sbi.RequestContext, ha
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param configurationId The Identifier of an Individual IPTV Configuration to be updated. It shall apply the format of Data type string.
-@return 
+@return
 */
 func DeleteIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurationId string) (err error) {
-	
+
 	if len(configurationId) == 0 {
 		err = fmt.Errorf("configurationId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurat
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/iptvConfigData/{configurationId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"configurationId"+"}", url.PathEscape(configurationId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"configurationId"+"}", url.PathEscape(configurationId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurat
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualIPTVConfigurationData(client sbi.ConsumerClient, configurat
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualIPTVConfigurationData
 func OnDeleteIndividualIPTVConfigurationData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualIPTVConfigurationDataDocumentApiHandler)
-	
+
 	configurationId := ctx.Param("configurationId")
 	if len(configurationId) == 0 {
 		//configurationId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "configurationId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -231,9 +222,6 @@ func OnDeleteIndividualIPTVConfigurationData(ctx sbi.RequestContext, handler int
 	}
 	return
 }
-
-
-
 
 type IndividualIPTVConfigurationDataDocumentApiHandler interface {
 	DR_HandleCreateOrReplaceIndividualIPTVConfigurationData(configurationId string, body models.IptvConfigData) (successCode int32, result models.IptvConfigData, err *sbi.ApiError)

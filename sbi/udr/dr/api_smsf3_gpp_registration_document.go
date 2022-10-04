@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func CreateSmsfContext3gpp(client sbi.ConsumerClient, ueId string, body models.SmsfRegistration) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -52,7 +51,7 @@ func CreateSmsfContext3gpp(client sbi.ConsumerClient, ueId string, body models.S
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -63,21 +62,20 @@ func CreateSmsfContext3gpp(client sbi.ConsumerClient, ueId string, body models.S
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateSmsfContext3gpp
 func OnCreateSmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMSF3GPPRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -95,7 +93,6 @@ func OnCreateSmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -105,16 +102,13 @@ func OnCreateSmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
-@return 
+@return
 */
 func DeleteSmsfContext3gpp(client sbi.ConsumerClient, ueId string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
@@ -124,8 +118,8 @@ func DeleteSmsfContext3gpp(client sbi.ConsumerClient, ueId string) (err error) {
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data/smsf-3gpp-access", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)	
-	
+	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -136,7 +130,7 @@ func DeleteSmsfContext3gpp(client sbi.ConsumerClient, ueId string) (err error) {
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -145,26 +139,23 @@ func DeleteSmsfContext3gpp(client sbi.ConsumerClient, ueId string) (err error) {
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteSmsfContext3gpp
 func OnDeleteSmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMSF3GPPRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -179,22 +170,19 @@ func OnDeleteSmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.SmsfRegistration, 
+@return *models.SmsfRegistration,
 */
 func QuerySmsfContext3gpp(client sbi.ConsumerClient, ueId string, fields []string, supportedFeatures string) (result models.SmsfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -207,7 +195,7 @@ func QuerySmsfContext3gpp(client sbi.ConsumerClient, ueId string, fields []strin
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -219,7 +207,7 @@ func QuerySmsfContext3gpp(client sbi.ConsumerClient, ueId string, fields []strin
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -230,21 +218,20 @@ func QuerySmsfContext3gpp(client sbi.ConsumerClient, ueId string, fields []strin
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QuerySmsfContext3gpp
 func OnQuerySmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMSF3GPPRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -255,21 +242,18 @@ func OnQuerySmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp s
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmsfRegistration
-
 
 	successCode, result, apierr = prod.DR_HandleQuerySmsfContext3gpp(ueId, fields, supportedFeatures)
 
@@ -280,9 +264,6 @@ func OnQuerySmsfContext3gpp(ctx sbi.RequestContext, handler interface{}) (resp s
 	}
 	return
 }
-
-
-
 
 type SMSF3GPPRegistrationDocumentApiHandler interface {
 	DR_HandleCreateSmsfContext3gpp(ueId string, body models.SmsfRegistration) (successCode int32, result models.SmsfRegistration, err *sbi.ApiError)

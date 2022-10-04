@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,8 +15,8 @@ type ChangeTypeAnyOf string
 
 // List of ChangeTypeAnyOf
 const (
-	CHANGETYPEANYOF_ADD ChangeTypeAnyOf = "ADD"
-	CHANGETYPEANYOF_MOVE ChangeTypeAnyOf = "MOVE"
-	CHANGETYPEANYOF_REMOVE ChangeTypeAnyOf = "REMOVE"
+	CHANGETYPEANYOF_ADD     ChangeTypeAnyOf = "ADD"
+	CHANGETYPEANYOF_MOVE    ChangeTypeAnyOf = "MOVE"
+	CHANGETYPEANYOF_REMOVE  ChangeTypeAnyOf = "REMOVE"
 	CHANGETYPEANYOF_REPLACE ChangeTypeAnyOf = "REPLACE"
 )

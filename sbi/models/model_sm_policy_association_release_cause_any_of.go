@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,8 +15,8 @@ type SmPolicyAssociationReleaseCauseAnyOf string
 
 // List of SmPolicyAssociationReleaseCauseAnyOf
 const (
-	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED SmPolicyAssociationReleaseCauseAnyOf = "UNSPECIFIED"
-	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION SmPolicyAssociationReleaseCauseAnyOf = "UE_SUBSCRIPTION"
-	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_INSUFFICIENT_RES SmPolicyAssociationReleaseCauseAnyOf = "INSUFFICIENT_RES"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED                  SmPolicyAssociationReleaseCauseAnyOf = "UNSPECIFIED"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION              SmPolicyAssociationReleaseCauseAnyOf = "UE_SUBSCRIPTION"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_INSUFFICIENT_RES             SmPolicyAssociationReleaseCauseAnyOf = "INSUFFICIENT_RES"
 	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_VALIDATION_CONDITION_NOT_MET SmPolicyAssociationReleaseCauseAnyOf = "VALIDATION_CONDITION_NOT_MET"
 )

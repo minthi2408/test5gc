@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,7 +12,6 @@ API version: 1.1.6
 package models
 
 type PolicyAssociationUpdateRequest struct {
-
 	NotificationUri string `json:"notificationUri,omitempty"`
 
 	// Alternate or backup IPv4 Address(es) where to send Notifications.

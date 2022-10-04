@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,7 +15,7 @@ type ResponseTimeAnyOf string
 
 // List of ResponseTimeAnyOf
 const (
-	RESPONSETIMEANYOF_LOW_DELAY ResponseTimeAnyOf = "LOW_DELAY"
+	RESPONSETIMEANYOF_LOW_DELAY      ResponseTimeAnyOf = "LOW_DELAY"
 	RESPONSETIMEANYOF_DELAY_TOLERANT ResponseTimeAnyOf = "DELAY_TOLERANT"
-	RESPONSETIMEANYOF_NO_DELAY ResponseTimeAnyOf = "NO_DELAY"
+	RESPONSETIMEANYOF_NO_DELAY       ResponseTimeAnyOf = "NO_DELAY"
 )

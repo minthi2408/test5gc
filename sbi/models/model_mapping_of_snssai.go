@@ -1,7 +1,7 @@
 /*
 Npcf_AMPolicyControl
 
-Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Access and Mobility Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,7 +12,6 @@ API version: 1.1.6
 package models
 
 type MappingOfSnssai struct {
-
 	ServingSnssai Snssai `json:"servingSnssai"`
 
 	HomeSnssai Snssai `json:"homeSnssai"`

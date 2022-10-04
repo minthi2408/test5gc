@@ -1,7 +1,7 @@
 /*
 Nsmf_EventExposure
 
-Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -17,7 +17,6 @@ import (
 
 // NsmfEventExposure - Represents an Individual SMF Notification Subscription resource. The serviveName property corresponds to the serviceName in the main body of the specification.
 type NsmfEventExposure struct {
-
 	Supi string `json:"supi,omitempty"`
 
 	Gpsi string `json:"gpsi,omitempty"`

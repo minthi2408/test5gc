@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -16,7 +16,7 @@ type DomainNameProtocolAnyOf string
 // List of DomainNameProtocolAnyOf
 const (
 	DOMAINNAMEPROTOCOLANYOF_DNS_QNAME DomainNameProtocolAnyOf = "DNS_QNAME"
-	DOMAINNAMEPROTOCOLANYOF_TLS_SNI DomainNameProtocolAnyOf = "TLS_SNI"
-	DOMAINNAMEPROTOCOLANYOF_TLS_SAN DomainNameProtocolAnyOf = "TLS_SAN"
-	DOMAINNAMEPROTOCOLANYOF_TSL_SCN DomainNameProtocolAnyOf = "TSL_SCN"
+	DOMAINNAMEPROTOCOLANYOF_TLS_SNI   DomainNameProtocolAnyOf = "TLS_SNI"
+	DOMAINNAMEPROTOCOLANYOF_TLS_SAN   DomainNameProtocolAnyOf = "TLS_SAN"
+	DOMAINNAMEPROTOCOLANYOF_TSL_SCN   DomainNameProtocolAnyOf = "TSL_SCN"
 )

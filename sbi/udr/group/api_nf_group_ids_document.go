@@ -1,7 +1,7 @@
 /*
 Nudr_GroupIDmap
 
-Unified Data Repository Service for NF-Group ID retrieval. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service for NF-Group ID retrieval. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.1
 */
@@ -12,27 +12,26 @@ API version: 1.0.1
 package group
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param nfType Type of NF
 @param subscriberId Identifier of the subscriber
-@return map[string]string, 
+@return map[string]string,
 */
 func GetNfGroupIDs(client sbi.ConsumerClient, nfType []models.NFType, subscriberId string) (result map[string]string, err error) {
-	
+
 	nfTypeStr := utils.Param2String(nfType)
 	if len(nfTypeStr) == 0 {
 		err = fmt.Errorf("nfType is required")
 		return
-	}	
+	}
 	if len(subscriberId) == 0 {
 		err = fmt.Errorf("subscriberId is required")
 		return
@@ -45,7 +44,7 @@ func GetNfGroupIDs(client sbi.ConsumerClient, nfType []models.NFType, subscriber
 	req.QueryParams.Add("nf-type", nfTypeStr)
 
 	req.QueryParams.Add("subscriberId", subscriberId)
-	
+
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -60,7 +59,7 @@ func GetNfGroupIDs(client sbi.ConsumerClient, nfType []models.NFType, subscriber
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -71,21 +70,20 @@ func GetNfGroupIDs(client sbi.ConsumerClient, nfType []models.NFType, subscriber
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for GetNfGroupIDs
 func OnGetNfGroupIDs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(NFGroupIDsDocumentApiHandler)
-	
+
 	nfTypeStr := ctx.Param("nf-type")
 	if len(nfTypeStr) == 0 {
 		//nfType is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "nfType is required",
 		}))
@@ -95,30 +93,27 @@ func OnGetNfGroupIDs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var nfTypeErr error
 	if nfType, nfTypeErr = utils.String2ArrayOfNFType(nfTypeStr); nfTypeErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: nfTypeErr.Error(), 
+			Detail: nfTypeErr.Error(),
 		}))
 		return
 	}
-	
+
 	subscriberId := ctx.Param("subscriberId")
 	if len(subscriberId) == 0 {
 		//subscriberId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subscriberId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result map[string]string
-
 
 	successCode, result, apierr = prod.GROUP_HandleGetNfGroupIDs(nfType, subscriberId)
 
@@ -129,9 +124,6 @@ func OnGetNfGroupIDs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	}
 	return
 }
-
-
-
 
 type NFGroupIDsDocumentApiHandler interface {
 	GROUP_HandleGetNfGroupIDs(nfType []models.NFType, subscriberId string) (successCode int32, result map[string]string, err *sbi.ApiError)

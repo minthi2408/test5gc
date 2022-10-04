@@ -1,7 +1,7 @@
 /*
 Nudm_EE
 
-Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.4
 */
@@ -12,32 +12,29 @@ API version: 1.1.4
 package ee
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nudm-ee/v1"
+	SERVICE_PATH = "{apiRoot}/nudm-ee/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueIdentity Represents the scope of the UE for which the subscription is applied. Contains the GPSI of the user or the external group ID or any UE.
-@return *models.CreatedEeSubscription, 
+@return *models.CreatedEeSubscription,
 */
 func CreateEeSubscription(client sbi.ConsumerClient, ueIdentity string, body models.EeSubscription) (result models.CreatedEeSubscription, err error) {
-	
+
 	if len(ueIdentity) == 0 {
 		err = fmt.Errorf("ueIdentity is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -75,7 +72,7 @@ func CreateEeSubscription(client sbi.ConsumerClient, ueIdentity string, body mod
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -86,23 +83,23 @@ func CreateEeSubscription(client sbi.ConsumerClient, ueIdentity string, body mod
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueIdentity Represents the scope of the UE for which the subscription is applied. Contains the GPSI of the user or the external group ID or any UE.
 @param subscriptionId Id of the EE Subscription
-@return 
+@return
 */
 func DeleteEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscriptionId string) (err error) {
-	
+
 	if len(ueIdentity) == 0 {
 		err = fmt.Errorf("ueIdentity is required")
 		return
-	}	
+	}
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
@@ -113,7 +110,7 @@ func DeleteEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 
 	req.Path = fmt.Sprintf("%s/{ueIdentity}/ee-subscriptions/{subscriptionId}", SERVICE_PATH)
 	req.Path = strings.Replace(req.Path, "{"+"ueIdentity"+"}", url.PathEscape(ueIdentity), -1)
-	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"subscriptionId"+"}", url.PathEscape(subscriptionId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -137,7 +134,7 @@ func DeleteEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -146,7 +143,7 @@ func DeleteEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -154,18 +151,18 @@ func DeleteEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 @param ueIdentity Represents the scope of the UE for which the subscription is applied. Contains the GPSI of the user or the external group ID or any UE.
 @param subscriptionId Id of the EE Subscription
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func UpdateEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscriptionId string, supportedFeatures string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(ueIdentity) == 0 {
 		err = fmt.Errorf("ueIdentity is required")
 		return
-	}	
+	}
 	if len(subscriptionId) == 0 {
 		err = fmt.Errorf("subscriptionId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -195,7 +192,7 @@ func UpdateEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -206,9 +203,7 @@ func UpdateEeSubscription(client sbi.ConsumerClient, ueIdentity string, subscrip
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

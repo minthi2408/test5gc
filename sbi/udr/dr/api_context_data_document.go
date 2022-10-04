@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,28 +12,27 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param contextDatasetNames List of context dataset names
-@return *models.ContextDataSets, 
+@return *models.ContextDataSets,
 */
 func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetNames []models.ContextDataSetName) (result models.ContextDataSets, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	contextDatasetNamesStr := utils.Param2String(contextDatasetNames)
 	if len(contextDatasetNamesStr) == 0 {
 		err = fmt.Errorf("contextDatasetNames is required")
@@ -46,7 +45,7 @@ func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetName
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
 	req.QueryParams.Add("context-dataset-names", contextDatasetNamesStr)
-	
+
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -58,7 +57,7 @@ func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetName
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -69,21 +68,20 @@ func QueryContextData(client sbi.ConsumerClient, ueId string, contextDatasetName
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryContextData
 func OnQueryContextData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(ContextDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -93,7 +91,7 @@ func OnQueryContextData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	if len(contextDatasetNamesStr) == 0 {
 		//contextDatasetNames is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "contextDatasetNames is required",
 		}))
@@ -103,20 +101,16 @@ func OnQueryContextData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	var contextDatasetNamesErr error
 	if contextDatasetNames, contextDatasetNamesErr = utils.String2ArrayOfContextDataSetName(contextDatasetNamesStr); contextDatasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: contextDatasetNamesErr.Error(), 
+			Detail: contextDatasetNamesErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.ContextDataSets
-
 
 	successCode, result, apierr = prod.DR_HandleQueryContextData(ueId, contextDatasetNames)
 
@@ -127,9 +121,6 @@ func OnQueryContextData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	}
 	return
 }
-
-
-
 
 type ContextDataDocumentApiHandler interface {
 	DR_HandleQueryContextData(ueId string, contextDatasetNames []models.ContextDataSetName) (successCode int32, result models.ContextDataSets, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,7 +12,6 @@ API version: 1.1.6
 package models
 
 type N3gaLocation struct {
-
 	N3gppTai Tai `json:"n3gppTai,omitempty"`
 
 	N3IwfId string `json:"n3IwfId,omitempty"`

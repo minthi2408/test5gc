@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,12 +15,12 @@ type LocationFilterAnyOf string
 
 // List of LocationFilterAnyOf
 const (
-	LOCATIONFILTERANYOF_TAI LocationFilterAnyOf = "TAI"
-	LOCATIONFILTERANYOF_CELL_ID LocationFilterAnyOf = "CELL_ID"
-	LOCATIONFILTERANYOF_N3_IWF LocationFilterAnyOf = "N3IWF"
-	LOCATIONFILTERANYOF_UE_IP LocationFilterAnyOf = "UE_IP"
+	LOCATIONFILTERANYOF_TAI      LocationFilterAnyOf = "TAI"
+	LOCATIONFILTERANYOF_CELL_ID  LocationFilterAnyOf = "CELL_ID"
+	LOCATIONFILTERANYOF_N3_IWF   LocationFilterAnyOf = "N3IWF"
+	LOCATIONFILTERANYOF_UE_IP    LocationFilterAnyOf = "UE_IP"
 	LOCATIONFILTERANYOF_UDP_PORT LocationFilterAnyOf = "UDP_PORT"
-	LOCATIONFILTERANYOF_TNAP_ID LocationFilterAnyOf = "TNAP_ID"
-	LOCATIONFILTERANYOF_GLI LocationFilterAnyOf = "GLI"
-	LOCATIONFILTERANYOF_TWAP_ID LocationFilterAnyOf = "TWAP_ID"
+	LOCATIONFILTERANYOF_TNAP_ID  LocationFilterAnyOf = "TNAP_ID"
+	LOCATIONFILTERANYOF_GLI      LocationFilterAnyOf = "GLI"
+	LOCATIONFILTERANYOF_TWAP_ID  LocationFilterAnyOf = "TWAP_ID"
 )

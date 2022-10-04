@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,15 +12,14 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -29,14 +28,14 @@ import (
 @param dnn
 @param fields attributes to be retrieved
 @param suppFeat Supported Features
-@return *models.SmPolicyData, 
+@return *models.SmPolicyData,
 */
 func ReadSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, snssai *models.Snssai, dnn string, fields []string, suppFeat string) (result models.SmPolicyData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}				
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -56,7 +55,7 @@ func ReadSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, sns
 	}
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -92,7 +91,7 @@ func ReadSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, sns
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -103,21 +102,20 @@ func ReadSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, sns
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadSessionManagementPolicyData
 func OnReadSessionManagementPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SessionManagementPolicyDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -128,34 +126,31 @@ func OnReadSessionManagementPolicyData(ctx sbi.RequestContext, handler interface
 	var snssaiErr error
 	if snssai, snssaiErr = utils.String2Snssai(snssaiStr); snssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: snssaiErr.Error(), 
+			Detail: snssaiErr.Error(),
 		}))
 		return
 	}
-	
+
 	dnn := ctx.Param("dnn")
 	fieldsStr := ctx.Param("fields")
 	var fields []string
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	suppFeat := ctx.Param("supp-feat")
 
-	
+	suppFeat := ctx.Param("supp-feat")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmPolicyData
-
 
 	successCode, result, apierr = prod.DR_HandleReadSessionManagementPolicyData(ueId, snssai, dnn, fields, suppFeat)
 
@@ -167,20 +162,17 @@ func OnReadSessionManagementPolicyData(ctx sbi.RequestContext, handler interface
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId
-@return *models.SmPolicyData, 
+@return *models.SmPolicyData,
 */
 func UpdateSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, body models.SmPolicyDataPatch) (result models.SmPolicyData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -230,7 +222,7 @@ func UpdateSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, b
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -241,21 +233,20 @@ func UpdateSessionManagementPolicyData(client sbi.ConsumerClient, ueId string, b
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateSessionManagementPolicyData
 func OnUpdateSessionManagementPolicyData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SessionManagementPolicyDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -273,7 +264,6 @@ func OnUpdateSessionManagementPolicyData(ctx sbi.RequestContext, handler interfa
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -282,9 +272,6 @@ func OnUpdateSessionManagementPolicyData(ctx sbi.RequestContext, handler interfa
 	}
 	return
 }
-
-
-
 
 type SessionManagementPolicyDataDocumentApiHandler interface {
 	DR_HandleReadSessionManagementPolicyData(ueId string, snssai *models.Snssai, dnn string, fields []string, suppFeat string) (successCode int32, result models.SmPolicyData, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,9 +15,9 @@ type PeriodicityAnyOf string
 
 // List of PeriodicityAnyOf
 const (
-	PERIODICITYANYOF_YEARLY PeriodicityAnyOf = "YEARLY"
+	PERIODICITYANYOF_YEARLY  PeriodicityAnyOf = "YEARLY"
 	PERIODICITYANYOF_MONTHLY PeriodicityAnyOf = "MONTHLY"
-	PERIODICITYANYOF_WEEKLY PeriodicityAnyOf = "WEEKLY"
-	PERIODICITYANYOF_DAILY PeriodicityAnyOf = "DAILY"
-	PERIODICITYANYOF_HOURLY PeriodicityAnyOf = "HOURLY"
+	PERIODICITYANYOF_WEEKLY  PeriodicityAnyOf = "WEEKLY"
+	PERIODICITYANYOF_DAILY   PeriodicityAnyOf = "DAILY"
+	PERIODICITYANYOF_HOURLY  PeriodicityAnyOf = "HOURLY"
 )

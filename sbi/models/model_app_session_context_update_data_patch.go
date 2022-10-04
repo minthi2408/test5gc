@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -13,6 +13,5 @@ package models
 
 // AppSessionContextUpdateDataPatch - Identifies the modifications to an Individual Application Session Context and/or the modifications to the sub-resource Events Subscription.
 type AppSessionContextUpdateDataPatch struct {
-
 	AscReqData AppSessionContextUpdateData `json:"ascReqData,omitempty"`
 }

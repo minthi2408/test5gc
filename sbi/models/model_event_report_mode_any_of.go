@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,6 +15,6 @@ type EventReportModeAnyOf string
 
 // List of EventReportModeAnyOf
 const (
-	EVENTREPORTMODEANYOF_PERIODIC EventReportModeAnyOf = "PERIODIC"
+	EVENTREPORTMODEANYOF_PERIODIC           EventReportModeAnyOf = "PERIODIC"
 	EVENTREPORTMODEANYOF_ON_EVENT_DETECTION EventReportModeAnyOf = "ON_EVENT_DETECTION"
 )

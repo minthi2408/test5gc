@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,11 +15,11 @@ type N2InformationClassAnyOf string
 
 // List of N2InformationClassAnyOf
 const (
-	N2INFORMATIONCLASSANYOF_SM N2InformationClassAnyOf = "SM"
-	N2INFORMATIONCLASSANYOF_NRPPA N2InformationClassAnyOf = "NRPPa"
-	N2INFORMATIONCLASSANYOF_PWS N2InformationClassAnyOf = "PWS"
+	N2INFORMATIONCLASSANYOF_SM       N2InformationClassAnyOf = "SM"
+	N2INFORMATIONCLASSANYOF_NRPPA    N2InformationClassAnyOf = "NRPPa"
+	N2INFORMATIONCLASSANYOF_PWS      N2InformationClassAnyOf = "PWS"
 	N2INFORMATIONCLASSANYOF_PWS_BCAL N2InformationClassAnyOf = "PWS-BCAL"
-	N2INFORMATIONCLASSANYOF_PWS_RF N2InformationClassAnyOf = "PWS-RF"
-	N2INFORMATIONCLASSANYOF_RAN N2InformationClassAnyOf = "RAN"
-	N2INFORMATIONCLASSANYOF_V2_X N2InformationClassAnyOf = "V2X"
+	N2INFORMATIONCLASSANYOF_PWS_RF   N2InformationClassAnyOf = "PWS-RF"
+	N2INFORMATIONCLASSANYOF_RAN      N2InformationClassAnyOf = "RAN"
+	N2INFORMATIONCLASSANYOF_V2_X     N2InformationClassAnyOf = "V2X"
 )

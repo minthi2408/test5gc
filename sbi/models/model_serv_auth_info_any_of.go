@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,7 +15,7 @@ type ServAuthInfoAnyOf string
 
 // List of ServAuthInfoAnyOf
 const (
-	SERVAUTHINFOANYOF_NOT_KNOWN ServAuthInfoAnyOf = "TP_NOT_KNOWN"
-	SERVAUTHINFOANYOF_EXPIRED ServAuthInfoAnyOf = "TP_EXPIRED"
+	SERVAUTHINFOANYOF_NOT_KNOWN       ServAuthInfoAnyOf = "TP_NOT_KNOWN"
+	SERVAUTHINFOANYOF_EXPIRED         ServAuthInfoAnyOf = "TP_EXPIRED"
 	SERVAUTHINFOANYOF_NOT_YET_OCURRED ServAuthInfoAnyOf = "TP_NOT_YET_OCURRED"
 )

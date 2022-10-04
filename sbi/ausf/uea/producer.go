@@ -1,7 +1,7 @@
 /*
 AUSF API
 
-AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF UE Authentication Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,27 +12,25 @@ API version: 1.1.3
 package uea
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for Delete5gAkaAuthenticationResult
 func OnDelete5gAkaAuthenticationResult(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	authCtxId := ctx.Param("authCtxId")
 	if len(authCtxId) == 0 {
 		//authCtxId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authCtxId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -47,23 +45,20 @@ func OnDelete5gAkaAuthenticationResult(ctx sbi.RequestContext, handler interface
 	return
 }
 
-
 //sbi producer handler for DeleteEapAuthenticationResult
 func OnDeleteEapAuthenticationResult(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	authCtxId := ctx.Param("authCtxId")
 	if len(authCtxId) == 0 {
 		//authCtxId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authCtxId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -78,16 +73,15 @@ func OnDeleteEapAuthenticationResult(ctx sbi.RequestContext, handler interface{}
 	return
 }
 
-
 //sbi producer handler for EapAuthMethod
 func OnEapAuthMethod(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	authCtxId := ctx.Param("authCtxId")
 	if len(authCtxId) == 0 {
 		//authCtxId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authCtxId is required",
 		}))
@@ -105,7 +99,6 @@ func OnEapAuthMethod(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -115,11 +108,9 @@ func OnEapAuthMethod(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for RgAuthenticationsPost
 func OnRgAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.RgAuthenticationInfo
 
@@ -132,7 +123,6 @@ func OnRgAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -142,16 +132,15 @@ func OnRgAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
 //sbi producer handler for UeAuthenticationsAuthCtxId5gAkaConfirmationPut
 func OnUeAuthenticationsAuthCtxId5gAkaConfirmationPut(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	authCtxId := ctx.Param("authCtxId")
 	if len(authCtxId) == 0 {
 		//authCtxId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authCtxId is required",
 		}))
@@ -169,7 +158,6 @@ func OnUeAuthenticationsAuthCtxId5gAkaConfirmationPut(ctx sbi.RequestContext, ha
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -179,11 +167,9 @@ func OnUeAuthenticationsAuthCtxId5gAkaConfirmationPut(ctx sbi.RequestContext, ha
 	return
 }
 
-
 //sbi producer handler for UeAuthenticationsDeregisterPost
 func OnUeAuthenticationsDeregisterPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.DeregistrationInfo
 
@@ -194,7 +180,6 @@ func OnUeAuthenticationsDeregisterPost(ctx sbi.RequestContext, handler interface
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -204,11 +189,9 @@ func OnUeAuthenticationsDeregisterPost(ctx sbi.RequestContext, handler interface
 	return
 }
 
-
 //sbi producer handler for UeAuthenticationsPost
 func OnUeAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.AuthenticationInfo
 
@@ -221,7 +204,6 @@ func OnUeAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -230,7 +212,6 @@ func OnUeAuthenticationsPost(ctx sbi.RequestContext, handler interface{}) (resp 
 	}
 	return
 }
-
 
 type Producer interface {
 	UEA_HandleDelete5gAkaAuthenticationResult(authCtxId string) (successCode int32, err *sbi.ApiError)
@@ -241,5 +222,3 @@ type Producer interface {
 	UEA_HandleUeAuthenticationsDeregisterPost(body models.DeregistrationInfo) (successCode int32, err *sbi.ApiError)
 	UEA_HandleUeAuthenticationsPost(body models.AuthenticationInfo) (successCode int32, result models.UEAuthenticationCtx, err *sbi.ApiError)
 }
-
-

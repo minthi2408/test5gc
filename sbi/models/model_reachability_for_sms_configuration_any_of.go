@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -16,5 +16,5 @@ type ReachabilityForSmsConfigurationAnyOf string
 // List of ReachabilityForSmsConfigurationAnyOf
 const (
 	REACHABILITYFORSMSCONFIGURATIONANYOF_NAS ReachabilityForSmsConfigurationAnyOf = "REACHABILITY_FOR_SMS_OVER_NAS"
-	REACHABILITYFORSMSCONFIGURATIONANYOF_IP ReachabilityForSmsConfigurationAnyOf = "REACHABILITY_FOR_SMS_OVER_IP"
+	REACHABILITYFORSMSCONFIGURATIONANYOF_IP  ReachabilityForSmsConfigurationAnyOf = "REACHABILITY_FOR_SMS_OVER_IP"
 )

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return []SubscriptionDataSubscriptions, 
+@return []SubscriptionDataSubscriptions,
 */
 func QuerySubsToNotify(client sbi.ConsumerClient, ueId string, supportedFeatures string) (result []models.SubscriptionDataSubscriptions, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -41,7 +40,7 @@ func QuerySubsToNotify(client sbi.ConsumerClient, ueId string, supportedFeatures
 
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -53,7 +52,7 @@ func QuerySubsToNotify(client sbi.ConsumerClient, ueId string, supportedFeatures
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,21 +63,20 @@ func QuerySubsToNotify(client sbi.ConsumerClient, ueId string, supportedFeatures
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QuerySubsToNotify
 func OnQuerySubsToNotify(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SubsToNotifyCollectionApiHandler)
-	
+
 	ueId := ctx.Param("ue-id")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -86,12 +84,9 @@ func OnQuerySubsToNotify(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.SubscriptionDataSubscriptions
-
 
 	successCode, result, apierr = prod.DR_HandleQuerySubsToNotify(ueId, supportedFeatures)
 
@@ -103,23 +98,20 @@ func OnQuerySubsToNotify(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE ID
 @param nfInstanceId NF Instance ID
 @param deleteAllNfs Flag to delete subscriptions from all NFs
 @param implicitUnsubscribeIndication Implicit Unsubscribe Indication
-@return 
+@return
 */
 func RemoveMultipleSubscriptionDataSubscriptions(client sbi.ConsumerClient, ueId string, nfInstanceId string, deleteAllNfs *bool, implicitUnsubscribeIndication *bool) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodDelete
@@ -137,8 +129,8 @@ func RemoveMultipleSubscriptionDataSubscriptions(client sbi.ConsumerClient, ueId
 	implicitUnsubscribeIndicationStr := utils.Param2String(*implicitUnsubscribeIndication)
 	if len(implicitUnsubscribeIndicationStr) > 0 {
 		req.QueryParams.Add("implicit-unsubscribe-indication", implicitUnsubscribeIndicationStr)
-	}	
-	
+	}
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -149,7 +141,7 @@ func RemoveMultipleSubscriptionDataSubscriptions(client sbi.ConsumerClient, ueId
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -158,19 +150,18 @@ func RemoveMultipleSubscriptionDataSubscriptions(client sbi.ConsumerClient, ueId
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for RemoveMultipleSubscriptionDataSubscriptions
 func OnRemoveMultipleSubscriptionDataSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SubsToNotifyCollectionApiHandler)
-	
+
 	ueId := ctx.Param("ue-id")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -182,27 +173,24 @@ func OnRemoveMultipleSubscriptionDataSubscriptions(ctx sbi.RequestContext, handl
 	var deleteAllNfsErr error
 	if deleteAllNfs, deleteAllNfsErr = utils.String2Bool(deleteAllNfsStr); deleteAllNfsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: deleteAllNfsErr.Error(), 
+			Detail: deleteAllNfsErr.Error(),
 		}))
 		return
 	}
-	
+
 	implicitUnsubscribeIndicationStr := ctx.Param("implicit-unsubscribe-indication")
 	var implicitUnsubscribeIndication *bool
 	var implicitUnsubscribeIndicationErr error
 	if implicitUnsubscribeIndication, implicitUnsubscribeIndicationErr = utils.String2Bool(implicitUnsubscribeIndicationStr); implicitUnsubscribeIndicationErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: implicitUnsubscribeIndicationErr.Error(), 
+			Detail: implicitUnsubscribeIndicationErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -217,15 +205,12 @@ func OnRemoveMultipleSubscriptionDataSubscriptions(ctx sbi.RequestContext, handl
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.SubscriptionDataSubscriptions, 
+@return *models.SubscriptionDataSubscriptions,
 */
 func SubscriptionDataSubscriptions(client sbi.ConsumerClient, body models.SubscriptionDataSubscriptions) (result models.SubscriptionDataSubscriptions, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -244,7 +229,7 @@ func SubscriptionDataSubscriptions(client sbi.ConsumerClient, body models.Subscr
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -255,16 +240,14 @@ func SubscriptionDataSubscriptions(client sbi.ConsumerClient, body models.Subscr
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for SubscriptionDataSubscriptions
 func OnSubscriptionDataSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SubsToNotifyCollectionApiHandler)
-	
 
 	var input models.SubscriptionDataSubscriptions
 
@@ -277,7 +260,6 @@ func OnSubscriptionDataSubscriptions(ctx sbi.RequestContext, handler interface{}
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -286,9 +268,6 @@ func OnSubscriptionDataSubscriptions(ctx sbi.RequestContext, handler interface{}
 	}
 	return
 }
-
-
-
 
 type SubsToNotifyCollectionApiHandler interface {
 	DR_HandleQuerySubsToNotify(ueId string, supportedFeatures string) (successCode int32, result []models.SubscriptionDataSubscriptions, err *sbi.ApiError)

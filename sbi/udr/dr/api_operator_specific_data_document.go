@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,29 +12,28 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE Id
 @param fields attributes to be retrieved
 @param suppFeat Supported Features
-@return map[string]models.OperatorSpecificDataContainer, 
+@return map[string]models.OperatorSpecificDataContainer,
 */
 func ReadOperatorSpecificData(client sbi.ConsumerClient, ueId string, fields []string, suppFeat string) (result map[string]models.OperatorSpecificDataContainer, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -47,7 +46,7 @@ func ReadOperatorSpecificData(client sbi.ConsumerClient, ueId string, fields []s
 	}
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -83,7 +82,7 @@ func ReadOperatorSpecificData(client sbi.ConsumerClient, ueId string, fields []s
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -94,21 +93,20 @@ func ReadOperatorSpecificData(client sbi.ConsumerClient, ueId string, fields []s
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadOperatorSpecificData
 func OnReadOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(OperatorSpecificDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -119,21 +117,18 @@ func OnReadOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (re
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	suppFeat := ctx.Param("supp-feat")
 
-	
+	suppFeat := ctx.Param("supp-feat")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result map[string]models.OperatorSpecificDataContainer
-
 
 	successCode, result, apierr = prod.DR_HandleReadOperatorSpecificData(ueId, fields, suppFeat)
 
@@ -145,20 +140,17 @@ func OnReadOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE Id
-@return map[string]models.OperatorSpecificDataContainer, 
+@return map[string]models.OperatorSpecificDataContainer,
 */
 func ReplaceOperatorSpecificData(client sbi.ConsumerClient, ueId string, body map[string]models.OperatorSpecificDataContainer) (result map[string]models.OperatorSpecificDataContainer, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -208,7 +200,7 @@ func ReplaceOperatorSpecificData(client sbi.ConsumerClient, ueId string, body ma
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -219,21 +211,20 @@ func ReplaceOperatorSpecificData(client sbi.ConsumerClient, ueId string, body ma
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReplaceOperatorSpecificData
 func OnReplaceOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(OperatorSpecificDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -251,7 +242,6 @@ func OnReplaceOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -261,20 +251,17 @@ func OnReplaceOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE Id
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func UpdateOperatorSpecificData(client sbi.ConsumerClient, ueId string, body []models.PatchItem) (result models.PatchResult, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -324,7 +311,7 @@ func UpdateOperatorSpecificData(client sbi.ConsumerClient, ueId string, body []m
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -335,21 +322,20 @@ func UpdateOperatorSpecificData(client sbi.ConsumerClient, ueId string, body []m
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for UpdateOperatorSpecificData
 func OnUpdateOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(OperatorSpecificDataDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -367,7 +353,6 @@ func OnUpdateOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -376,9 +361,6 @@ func OnUpdateOperatorSpecificData(ctx sbi.RequestContext, handler interface{}) (
 	}
 	return
 }
-
-
-
 
 type OperatorSpecificDataDocumentApiHandler interface {
 	DR_HandleReadOperatorSpecificData(ueId string, fields []string, suppFeat string) (successCode int32, result map[string]models.OperatorSpecificDataContainer, err *sbi.ApiError)

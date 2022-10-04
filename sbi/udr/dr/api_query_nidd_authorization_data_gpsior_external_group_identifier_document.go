@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,15 +12,14 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -30,27 +29,27 @@ import (
 @param mtcProviderInformation MTC Provider Information
 @param ifNoneMatch Validator for conditional requests, as described in RFC 7232, 3.2
 @param ifModifiedSince Validator for conditional requests, as described in RFC 7232, 3.3
-@return *models.AuthorizationData, 
+@return *models.AuthorizationData,
 */
 func GetNiddAuData(client sbi.ConsumerClient, ueId string, singleNssai models.Snssai, dnn string, mtcProviderInformation string, ifNoneMatch string, ifModifiedSince string) (result models.AuthorizationData, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	singleNssaiStr := utils.Param2String(singleNssai)
 	if len(singleNssaiStr) == 0 {
 		err = fmt.Errorf("singleNssai is required")
 		return
-	}	
+	}
 	if len(dnn) == 0 {
 		err = fmt.Errorf("dnn is required")
 		return
-	}	
+	}
 	if len(mtcProviderInformation) == 0 {
 		err = fmt.Errorf("mtcProviderInformation is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -68,7 +67,7 @@ func GetNiddAuData(client sbi.ConsumerClient, ueId string, singleNssai models.Sn
 	}
 	if len(ifModifiedSince) > 0 {
 		req.HeaderParams["If-Modified-Since"] = ifModifiedSince
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -80,7 +79,7 @@ func GetNiddAuData(client sbi.ConsumerClient, ueId string, singleNssai models.Sn
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -91,21 +90,20 @@ func GetNiddAuData(client sbi.ConsumerClient, ueId string, singleNssai models.Sn
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for GetNiddAuData
 func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(QueryNIDDAuthorizationDataGPSIOrExternalGroupIdentifierDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -115,7 +113,7 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	if len(singleNssaiStr) == 0 {
 		//singleNssai is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "singleNssai is required",
 		}))
@@ -125,18 +123,18 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var singleNssaiErr error
 	if singleNssai, singleNssaiErr = utils.String2Snssai(singleNssaiStr); singleNssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: singleNssaiErr.Error(), 
+			Detail: singleNssaiErr.Error(),
 		}))
 		return
 	}
-	
+
 	dnn := ctx.Param("dnn")
 	if len(dnn) == 0 {
 		//dnn is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "dnn is required",
 		}))
@@ -146,7 +144,7 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	if len(mtcProviderInformation) == 0 {
 		//mtcProviderInformation is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "mtcProviderInformation is required",
 		}))
@@ -155,12 +153,9 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AuthorizationData
-
 
 	successCode, result, apierr = prod.DR_HandleGetNiddAuData(ueId, *singleNssai, dnn, mtcProviderInformation, ifNoneMatch, ifModifiedSince)
 
@@ -171,9 +166,6 @@ func OnGetNiddAuData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	}
 	return
 }
-
-
-
 
 type QueryNIDDAuthorizationDataGPSIOrExternalGroupIdentifierDocumentApiHandler interface {
 	DR_HandleGetNiddAuData(ueId string, singleNssai models.Snssai, dnn string, mtcProviderInformation string, ifNoneMatch string, ifModifiedSince string) (successCode int32, result models.AuthorizationData, err *sbi.ApiError)

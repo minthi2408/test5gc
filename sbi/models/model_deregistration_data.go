@@ -1,7 +1,7 @@
 /*
 Nudm_UECM
 
-Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.5
 */
@@ -12,7 +12,6 @@ API version: 1.1.5
 package models
 
 type DeregistrationData struct {
-
 	DeregReason DeregistrationReason `json:"deregReason"`
 
 	AccessType AccessType `json:"accessType,omitempty"`

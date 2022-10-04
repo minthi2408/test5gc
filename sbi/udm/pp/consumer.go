@@ -1,7 +1,7 @@
 /*
 Nudm_PP
 
-Nudm Parameter Provision Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Nudm Parameter Provision Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,33 +12,30 @@ API version: 1.1.3
 package pp
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nudm-pp/v1"
+	SERVICE_PATH = "{apiRoot}/nudm-pp/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param extGroupId External Identifier of the Group
-@return 
+@return
 */
 func Create5GVNGroup(client sbi.ConsumerClient, extGroupId string, body models.Model5GVnGroupConfiguration) (err error) {
-	
+
 	if len(extGroupId) == 0 {
 		err = fmt.Errorf("extGroupId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -73,7 +70,7 @@ func Create5GVNGroup(client sbi.ConsumerClient, extGroupId string, body models.M
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -82,7 +79,7 @@ func Create5GVNGroup(client sbi.ConsumerClient, extGroupId string, body models.M
 		}
 	}
 
-	return 
+	return
 }
 
 /*
@@ -90,14 +87,14 @@ func Create5GVNGroup(client sbi.ConsumerClient, extGroupId string, body models.M
 @param extGroupId External Identifier of the Group
 @param mtcProviderInfo MTC Provider Information that originated the service operation
 @param afId AF ID that originated the service operation
-@return 
+@return
 */
 func Delete5GVNGroup(client sbi.ConsumerClient, extGroupId string, mtcProviderInfo string, afId string) (err error) {
-	
+
 	if len(extGroupId) == 0 {
 		err = fmt.Errorf("extGroupId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodDelete
@@ -109,7 +106,7 @@ func Delete5GVNGroup(client sbi.ConsumerClient, extGroupId string, mtcProviderIn
 	}
 	if len(afId) > 0 {
 		req.QueryParams.Add("af-id", afId)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -136,7 +133,7 @@ func Delete5GVNGroup(client sbi.ConsumerClient, extGroupId string, mtcProviderIn
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -145,16 +142,16 @@ func Delete5GVNGroup(client sbi.ConsumerClient, extGroupId string, mtcProviderIn
 		}
 	}
 
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param extGroupId External Identifier of the group
-@return *models.Model5GVnGroupConfiguration, 
+@return *models.Model5GVnGroupConfiguration,
 */
 func Get5GVNGroup(client sbi.ConsumerClient, extGroupId string) (result models.Model5GVnGroupConfiguration, err error) {
-	
+
 	if len(extGroupId) == 0 {
 		err = fmt.Errorf("extGroupId is required")
 		return
@@ -164,7 +161,7 @@ func Get5GVNGroup(client sbi.ConsumerClient, extGroupId string) (result models.M
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/5g-vn-groups/{extGroupId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"extGroupId"+"}", url.PathEscape(extGroupId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"extGroupId"+"}", url.PathEscape(extGroupId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -191,7 +188,7 @@ func Get5GVNGroup(client sbi.ConsumerClient, extGroupId string) (result models.M
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -202,23 +199,23 @@ func Get5GVNGroup(client sbi.ConsumerClient, extGroupId string) (result models.M
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param extGroupId External Identifier of the group
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func Modify5GVNGroup(client sbi.ConsumerClient, extGroupId string, supportedFeatures string, body models.Model5GVnGroupConfiguration) (result models.PatchResult, err error) {
-	
+
 	if len(extGroupId) == 0 {
 		err = fmt.Errorf("extGroupId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -256,7 +253,7 @@ func Modify5GVNGroup(client sbi.ConsumerClient, extGroupId string, supportedFeat
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -267,24 +264,24 @@ func Modify5GVNGroup(client sbi.ConsumerClient, extGroupId string, supportedFeat
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId Identifier of the UE
 @param supportedFeatures Features required to be supported by the target NF
-@return *models.PatchResult, 
+@return *models.PatchResult,
 */
 func Update(client sbi.ConsumerClient, ueId models.UpdateUeIdParameter, supportedFeatures string, body models.PpData) (result models.PatchResult, err error) {
-	
+
 	ueIdStr := utils.Param2String(ueId)
 	if len(ueIdStr) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -322,7 +319,7 @@ func Update(client sbi.ConsumerClient, ueId models.UpdateUeIdParameter, supporte
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -333,9 +330,7 @@ func Update(client sbi.ConsumerClient, ueId models.UpdateUeIdParameter, supporte
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

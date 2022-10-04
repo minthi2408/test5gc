@@ -1,7 +1,7 @@
 /*
 Npcf_UEPolicyControl
 
-UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+UE Policy Control Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -15,6 +15,6 @@ type CmStateAnyOf string
 
 // List of CmStateAnyOf
 const (
-	CMSTATEANYOF_IDLE CmStateAnyOf = "IDLE"
+	CMSTATEANYOF_IDLE      CmStateAnyOf = "IDLE"
 	CMSTATEANYOF_CONNECTED CmStateAnyOf = "CONNECTED"
 )

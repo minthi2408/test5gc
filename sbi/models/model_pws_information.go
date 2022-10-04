@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,7 +12,6 @@ API version: 1.1.8
 package models
 
 type PwsInformation struct {
-
 	MessageIdentifier int32 `json:"messageIdentifier"`
 
 	SerialNumber int32 `json:"serialNumber"`

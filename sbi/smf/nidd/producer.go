@@ -1,7 +1,7 @@
 /*
 Nsmf_NIDD
 
-SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF NIDD Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.0.2
 */
@@ -12,20 +12,20 @@ API version: 1.0.2
 package nidd
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for Deliver
 func OnDeliver(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	pduSessionRef := ctx.Param("pduSessionRef")
 	if len(pduSessionRef) == 0 {
 		//pduSessionRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionRef is required",
 		}))
@@ -41,7 +41,6 @@ func OnDeliver(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -51,9 +50,6 @@ func OnDeliver(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) 
 	return
 }
 
-
 type Producer interface {
 	NIDD_HandleDeliver(pduSessionRef string, body models.DeliverRequest) (successCode int32, err *sbi.ApiError)
 }
-
-

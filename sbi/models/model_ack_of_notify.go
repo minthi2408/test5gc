@@ -1,7 +1,7 @@
 /*
 Nsmf_EventExposure
 
-Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,7 +12,6 @@ API version: 1.1.3
 package models
 
 type AckOfNotify struct {
-
 	NotifId string `json:"notifId"`
 
 	AckResult AfResultInfo `json:"ackResult"`

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -13,7 +13,6 @@ package models
 
 // LimitIdToMonitoringKey - Contains the limit identifier and the corresponding monitoring key for a given S-NSSAI and DNN.
 type LimitIdToMonitoringKey struct {
-
 	LimitId string `json:"limitId"`
 
 	Monkey []string `json:"monkey,omitempty"`

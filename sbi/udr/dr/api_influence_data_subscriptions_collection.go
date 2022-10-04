@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,20 +12,19 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.TrafficInfluSub, 
+@return *models.TrafficInfluSub,
 */
 func CreateIndividualInfluenceDataSubscription(client sbi.ConsumerClient, body models.TrafficInfluSub) (result models.TrafficInfluSub, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -74,7 +73,7 @@ func CreateIndividualInfluenceDataSubscription(client sbi.ConsumerClient, body m
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -85,16 +84,14 @@ func CreateIndividualInfluenceDataSubscription(client sbi.ConsumerClient, body m
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateIndividualInfluenceDataSubscription
 func OnCreateIndividualInfluenceDataSubscription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(InfluenceDataSubscriptionsCollectionApiHandler)
-	
 
 	var input models.TrafficInfluSub
 
@@ -107,7 +104,6 @@ func OnCreateIndividualInfluenceDataSubscription(ctx sbi.RequestContext, handler
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -117,19 +113,16 @@ func OnCreateIndividualInfluenceDataSubscription(ctx sbi.RequestContext, handler
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param dnn Identifies a DNN.
 @param snssai Identifies a slice.
 @param internalGroupId Identifies a group of users.
 @param supi Identifies a user.
-@return []models.TrafficInfluSub, 
+@return []models.TrafficInfluSub,
 */
 func ReadInfluenceDataSubscriptions(client sbi.ConsumerClient, dnn string, snssai *models.Snssai, internalGroupId string, supi string) (result []models.TrafficInfluSub, err error) {
-				
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -147,7 +140,7 @@ func ReadInfluenceDataSubscriptions(client sbi.ConsumerClient, dnn string, snssa
 	}
 	if len(supi) > 0 {
 		req.QueryParams.Add("supi", supi)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -183,7 +176,7 @@ func ReadInfluenceDataSubscriptions(client sbi.ConsumerClient, dnn string, snssa
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -194,38 +187,34 @@ func ReadInfluenceDataSubscriptions(client sbi.ConsumerClient, dnn string, snssa
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadInfluenceDataSubscriptions
 func OnReadInfluenceDataSubscriptions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(InfluenceDataSubscriptionsCollectionApiHandler)
-	
+
 	dnn := ctx.Param("dnn")
 	snssaiStr := ctx.Param("snssai")
 	var snssai *models.Snssai
 	var snssaiErr error
 	if snssai, snssaiErr = utils.String2Snssai(snssaiStr); snssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: snssaiErr.Error(), 
+			Detail: snssaiErr.Error(),
 		}))
 		return
 	}
-	
+
 	internalGroupId := ctx.Param("internal-Group-Id")
 	supi := ctx.Param("supi")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.TrafficInfluSub
-
 
 	successCode, result, apierr = prod.DR_HandleReadInfluenceDataSubscriptions(dnn, snssai, internalGroupId, supi)
 
@@ -236,9 +225,6 @@ func OnReadInfluenceDataSubscriptions(ctx sbi.RequestContext, handler interface{
 	}
 	return
 }
-
-
-
 
 type InfluenceDataSubscriptionsCollectionApiHandler interface {
 	DR_HandleCreateIndividualInfluenceDataSubscription(body models.TrafficInfluSub) (successCode int32, result models.TrafficInfluSub, err *sbi.ApiError)

@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,10 +15,10 @@ type PatchOperationAnyOf string
 
 // List of PatchOperationAnyOf
 const (
-	PATCHOPERATIONANYOF_ADD PatchOperationAnyOf = "add"
-	PATCHOPERATIONANYOF_COPY PatchOperationAnyOf = "copy"
-	PATCHOPERATIONANYOF_MOVE PatchOperationAnyOf = "move"
-	PATCHOPERATIONANYOF_REMOVE PatchOperationAnyOf = "remove"
+	PATCHOPERATIONANYOF_ADD     PatchOperationAnyOf = "add"
+	PATCHOPERATIONANYOF_COPY    PatchOperationAnyOf = "copy"
+	PATCHOPERATIONANYOF_MOVE    PatchOperationAnyOf = "move"
+	PATCHOPERATIONANYOF_REMOVE  PatchOperationAnyOf = "remove"
 	PATCHOPERATIONANYOF_REPLACE PatchOperationAnyOf = "replace"
-	PATCHOPERATIONANYOF_TEST PatchOperationAnyOf = "test"
+	PATCHOPERATIONANYOF_TEST    PatchOperationAnyOf = "test"
 )

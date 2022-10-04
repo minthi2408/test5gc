@@ -1,7 +1,7 @@
 /*
 Npcf_BDTPolicyControl Service API
 
-PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,27 +12,24 @@ API version: 1.1.3
 package btdpc
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/npcf-bdtpolicycontrol/v1"
+	SERVICE_PATH = "{apiRoot}/npcf-bdtpolicycontrol/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@return *models.BdtPolicy, 
+@return *models.BdtPolicy,
 */
 func CreateBDTPolicy(client sbi.ConsumerClient, body models.BdtReqData) (result models.BdtPolicy, err error) {
-	
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -81,7 +78,7 @@ func CreateBDTPolicy(client sbi.ConsumerClient, body models.BdtReqData) (result 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -92,18 +89,18 @@ func CreateBDTPolicy(client sbi.ConsumerClient, body models.BdtReqData) (result 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtPolicyId String identifying the individual BDT policy resource in the PCF.
-@return *models.BdtPolicy, 
+@return *models.BdtPolicy,
 */
 func GetBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string) (result models.BdtPolicy, err error) {
-	
+
 	if len(bdtPolicyId) == 0 {
 		err = fmt.Errorf("bdtPolicyId is required")
 		return
@@ -113,7 +110,7 @@ func GetBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string) (result models.
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/bdtpolicies/{bdtPolicyId}", SERVICE_PATH)
-	req.Path = strings.Replace(req.Path, "{"+"bdtPolicyId"+"}", url.PathEscape(bdtPolicyId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"bdtPolicyId"+"}", url.PathEscape(bdtPolicyId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -152,7 +149,7 @@ func GetBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string) (result models.
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -163,22 +160,22 @@ func GetBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string) (result models.
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtPolicyId String identifying the individual BDT policy resource in the PCF.
-@return *models.BdtPolicy, 
+@return *models.BdtPolicy,
 */
 func UpdateBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string, body models.PatchBdtPolicy) (result models.BdtPolicy, err error) {
-	
+
 	if len(bdtPolicyId) == 0 {
 		err = fmt.Errorf("bdtPolicyId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPatch
@@ -234,7 +231,7 @@ func UpdateBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string, body models.
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -245,9 +242,7 @@ func UpdateBDTPolicy(client sbi.ConsumerClient, bdtPolicyId string, body models.
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

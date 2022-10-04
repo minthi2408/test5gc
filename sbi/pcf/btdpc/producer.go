@@ -1,7 +1,7 @@
 /*
 Npcf_BDTPolicyControl Service API
 
-PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF BDT Policy Control Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,15 +12,14 @@ API version: 1.1.3
 package btdpc
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for CreateBDTPolicy
 func OnCreateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.BdtReqData
 
@@ -33,7 +32,6 @@ func OnCreateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -43,28 +41,24 @@ func OnCreateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for GetBDTPolicy
 func OnGetBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	bdtPolicyId := ctx.Param("bdtPolicyId")
 	if len(bdtPolicyId) == 0 {
 		//bdtPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtPolicyId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.BdtPolicy
-
 
 	successCode, result, apierr = prod.BTDPC_HandleGetBDTPolicy(bdtPolicyId)
 
@@ -76,16 +70,15 @@ func OnGetBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	return
 }
 
-
 //sbi producer handler for UpdateBDTPolicy
 func OnUpdateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	bdtPolicyId := ctx.Param("bdtPolicyId")
 	if len(bdtPolicyId) == 0 {
 		//bdtPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "bdtPolicyId is required",
 		}))
@@ -103,7 +96,6 @@ func OnUpdateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -113,11 +105,8 @@ func OnUpdateBDTPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 type Producer interface {
 	BTDPC_HandleCreateBDTPolicy(body models.BdtReqData) (successCode int32, result models.BdtPolicy, err *sbi.ApiError)
 	BTDPC_HandleGetBDTPolicy(bdtPolicyId string) (successCode int32, result models.BdtPolicy, err *sbi.ApiError)
 	BTDPC_HandleUpdateBDTPolicy(bdtPolicyId string, body models.PatchBdtPolicy) (successCode int32, result models.BdtPolicy, err *sbi.ApiError)
 }
-
-

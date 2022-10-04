@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,20 +12,20 @@ API version: 1.1.8
 package smpc
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for DeleteSMPolicy
 func OnDeleteSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smPolicyId := ctx.Param("smPolicyId")
 	if len(smPolicyId) == 0 {
 		//smPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smPolicyId is required",
 		}))
@@ -41,7 +41,6 @@ func OnDeleteSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -51,28 +50,24 @@ func OnDeleteSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 //sbi producer handler for GetSMPolicy
 func OnGetSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smPolicyId := ctx.Param("smPolicyId")
 	if len(smPolicyId) == 0 {
 		//smPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smPolicyId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmPolicyControl
-
 
 	successCode, result, apierr = prod.SMPC_HandleGetSMPolicy(smPolicyId)
 
@@ -84,16 +79,15 @@ func OnGetSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	return
 }
 
-
 //sbi producer handler for UpdateSMPolicy
 func OnUpdateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smPolicyId := ctx.Param("smPolicyId")
 	if len(smPolicyId) == 0 {
 		//smPolicyId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smPolicyId is required",
 		}))
@@ -111,7 +105,6 @@ func OnUpdateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -121,11 +114,9 @@ func OnUpdateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 //sbi producer handler for CreateSMPolicy
 func OnCreateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.SmPolicyContextData
 
@@ -138,7 +129,6 @@ func OnCreateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -148,12 +138,9 @@ func OnCreateSMPolicy(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 type Producer interface {
 	SMPC_HandleDeleteSMPolicy(smPolicyId string, body models.SmPolicyDeleteData) (successCode int32, err *sbi.ApiError)
 	SMPC_HandleGetSMPolicy(smPolicyId string) (successCode int32, result models.SmPolicyControl, err *sbi.ApiError)
 	SMPC_HandleUpdateSMPolicy(smPolicyId string, body models.SmPolicyUpdateContextData) (successCode int32, result models.SmPolicyDecision, err *sbi.ApiError)
 	SMPC_HandleCreateSMPolicy(body models.SmPolicyContextData) (successCode int32, result models.SmPolicyDecision, err *sbi.ApiError)
 }
-
-

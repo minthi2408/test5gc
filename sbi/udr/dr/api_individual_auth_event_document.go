@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,28 +12,27 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param servingNetworkName Serving Network Name
-@return 
+@return
 */
 func DeleteIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string, servingNetworkName string) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(servingNetworkName) == 0 {
 		err = fmt.Errorf("servingNetworkName is required")
 		return
@@ -44,8 +43,8 @@ func DeleteIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/authentication-data/authentication-status/{servingNetworkName}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"servingNetworkName"+"}", url.PathEscape(servingNetworkName), -1)	
-	
+	req.Path = strings.Replace(req.Path, "{"+"servingNetworkName"+"}", url.PathEscape(servingNetworkName), -1)
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -56,7 +55,7 @@ func DeleteIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -65,19 +64,18 @@ func DeleteIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualAuthenticationStatus
 func OnDeleteIndividualAuthenticationStatus(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualAuthEventDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -87,14 +85,12 @@ func OnDeleteIndividualAuthenticationStatus(ctx sbi.RequestContext, handler inte
 	if len(servingNetworkName) == 0 {
 		//servingNetworkName is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "servingNetworkName is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -109,27 +105,24 @@ func OnDeleteIndividualAuthenticationStatus(ctx sbi.RequestContext, handler inte
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param servingNetworkName Serving Network Name
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.AuthEvent, 
+@return *models.AuthEvent,
 */
 func QueryIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string, servingNetworkName string, fields []string, supportedFeatures string) (result models.AuthEvent, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	if len(servingNetworkName) == 0 {
 		err = fmt.Errorf("servingNetworkName is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -143,7 +136,7 @@ func QueryIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string,
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -155,7 +148,7 @@ func QueryIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string,
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -166,21 +159,20 @@ func QueryIndividualAuthenticationStatus(client sbi.ConsumerClient, ueId string,
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QueryIndividualAuthenticationStatus
 func OnQueryIndividualAuthenticationStatus(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualAuthEventDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -190,7 +182,7 @@ func OnQueryIndividualAuthenticationStatus(ctx sbi.RequestContext, handler inter
 	if len(servingNetworkName) == 0 {
 		//servingNetworkName is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "servingNetworkName is required",
 		}))
@@ -201,21 +193,18 @@ func OnQueryIndividualAuthenticationStatus(ctx sbi.RequestContext, handler inter
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AuthEvent
-
 
 	successCode, result, apierr = prod.DR_HandleQueryIndividualAuthenticationStatus(ueId, servingNetworkName, fields, supportedFeatures)
 
@@ -226,9 +215,6 @@ func OnQueryIndividualAuthenticationStatus(ctx sbi.RequestContext, handler inter
 	}
 	return
 }
-
-
-
 
 type IndividualAuthEventDocumentApiHandler interface {
 	DR_HandleDeleteIndividualAuthenticationStatus(ueId string, servingNetworkName string) (successCode int32, err *sbi.ApiError)

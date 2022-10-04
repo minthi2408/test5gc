@@ -1,7 +1,7 @@
 /*
 Npcf_SMPolicyControl API
 
-Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Policy Control Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,9 +15,9 @@ type PduSessionTypeAnyOf string
 
 // List of PduSessionTypeAnyOf
 const (
-	PDUSESSIONTYPEANYOF_IPV4 PduSessionTypeAnyOf = "IPV4"
-	PDUSESSIONTYPEANYOF_IPV6 PduSessionTypeAnyOf = "IPV6"
-	PDUSESSIONTYPEANYOF_IPV4_V6 PduSessionTypeAnyOf = "IPV4V6"
+	PDUSESSIONTYPEANYOF_IPV4         PduSessionTypeAnyOf = "IPV4"
+	PDUSESSIONTYPEANYOF_IPV6         PduSessionTypeAnyOf = "IPV6"
+	PDUSESSIONTYPEANYOF_IPV4_V6      PduSessionTypeAnyOf = "IPV4V6"
 	PDUSESSIONTYPEANYOF_UNSTRUCTURED PduSessionTypeAnyOf = "UNSTRUCTURED"
-	PDUSESSIONTYPEANYOF_ETHERNET PduSessionTypeAnyOf = "ETHERNET"
+	PDUSESSIONTYPEANYOF_ETHERNET     PduSessionTypeAnyOf = "ETHERNET"
 )

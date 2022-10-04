@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -15,7 +15,7 @@ type AmfEventTriggerAnyOf string
 
 // List of AmfEventTriggerAnyOf
 const (
-	AMFEVENTTRIGGERANYOF_ONE_TIME AmfEventTriggerAnyOf = "ONE_TIME"
+	AMFEVENTTRIGGERANYOF_ONE_TIME   AmfEventTriggerAnyOf = "ONE_TIME"
 	AMFEVENTTRIGGERANYOF_CONTINUOUS AmfEventTriggerAnyOf = "CONTINUOUS"
-	AMFEVENTTRIGGERANYOF_PERIODIC AmfEventTriggerAnyOf = "PERIODIC"
+	AMFEVENTTRIGGERANYOF_PERIODIC   AmfEventTriggerAnyOf = "PERIODIC"
 )

@@ -1,7 +1,7 @@
 /*
 Nausf_UPUProtection Service
 
-AUSF UPU Protection Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF UPU Protection Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.4
 */
@@ -12,32 +12,29 @@ API version: 1.1.4
 package upu
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/nausf-upuprotection/v1"
+	SERVICE_PATH = "{apiRoot}/nausf-upuprotection/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param supi Identifier of the UE
-@return *models.UpuSecurityInfo, 
+@return *models.UpuSecurityInfo,
 */
 func SupiUeUpuPost(client sbi.ConsumerClient, supi string, body models.UpuInfo) (result models.UpuSecurityInfo, err error) {
-	
+
 	if len(supi) == 0 {
 		err = fmt.Errorf("supi is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPost
@@ -66,7 +63,7 @@ func SupiUeUpuPost(client sbi.ConsumerClient, supi string, body models.UpuInfo) 
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -77,9 +74,7 @@ func SupiUeUpuPost(client sbi.ConsumerClient, supi string, body models.UpuInfo) 
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

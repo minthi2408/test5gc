@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,26 +12,25 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appId Indicate the application identifier for the request pfd(s). It shall apply the format of Data type ApplicationId.
-@return *models.PfdDataForAppExt, 
+@return *models.PfdDataForAppExt,
 */
 func CreateOrReplaceIndividualPFDData(client sbi.ConsumerClient, appId string, body models.PfdDataForAppExt) (result models.PfdDataForAppExt, err error) {
-	
+
 	if len(appId) == 0 {
 		err = fmt.Errorf("appId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -84,7 +83,7 @@ func CreateOrReplaceIndividualPFDData(client sbi.ConsumerClient, appId string, b
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -95,21 +94,20 @@ func CreateOrReplaceIndividualPFDData(client sbi.ConsumerClient, appId string, b
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrReplaceIndividualPFDData
 func OnCreateOrReplaceIndividualPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualPFDDataDocumentApiHandler)
-	
+
 	appId := ctx.Param("appId")
 	if len(appId) == 0 {
 		//appId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appId is required",
 		}))
@@ -127,7 +125,6 @@ func OnCreateOrReplaceIndividualPFDData(ctx sbi.RequestContext, handler interfac
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -137,16 +134,13 @@ func OnCreateOrReplaceIndividualPFDData(ctx sbi.RequestContext, handler interfac
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appId Indicate the application identifier for the request pfd(s). It shall apply the format of Data type ApplicationId.
-@return 
+@return
 */
 func DeleteIndividualPFDData(client sbi.ConsumerClient, appId string) (err error) {
-	
+
 	if len(appId) == 0 {
 		err = fmt.Errorf("appId is required")
 		return
@@ -156,7 +150,7 @@ func DeleteIndividualPFDData(client sbi.ConsumerClient, appId string) (err error
 	req.Method = http.MethodDelete
 
 	req.Path = fmt.Sprintf("%s/application-data/pfds/{appId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"appId"+"}", url.PathEscape(appId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"appId"+"}", url.PathEscape(appId), -1)
 	req.HeaderParams["Accept"] = "application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -189,7 +183,7 @@ func DeleteIndividualPFDData(client sbi.ConsumerClient, appId string) (err error
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -198,26 +192,23 @@ func DeleteIndividualPFDData(client sbi.ConsumerClient, appId string) (err error
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteIndividualPFDData
 func OnDeleteIndividualPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualPFDDataDocumentApiHandler)
-	
+
 	appId := ctx.Param("appId")
 	if len(appId) == 0 {
 		//appId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -232,16 +223,13 @@ func OnDeleteIndividualPFDData(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param appId Indicate the application identifier for the request pfd(s). It shall apply the format of Data type ApplicationId.
-@return *models.PfdDataForAppExt, 
+@return *models.PfdDataForAppExt,
 */
 func ReadIndividualPFDData(client sbi.ConsumerClient, appId string) (result models.PfdDataForAppExt, err error) {
-	
+
 	if len(appId) == 0 {
 		err = fmt.Errorf("appId is required")
 		return
@@ -251,7 +239,7 @@ func ReadIndividualPFDData(client sbi.ConsumerClient, appId string) (result mode
 	req.Method = http.MethodGet
 
 	req.Path = fmt.Sprintf("%s/application-data/pfds/{appId}", ServicePath)
-	req.Path = strings.Replace(req.Path, "{"+"appId"+"}", url.PathEscape(appId), -1)	
+	req.Path = strings.Replace(req.Path, "{"+"appId"+"}", url.PathEscape(appId), -1)
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -284,7 +272,7 @@ func ReadIndividualPFDData(client sbi.ConsumerClient, appId string) (result mode
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -295,33 +283,29 @@ func ReadIndividualPFDData(client sbi.ConsumerClient, appId string) (result mode
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadIndividualPFDData
 func OnReadIndividualPFDData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(IndividualPFDDataDocumentApiHandler)
-	
+
 	appId := ctx.Param("appId")
 	if len(appId) == 0 {
 		//appId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.PfdDataForAppExt
-
 
 	successCode, result, apierr = prod.DR_HandleReadIndividualPFDData(appId)
 
@@ -332,9 +316,6 @@ func OnReadIndividualPFDData(ctx sbi.RequestContext, handler interface{}) (resp 
 	}
 	return
 }
-
-
-
 
 type IndividualPFDDataDocumentApiHandler interface {
 	DR_HandleCreateOrReplaceIndividualPFDData(appId string, body models.PfdDataForAppExt) (successCode int32, result models.PfdDataForAppExt, err *sbi.ApiError)

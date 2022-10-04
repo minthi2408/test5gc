@@ -1,7 +1,7 @@
 /*
 Nudm_UECM
 
-Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.5
 */
@@ -15,9 +15,9 @@ type RegistrationDataSetNameAnyOf string
 
 // List of RegistrationDataSetNameAnyOf
 const (
-	REGISTRATIONDATASETNAMEANYOF_AMF_3_GPP RegistrationDataSetNameAnyOf = "AMF_3GPP"
-	REGISTRATIONDATASETNAMEANYOF_AMF_NON_3_GPP RegistrationDataSetNameAnyOf = "AMF_NON_3GPP"
+	REGISTRATIONDATASETNAMEANYOF_AMF_3_GPP        RegistrationDataSetNameAnyOf = "AMF_3GPP"
+	REGISTRATIONDATASETNAMEANYOF_AMF_NON_3_GPP    RegistrationDataSetNameAnyOf = "AMF_NON_3GPP"
 	REGISTRATIONDATASETNAMEANYOF_SMF_PDU_SESSIONS RegistrationDataSetNameAnyOf = "SMF_PDU_SESSIONS"
-	REGISTRATIONDATASETNAMEANYOF_SMSF_3_GPP RegistrationDataSetNameAnyOf = "SMSF_3GPP"
-	REGISTRATIONDATASETNAMEANYOF_SMSF_NON_3_GPP RegistrationDataSetNameAnyOf = "SMSF_NON_3GPP"
+	REGISTRATIONDATASETNAMEANYOF_SMSF_3_GPP       RegistrationDataSetNameAnyOf = "SMSF_3GPP"
+	REGISTRATIONDATASETNAMEANYOF_SMSF_NON_3_GPP   RegistrationDataSetNameAnyOf = "SMSF_NON_3GPP"
 )

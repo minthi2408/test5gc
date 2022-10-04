@@ -1,7 +1,7 @@
 /*
 Npcf_PolicyAuthorization Service API
 
-PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+PCF Policy Authorization Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.6
 */
@@ -12,15 +12,14 @@ API version: 1.1.6
 package pa
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for PostAppSessions
 func OnPostAppSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.AppSessionContext
 
@@ -33,7 +32,6 @@ func OnPostAppSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -43,23 +41,20 @@ func OnPostAppSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for DeleteEventsSubsc
 func OnDeleteEventsSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	appSessionId := ctx.Param("appSessionId")
 	if len(appSessionId) == 0 {
 		//appSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appSessionId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -74,16 +69,15 @@ func OnDeleteEventsSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for UpdateEventsSubsc
 func OnUpdateEventsSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	appSessionId := ctx.Param("appSessionId")
 	if len(appSessionId) == 0 {
 		//appSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appSessionId is required",
 		}))
@@ -101,7 +95,6 @@ func OnUpdateEventsSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -111,16 +104,15 @@ func OnUpdateEventsSubsc(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for DeleteAppSession
 func OnDeleteAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	appSessionId := ctx.Param("appSessionId")
 	if len(appSessionId) == 0 {
 		//appSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appSessionId is required",
 		}))
@@ -138,7 +130,6 @@ func OnDeleteAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -148,28 +139,24 @@ func OnDeleteAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for GetAppSession
 func OnGetAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	appSessionId := ctx.Param("appSessionId")
 	if len(appSessionId) == 0 {
 		//appSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appSessionId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AppSessionContext
-
 
 	successCode, result, apierr = prod.PA_HandleGetAppSession(appSessionId)
 
@@ -181,16 +168,15 @@ func OnGetAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for ModAppSession
 func OnModAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	appSessionId := ctx.Param("appSessionId")
 	if len(appSessionId) == 0 {
 		//appSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "appSessionId is required",
 		}))
@@ -208,7 +194,6 @@ func OnModAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -218,11 +203,9 @@ func OnModAppSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 //sbi producer handler for PcscfRestoration
 func OnPcscfRestoration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.PcscfRestorationRequestData
 
@@ -233,7 +216,6 @@ func OnPcscfRestoration(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -242,7 +224,6 @@ func OnPcscfRestoration(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	}
 	return
 }
-
 
 type Producer interface {
 	PA_HandlePostAppSessions(body models.AppSessionContext) (successCode int32, result models.AppSessionContext, err *sbi.ApiError)
@@ -253,5 +234,3 @@ type Producer interface {
 	PA_HandleModAppSession(appSessionId string, body models.AppSessionContextUpdateDataPatch) (successCode int32, result models.AppSessionContext, err *sbi.ApiError)
 	PA_HandlePcscfRestoration(body models.PcscfRestorationRequestData) (successCode int32, err *sbi.ApiError)
 }
-
-

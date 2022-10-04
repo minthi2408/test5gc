@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,7 +12,6 @@ API version: 1.1.8
 package models
 
 type IpAddress struct {
-
 	Ipv4Addr string `json:"ipv4Addr,omitempty"`
 
 	Ipv6Addr Ipv6Addr `json:"ipv6Addr,omitempty"`

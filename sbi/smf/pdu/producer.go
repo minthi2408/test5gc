@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,20 +12,20 @@ API version: 1.1.8
 package pdu
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for ReleasePduSession
 func OnReleasePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	pduSessionRef := ctx.Param("pduSessionRef")
 	if len(pduSessionRef) == 0 {
 		//pduSessionRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionRef is required",
 		}))
@@ -43,7 +43,6 @@ func OnReleasePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -53,16 +52,15 @@ func OnReleasePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for RetrievePduSession
 func OnRetrievePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	pduSessionRef := ctx.Param("pduSessionRef")
 	if len(pduSessionRef) == 0 {
 		//pduSessionRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionRef is required",
 		}))
@@ -80,7 +78,6 @@ func OnRetrievePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -90,16 +87,15 @@ func OnRetrievePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for TransferMoData
 func OnTransferMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	pduSessionRef := ctx.Param("pduSessionRef")
 	if len(pduSessionRef) == 0 {
 		//pduSessionRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionRef is required",
 		}))
@@ -115,7 +111,6 @@ func OnTransferMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -125,16 +120,15 @@ func OnTransferMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	return
 }
 
-
 //sbi producer handler for UpdatePduSession
 func OnUpdatePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	pduSessionRef := ctx.Param("pduSessionRef")
 	if len(pduSessionRef) == 0 {
 		//pduSessionRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionRef is required",
 		}))
@@ -152,7 +146,6 @@ func OnUpdatePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -162,16 +155,15 @@ func OnUpdatePduSession(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for ReleaseSmContext
 func OnReleaseSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smContextRef := ctx.Param("smContextRef")
 	if len(smContextRef) == 0 {
 		//smContextRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smContextRef is required",
 		}))
@@ -189,7 +181,6 @@ func OnReleaseSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -199,16 +190,15 @@ func OnReleaseSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for RetrieveSmContext
 func OnRetrieveSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smContextRef := ctx.Param("smContextRef")
 	if len(smContextRef) == 0 {
 		//smContextRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smContextRef is required",
 		}))
@@ -226,7 +216,6 @@ func OnRetrieveSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -236,16 +225,15 @@ func OnRetrieveSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for SendMoData
 func OnSendMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smContextRef := ctx.Param("smContextRef")
 	if len(smContextRef) == 0 {
 		//smContextRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smContextRef is required",
 		}))
@@ -261,7 +249,6 @@ func OnSendMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -271,16 +258,15 @@ func OnSendMoData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for UpdateSmContext
 func OnUpdateSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	smContextRef := ctx.Param("smContextRef")
 	if len(smContextRef) == 0 {
 		//smContextRef is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "smContextRef is required",
 		}))
@@ -298,7 +284,6 @@ func OnUpdateSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -308,11 +293,9 @@ func OnUpdateSmContext(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for PostPduSessions
 func OnPostPduSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.PduSessionCreateData
 
@@ -325,7 +308,6 @@ func OnPostPduSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -335,11 +317,9 @@ func OnPostPduSessions(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	return
 }
 
-
 //sbi producer handler for PostSmContexts
 func OnPostSmContexts(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.PostSmContextsRequest
 
@@ -352,7 +332,6 @@ func OnPostSmContexts(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -361,7 +340,6 @@ func OnPostSmContexts(ctx sbi.RequestContext, handler interface{}) (resp sbi.Res
 	}
 	return
 }
-
 
 type Producer interface {
 	PDU_HandleReleasePduSession(pduSessionRef string, body *models.ReleaseData) (successCode int32, result models.ReleasedData, err *sbi.ApiError)
@@ -375,5 +353,3 @@ type Producer interface {
 	PDU_HandlePostPduSessions(body models.PduSessionCreateData) (successCode int32, result models.PduSessionCreatedData, err *sbi.ApiError)
 	PDU_HandlePostSmContexts(body models.PostSmContextsRequest) (successCode int32, result models.SmContextCreatedData, err *sbi.ApiError)
 }
-
-

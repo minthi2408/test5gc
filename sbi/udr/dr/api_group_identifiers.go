@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,13 +12,12 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -26,10 +25,10 @@ import (
 @param intGroupId Internal Group Identifier
 @param ueIdInd Indication whether UE identifiers are required or not
 @param supportedFeatures Supported Features
-@return *models.GroupIdentifiers, 
+@return *models.GroupIdentifiers,
 */
 func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupId string, ueIdInd *bool, supportedFeatures string) (result models.GroupIdentifiers, err error) {
-				
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -47,7 +46,7 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -59,7 +58,7 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -70,16 +69,15 @@ func GetGroupIdentifiers(client sbi.ConsumerClient, extGroupId string, intGroupI
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for GetGroupIdentifiers
 func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(GroupIdentifiersApiHandler)
-	
+
 	extGroupId := ctx.Param("ext-group-id")
 	intGroupId := ctx.Param("int-group-id")
 	ueIdIndStr := ctx.Param("ue-id-ind")
@@ -87,21 +85,18 @@ func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sb
 	var ueIdIndErr error
 	if ueIdInd, ueIdIndErr = utils.String2Bool(ueIdIndStr); ueIdIndErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: ueIdIndErr.Error(), 
+			Detail: ueIdIndErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.GroupIdentifiers
-
 
 	successCode, result, apierr = prod.DR_HandleGetGroupIdentifiers(extGroupId, intGroupId, ueIdInd, supportedFeatures)
 
@@ -112,9 +107,6 @@ func OnGetGroupIdentifiers(ctx sbi.RequestContext, handler interface{}) (resp sb
 	}
 	return
 }
-
-
-
 
 type GroupIdentifiersApiHandler interface {
 	DR_HandleGetGroupIdentifiers(extGroupId string, intGroupId string, ueIdInd *bool, supportedFeatures string) (successCode int32, result models.GroupIdentifiers, err *sbi.ApiError)

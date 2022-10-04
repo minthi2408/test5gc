@@ -1,7 +1,7 @@
 /*
 Nausf_SoRProtection Service
 
-AUSF SoR Protection Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AUSF SoR Protection Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,20 +12,20 @@ API version: 1.1.3
 package sor
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for SupiUeSorPost
 func OnSupiUeSorPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -43,7 +43,6 @@ func OnSupiUeSorPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -53,9 +52,6 @@ func OnSupiUeSorPost(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 type Producer interface {
 	SOR_HandleSupiUeSorPost(supi string, body models.SorInfo) (successCode int32, result models.SorSecurityInfo, err *sbi.ApiError)
 }
-
-

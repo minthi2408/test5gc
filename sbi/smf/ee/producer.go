@@ -1,7 +1,7 @@
 /*
 Nsmf_EventExposure
 
-Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,27 +12,25 @@ API version: 1.1.3
 package ee
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
+	"net/http"
 )
 
 //sbi producer handler for DeleteIndividualSubcription
 func OnDeleteIndividualSubcription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subId := ctx.Param("subId")
 	if len(subId) == 0 {
 		//subId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -47,28 +45,24 @@ func OnDeleteIndividualSubcription(ctx sbi.RequestContext, handler interface{}) 
 	return
 }
 
-
 //sbi producer handler for GetIndividualSubcription
 func OnGetIndividualSubcription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subId := ctx.Param("subId")
 	if len(subId) == 0 {
 		//subId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.NsmfEventExposure
-
 
 	successCode, result, apierr = prod.EE_HandleGetIndividualSubcription(subId)
 
@@ -80,16 +74,15 @@ func OnGetIndividualSubcription(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
 //sbi producer handler for ReplaceIndividualSubcription
 func OnReplaceIndividualSubcription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	subId := ctx.Param("subId")
 	if len(subId) == 0 {
 		//subId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "subId is required",
 		}))
@@ -107,7 +100,6 @@ func OnReplaceIndividualSubcription(ctx sbi.RequestContext, handler interface{})
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -117,11 +109,9 @@ func OnReplaceIndividualSubcription(ctx sbi.RequestContext, handler interface{})
 	return
 }
 
-
 //sbi producer handler for CreateIndividualSubcription
 func OnCreateIndividualSubcription(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.NsmfEventExposure
 
@@ -134,7 +124,6 @@ func OnCreateIndividualSubcription(ctx sbi.RequestContext, handler interface{}) 
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -144,12 +133,9 @@ func OnCreateIndividualSubcription(ctx sbi.RequestContext, handler interface{}) 
 	return
 }
 
-
 type Producer interface {
 	EE_HandleDeleteIndividualSubcription(subId string) (successCode int32, err *sbi.ApiError)
 	EE_HandleGetIndividualSubcription(subId string) (successCode int32, result models.NsmfEventExposure, err *sbi.ApiError)
 	EE_HandleReplaceIndividualSubcription(subId string, body models.NsmfEventExposure) (successCode int32, result models.NsmfEventExposure, err *sbi.ApiError)
 	EE_HandleCreateIndividualSubcription(body models.NsmfEventExposure) (successCode int32, result models.NsmfEventExposure, err *sbi.ApiError)
 }
-
-

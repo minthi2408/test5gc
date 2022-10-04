@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -15,8 +15,8 @@ type NotificationCauseAnyOf string
 
 // List of NotificationCauseAnyOf
 const (
-	NOTIFICATIONCAUSEANYOF_QOS_FULFILLED NotificationCauseAnyOf = "QOS_FULFILLED"
-	NOTIFICATIONCAUSEANYOF_QOS_NOT_FULFILLED NotificationCauseAnyOf = "QOS_NOT_FULFILLED"
-	NOTIFICATIONCAUSEANYOF_UP_SEC_FULFILLED NotificationCauseAnyOf = "UP_SEC_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_QOS_FULFILLED        NotificationCauseAnyOf = "QOS_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_QOS_NOT_FULFILLED    NotificationCauseAnyOf = "QOS_NOT_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_UP_SEC_FULFILLED     NotificationCauseAnyOf = "UP_SEC_FULFILLED"
 	NOTIFICATIONCAUSEANYOF_UP_SEC_NOT_FULFILLED NotificationCauseAnyOf = "UP_SEC_NOT_FULFILLED"
 )

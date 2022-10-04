@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,5 +16,5 @@ type StationaryIndicationAnyOf string
 // List of StationaryIndicationAnyOf
 const (
 	STATIONARYINDICATIONANYOF_STATIONARY StationaryIndicationAnyOf = "STATIONARY"
-	STATIONARYINDICATIONANYOF_MOBILE StationaryIndicationAnyOf = "MOBILE"
+	STATIONARYINDICATIONANYOF_MOBILE     StationaryIndicationAnyOf = "MOBILE"
 )

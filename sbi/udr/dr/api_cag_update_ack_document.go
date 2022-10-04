@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,27 +12,26 @@ API version: 2.1.7
 package dr
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param supportedFeatures Supported Features
-@return 
+@return
 */
 func CreateCagUpdateAck(client sbi.ConsumerClient, ueId string, supportedFeatures string, body models.CagAckData) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -44,7 +43,7 @@ func CreateCagUpdateAck(client sbi.ConsumerClient, ueId string, supportedFeature
 	}
 	req.Body = &body
 	req.HeaderParams["Content-Type"] = "application/json"
-	
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -55,7 +54,7 @@ func CreateCagUpdateAck(client sbi.ConsumerClient, ueId string, supportedFeature
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -64,19 +63,18 @@ func CreateCagUpdateAck(client sbi.ConsumerClient, ueId string, supportedFeature
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateCagUpdateAck
 func OnCreateCagUpdateAck(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(CAGUpdateAckDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -93,7 +91,6 @@ func OnCreateCagUpdateAck(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -102,9 +99,6 @@ func OnCreateCagUpdateAck(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	}
 	return
 }
-
-
-
 
 type CAGUpdateAckDocumentApiHandler interface {
 	DR_HandleCreateCagUpdateAck(ueId string, supportedFeatures string, body models.CagAckData) (successCode int32, err *sbi.ApiError)

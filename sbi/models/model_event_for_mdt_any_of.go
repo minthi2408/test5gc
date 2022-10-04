@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -16,5 +16,5 @@ type EventForMdtAnyOf string
 // List of EventForMdtAnyOf
 const (
 	EVENTFORMDTANYOF_OUT_OF_COVERAG EventForMdtAnyOf = "OUT_OF_COVERAG"
-	EVENTFORMDTANYOF_A2_EVENT EventForMdtAnyOf = "A2_EVENT"
+	EVENTFORMDTANYOF_A2_EVENT       EventForMdtAnyOf = "A2_EVENT"
 )

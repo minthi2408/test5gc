@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,33 +12,32 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
-	"net/url"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
+	"net/url"
 	"strings"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param pduSessionId PDU session id
-@return *models.SmfRegistration, 
+@return *models.SmfRegistration,
 */
 func CreateOrUpdateSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId int32, body models.SmfRegistration) (result models.SmfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -59,7 +58,7 @@ func CreateOrUpdateSmfRegistration(client sbi.ConsumerClient, ueId string, pduSe
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -70,21 +69,20 @@ func CreateOrUpdateSmfRegistration(client sbi.ConsumerClient, ueId string, pduSe
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for CreateOrUpdateSmfRegistration
 func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMFRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -94,7 +92,7 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -104,13 +102,12 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
 
 	var input models.SmfRegistration
 
@@ -123,7 +120,6 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -133,21 +129,18 @@ func OnCreateOrUpdateSmfRegistration(ctx sbi.RequestContext, handler interface{}
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param pduSessionId PDU session id
-@return 
+@return
 */
 func DeleteSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId int32) (err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
@@ -159,8 +152,8 @@ func DeleteSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId 
 
 	req.Path = fmt.Sprintf("%s/subscription-data/{ueId}/context-data/smf-registrations/{pduSessionId}", ServicePath)
 	req.Path = strings.Replace(req.Path, "{"+"ueId"+"}", url.PathEscape(ueId), -1)
-	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)	
-	
+	req.Path = strings.Replace(req.Path, "{"+"pduSessionId"+"}", url.PathEscape(pduSessionIdStr), -1)
+
 	//send the request
 	var resp *sbi.Response
 	if resp, err = client.Send(req); err != nil {
@@ -171,7 +164,7 @@ func DeleteSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId 
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -180,19 +173,18 @@ func DeleteSmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId 
 		}
 	}
 
-	return 
+	return
 }
-
 
 //sbi producer handler for DeleteSmfRegistration
 func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMFRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -202,7 +194,7 @@ func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -212,15 +204,12 @@ func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -235,28 +224,25 @@ func OnDeleteSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
-
-
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueId UE id
 @param pduSessionId PDU session id
 @param fields attributes to be retrieved
 @param supportedFeatures Supported Features
-@return *models.SmfRegistration, 
+@return *models.SmfRegistration,
 */
 func QuerySmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId int32, fields []string, supportedFeatures string) (result models.SmfRegistration, err error) {
-	
+
 	if len(ueId) == 0 {
 		err = fmt.Errorf("ueId is required")
 		return
-	}	
+	}
 	pduSessionIdStr := utils.Param2String(pduSessionId)
 	if len(pduSessionIdStr) == 0 {
 		err = fmt.Errorf("pduSessionId is required")
 		return
-	}		
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -270,7 +256,7 @@ func QuerySmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId i
 	}
 	if len(supportedFeatures) > 0 {
 		req.QueryParams.Add("supported-features", supportedFeatures)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json"
 	//send the request
 	var resp *sbi.Response
@@ -282,7 +268,7 @@ func QuerySmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId i
 	if resp.StatusCode >= 300 {
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -293,21 +279,20 @@ func QuerySmfRegistration(client sbi.ConsumerClient, ueId string, pduSessionId i
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for QuerySmfRegistration
 func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(SMFRegistrationDocumentApiHandler)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -317,7 +302,7 @@ func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -327,33 +312,30 @@ func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	fieldsStr := ctx.Param("fields")
 	var fields []string
 	var fieldsErr error
 	if fields, fieldsErr = utils.String2ArrayOfstring(fieldsStr); fieldsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: fieldsErr.Error(), 
+			Detail: fieldsErr.Error(),
 		}))
 		return
 	}
-	
-	supportedFeatures := ctx.Param("supported-features")
 
-	
+	supportedFeatures := ctx.Param("supported-features")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmfRegistration
-
 
 	successCode, result, apierr = prod.DR_HandleQuerySmfRegistration(ueId, *pduSessionId, fields, supportedFeatures)
 
@@ -364,9 +346,6 @@ func OnQuerySmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	}
 	return
 }
-
-
-
 
 type SMFRegistrationDocumentApiHandler interface {
 	DR_HandleCreateOrUpdateSmfRegistration(ueId string, pduSessionId int32, body models.SmfRegistration) (successCode int32, result models.SmfRegistration, err *sbi.ApiError)

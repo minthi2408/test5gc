@@ -1,7 +1,7 @@
 /*
 Nudm_EE
 
-Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Event Exposure Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.4
 */
@@ -16,5 +16,5 @@ type PdnConnectivityStatusAnyOf string
 // List of PdnConnectivityStatusAnyOf
 const (
 	PDNCONNECTIVITYSTATUSANYOF_ESTABLISHED PdnConnectivityStatusAnyOf = "ESTABLISHED"
-	PDNCONNECTIVITYSTATUSANYOF_RELEASED PdnConnectivityStatusAnyOf = "RELEASED"
+	PDNCONNECTIVITYSTATUSANYOF_RELEASED    PdnConnectivityStatusAnyOf = "RELEASED"
 )

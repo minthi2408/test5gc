@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -16,5 +16,5 @@ type LocationPrivacyIndAnyOf string
 // List of LocationPrivacyIndAnyOf
 const (
 	LOCATIONPRIVACYINDANYOF_DISALLOWED LocationPrivacyIndAnyOf = "LOCATION_DISALLOWED"
-	LOCATIONPRIVACYINDANYOF_ALLOWED LocationPrivacyIndAnyOf = "LOCATION_ALLOWED"
+	LOCATIONPRIVACYINDANYOF_ALLOWED    LocationPrivacyIndAnyOf = "LOCATION_ALLOWED"
 )

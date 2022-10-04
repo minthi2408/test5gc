@@ -1,7 +1,7 @@
 /*
 Nsmf_EventExposure
 
-Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Session Management Event Exposure Service. © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -15,14 +15,14 @@ type SmfEventAnyOf string
 
 // List of SmfEventAnyOf
 const (
-	SMFEVENTANYOF_AC_TY_CH SmfEventAnyOf = "AC_TY_CH"
-	SMFEVENTANYOF_UP_PATH_CH SmfEventAnyOf = "UP_PATH_CH"
+	SMFEVENTANYOF_AC_TY_CH    SmfEventAnyOf = "AC_TY_CH"
+	SMFEVENTANYOF_UP_PATH_CH  SmfEventAnyOf = "UP_PATH_CH"
 	SMFEVENTANYOF_PDU_SES_REL SmfEventAnyOf = "PDU_SES_REL"
-	SMFEVENTANYOF_PLMN_CH SmfEventAnyOf = "PLMN_CH"
-	SMFEVENTANYOF_UE_IP_CH SmfEventAnyOf = "UE_IP_CH"
-	SMFEVENTANYOF_DDDS SmfEventAnyOf = "DDDS"
-	SMFEVENTANYOF_COMM_FAIL SmfEventAnyOf = "COMM_FAIL"
+	SMFEVENTANYOF_PLMN_CH     SmfEventAnyOf = "PLMN_CH"
+	SMFEVENTANYOF_UE_IP_CH    SmfEventAnyOf = "UE_IP_CH"
+	SMFEVENTANYOF_DDDS        SmfEventAnyOf = "DDDS"
+	SMFEVENTANYOF_COMM_FAIL   SmfEventAnyOf = "COMM_FAIL"
 	SMFEVENTANYOF_PDU_SES_EST SmfEventAnyOf = "PDU_SES_EST"
-	SMFEVENTANYOF_QFI_ALLOC SmfEventAnyOf = "QFI_ALLOC"
-	SMFEVENTANYOF_QOS_MON SmfEventAnyOf = "QOS_MON"
+	SMFEVENTANYOF_QFI_ALLOC   SmfEventAnyOf = "QFI_ALLOC"
+	SMFEVENTANYOF_QOS_MON     SmfEventAnyOf = "QOS_MON"
 )

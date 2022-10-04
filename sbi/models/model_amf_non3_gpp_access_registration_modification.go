@@ -1,7 +1,7 @@
 /*
 Nudm_UECM
 
-Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.5
 */
@@ -12,7 +12,6 @@ API version: 1.1.5
 package models
 
 type AmfNon3GppAccessRegistrationModification struct {
-
 	Guami Guami `json:"guami"`
 
 	PurgeFlag bool `json:"purgeFlag,omitempty"`

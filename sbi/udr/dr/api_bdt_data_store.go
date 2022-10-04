@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -12,22 +12,21 @@ API version: 2.1.7
 package dr
 
 import (
-	"fmt"
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"fmt"
+	"net/http"
 )
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param bdtRefIds List of the BDT reference identifiers.
 @param suppFeat Supported Features
-@return []models.BdtData, 
+@return []models.BdtData,
 */
 func ReadBdtData(client sbi.ConsumerClient, bdtRefIds []string, suppFeat string) (result []models.BdtData, err error) {
-		
+
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -39,7 +38,7 @@ func ReadBdtData(client sbi.ConsumerClient, bdtRefIds []string, suppFeat string)
 	}
 	if len(suppFeat) > 0 {
 		req.QueryParams.Add("supp-feat", suppFeat)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -72,7 +71,7 @@ func ReadBdtData(client sbi.ConsumerClient, bdtRefIds []string, suppFeat string)
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -83,36 +82,32 @@ func ReadBdtData(client sbi.ConsumerClient, bdtRefIds []string, suppFeat string)
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
 
 //sbi producer handler for ReadBdtData
 func OnReadBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(BdtDataStoreApiHandler)
-	
+
 	bdtRefIdsStr := ctx.Param("bdt-ref-ids")
 	var bdtRefIds []string
 	var bdtRefIdsErr error
 	if bdtRefIds, bdtRefIdsErr = utils.String2ArrayOfstring(bdtRefIdsStr); bdtRefIdsErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: bdtRefIdsErr.Error(), 
+			Detail: bdtRefIdsErr.Error(),
 		}))
 		return
 	}
-	
-	suppFeat := ctx.Param("supp-feat")
 
-	
+	suppFeat := ctx.Param("supp-feat")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result []models.BdtData
-
 
 	successCode, result, apierr = prod.DR_HandleReadBdtData(bdtRefIds, suppFeat)
 
@@ -123,9 +118,6 @@ func OnReadBdtData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	}
 	return
 }
-
-
-
 
 type BdtDataStoreApiHandler interface {
 	DR_HandleReadBdtData(bdtRefIds []string, suppFeat string) (successCode int32, result []models.BdtData, err *sbi.ApiError)

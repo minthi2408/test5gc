@@ -1,7 +1,7 @@
 /*
 Nudr_DataRepository API OpenAPI file
 
-Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+Unified Data Repository Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 2.1.7
 */
@@ -15,9 +15,9 @@ type LoggingIntervalMdtAnyOf string
 
 // List of LoggingIntervalMdtAnyOf
 const (
-	LOGGINGINTERVALMDTANYOF__128 LoggingIntervalMdtAnyOf = "128"
-	LOGGINGINTERVALMDTANYOF__256 LoggingIntervalMdtAnyOf = "256"
-	LOGGINGINTERVALMDTANYOF__512 LoggingIntervalMdtAnyOf = "512"
+	LOGGINGINTERVALMDTANYOF__128  LoggingIntervalMdtAnyOf = "128"
+	LOGGINGINTERVALMDTANYOF__256  LoggingIntervalMdtAnyOf = "256"
+	LOGGINGINTERVALMDTANYOF__512  LoggingIntervalMdtAnyOf = "512"
 	LOGGINGINTERVALMDTANYOF__1024 LoggingIntervalMdtAnyOf = "1024"
 	LOGGINGINTERVALMDTANYOF__2048 LoggingIntervalMdtAnyOf = "2048"
 	LOGGINGINTERVALMDTANYOF__3072 LoggingIntervalMdtAnyOf = "3072"

@@ -1,7 +1,7 @@
 /*
 Namf_MT
 
-AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Mobile Terminated Service © 2021, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,21 +12,18 @@ API version: 1.1.3
 package mt
 
 import (
+	"etri5gc/sbi"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
 )
-
 
 const (
- SERVICE_PATH = "{apiRoot}/namf-mt/v1"
+	SERVICE_PATH = "{apiRoot}/namf-mt/v1"
 )
-
-
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
@@ -34,14 +31,14 @@ const (
 @param infoClass UE Context Information Class
 @param supportedFeatures Supported Features
 @param oldGuami Old GUAMI
-@return *models.UeContextInfo, 
+@return *models.UeContextInfo,
 */
 func ProvideDomainSelectionInfo(client sbi.ConsumerClient, ueContextId string, infoClass *models.UeContextInfoClass, supportedFeatures string, oldGuami *models.Guami) (result models.UeContextInfo, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}			
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodGet
@@ -58,7 +55,7 @@ func ProvideDomainSelectionInfo(client sbi.ConsumerClient, ueContextId string, i
 	oldGuamiStr := utils.Param2String(oldGuami)
 	if len(oldGuamiStr) > 0 {
 		req.QueryParams.Add("old-guami", oldGuamiStr)
-	}	
+	}
 	req.HeaderParams["Accept"] = "application/json, application/problem+json"
 	//send the request
 	var resp *sbi.Response
@@ -97,7 +94,7 @@ func ProvideDomainSelectionInfo(client sbi.ConsumerClient, ueContextId string, i
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -108,22 +105,22 @@ func ProvideDomainSelectionInfo(client sbi.ConsumerClient, ueContextId string, i
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
 
 /*
 @param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
 @param ueContextId UE Context Identifier
-@return *models.EnableUeReachabilityRspData, 
+@return *models.EnableUeReachabilityRspData,
 */
 func EnableUeReachability(client sbi.ConsumerClient, ueContextId string, body models.EnableUeReachabilityReqData) (result models.EnableUeReachabilityRspData, err error) {
-	
+
 	if len(ueContextId) == 0 {
 		err = fmt.Errorf("ueContextId is required")
 		return
-	}	
+	}
 	//create a request
 	req := sbi.DefaultRequest()
 	req.Method = http.MethodPut
@@ -179,7 +176,7 @@ func EnableUeReachability(client sbi.ConsumerClient, ueContextId string, body mo
 		}
 		if resp.Body != nil {
 			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 			}
 			return
 		} else {
@@ -190,9 +187,7 @@ func EnableUeReachability(client sbi.ConsumerClient, ueContextId string, body mo
 
 	resp.Body = &result
 	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)	
+		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
 	}
-	return 
+	return
 }
-
-

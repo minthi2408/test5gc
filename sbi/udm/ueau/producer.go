@@ -1,7 +1,7 @@
 /*
 Nudm_UEAU
 
-UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.3
 */
@@ -12,21 +12,21 @@ API version: 1.1.3
 package ueau
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for ConfirmAuth
 func OnConfirmAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -44,7 +44,6 @@ func OnConfirmAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -54,16 +53,15 @@ func OnConfirmAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respon
 	return
 }
 
-
 //sbi producer handler for DeleteAuth
 func OnDeleteAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -73,7 +71,7 @@ func OnDeleteAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	if len(authEventId) == 0 {
 		//authEventId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authEventId is required",
 		}))
@@ -89,7 +87,6 @@ func OnDeleteAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -99,16 +96,15 @@ func OnDeleteAuth(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for GenerateAuthData
 func OnGenerateAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supiOrSuci := ctx.Param("supiOrSuci")
 	if len(supiOrSuci) == 0 {
 		//supiOrSuci is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supiOrSuci is required",
 		}))
@@ -126,7 +122,6 @@ func OnGenerateAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -136,16 +131,15 @@ func OnGenerateAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for GenerateAv
 func OnGenerateAv(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supi := ctx.Param("supi")
 	if len(supi) == 0 {
 		//supi is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supi is required",
 		}))
@@ -155,7 +149,7 @@ func OnGenerateAv(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	if len(hssAuthTypeStr) == 0 {
 		//hssAuthType is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "hssAuthType is required",
 		}))
@@ -165,13 +159,12 @@ func OnGenerateAv(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	var hssAuthTypeErr error
 	if hssAuthType, hssAuthTypeErr = utils.String2HssAuthTypeInUri(hssAuthTypeStr); hssAuthTypeErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: hssAuthTypeErr.Error(), 
+			Detail: hssAuthTypeErr.Error(),
 		}))
 		return
 	}
-	
 
 	var input models.HssAuthenticationInfoRequest
 
@@ -184,7 +177,6 @@ func OnGenerateAv(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -194,16 +186,15 @@ func OnGenerateAv(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respons
 	return
 }
 
-
 //sbi producer handler for GetRgAuthData
 func OnGetRgAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	supiOrSuci := ctx.Param("supiOrSuci")
 	if len(supiOrSuci) == 0 {
 		//supiOrSuci is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "supiOrSuci is required",
 		}))
@@ -213,7 +204,7 @@ func OnGetRgAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	if len(authenticatedIndStr) == 0 {
 		//authenticatedInd is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "authenticatedInd is required",
 		}))
@@ -223,35 +214,32 @@ func OnGetRgAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	var authenticatedIndErr error
 	if authenticatedInd, authenticatedIndErr = utils.String2Bool(authenticatedIndStr); authenticatedIndErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: authenticatedIndErr.Error(), 
+			Detail: authenticatedIndErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 	plmnIdStr := ctx.Param("plmn-id")
 	var plmnId *models.PlmnId
 	var plmnIdErr error
 	if plmnId, plmnIdErr = utils.String2PlmnId(plmnIdStr); plmnIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: plmnIdErr.Error(), 
+			Detail: plmnIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	ifNoneMatch := ctx.Param("If-None-Match")
 	ifModifiedSince := ctx.Param("If-Modified-Since")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.RgAuthCtx
-
 
 	successCode, result, apierr = prod.UEAU_HandleGetRgAuthData(supiOrSuci, *authenticatedInd, supportedFeatures, plmnId, ifNoneMatch, ifModifiedSince)
 
@@ -263,7 +251,6 @@ func OnGetRgAuthData(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	return
 }
 
-
 type Producer interface {
 	UEAU_HandleConfirmAuth(supi string, body models.AuthEvent) (successCode int32, result models.AuthEvent, err *sbi.ApiError)
 	UEAU_HandleDeleteAuth(supi string, authEventId string, body models.AuthEvent) (successCode int32, err *sbi.ApiError)
@@ -271,5 +258,3 @@ type Producer interface {
 	UEAU_HandleGenerateAv(supi string, hssAuthType models.HssAuthTypeInUri, body models.HssAuthenticationInfoRequest) (successCode int32, result models.HssAuthenticationInfoResult, err *sbi.ApiError)
 	UEAU_HandleGetRgAuthData(supiOrSuci string, authenticatedInd bool, supportedFeatures string, plmnId *models.PlmnId, ifNoneMatch string, ifModifiedSince string) (successCode int32, result models.RgAuthCtx, err *sbi.ApiError)
 }
-
-

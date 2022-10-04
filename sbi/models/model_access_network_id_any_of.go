@@ -1,7 +1,7 @@
 /*
 Nudm_UEAU
 
-UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+UDM UE Authentication Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.3
 */
@@ -15,8 +15,8 @@ type AccessNetworkIdAnyOf string
 
 // List of AccessNetworkIdAnyOf
 const (
-	ACCESSNETWORKIDANYOF_HRPD AccessNetworkIdAnyOf = "HRPD"
-	ACCESSNETWORKIDANYOF_WIMAX AccessNetworkIdAnyOf = "WIMAX"
-	ACCESSNETWORKIDANYOF_WLAN AccessNetworkIdAnyOf = "WLAN"
+	ACCESSNETWORKIDANYOF_HRPD     AccessNetworkIdAnyOf = "HRPD"
+	ACCESSNETWORKIDANYOF_WIMAX    AccessNetworkIdAnyOf = "WIMAX"
+	ACCESSNETWORKIDANYOF_WLAN     AccessNetworkIdAnyOf = "WLAN"
 	ACCESSNETWORKIDANYOF_ETHERNET AccessNetworkIdAnyOf = "ETHERNET"
 )

@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,5 +16,5 @@ type SmContextTypeAnyOf string
 // List of SmContextTypeAnyOf
 const (
 	SMCONTEXTTYPEANYOF_EPS_PDN_CONNECTION SmContextTypeAnyOf = "EPS_PDN_CONNECTION"
-	SMCONTEXTTYPEANYOF_SM_CONTEXT SmContextTypeAnyOf = "SM_CONTEXT"
+	SMCONTEXTTYPEANYOF_SM_CONTEXT         SmContextTypeAnyOf = "SM_CONTEXT"
 )

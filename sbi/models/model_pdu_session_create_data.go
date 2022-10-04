@@ -1,7 +1,7 @@
 /*
 Nsmf_PDUSession
 
-SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+SMF PDU Session Service. © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -16,7 +16,6 @@ import (
 )
 
 type PduSessionCreateData struct {
-
 	Supi string `json:"supi,omitempty"`
 
 	UnauthenticatedSupi bool `json:"unauthenticatedSupi,omitempty"`

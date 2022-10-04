@@ -1,7 +1,7 @@
 /*
 Nudm_UECM
 
-Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved. 
+Nudm Context Management Service.   © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC).   All rights reserved.
 
 API version: 1.1.5
 */
@@ -12,21 +12,21 @@ API version: 1.1.5
 package uecm
 
 import (
-	"net/http"
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
+	"net/http"
 )
 
 //sbi producer handler for Get3GppRegistration
 func OnGet3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -34,12 +34,9 @@ func OnGet3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sb
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.Amf3GppAccessRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleGet3GppRegistration(ueId, supportedFeatures)
 
@@ -51,16 +48,15 @@ func OnGet3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for GetNon3GppRegistration
 func OnGetNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -68,12 +64,9 @@ func OnGetNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.AmfNon3GppAccessRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleGetNon3GppRegistration(ueId, supportedFeatures)
 
@@ -85,16 +78,15 @@ func OnGetNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 //sbi producer handler for Call3GppRegistration
 func OnCall3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -112,7 +104,6 @@ func OnCall3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -122,16 +113,15 @@ func OnCall3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 //sbi producer handler for Non3GppRegistration
 func OnNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -149,7 +139,6 @@ func OnNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sb
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -159,23 +148,20 @@ func OnNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sb
 	return
 }
 
-
 //sbi producer handler for IpSmGwDeregistration
 func OnIpSmGwDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -190,16 +176,15 @@ func OnIpSmGwDeregistration(ctx sbi.RequestContext, handler interface{}) (resp s
 	return
 }
 
-
 //sbi producer handler for IpSmGwRegistration
 func OnIpSmGwRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -217,7 +202,6 @@ func OnIpSmGwRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -227,28 +211,24 @@ func OnIpSmGwRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for GetIpSmGwRegistration
 func OnGetIpSmGwRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.IpSmGwRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleGetIpSmGwRegistration(ueId)
 
@@ -260,16 +240,15 @@ func OnGetIpSmGwRegistration(ctx sbi.RequestContext, handler interface{}) (resp 
 	return
 }
 
-
 //sbi producer handler for PeiUpdate
 func OnPeiUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -285,7 +264,6 @@ func OnPeiUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -295,16 +273,15 @@ func OnPeiUpdate(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response
 	return
 }
 
-
 //sbi producer handler for Update3GppRegistration
 func OnUpdate3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -323,7 +300,6 @@ func OnUpdate3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -333,16 +309,15 @@ func OnUpdate3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp
 	return
 }
 
-
 //sbi producer handler for UpdateNon3GppRegistration
 func OnUpdateNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -361,7 +336,6 @@ func OnUpdateNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (r
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -371,16 +345,15 @@ func OnUpdateNon3GppRegistration(ctx sbi.RequestContext, handler interface{}) (r
 	return
 }
 
-
 //sbi producer handler for RetrieveSmfRegistration
 func OnRetrieveSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -390,7 +363,7 @@ func OnRetrieveSmfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -400,20 +373,16 @@ func OnRetrieveSmfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmfRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleRetrieveSmfRegistration(ueId, *pduSessionId)
 
@@ -425,16 +394,15 @@ func OnRetrieveSmfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for SmfDeregistration
 func OnSmfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -444,7 +412,7 @@ func OnSmfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -454,17 +422,15 @@ func OnSmfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
+
 	smfSetId := ctx.Param("smf-set-id")
 	smfInstanceId := ctx.Param("smf-instance-id")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -479,16 +445,15 @@ func OnSmfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.
 	return
 }
 
-
 //sbi producer handler for GetSmfRegistration
 func OnGetSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -499,22 +464,19 @@ func OnGetSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	var singleNssaiErr error
 	if singleNssai, singleNssaiErr = utils.String2Snssai(singleNssaiStr); singleNssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: singleNssaiErr.Error(), 
+			Detail: singleNssaiErr.Error(),
 		}))
 		return
 	}
-	
+
 	dnn := ctx.Param("dnn")
 	supportedFeatures := ctx.Param("supported-features")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmfRegistrationInfo
-
 
 	successCode, result, apierr = prod.UECM_HandleGetSmfRegistration(ueId, singleNssai, dnn, supportedFeatures)
 
@@ -526,16 +488,15 @@ func OnGetSmfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi
 	return
 }
 
-
 //sbi producer handler for Registration
 func OnRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -545,7 +506,7 @@ func OnRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	if len(pduSessionIdStr) == 0 {
 		//pduSessionId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "pduSessionId is required",
 		}))
@@ -555,13 +516,12 @@ func OnRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	var pduSessionIdErr error
 	if pduSessionId, pduSessionIdErr = utils.String2Int32(pduSessionIdStr); pduSessionIdErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: pduSessionIdErr.Error(), 
+			Detail: pduSessionIdErr.Error(),
 		}))
 		return
 	}
-	
 
 	var input models.SmfRegistration
 
@@ -574,7 +534,6 @@ func OnRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -584,16 +543,15 @@ func OnRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Respo
 	return
 }
 
-
 //sbi producer handler for Get3GppSmsfRegistration
 func OnGet3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -601,12 +559,9 @@ func OnGet3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmsfRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleGet3GppSmsfRegistration(ueId, supportedFeatures)
 
@@ -618,24 +573,21 @@ func OnGet3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for Call3GppSmsfDeregistration
 func OnCall3GppSmsfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
 	smsfSetId := ctx.Param("smsf-set-id")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -650,24 +602,21 @@ func OnCall3GppSmsfDeregistration(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
 //sbi producer handler for Non3GppSmsfDeregistration
 func OnNon3GppSmsfDeregistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
 		return
 	}
 	smsfSetId := ctx.Param("smsf-set-id")
-
-	
 
 	var apierr *sbi.ApiError
 	var successCode int32
@@ -682,16 +631,15 @@ func OnNon3GppSmsfDeregistration(ctx sbi.RequestContext, handler interface{}) (r
 	return
 }
 
-
 //sbi producer handler for GetNon3GppSmsfRegistration
 func OnGetNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -699,12 +647,9 @@ func OnGetNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.SmsfRegistration
-
 
 	successCode, result, apierr = prod.UECM_HandleGetNon3GppSmsfRegistration(ueId, supportedFeatures)
 
@@ -716,16 +661,15 @@ func OnGetNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (
 	return
 }
 
-
 //sbi producer handler for Call3GppSmsfRegistration
 func OnCall3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -743,7 +687,6 @@ func OnCall3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -753,16 +696,15 @@ func OnCall3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (re
 	return
 }
 
-
 //sbi producer handler for Non3GppSmsfRegistration
 func OnNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -780,7 +722,6 @@ func OnNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -790,16 +731,15 @@ func OnNon3GppSmsfRegistration(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for DeregAMF
 func OnDeregAMF(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -815,7 +755,6 @@ func OnDeregAMF(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response)
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -825,11 +764,9 @@ func OnDeregAMF(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response)
 	return
 }
 
-
 //sbi producer handler for TriggerPCSCFRestoration
 func OnTriggerPCSCFRestoration(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
 
 	var input models.TriggerRequest
 
@@ -840,7 +777,6 @@ func OnTriggerPCSCFRestoration(ctx sbi.RequestContext, handler interface{}) (res
 	} else {
 		apierr = sbi.ApiErrFromProb(prob)
 	}
-	
 
 	if apierr != nil {
 		resp.SetApiError(apierr)
@@ -850,16 +786,15 @@ func OnTriggerPCSCFRestoration(ctx sbi.RequestContext, handler interface{}) (res
 	return
 }
 
-
 //sbi producer handler for GetRegistrations
 func OnGetRegistrations(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -869,7 +804,7 @@ func OnGetRegistrations(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	if len(registrationDatasetNamesStr) == 0 {
 		//registrationDatasetNames is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "registrationDatasetNames is required",
 		}))
@@ -879,34 +814,31 @@ func OnGetRegistrations(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	var registrationDatasetNamesErr error
 	if registrationDatasetNames, registrationDatasetNamesErr = utils.String2ArrayOfRegistrationDataSetName(registrationDatasetNamesStr); registrationDatasetNamesErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: registrationDatasetNamesErr.Error(), 
+			Detail: registrationDatasetNamesErr.Error(),
 		}))
 		return
 	}
-	
+
 	supportedFeatures := ctx.Param("supported-features")
 	singleNssaiStr := ctx.Param("single-nssai")
 	var singleNssai *models.Snssai
 	var singleNssaiErr error
 	if singleNssai, singleNssaiErr = utils.String2Snssai(singleNssaiStr); singleNssaiErr != nil {
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
-			Detail: singleNssaiErr.Error(), 
+			Detail: singleNssaiErr.Error(),
 		}))
 		return
 	}
-	
-	dnn := ctx.Param("dnn")
 
-	
+	dnn := ctx.Param("dnn")
 
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.RegistrationDataSets
-
 
 	successCode, result, apierr = prod.UECM_HandleGetRegistrations(ueId, registrationDatasetNames, supportedFeatures, singleNssai, dnn)
 
@@ -918,16 +850,15 @@ func OnGetRegistrations(ctx sbi.RequestContext, handler interface{}) (resp sbi.R
 	return
 }
 
-
 //sbi producer handler for GetLocationInfo
 func OnGetLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
 	prod := handler.(Producer)
-	
+
 	ueId := ctx.Param("ueId")
 	if len(ueId) == 0 {
 		//ueId is required
 		resp.SetApiError(sbi.ApiErrFromProb(&models.ProblemDetails{
-			Title: "Bad request",
+			Title:  "Bad request",
 			Status: http.StatusBadRequest,
 			Detail: "ueId is required",
 		}))
@@ -935,12 +866,9 @@ func OnGetLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	supportedFeatures := ctx.Param("supported-features")
 
-	
-
 	var apierr *sbi.ApiError
 	var successCode int32
 	var result models.LocationInfo
-
 
 	successCode, result, apierr = prod.UECM_HandleGetLocationInfo(ueId, supportedFeatures)
 
@@ -951,7 +879,6 @@ func OnGetLocationInfo(ctx sbi.RequestContext, handler interface{}) (resp sbi.Re
 	}
 	return
 }
-
 
 type Producer interface {
 	UECM_HandleGet3GppRegistration(ueId string, supportedFeatures string) (successCode int32, result models.Amf3GppAccessRegistration, err *sbi.ApiError)
@@ -979,5 +906,3 @@ type Producer interface {
 	UECM_HandleGetRegistrations(ueId string, registrationDatasetNames []models.RegistrationDataSetName, supportedFeatures string, singleNssai *models.Snssai, dnn string) (successCode int32, result models.RegistrationDataSets, err *sbi.ApiError)
 	UECM_HandleGetLocationInfo(ueId string, supportedFeatures string) (successCode int32, result models.LocationInfo, err *sbi.ApiError)
 }
-
-
