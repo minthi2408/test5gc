@@ -25,6 +25,24 @@ func String2ArrayOfstring(v string) (list []string, err error) {
 	return
 }
 
+func String2ArrayOfRegistrationDataSetName(v string) (list []models.RegistrationDataSetName, err error) {
+	//TODO
+	return
+}
+func String2PlmnId(s string) (v *models.PlmnId, err error) {
+	//TODO
+	return
+}
+func String2HssAuthTypeInUri(s string) (v *models.HssAuthTypeInUri, err error) {
+	//TODO
+	return
+}
+
+func String2UpdateUeIdParameter(s string) (v *models.UpdateUeIdParameter, err error) {
+	//TODO
+	return
+}
+
 func String2UeContextInfoClass(s string) (v *models.UeContextInfoClass, err error) {
 	//TODO
 	return

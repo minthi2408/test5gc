@@ -36,6 +36,13 @@ import (
 	smfee "etri5gc/sbi/smf/ee"
 	smfnidd "etri5gc/sbi/smf/nidd"
 	smfpdu "etri5gc/sbi/smf/pdu"
+	udmee "etri5gc/sbi/udm/ee"
+	udmmt "etri5gc/sbi/udm/mt"
+	udmniddau "etri5gc/sbi/udm/niddau"
+	udmpp "etri5gc/sbi/udm/pp"
+	udmsdm "etri5gc/sbi/udm/sdm"
+	udmueau "etri5gc/sbi/udm/ueau"
+	udmuecm "etri5gc/sbi/udm/uecm"
 	udrdr "etri5gc/sbi/udr/dr"
 	udrgroup "etri5gc/sbi/udr/group"
 
@@ -157,4 +164,14 @@ func check_amf_compile() {
 	pcfbtdpc.CreateBDTPolicy(nil, body8)
 	body9 := models.AppSessionContext{}
 	pcfpa.PostAppSessions(nil, body9)
+
+	udmee.DeleteEeSubscription(nil, "", "")
+	udmmt.QueryUeInfo(nil, "", nil, "")
+	udmpp.Delete5GVNGroup(nil, "", "", "")
+	udmsdm.GetAmData(nil, "", "", nil, "", "")
+	body10 := models.AuthEvent{}
+	udmueau.ConfirmAuth(nil, "", body10)
+	udmuecm.Get3GppRegistration(nil, "", "")
+	body11 := models.AuthorizationInfo{}
+	udmniddau.AuthorizeNiddData(nil, "", body11)
 }
