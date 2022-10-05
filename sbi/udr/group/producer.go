@@ -15,69 +15,12 @@ import (
 	"etri5gc/sbi"
 	"etri5gc/sbi/models"
 	"etri5gc/sbi/utils"
-	"fmt"
 	"net/http"
 )
 
-/*
-@param client sbi.ConsumerClient - for encoding request/encoding response and sending request to remote agent.
-@param nfType Type of NF
-@param subscriberId Identifier of the subscriber
-@return map[string]string,
-*/
-func GetNfGroupIDs(client sbi.ConsumerClient, nfType []models.NFType, subscriberId string) (result map[string]string, err error) {
-
-	nfTypeStr := utils.Param2String(nfType)
-	if len(nfTypeStr) == 0 {
-		err = fmt.Errorf("nfType is required")
-		return
-	}
-	if len(subscriberId) == 0 {
-		err = fmt.Errorf("subscriberId is required")
-		return
-	}
-	//create a request
-	req := sbi.DefaultRequest()
-	req.Method = http.MethodGet
-
-	req.Path = fmt.Sprintf("%s/nf-group-ids", ServicePath)
-	req.QueryParams.Add("nf-type", nfTypeStr)
-
-	req.QueryParams.Add("subscriberId", subscriberId)
-
-	req.HeaderParams["Accept"] = "application/json, application/problem+json"
-	//send the request
-	var resp *sbi.Response
-	if resp, err = client.Send(req); err != nil {
-		return
-	}
-
-	//handle the response
-	if resp.StatusCode >= 300 {
-		if resp.StatusCode == 404 {
-			resp.Body = &models.ProblemDetails{}
-		}
-		if resp.Body != nil {
-			if err = client.DecodeResponse(resp); err == nil {
-				err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
-			}
-			return
-		} else {
-			err = fmt.Errorf("%d is unknown to GetNfGroupIDs", resp.StatusCode)
-			return
-		}
-	}
-
-	resp.Body = &result
-	if err = client.DecodeResponse(resp); err == nil {
-		err = sbi.NewApiError(resp.StatusCode, resp.Status, resp.Body)
-	}
-	return
-}
-
 //sbi producer handler for GetNfGroupIDs
 func OnGetNfGroupIDs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
-	prod := handler.(NFGroupIDsDocumentApiHandler)
+	prod := handler.(Producer)
 
 	nfTypeStr := ctx.Param("nf-type")
 	if len(nfTypeStr) == 0 {
@@ -120,11 +63,11 @@ func OnGetNfGroupIDs(ctx sbi.RequestContext, handler interface{}) (resp sbi.Resp
 	if apierr != nil {
 		resp.SetApiError(apierr)
 	} else {
-		resp.SetBody(int(successCode), result)
+		resp.SetBody(int(successCode), &result)
 	}
 	return
 }
 
-type NFGroupIDsDocumentApiHandler interface {
+type Producer interface {
 	GROUP_HandleGetNfGroupIDs(nfType []models.NFType, subscriberId string) (successCode int32, result map[string]string, err *sbi.ApiError)
 }
