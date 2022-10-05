@@ -11,4 +11,4 @@ API version: 1.1.6
 
 package models
 
-type Ipv6Addr string 
+type Ipv6Addr string

@@ -1,7 +1,7 @@
 /*
 Namf_Communication
 
-AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Communication Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.8
 */
@@ -12,106 +12,106 @@ API version: 1.1.8
 package comm
 
 import (
-	"net/http"
 	"etri5gc/sbi"
+	"net/http"
 )
 
 var Routes = sbi.SbiRoutes{
 
 	{
-		Label: "AMFStatusChangeSubscribeModfy",
-		Method: http.MethodPut,
-		Path: "/namf-comm/v1/subscriptions/{subscriptionId}",
+		Label:   "AMFStatusChangeSubscribeModfy",
+		Method:  http.MethodPut,
+		Path:    "/namf-comm/v1/subscriptions/{subscriptionId}",
 		Handler: OnAMFStatusChangeSubscribeModfy,
 	},
 	{
-		Label: "AMFStatusChangeUnSubscribe",
-		Method: http.MethodDelete,
-		Path: "/namf-comm/v1/subscriptions/{subscriptionId}",
+		Label:   "AMFStatusChangeUnSubscribe",
+		Method:  http.MethodDelete,
+		Path:    "/namf-comm/v1/subscriptions/{subscriptionId}",
 		Handler: OnAMFStatusChangeUnSubscribe,
 	},
 	{
-		Label: "CancelRelocateUEContext",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/cancel-relocate",
+		Label:   "CancelRelocateUEContext",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/cancel-relocate",
 		Handler: OnCancelRelocateUEContext,
 	},
 	{
-		Label: "CreateUEContext",
-		Method: http.MethodPut,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}",
+		Label:   "CreateUEContext",
+		Method:  http.MethodPut,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}",
 		Handler: OnCreateUEContext,
 	},
 	{
-		Label: "EBIAssignment",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/assign-ebi",
+		Label:   "EBIAssignment",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/assign-ebi",
 		Handler: OnEBIAssignment,
 	},
 	{
-		Label: "RegistrationStatusUpdate",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/transfer-update",
+		Label:   "RegistrationStatusUpdate",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/transfer-update",
 		Handler: OnRegistrationStatusUpdate,
 	},
 	{
-		Label: "ReleaseUEContext",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/release",
+		Label:   "ReleaseUEContext",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/release",
 		Handler: OnReleaseUEContext,
 	},
 	{
-		Label: "RelocateUEContext",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/relocate",
+		Label:   "RelocateUEContext",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/relocate",
 		Handler: OnRelocateUEContext,
 	},
 	{
-		Label: "UEContextTransfer",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/transfer",
+		Label:   "UEContextTransfer",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/transfer",
 		Handler: OnUEContextTransfer,
 	},
 	{
-		Label: "N1N2MessageUnSubscribe",
-		Method: http.MethodDelete,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages/subscriptions/{subscriptionId}",
+		Label:   "N1N2MessageUnSubscribe",
+		Method:  http.MethodDelete,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages/subscriptions/{subscriptionId}",
 		Handler: OnN1N2MessageUnSubscribe,
 	},
 	{
-		Label: "N1N2MessageTransfer",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages",
+		Label:   "N1N2MessageTransfer",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages",
 		Handler: OnN1N2MessageTransfer,
 	},
 	{
-		Label: "N1N2MessageSubscribe",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages/subscriptions",
+		Label:   "N1N2MessageSubscribe",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/ue-contexts/{ueContextId}/n1-n2-messages/subscriptions",
 		Handler: OnN1N2MessageSubscribe,
 	},
 	{
-		Label: "NonUeN2InfoUnSubscribe",
-		Method: http.MethodDelete,
-		Path: "/namf-comm/v1/non-ue-n2-messages/subscriptions/{n2NotifySubscriptionId}",
+		Label:   "NonUeN2InfoUnSubscribe",
+		Method:  http.MethodDelete,
+		Path:    "/namf-comm/v1/non-ue-n2-messages/subscriptions/{n2NotifySubscriptionId}",
 		Handler: OnNonUeN2InfoUnSubscribe,
 	},
 	{
-		Label: "NonUeN2MessageTransfer",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/non-ue-n2-messages/transfer",
+		Label:   "NonUeN2MessageTransfer",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/non-ue-n2-messages/transfer",
 		Handler: OnNonUeN2MessageTransfer,
 	},
 	{
-		Label: "NonUeN2InfoSubscribe",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/non-ue-n2-messages/subscriptions",
+		Label:   "NonUeN2InfoSubscribe",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/non-ue-n2-messages/subscriptions",
 		Handler: OnNonUeN2InfoSubscribe,
 	},
 	{
-		Label: "AMFStatusChangeSubscribe",
-		Method: http.MethodPost,
-		Path: "/namf-comm/v1/subscriptions",
+		Label:   "AMFStatusChangeSubscribe",
+		Method:  http.MethodPost,
+		Path:    "/namf-comm/v1/subscriptions",
 		Handler: OnAMFStatusChangeSubscribe,
 	},
 }

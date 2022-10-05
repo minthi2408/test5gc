@@ -1,7 +1,7 @@
 /*
 Namf_Location
 
-AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Location Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -10,29 +10,30 @@ API version: 1.1.7
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package loc
+
 import (
-	"net/http"
 	"etri5gc/sbi"
+	"net/http"
 )
 
 var Routes = sbi.SbiRoutes{
 
 	{
-		Label: "CancelLocation",
-		Method: http.MethodPost,
-		Path: "/namf-loc/v1/{ueContextId}/cancel-pos-info",
+		Label:   "CancelLocation",
+		Method:  http.MethodPost,
+		Path:    "/namf-loc/v1/{ueContextId}/cancel-pos-info",
 		Handler: OnCancelLocation,
 	},
 	{
-		Label: "ProvideLocationInfo",
-		Method: http.MethodPost,
-		Path: "/namf-loc/v1/{ueContextId}/provide-loc-info",
+		Label:   "ProvideLocationInfo",
+		Method:  http.MethodPost,
+		Path:    "/namf-loc/v1/{ueContextId}/provide-loc-info",
 		Handler: OnProvideLocationInfo,
 	},
 	{
-		Label: "ProvidePositioningInfo",
-		Method: http.MethodPost,
-		Path: "/namf-loc/v1/{ueContextId}/provide-pos-info",
+		Label:   "ProvidePositioningInfo",
+		Method:  http.MethodPost,
+		Path:    "/namf-loc/v1/{ueContextId}/provide-pos-info",
 		Handler: OnProvidePositioningInfo,
 	},
 }

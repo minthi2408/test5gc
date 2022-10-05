@@ -1,7 +1,7 @@
 /*
 Namf_EventExposure
 
-AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved. 
+AMF Event Exposure Service © 2022, 3GPP Organizational Partners (ARIB, ATIS, CCSA, ETSI, TSDSI, TTA, TTC). All rights reserved.
 
 API version: 1.1.7
 */
@@ -10,29 +10,30 @@ API version: 1.1.7
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package ee
+
 import (
-	"net/http"
 	"etri5gc/sbi"
+	"net/http"
 )
 
 var Routes = sbi.SbiRoutes{
 
 	{
-		Label: "DeleteSubscription",
-		Method: http.MethodDelete,
-		Path: "/namf-evts/v1/subscriptions/{subscriptionId}",
+		Label:   "DeleteSubscription",
+		Method:  http.MethodDelete,
+		Path:    "/namf-evts/v1/subscriptions/{subscriptionId}",
 		Handler: OnDeleteSubscription,
 	},
 	{
-		Label: "ModifySubscription",
-		Method: http.MethodPatch,
-		Path: "/namf-evts/v1/subscriptions/{subscriptionId}",
+		Label:   "ModifySubscription",
+		Method:  http.MethodPatch,
+		Path:    "/namf-evts/v1/subscriptions/{subscriptionId}",
 		Handler: OnModifySubscription,
 	},
 	{
-		Label: "CreateSubscription",
-		Method: http.MethodPost,
-		Path: "/namf-evts/v1/subscriptions",
+		Label:   "CreateSubscription",
+		Method:  http.MethodPost,
+		Path:    "/namf-evts/v1/subscriptions",
 		Handler: OnCreateSubscription,
 	},
 }

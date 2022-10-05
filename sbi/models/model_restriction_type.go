@@ -10,4 +10,3 @@ API version: 1.1.6
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
-
