@@ -13,7 +13,7 @@ import (
 
 	"etri5gc/fabric"
 	"etri5gc/nfs/amf/config"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	"github.com/free5gc/util/idgenerator"
 	"github.com/google/uuid"
@@ -279,7 +279,7 @@ func (amf *AmfContext) NewAmfUeByReq(supi string, dat *models.UeContextCreateDat
 	// }
 	ue.HandoverNotifyUri = dat.N2NotifyUri
 
-	amf.AmfRanFindByRanID(*dat.TargetId.RanNodeId)
+	amf.AmfRanFindByRanID(dat.TargetId.RanNodeId)
 
 	/*TungTQ comment - supportedTAI is not used, redundant?
 	supportedTAI := NewSupportedTAI()

@@ -4,17 +4,16 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
-	"etri5gc/openapi"
+	"etri5gc/sbi"
 	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
 
-	"etri5gc/openapi/consumers/amf"
-	"etri5gc/openapi/consumers/ausf"
-	openapi_http "etri5gc/openapi/httpdp"
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/nasConvert"
+	ausf_uea "etri5gc/sbi/ausf/uea"
+	sbi_http "etri5gc/sbi/httpdp"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/nasConvert"
 
 	"github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasMessage"
@@ -30,7 +29,7 @@ type AusfInfo struct {
 	AusfId                            string
 	AusfUri                           string
 	RoutingIndicator                  string
-	AuthenticationCtx                 *models.UeAuthenticationCtx
+	AuthenticationCtx                 *models.UEAuthenticationCtx
 	AuthFailureCauseSynchFailureTimes int
 	IdentityRequestSendTimes          int
 	ABBA                              []uint8
@@ -63,7 +62,7 @@ type ausfClient struct {
 	ue       *AmfUe
 	info     AusfInfo
 	seccon   SecContext
-	consumer openapi.ConsumerClient
+	consumer sbi.ConsumerClient
 }
 
 func (c *ausfClient) Info() *AusfInfo {
@@ -159,7 +158,7 @@ func (c *ausfClient) DerivateAnKey(anType models.AccessType) {
 	P0 := make([]byte, 4)
 	binary.BigEndian.PutUint32(P0, c.seccon.ULCount.Get())
 	L0 := ueauth.KDFLen(P0)
-	if anType == models.AccessType_NON_3_GPP_ACCESS {
+	if anType == models.ACCESSTYPE_NON_3_GPP_ACCESS {
 		accessType = security.AccessTypeNon3GPP
 	}
 	P1 := []byte{accessType}
@@ -208,9 +207,9 @@ func (c *ausfClient) DerivateNH(syncInput []byte) {
 func (c *ausfClient) UpdateSecurityContext(anType models.AccessType) {
 	c.DerivateAnKey(anType)
 	switch anType {
-	case models.AccessType__3_GPP_ACCESS:
+	case models.ACCESSTYPE__3_GPP_ACCESS:
 		c.DerivateNH(c.seccon.Kgnb)
-	case models.AccessType_NON_3_GPP_ACCESS:
+	case models.ACCESSTYPE_NON_3_GPP_ACCESS:
 		c.DerivateNH(c.seccon.Kn3iwf)
 	}
 	c.seccon.NCC = 1
@@ -278,10 +277,10 @@ func (c *ausfClient) clear() {
 // build a query to select an AUSF producer
 func (c *ausfClient) Select() {
 	//TODO: forward Forwarder to the constructor
-	c.consumer = openapi_http.NewClient(nil)
+	c.consumer = sbi_http.NewClient(nil)
 }
 
-func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UeAuthenticationCtx, *models.ProblemDetails, error) {
+func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.ResynchronizationInfo) (*models.UEAuthenticationCtx, *models.ProblemDetails, error) {
 
 	//1. Prepare parameters
 	servedGuami := c.ue.amf.ServedGuami()
@@ -294,11 +293,11 @@ func (c *ausfClient) SendUEAuthRequest(resynchronizationInfo *models.Resynchroni
 		authInfo.ServingNetworkName = fmt.Sprintf("5G:mnc%03d.mcc%s.3gppnetwork.org", mnc, servedGuami.PlmnId.Mcc)
 	}
 	if resynchronizationInfo != nil {
-		authInfo.ResynchronizationInfo = resynchronizationInfo
+		authInfo.ResynchronizationInfo = *resynchronizationInfo
 	}
-	if authCtx, err := ausf.UeAuthPost(c.consumer, authInfo); err == nil {
+	if authCtx, err := ausf_uea.UeAuthenticationsPost(c.consumer, authInfo); err == nil {
 		return &authCtx, nil, nil
-	} else if errEx, ok := err.(*openapi.ApiError); ok {
+	} else if errEx, ok := err.(*sbi.ApiError); ok {
 		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
@@ -312,9 +311,9 @@ func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 	//it seems it is not neccessary to extract the path for confirmation
 	//path := c.info.AuthenticationCtx.Links["5g-aka"].Href)
 
-	if result, err := ausf.UeAuthAuthCtxId5gAkaConfirmationPut(c.consumer, c.ue.Suci, resStar); err == nil {
+	if result, err := ausf_uea.UeAuthenticationsAuthCtxId5gAkaConfirmationPut(c.consumer, c.ue.Suci, &models.ConfirmationData{ResStar: &resStar}); err == nil {
 		return &result, nil, nil
-	} else if errEx, ok := err.(*openapi.ApiError); ok {
+	} else if errEx, ok := err.(*sbi.ApiError); ok {
 		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
@@ -323,14 +322,14 @@ func (c *ausfClient) SendAuth5gAkaConfirmRequest(resStar string) (
 
 func (c *ausfClient) SendEapAuthConfirmRequest(eapMsg nasType.EAPMessage) (*models.EapSession, *models.ProblemDetails, error) {
 	//confirmUri, err := url.Parse(ue.GetAusfInfo().AuthenticationCtx.Links["eap-session"].Href)
-
+	payload := base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage())
 	eapin := &models.EapSession{
-		EapPayload: base64.StdEncoding.EncodeToString(eapMsg.GetEAPMessage()),
+		EapPayload: &payload,
 	}
 
-	if eapout, err := ausf.EapAuthMethod(c.consumer, c.ue.Suci, eapin); err == nil {
+	if eapout, err := ausf_uea.EapAuthMethod(c.consumer, c.ue.Suci, eapin); err == nil {
 		return &eapout, nil, nil
-	} else if errEx, ok := err.(*openapi.ApiError); ok {
+	} else if errEx, ok := err.(*sbi.ApiError); ok {
 		return nil, errEx.Data().(*models.ProblemDetails), err
 	} else {
 		return nil, nil, err
@@ -518,9 +517,9 @@ func (c *ausfClient) NasDecode(accessType models.AccessType, payload []byte) (*n
 }
 
 func GetBearerType(accessType models.AccessType) uint8 {
-	if accessType == models.AccessType__3_GPP_ACCESS {
+	if accessType == models.ACCESSTYPE__3_GPP_ACCESS {
 		return security.Bearer3GPP
-	} else if accessType == models.AccessType_NON_3_GPP_ACCESS {
+	} else if accessType == models.ACCESSTYPE_NON_3_GPP_ACCESS {
 		return security.BearerNon3GPP
 	} else {
 		return security.OnlyOneBearer
@@ -558,7 +557,7 @@ func (c *ausfClient) BuildAuthRequest(req *nasMessage.AuthenticationRequest) err
 	req.ABBA.SetABBAContents(c.info.ABBA)
 
 	switch c.info.AuthenticationCtx.AuthType {
-	case models.AuthType__5_G_AKA:
+	case models.AUTHTYPE__5_G_AKA:
 		var tmpArray [16]byte
 		var av5gAka models.Av5gAka
 
@@ -585,8 +584,8 @@ func (c *ausfClient) BuildAuthRequest(req *nasMessage.AuthenticationRequest) err
 		req.AuthenticationParameterAUTN.SetLen(uint8(len(autn)))
 		copy(tmpArray[:], autn[0:16])
 		req.AuthenticationParameterAUTN.SetAUTN(tmpArray)
-	case models.AuthType_EAP_AKA_PRIME:
-		eapMsg := c.info.AuthenticationCtx.Var5gAuthData.(string)
+	case models.AUTHTYPE_EAP_AKA_PRIME:
+		eapMsg := c.info.AuthenticationCtx.Var5gAuthData.Autn //TungTQ
 		rawEapMsg, err := base64.StdEncoding.DecodeString(eapMsg)
 		if err != nil {
 			return err
@@ -651,7 +650,7 @@ func (c *ausfClient) BuildSecModeCmd(cmd *nasMessage.SecurityModeCommand, eapSuc
 			cmd.ABBA.SetABBAContents(c.info.ABBA)
 		}
 	}
-	amf.N1N2MessageUnSubscribe(nil, "", "")                   //TODO: just for testing, remove later
-	amf.ProvideLocationInfo(nil, "", models.RequestLocInfo{}) //TODO: just for testing, remove later
+	//amf.N1N2MessageUnSubscribe(nil, "", "")                   //TODO: just for testing, remove later
+	//amf.ProvideLocationInfo(nil, "", models.RequestLocInfo{}) //TODO: just for testing, remove later
 	return nil
 }

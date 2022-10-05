@@ -7,31 +7,31 @@ import (
 	"strconv"
 	"time"
 
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	"github.com/free5gc/nas/security"
-	"github.com/mohae/deepcopy"
 )
 
 func CompareUserLocation(loc1 models.UserLocation, loc2 models.UserLocation) bool {
-	if loc1.EutraLocation != nil && loc2.EutraLocation != nil {
-		eutraloc1 := deepcopy.Copy(*loc1.EutraLocation).(models.EutraLocation)
-		eutraloc2 := deepcopy.Copy(*loc2.EutraLocation).(models.EutraLocation)
-		eutraloc1.UeLocationTimestamp = nil
-		eutraloc2.UeLocationTimestamp = nil
-		return reflect.DeepEqual(eutraloc1, eutraloc2)
-	}
-	if loc1.N3gaLocation != nil && loc2.N3gaLocation != nil {
-		return reflect.DeepEqual(loc1, loc2)
-	}
-	if loc1.NrLocation != nil && loc2.NrLocation != nil {
-		nrloc1 := deepcopy.Copy(*loc1.NrLocation).(models.NrLocation)
-		nrloc2 := deepcopy.Copy(*loc2.NrLocation).(models.NrLocation)
-		nrloc1.UeLocationTimestamp = nil
-		nrloc2.UeLocationTimestamp = nil
-		return reflect.DeepEqual(nrloc1, nrloc2)
-	}
-
+	/*
+		if loc1.EutraLocation != nil && loc2.EutraLocation != nil {
+			eutraloc1 := deepcopy.Copy(*loc1.EutraLocation).(models.EutraLocation)
+			eutraloc2 := deepcopy.Copy(*loc2.EutraLocation).(models.EutraLocation)
+			eutraloc1.UeLocationTimestamp = nil
+			eutraloc2.UeLocationTimestamp = nil
+			return reflect.DeepEqual(eutraloc1, eutraloc2)
+		}
+		if loc1.N3gaLocation != nil && loc2.N3gaLocation != nil {
+			return reflect.DeepEqual(loc1, loc2)
+		}
+		if loc1.NrLocation != nil && loc2.NrLocation != nil {
+			nrloc1 := deepcopy.Copy(*loc1.NrLocation).(models.NrLocation)
+			nrloc2 := deepcopy.Copy(*loc2.NrLocation).(models.NrLocation)
+			nrloc1.UeLocationTimestamp = nil
+			nrloc2.UeLocationTimestamp = nil
+			return reflect.DeepEqual(nrloc1, nrloc2)
+		}
+	*/
 	return false
 }
 

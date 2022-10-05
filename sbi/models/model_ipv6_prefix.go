@@ -11,5 +11,4 @@ API version: 1.1.8
 
 package models
 
-type Ipv6Prefix struct {
-}
+type Ipv6Prefix string

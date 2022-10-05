@@ -7,8 +7,8 @@ import (
 
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/ngapConvert"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/ngapConvert"
 
 	"github.com/free5gc/aper"
 	libngap "github.com/free5gc/ngap"
@@ -115,7 +115,8 @@ func (s *ngapSender) buildNGSetupResponse() ([]byte, error) {
 	servedGUAMIList := ie.Value.ServedGUAMIList
 	for _, guami := range amf.ServedGuamiList() {
 		servedGUAMIItem := ngapType.ServedGUAMIItem{}
-		servedGUAMIItem.GUAMI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*guami.PlmnId)
+		//		servedGUAMIItem.GUAMI.PLMNIdentity =
+		//		ngapConvert.PlmnIdToNgap(guami.PlmnId)//tungtq
 		regionId, setId, prtId := ngapConvert.AmfIdToNgap(guami.AmfId)
 		servedGUAMIItem.GUAMI.AMFRegionID.Value = regionId
 		servedGUAMIItem.GUAMI.AMFSetID.Value = setId
@@ -377,7 +378,7 @@ func (s *ngapSender) buildDownlinkNasTransport(ue *context.RanUe, nasPdu []byte,
 
 	// RAN Paging Priority (optional)
 	// Mobility Restriction List (optional)
-	if ue.Ran().AnType() == models.AccessType__3_GPP_ACCESS && mobilityRestrictionList != nil {
+	if ue.Ran().AnType() == models.ACCESSTYPE__3_GPP_ACCESS && mobilityRestrictionList != nil {
 		amfUe := ue.AmfUe
 		if amfUe == nil {
 			return nil, fmt.Errorf("amfUe is nil")
@@ -987,14 +988,14 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	ie.Value.GUAMI = new(ngapType.GUAMI)
 
 	guami := ie.Value.GUAMI
-	plmnID := &guami.PLMNIdentity
+	//plmnID := &guami.PLMNIdentity
 	amfRegionID := &guami.AMFRegionID
 	amfSetID := &guami.AMFSetID
 	amfPtrID := &guami.AMFPointer
 
 	servedGuami := amf.ServedGuamiList()[0]
 
-	*plmnID = ngapConvert.PlmnIdToNgap(*servedGuami.PlmnId)
+	//*plmnID = ngapConvert.PlmnIdToNgap(*servedGuami.PlmnId) //tungtq
 	amfRegionID.Value, amfSetID.Value, amfPtrID.Value = ngapConvert.AmfIdToNgap(servedGuami.AmfId)
 
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
@@ -1016,6 +1017,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	ie.Value.Present = ngapType.InitialContextSetupRequestIEsPresentAllowedNSSAI
 	ie.Value.AllowedNSSAI = new(ngapType.AllowedNSSAI)
 
+	/* tungtq
 	allowedNSSAI := ie.Value.AllowedNSSAI
 
 	for _, allowedSnssai := range amfUe.GetNssfInfo().AllowedNssai[anType] {
@@ -1024,6 +1026,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		allowedNSSAIItem.SNSSAI = ngapSnssai
 		allowedNSSAI.List = append(allowedNSSAI.List, allowedNSSAIItem)
 	}
+	*/
 
 	initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 
@@ -1073,9 +1076,9 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 
 	securityKey := ie.Value.SecurityKey
 	switch ranUe.Ran().AnType() {
-	case models.AccessType__3_GPP_ACCESS:
+	case models.ACCESSTYPE__3_GPP_ACCESS:
 		securityKey.Value = ngapConvert.ByteToBitString(secinfo.Kgnb, 256)
-	case models.AccessType_NON_3_GPP_ACCESS:
+	case models.ACCESSTYPE_NON_3_GPP_ACCESS:
 		securityKey.Value = ngapConvert.ByteToBitString(secinfo.Kn3iwf, 256)
 	}
 
@@ -1096,7 +1099,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 	}
 
 	// Mobility Restriction List (optional)
-	if anType == models.AccessType__3_GPP_ACCESS {
+	if anType == models.ACCESSTYPE__3_GPP_ACCESS {
 		ie = ngapType.InitialContextSetupRequestIEs{}
 		ie.Id.Value = ngapType.ProtocolIEIDMobilityRestrictionList
 		ie.Criticality.Value = ngapType.CriticalityPresentIgnore
@@ -1123,6 +1126,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 		ie.Value.UERadioCapability.Value = uecapa
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
+	/* tungtq
 	pcfinfo := amfUe.PcfClient().Info()
 	// Index to RAT/Frequency Selection Priority (optional)
 	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
@@ -1136,7 +1140,7 @@ func (s *ngapSender) buildInitialContextSetupRequest(
 
 		initialContextSetupRequestIEs.List = append(initialContextSetupRequestIEs.List, ie)
 	}
-
+	*/
 	// Masked IMEISV (optional)
 	// TS 38.413 9.3.1.54; TS 23.003 6.2; TS 23.501 5.9.3
 	// last 4 digits of the SNR masked by setting the corresponding bits to 1.
@@ -1301,6 +1305,7 @@ func (s *ngapSender) buildUEContextModificationRequest(
 	// Security Key (optional)
 
 	// Index to RAT/Frequency Selection Priority (optional)
+	/* tungtq
 	pcfinfo := amfUe.PcfClient().Info()
 	if pcfinfo.AmPolicyAssociation != nil && pcfinfo.AmPolicyAssociation.Rfsp != 0 {
 		ie = ngapType.UEContextModificationRequestIEs{}
@@ -1313,8 +1318,9 @@ func (s *ngapSender) buildUEContextModificationRequest(
 
 		uEContextModificationRequestIEs.List = append(uEContextModificationRequestIEs.List, ie)
 	}
-
+	*/
 	// UE Aggregate Maximum Bit Rate (optional)
+	/*tungtq
 	udminfo := amfUe.UdmClient().Info()
 	if udminfo.AccessAndMobilitySubscriptionData != nil &&
 		udminfo.AccessAndMobilitySubscriptionData.SubscribedUeAmbr != nil {
@@ -1331,7 +1337,7 @@ func (s *ngapSender) buildUEContextModificationRequest(
 
 		uEContextModificationRequestIEs.List = append(uEContextModificationRequestIEs.List, ie)
 	}
-
+	*/
 	// UE Security Capabilities (optional)
 
 	// Core Network Assistance Information (optional)
@@ -1737,14 +1743,14 @@ func (s *ngapSender) buildHandoverRequest(ue *context.RanUe, cause ngapType.Caus
 	ie.Value.GUAMI = new(ngapType.GUAMI)
 
 	guami := ie.Value.GUAMI
-	plmnID := &guami.PLMNIdentity
+	//plmnID := &guami.PLMNIdentity
 	amfRegionID := &guami.AMFRegionID
 	amfSetID := &guami.AMFSetID
 	amfPtrID := &guami.AMFPointer
 
 	servedGuami := amf.ServedGuamiList()[0]
 
-	*plmnID = ngapConvert.PlmnIdToNgap(*servedGuami.PlmnId)
+	//	*plmnID = ngapConvert.PlmnIdToNgap(*servedGuami.PlmnId) tungtq
 	amfRegionID.Value, amfSetID.Value, amfPtrID.Value = ngapConvert.AmfIdToNgap(servedGuami.AmfId)
 
 	handoverRequestIEs.List = append(handoverRequestIEs.List, ie)
@@ -2157,13 +2163,13 @@ func (s *ngapSender) BuildPaging(
 	ie.Criticality.Value = ngapType.CriticalityPresentIgnore
 	ie.Value.Present = ngapType.PagingIEsPresentTAIListForPaging
 	ie.Value.TAIListForPaging = new(ngapType.TAIListForPaging)
-
+	/* tungtq
 	taiListForPaging := ie.Value.TAIListForPaging
-	if ue.RegistrationArea[models.AccessType__3_GPP_ACCESS] == nil {
+	if ue.RegistrationArea[models.ACCESSTYPE__3_GPP_ACCESS] == nil {
 		err = fmt.Errorf("Registration Area of Ue[%s] is empty", ue.Supi)
 		return nil, err
 	} else {
-		for _, tai := range ue.RegistrationArea[models.AccessType__3_GPP_ACCESS] {
+		for _, tai := range ue.RegistrationArea[models.ACCESSTYPE__3_GPP_ACCESS] {
 			var tac []byte
 			taiListforPagingItem := ngapType.TAIListForPagingItem{}
 			taiListforPagingItem.TAI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*tai.PlmnId)
@@ -2175,7 +2181,7 @@ func (s *ngapSender) BuildPaging(
 			taiListForPaging.List = append(taiListForPaging.List, taiListforPagingItem)
 		}
 	}
-
+	*/
 	pagingIEs.List = append(pagingIEs.List, ie)
 
 	// Paging Priority (optional)
@@ -2235,13 +2241,16 @@ func (s *ngapSender) BuildPaging(
 				recommendedCellItem.NGRANCGI.Present = ngapType.NGRANCGIPresentNRCGI
 				recommendedCellItem.NGRANCGI.NRCGI = new(ngapType.NRCGI)
 				nrCGI := recommendedCellItem.NGRANCGI.NRCGI
-				nrCGI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*recommendedCell.NgRanCGI.NRCGI.PlmnId)
+				//nrCGI.PLMNIdentity =
+				//ngapConvert.PlmnIdToNgap(*recommendedCell.NgRanCGI.NRCGI.PlmnId)
+				//tungtq
 				nrCGI.NRCellIdentity.Value = ngapConvert.HexToBitString(recommendedCell.NgRanCGI.NRCGI.NrCellId, 36)
 			case context.NgRanCgiPresentEUTRACGI:
 				recommendedCellItem.NGRANCGI.Present = ngapType.NGRANCGIPresentEUTRACGI
 				recommendedCellItem.NGRANCGI.EUTRACGI = new(ngapType.EUTRACGI)
 				eutraCGI := recommendedCellItem.NGRANCGI.EUTRACGI
-				eutraCGI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*recommendedCell.NgRanCGI.EUTRACGI.PlmnId)
+				//eutraCGI.PLMNIdentity =
+				//ngapConvert.PlmnIdToNgap(*recommendedCell.NgRanCGI.EUTRACGI.PlmnId)//tungtq
 				eutraCGI.EUTRACellIdentity.Value =
 					ngapConvert.HexToBitString(recommendedCell.NgRanCGI.EUTRACGI.EutraCellId, 28)
 			}
@@ -2908,7 +2917,8 @@ func (s *ngapSender) buildAMFConfigurationUpdate(tNLassociationUsage ngapType.TN
 	servedGUAMIList := ie.Value.ServedGUAMIList
 	for _, guami := range amf.ServedGuamiList() {
 		servedGUAMIItem := ngapType.ServedGUAMIItem{}
-		servedGUAMIItem.GUAMI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*guami.PlmnId)
+		//servedGUAMIItem.GUAMI.PLMNIdentity =
+		//ngapConvert.PlmnIdToNgap(*guami.PlmnId)//tungtq
 		regionId, setId, prtId := ngapConvert.AmfIdToNgap(guami.AmfId)
 		servedGUAMIItem.GUAMI.AMFRegionID.Value = regionId
 		servedGUAMIItem.GUAMI.AMFSetID.Value = setId

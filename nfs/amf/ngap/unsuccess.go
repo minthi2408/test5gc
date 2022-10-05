@@ -2,7 +2,7 @@ package ngap
 
 import (
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	"github.com/free5gc/ngap/ngapType"
 )
@@ -78,7 +78,7 @@ func (h *ngapHandler) handleInitialContextSetupFailure(ran *context.AmfRan, init
 			if !ok {
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
-			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
+			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_SETUP_FAIL, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 			}

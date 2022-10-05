@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 	"net/http"
 	"strconv"
 	"time"
@@ -222,60 +222,62 @@ func (amf *AmfContext) DeleteAMFEventSub(subId string) *models.ProblemDetails {
 }
 
 func (amf *AmfContext) ModifyAMFEventSub(subId string, modreq models.ModifySubscriptionRequest) (*models.AmfUpdatedEventSubscription, *models.ProblemDetails) {
+	/*
+		if value, ok := amf.eventsubpool.Load(subId); !ok {
+			return nil, &models.ProblemDetails{
+				Status: http.StatusNotFound,
+				Cause:  "SUBSCRIPTION_NOT_FOUND",
+			}
+		} else {
+			cursub, _ := value.(*AmfContextEventSubscription)
 
-	if value, ok := amf.eventsubpool.Load(subId); !ok {
-		return nil, &models.ProblemDetails{
-			Status: http.StatusNotFound,
-			Cause:  "SUBSCRIPTION_NOT_FOUND",
-		}
-	} else {
-		cursub, _ := value.(*AmfContextEventSubscription)
-
-		if modreq.OptionItem != nil {
-			cursub.Expiry = modreq.OptionItem.Value
-		} else if modreq.SubscriptionItemInner != nil {
-			subscription := &cursub.EventSubscription
-			if !cursub.IsAnyUe && !cursub.IsGroupUe {
-				if _, ok := amf.uepool.Load(subscription.Supi); !ok {
-					//ue is not found
-					return nil, &models.ProblemDetails{
-						Status: http.StatusForbidden,
-						Cause:  "UE_NOT_SERVED_BY_AMF",
+			if modreq.OptionItem != nil {
+				cursub.Expiry = modreq.OptionItem.Value
+			} else if modreq.SubscriptionItemInner != nil {
+				subscription := &cursub.EventSubscription
+				if !cursub.IsAnyUe && !cursub.IsGroupUe {
+					if _, ok := amf.uepool.Load(subscription.Supi); !ok {
+						//ue is not found
+						return nil, &models.ProblemDetails{
+							Status: http.StatusForbidden,
+							Cause:  "UE_NOT_SERVED_BY_AMF",
+						}
 					}
 				}
+
+				op := modreq.SubscriptionItemInner.Op
+				index, err := strconv.Atoi(modreq.SubscriptionItemInner.Path[11:])
+				if err != nil {
+					return nil, &models.ProblemDetails{
+						Status: http.StatusInternalServerError,
+						Cause:  "UNSPECIFIED_NF_FAILURE",
+					}
+				}
+				lists := (*subscription.EventList)
+				eventlistLen := len(*subscription.EventList)
+				switch op {
+				case "replace":
+					event := *modreq.SubscriptionItemInner.Value
+					if index < eventlistLen {
+						(*subscription.EventList)[index] = event
+					}
+				case "remove":
+					if index < eventlistLen {
+						*subscription.EventList = append(lists[:index], lists[index+1:]...)
+					}
+				case "add":
+					event := *modreq.SubscriptionItemInner.Value
+					*subscription.EventList = append(lists, event)
+				}
 			}
 
-			op := modreq.SubscriptionItemInner.Op
-			index, err := strconv.Atoi(modreq.SubscriptionItemInner.Path[11:])
-			if err != nil {
-				return nil, &models.ProblemDetails{
-					Status: http.StatusInternalServerError,
-					Cause:  "UNSPECIFIED_NF_FAILURE",
-				}
+			upsub := &models.AmfUpdatedEventSubscription{
+				Subscription: &cursub.EventSubscription,
 			}
-			lists := (*subscription.EventList)
-			eventlistLen := len(*subscription.EventList)
-			switch op {
-			case "replace":
-				event := *modreq.SubscriptionItemInner.Value
-				if index < eventlistLen {
-					(*subscription.EventList)[index] = event
-				}
-			case "remove":
-				if index < eventlistLen {
-					*subscription.EventList = append(lists[:index], lists[index+1:]...)
-				}
-			case "add":
-				event := *modreq.SubscriptionItemInner.Value
-				*subscription.EventList = append(lists, event)
-			}
+			return upsub, nil
 		}
-
-		upsub := &models.AmfUpdatedEventSubscription{
-			Subscription: &cursub.EventSubscription,
-		}
-		return upsub, nil
-	}
+	*/
+	return nil, nil
 }
 
 func (context *AmfContext) FindEventSubscription(subscriptionID string) (*AmfContextEventSubscription, bool) {

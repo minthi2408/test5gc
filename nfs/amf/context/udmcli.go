@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 )
 
 type UdmInfo struct {
@@ -20,54 +20,55 @@ type UdmInfo struct {
 }
 
 func (info *UdmInfo) copy(ueContext *models.UeContext) {
-	if ueContext.SubUeAmbr != nil {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+	/*
+		if ueContext.SubUeAmbr != nil {
+			if info.AccessAndMobilitySubscriptionData == nil {
+				info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+			}
+			if info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
+				info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
+			}
+
+			subAmbr := info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
+			subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
+			subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
 		}
-		if info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr == nil {
-			info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr = new(models.AmbrRm)
+
+		if ueContext.SubRfsp != 0 {
+			if info.AccessAndMobilitySubscriptionData == nil {
+				info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+			}
+			info.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
 		}
 
-		subAmbr := info.AccessAndMobilitySubscriptionData.SubscribedUeAmbr
-		subAmbr.Uplink = ueContext.SubUeAmbr.Uplink
-		subAmbr.Downlink = ueContext.SubUeAmbr.Downlink
-	}
-
-	if ueContext.SubRfsp != 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		if len(ueContext.RestrictedRatList) > 0 {
+			if info.AccessAndMobilitySubscriptionData == nil {
+				info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+			}
+			info.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
 		}
-		info.AccessAndMobilitySubscriptionData.RfspIndex = ueContext.SubRfsp
-	}
 
-	if len(ueContext.RestrictedRatList) > 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		if len(ueContext.ForbiddenAreaList) > 0 {
+			if info.AccessAndMobilitySubscriptionData == nil {
+				info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+			}
+			info.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
 		}
-		info.AccessAndMobilitySubscriptionData.RatRestrictions = ueContext.RestrictedRatList
-	}
 
-	if len(ueContext.ForbiddenAreaList) > 0 {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		if ueContext.ServiceAreaRestriction != nil {
+			if info.AccessAndMobilitySubscriptionData == nil {
+				info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+			}
+			info.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
 		}
-		info.AccessAndMobilitySubscriptionData.ForbiddenAreas = ueContext.ForbiddenAreaList
-	}
-
-	if ueContext.ServiceAreaRestriction != nil {
-		if info.AccessAndMobilitySubscriptionData == nil {
-			info.AccessAndMobilitySubscriptionData = new(models.AccessAndMobilitySubscriptionData)
+		if ueContext.TraceData != nil {
+			info.TraceData = ueContext.TraceData
 		}
-		info.AccessAndMobilitySubscriptionData.ServiceAreaRestriction = ueContext.ServiceAreaRestriction
-	}
-	if ueContext.TraceData != nil {
-		info.TraceData = ueContext.TraceData
-	}
 
-	if ueContext.UdmGroupId != "" {
-		info.UdmGroupId = ueContext.UdmGroupId
-	}
-
+		if ueContext.UdmGroupId != "" {
+			info.UdmGroupId = ueContext.UdmGroupId
+		}
+	*/
 }
 
 type udmClient struct {
@@ -107,7 +108,7 @@ func (c *udmClient) SDMGetAmData() (problemDetails *models.ProblemDetails, err e
 		client := udm_sdm_client(ue)
 
 		getAmDataParamOpt := Nudm_SubscriberDataManagement.GetAmDataParamOpts{
-			PlmnId: optional.NewInterface(openapi.MarshToJsonString(ue.PlmnId)),
+			PlmnId: optional.NewInterface(sbi.MarshToJsonString(ue.PlmnId)),
 		}
 
 		data, httpResp, localErr := client.AccessAndMobilitySubscriptionDataRetrievalApi.GetAmData(
@@ -120,10 +121,10 @@ func (c *udmClient) SDMGetAmData() (problemDetails *models.ProblemDetails, err e
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -134,7 +135,7 @@ func (c *udmClient) SDMGetSmfSelectData() (problemDetails *models.ProblemDetails
 		client := udm_sdm_client(ue)
 
 		paramOpt := Nudm_SubscriberDataManagement.GetSmfSelectDataParamOpts{
-			PlmnId: optional.NewInterface(openapi.MarshToJsonString(ue.PlmnId)),
+			PlmnId: optional.NewInterface(sbi.MarshToJsonString(ue.PlmnId)),
 		}
 		data, httpResp, localErr :=
 			client.SMFSelectionSubscriptionDataRetrievalApi.GetSmfSelectData(org_context.Background(), ue.Supi, &paramOpt)
@@ -145,10 +146,10 @@ func (c *udmClient) SDMGetSmfSelectData() (problemDetails *models.ProblemDetails
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -167,10 +168,10 @@ func (c *udmClient) SDMGetUeContextInSmfData() (problemDetails *models.ProblemDe
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -195,10 +196,10 @@ func (c *udmClient) SDMSubscribe() (problemDetails *models.ProblemDetails, err e
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -209,7 +210,7 @@ func (c *udmClient) SDMGetSliceSelectionSubscriptionData() (problemDetails *mode
 		client := udm_sdm_client(ue)
 		udminfo := ue.GetUdmInfo()
 		paramOpt := Nudm_SubscriberDataManagement.GetNssaiParamOpts{
-			PlmnId: optional.NewInterface(openapi.MarshToJsonString(ue.PlmnId)),
+			PlmnId: optional.NewInterface(sbi.MarshToJsonString(ue.PlmnId)),
 		}
 		nssai, httpResp, localErr :=
 			client.SliceSelectionSubscriptionDataRetrievalApi.GetNssai(org_context.Background(), ue.Supi, &paramOpt)
@@ -240,10 +241,10 @@ func (c *udmClient) SDMGetSliceSelectionSubscriptionData() (problemDetails *mode
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 		return problemDetails, err
 	*/
@@ -262,10 +263,10 @@ func (c *udmClient) SDMUnsubscribe() (problemDetails *models.ProblemDetails, err
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -298,10 +299,10 @@ func (c *udmClient) UeCmRegistration(accessType models.AccessType, initialRegist
 				if httpResp.Status != localErr.Error() {
 					return nil, localErr
 				}
-				problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				return &problem, nil
 			} else {
-				return nil, openapi.ReportError("server no response")
+				return nil, sbi.ReportError("server no response")
 			}
 		case models.AccessType_NON_3_GPP_ACCESS:
 			registrationData := models.AmfNon3GppAccessRegistration{
@@ -319,10 +320,10 @@ func (c *udmClient) UeCmRegistration(accessType models.AccessType, initialRegist
 				if httpResp.Status != localErr.Error() {
 					return nil, localErr
 				}
-				problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				return &problem, nil
 			} else {
-				return nil, openapi.ReportError("server no response")
+				return nil, sbi.ReportError("server no response")
 			}
 		}
 	*/
@@ -349,10 +350,10 @@ func (c *udmClient) UeCmDeregistration(accessType models.AccessType) (
 				if httpResp.Status != localErr.Error() {
 					return nil, localErr
 				}
-				problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				return &problem, nil
 			} else {
-				return nil, openapi.ReportError("server no response")
+				return nil, sbi.ReportError("server no response")
 			}
 		case models.AccessType_NON_3_GPP_ACCESS:
 			modificationData := models.AmfNon3GppAccessRegistrationModification{
@@ -369,10 +370,10 @@ func (c *udmClient) UeCmDeregistration(accessType models.AccessType) (
 				if httpResp.Status != localErr.Error() {
 					return nil, localErr
 				}
-				problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				return &problem, nil
 			} else {
-				return nil, openapi.ReportError("server no response")
+				return nil, sbi.ReportError("server no response")
 			}
 		}
 	*/

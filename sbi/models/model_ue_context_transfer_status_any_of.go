@@ -11,10 +11,10 @@ API version: 1.1.8
 
 package models
 
-type UeContextTransferStatusAnyOf string
+type UeContextTransferStatus string
 
-// List of UeContextTransferStatusAnyOf
+// List of UeContextTransferStatus
 const (
-	UECONTEXTTRANSFERSTATUSANYOF_TRANSFERRED     UeContextTransferStatusAnyOf = "TRANSFERRED"
-	UECONTEXTTRANSFERSTATUSANYOF_NOT_TRANSFERRED UeContextTransferStatusAnyOf = "NOT_TRANSFERRED"
+	UECONTEXTTRANSFERSTATUS_TRANSFERRED     UeContextTransferStatus = "TRANSFERRED"
+	UECONTEXTTRANSFERSTATUS_NOT_TRANSFERRED UeContextTransferStatus = "NOT_TRANSFERRED"
 )

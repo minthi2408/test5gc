@@ -1,11 +1,9 @@
 package util
 
 import (
-	"encoding/hex"
-
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/ngapConvert"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/ngapConvert"
 
 	"github.com/free5gc/ngap/ngapType"
 )
@@ -83,74 +81,78 @@ func AppendPDUSessionResourceToReleaseListRelCmd(list *ngapType.PDUSessionResour
 
 func BuildIEMobilityRestrictionList(ue *context.AmfUe) ngapType.MobilityRestrictionList {
 	mobilityRestrictionList := ngapType.MobilityRestrictionList{}
-	mobilityRestrictionList.ServingPLMN = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-	udminfo := ue.UdmClient().Info()
-	if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.RatRestrictions) > 0 {
-		mobilityRestrictionList.RATRestrictions = new(ngapType.RATRestrictions)
-		ratRestrictions := mobilityRestrictionList.RATRestrictions
-		for _, ratType := range udminfo.AccessAndMobilitySubscriptionData.RatRestrictions {
-			item := ngapType.RATRestrictionsItem{}
-			item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-			item.RATRestrictionInformation = ngapConvert.RATRestrictionInformationToNgap(ratType)
-			ratRestrictions.List = append(ratRestrictions.List, item)
-		}
-	}
-
-	if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas) > 0 {
-		mobilityRestrictionList.ForbiddenAreaInformation = new(ngapType.ForbiddenAreaInformation)
-		forbiddenAreaInformation := mobilityRestrictionList.ForbiddenAreaInformation
-		for _, info := range udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas {
-			item := ngapType.ForbiddenAreaInformationItem{}
-			item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-			for _, tac := range info.Tacs {
-				tacBytes, err := hex.DecodeString(tac)
-				if err != nil {
-					//	logger.NgapLog.Errorf(
-					//		"[Error] DecodeString tac error: %+v", err)
-				}
-				tacNgap := ngapType.TAC{}
-				tacNgap.Value = tacBytes
-				item.ForbiddenTACs.List = append(item.ForbiddenTACs.List, tacNgap)
-			}
-			forbiddenAreaInformation.List = append(forbiddenAreaInformation.List, item)
-		}
-	}
-	pcfinfo := ue.PcfClient().Info()
-	if pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
-		mobilityRestrictionList.ServiceAreaInformation = new(ngapType.ServiceAreaInformation)
-		serviceAreaInformation := mobilityRestrictionList.ServiceAreaInformation
-
-		item := ngapType.ServiceAreaInformationItem{}
-		item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
-		var tacList []ngapType.TAC
-		for _, area := range pcfinfo.AmPolicyAssociation.ServAreaRes.Areas {
-			for _, tac := range area.Tacs {
-				tacBytes, err := hex.DecodeString(tac)
-				if err != nil {
-					//	logger.NgapLog.Errorf(
-					//		"[Error] DecodeString tac error: %+v", err)
-				}
-				tacNgap := ngapType.TAC{}
-				tacNgap.Value = tacBytes
-				tacList = append(tacList, tacNgap)
+	/*
+		mobilityRestrictionList.ServingPLMN = ngapConvert.PlmnIdToNgap(ue.PlmnId)
+		udminfo := ue.UdmClient().Info()
+		if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.RatRestrictions) > 0 {
+			mobilityRestrictionList.RATRestrictions = new(ngapType.RATRestrictions)
+			ratRestrictions := mobilityRestrictionList.RATRestrictions
+			for _, ratType := range udminfo.AccessAndMobilitySubscriptionData.RatRestrictions {
+				item := ngapType.RATRestrictionsItem{}
+				item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
+				item.RATRestrictionInformation = ngapConvert.RATRestrictionInformationToNgap(ratType)
+				ratRestrictions.List = append(ratRestrictions.List, item)
 			}
 		}
-		if pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType == models.RestrictionType_ALLOWED_AREAS {
-			item.AllowedTACs = new(ngapType.AllowedTACs)
-			item.AllowedTACs.List = append(item.AllowedTACs.List, tacList...)
-		} else {
-			item.NotAllowedTACs = new(ngapType.NotAllowedTACs)
-			item.NotAllowedTACs.List = append(item.NotAllowedTACs.List, tacList...)
+
+		if udminfo.AccessAndMobilitySubscriptionData != nil && len(udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas) > 0 {
+			mobilityRestrictionList.ForbiddenAreaInformation = new(ngapType.ForbiddenAreaInformation)
+			forbiddenAreaInformation := mobilityRestrictionList.ForbiddenAreaInformation
+			for _, info := range udminfo.AccessAndMobilitySubscriptionData.ForbiddenAreas {
+				item := ngapType.ForbiddenAreaInformationItem{}
+				item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
+				for _, tac := range info.Tacs {
+					tacBytes, err := hex.DecodeString(tac)
+					if err != nil {
+						//	logger.NgapLog.Errorf(
+						//		"[Error] DecodeString tac error: %+v", err)
+					}
+					tacNgap := ngapType.TAC{}
+					tacNgap.Value = tacBytes
+					item.ForbiddenTACs.List = append(item.ForbiddenTACs.List, tacNgap)
+				}
+				forbiddenAreaInformation.List = append(forbiddenAreaInformation.List, item)
+			}
 		}
-		serviceAreaInformation.List = append(serviceAreaInformation.List, item)
-	}
+		pcfinfo := ue.PcfClient().Info()
+		if pcfinfo.AmPolicyAssociation.ServAreaRes != nil {
+			mobilityRestrictionList.ServiceAreaInformation = new(ngapType.ServiceAreaInformation)
+			serviceAreaInformation := mobilityRestrictionList.ServiceAreaInformation
+
+			item := ngapType.ServiceAreaInformationItem{}
+			item.PLMNIdentity = ngapConvert.PlmnIdToNgap(ue.PlmnId)
+			var tacList []ngapType.TAC
+			for _, area := range pcfinfo.AmPolicyAssociation.ServAreaRes.Areas {
+				for _, tac := range area.Tacs {
+					tacBytes, err := hex.DecodeString(tac)
+					if err != nil {
+						//	logger.NgapLog.Errorf(
+						//		"[Error] DecodeString tac error: %+v", err)
+					}
+					tacNgap := ngapType.TAC{}
+					tacNgap.Value = tacBytes
+					tacList = append(tacList, tacNgap)
+				}
+			}
+			if pcfinfo.AmPolicyAssociation.ServAreaRes.RestrictionType == models.RestrictionType_ALLOWED_AREAS {
+				item.AllowedTACs = new(ngapType.AllowedTACs)
+				item.AllowedTACs.List = append(item.AllowedTACs.List, tacList...)
+			} else {
+				item.NotAllowedTACs = new(ngapType.NotAllowedTACs)
+				item.NotAllowedTACs.List = append(item.NotAllowedTACs.List, tacList...)
+			}
+			serviceAreaInformation.List = append(serviceAreaInformation.List, item)
+		}
+	*/
 	return mobilityRestrictionList
+
 }
 
 func BuildUnavailableGUAMIList(guamiList []models.Guami) (unavailableGUAMIList ngapType.UnavailableGUAMIList) {
 	for _, guami := range guamiList {
 		item := ngapType.UnavailableGUAMIItem{}
-		item.GUAMI.PLMNIdentity = ngapConvert.PlmnIdToNgap(*guami.PlmnId)
+		//item.GUAMI.PLMNIdentity = ngapConvert.PlmnIdToNgap(guami.PlmnId)
+		////TungTQ
 		regionId, setId, ptrId := ngapConvert.AmfIdToNgap(guami.AmfId)
 		item.GUAMI.AMFRegionID.Value = regionId
 		item.GUAMI.AMFSetID.Value = setId

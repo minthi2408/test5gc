@@ -2,8 +2,8 @@ package ngap
 
 import (
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/ngapConvert"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/ngapConvert"
 
 	"github.com/free5gc/ngap/ngapType"
 )
@@ -179,13 +179,13 @@ func (h *ngapHandler) handleUEContextReleaseComplete(ran *context.AmfRan, uECont
 				recommendedCell.NgRanCGI.Present = context.NgRanCgiPresentNRCGI
 				recommendedCell.NgRanCGI.NRCGI = new(models.Ncgi)
 				plmnID := ngapConvert.PlmnIdToModels(item.NGRANCGI.NRCGI.PLMNIdentity)
-				recommendedCell.NgRanCGI.NRCGI.PlmnId = &plmnID
+				recommendedCell.NgRanCGI.NRCGI.PlmnId = plmnID
 				recommendedCell.NgRanCGI.NRCGI.NrCellId = ngapConvert.BitStringToHex(&item.NGRANCGI.NRCGI.NRCellIdentity.Value)
 			case ngapType.NGRANCGIPresentEUTRACGI:
 				recommendedCell.NgRanCGI.Present = context.NgRanCgiPresentEUTRACGI
 				recommendedCell.NgRanCGI.EUTRACGI = new(models.Ecgi)
 				plmnID := ngapConvert.PlmnIdToModels(item.NGRANCGI.EUTRACGI.PLMNIdentity)
-				recommendedCell.NgRanCGI.EUTRACGI.PlmnId = &plmnID
+				recommendedCell.NgRanCGI.EUTRACGI.PlmnId = plmnID
 				recommendedCell.NgRanCGI.EUTRACGI.EutraCellId = ngapConvert.BitStringToHex(
 					&item.NGRANCGI.EUTRACGI.EUTRACellIdentity.Value)
 			}
@@ -345,7 +345,7 @@ func (h *ngapHandler) handlePDUSessionResourceReleaseResponse(ran *context.AmfRa
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				continue
 			}
-			_, responseErr, problemDetail, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_REL_RSP, transfer)
+			_, responseErr, problemDetail, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_REL_RSP, transfer)
 			// TODO: error handling
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceReleaseResponse] Error: %+v", err)
@@ -422,7 +422,7 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 				if !ok {
 					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
-				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_RSP, transfer)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_SETUP_RSP, transfer)
 				if err != nil {
 					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
 				}
@@ -445,7 +445,7 @@ func (h *ngapHandler) handlePDUSessionResourceSetupResponse(ran *context.AmfRan,
 				if !ok {
 					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
-				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_SETUP_FAIL, transfer)
 				if err != nil {
 					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 				}
@@ -531,7 +531,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 				if !ok {
 					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
-				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_MOD_RSP, transfer)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_MOD_RSP, transfer)
 				if err != nil {
 					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyResponseTransfer] Error: %+v", err)
 				}
@@ -554,7 +554,7 @@ func (h *ngapHandler) handlePDUSessionResourceModifyResponse(ran *context.AmfRan
 					log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 				}
 				// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
-				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_MOD_FAIL, transfer)
+				_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_MOD_FAIL, transfer)
 				if err != nil {
 					log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceModifyUnsuccessfulTransfer] Error: %+v", err)
 				}
@@ -643,7 +643,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
 			// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
-			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_RSP, transfer)
+			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_SETUP_RSP, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupResponseTransfer] Error: %+v", err)
 			}
@@ -667,7 +667,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 				log.Errorf("SmContext[PDU Session ID:%d] not found", pduSessionID)
 			}
 			// response, _, _, err := consumer.SendUpdateSmContextN2Info(amfUe, pduSessionID,
-			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SmInfoType_PDU_RES_SETUP_FAIL, transfer)
+			_, _, _, err := smContext.SmfClient().SendUpdateSmContextN2Info(models.N2SMINFOTYPE_PDU_RES_SETUP_FAIL, transfer)
 			if err != nil {
 				log.Errorf("SendUpdateSmContextN2Info[PDUSessionResourceSetupUnsuccessfulTransfer] Error: %+v", err)
 			}
@@ -680,7 +680,7 @@ func (h *ngapHandler) handleInitialContextSetupResponse(ran *context.AmfRan, ini
 		}
 	}
 
-	if ranUe.Ran().AnType() == models.AccessType_NON_3_GPP_ACCESS {
+	if ranUe.Ran().AnType() == models.ACCESSTYPE_NON_3_GPP_ACCESS {
 		h.sender.SendDownlinkNasTransport(ranUe, amfUe.RegistrationAcceptForNon3GPPAccess, nil)
 	}
 
@@ -853,7 +853,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan /*mes
 			transfer := item.HandoverRequestAcknowledgeTransfer
 			pduSessionId := int32(pduSessionID)
 			if smContext, exist := amfUe.SmContextFindByPDUSessionID(pduSessionId); exist {
-				response, errResponse, problemDetails, err := smContext.SmfClient().SendUpdateSmContextN2HandoverPrepared(models.N2SmInfoType_HANDOVER_REQ_ACK, transfer)
+				response, errResponse, problemDetails, err := smContext.SmfClient().SendUpdateSmContextN2HandoverPrepared(models.N2SMINFOTYPE_HANDOVER_REQ_ACK, transfer)
 				if err != nil {
 					log.Errorf("Send HandoverRequestAcknowledgeTransfer error: %v", err)
 				}
@@ -883,7 +883,7 @@ func (h *ngapHandler) handleHandoverRequestAcknowledge(ran *context.AmfRan /*mes
 			transfer := item.HandoverResourceAllocationUnsuccessfulTransfer
 			pduSessionId := int32(pduSessionID)
 			if smContext, exist := amfUe.SmContextFindByPDUSessionID(pduSessionId); exist {
-				_, _, problemDetails, err := smContext.SmfClient().SendUpdateSmContextN2HandoverPrepared(models.N2SmInfoType_HANDOVER_RES_ALLOC_FAIL, transfer)
+				_, _, problemDetails, err := smContext.SmfClient().SendUpdateSmContextN2HandoverPrepared(models.N2SMINFOTYPE_HANDOVER_RES_ALLOC_FAIL, transfer)
 				if err != nil {
 					log.Errorf("Send HandoverResourceAllocationUnsuccessfulTransfer error: %v", err)
 				}

@@ -11,14 +11,14 @@ API version: 1.1.6
 
 package models
 
-type RequestTriggerAnyOf string
+type RequestTrigger string
 
-// List of RequestTriggerAnyOf
+// List of RequestTrigger
 const (
-	REQUESTTRIGGERANYOF_LOC_CH            RequestTriggerAnyOf = "LOC_CH"
-	REQUESTTRIGGERANYOF_PRA_CH            RequestTriggerAnyOf = "PRA_CH"
-	REQUESTTRIGGERANYOF_UE_POLICY         RequestTriggerAnyOf = "UE_POLICY"
-	REQUESTTRIGGERANYOF_PLMN_CH           RequestTriggerAnyOf = "PLMN_CH"
-	REQUESTTRIGGERANYOF_CON_STATE_CH      RequestTriggerAnyOf = "CON_STATE_CH"
-	REQUESTTRIGGERANYOF_GROUP_ID_LIST_CHG RequestTriggerAnyOf = "GROUP_ID_LIST_CHG"
+	REQUESTTRIGGER_LOC_CH            RequestTrigger = "LOC_CH"
+	REQUESTTRIGGER_PRA_CH            RequestTrigger = "PRA_CH"
+	REQUESTTRIGGER_UE_POLICY         RequestTrigger = "UE_POLICY"
+	REQUESTTRIGGER_PLMN_CH           RequestTrigger = "PLMN_CH"
+	REQUESTTRIGGER_CON_STATE_CH      RequestTrigger = "CON_STATE_CH"
+	REQUESTTRIGGER_GROUP_ID_LIST_CHG RequestTrigger = "GROUP_ID_LIST_CHG"
 )

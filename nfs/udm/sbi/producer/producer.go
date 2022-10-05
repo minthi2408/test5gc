@@ -2,22 +2,19 @@ package producer
 
 import (
 	//	"fmt"
-	"etri5gc/nfs/udm/context"
-
 	"etri5gc/fabric/common"
+	"etri5gc/fabric/httpdp"
+	"etri5gc/nfs/udm/context"
+	sbi_httpdp "etri5gc/sbi/httpdp"
+	udmee "etri5gc/sbi/udm/ee"
 
-	"etri5gc/openapi"
-	openapi_http "etri5gc/openapi/httpdp"
-	udmprod "etri5gc/openapi/producers/udm"
-
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
 var log *logrus.Entry
 
 func init() {
-	log = logrus.WithFields(logrus.Fields{"mod": "udm.producer"})
+	log = logrus.WithFields(logrus.Fields{"mod": "sbi.producer"})
 }
 
 type Backend interface {
@@ -37,21 +34,16 @@ func New(b Backend) *Producer {
 // build services to register to the underlying server (http server in service
 // agent)
 func (prod *Producer) Services() []common.Service {
-	services := make([]common.Service, 6, 6)
-	services[0] = eventexposureService(prod)
-	//	services[1] = communicationService(prod)
-	//	services[2] = eventexposureService(prod)
-	//	services[3] = locationService(prod)
-	//	services[4] = mtService(prod)
-	//	services[5] = oamService(prod)
+	services := make([]common.Service, 7, 7)
+	services[0] = httpdp.HttpService{
+		Group:  "comm",
+		Routes: sbi_httpdp.MakeHttpRoutes(udmee.Routes, prod),
+	}
+
 	return services
 }
 
-// access to the internal data structures of the udm
+// access to the internal data structures of the AMF
 func (prod *Producer) udm() *context.UdmContext {
 	return prod.backend.Context()
-}
-
-func ginHandler(fn openapi.OpenApiProducerHandler, p udmprod.UdmProducer) gin.HandlerFunc {
-	return openapi_http.CreateGinHandler(fn, p)
 }

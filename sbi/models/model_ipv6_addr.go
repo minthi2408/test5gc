@@ -11,5 +11,4 @@ API version: 1.1.6
 
 package models
 
-type Ipv6Addr struct {
-}
+type Ipv6Addr string 

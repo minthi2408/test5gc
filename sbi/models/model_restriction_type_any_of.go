@@ -11,10 +11,10 @@ API version: 1.1.6
 
 package models
 
-type RestrictionTypeAnyOf string
+type RestrictionType string
 
 // List of RestrictionTypeAnyOf
 const (
-	RESTRICTIONTYPEANYOF_ALLOWED_AREAS     RestrictionTypeAnyOf = "ALLOWED_AREAS"
-	RESTRICTIONTYPEANYOF_NOT_ALLOWED_AREAS RestrictionTypeAnyOf = "NOT_ALLOWED_AREAS"
+	RESTRICTIONTYPE_ALLOWED_AREAS     RestrictionType = "ALLOWED_AREAS"
+	RESTRICTIONTYPE_NOT_ALLOWED_AREAS RestrictionType = "NOT_ALLOWED_AREAS"
 )

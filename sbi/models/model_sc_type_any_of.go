@@ -11,10 +11,10 @@ API version: 1.1.8
 
 package models
 
-type ScTypeAnyOf string
+type ScType string
 
 // List of ScTypeAnyOf
 const (
-	SCTYPEANYOF_NATIVE ScTypeAnyOf = "NATIVE"
-	SCTYPEANYOF_MAPPED ScTypeAnyOf = "MAPPED"
+	SCTYPE_NATIVE ScType = "NATIVE"
+	SCTYPE_MAPPED ScType = "MAPPED"
 )

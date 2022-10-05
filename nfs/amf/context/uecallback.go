@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 )
 
 type ueCallback struct {

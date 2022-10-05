@@ -1,7 +1,7 @@
 package httpdp
 
 import (
-	"etri5gc/openapi"
+	"etri5gc/sbi"
 )
 
 // a singleton
@@ -12,30 +12,30 @@ func Encoding() *encoding {
 	return oneEncoding
 }
 
-// emplement encoding and decoding of openapi's request/response to/from http's
+// emplement encoding and decoding of sbi's request/response to/from http's
 // request/response
 type encoding struct {
 }
 
 // unmarshaling the request body bytes (given a http request embeded in the
-// given openapi's request)
-func (enc *encoding) DecodeRequest(req *openapi.Request) error {
+// given sbi's request)
+func (enc *encoding) DecodeRequest(req *sbi.Request) error {
 	return nil
 }
 
 // unmarshaling the response body bytes (give a http response embeded in the
-// given openapi's response)
-func (enc *encoding) DecodeResponse(req *openapi.Response) error {
+// given sbi's response)
+func (enc *encoding) DecodeResponse(req *sbi.Response) error {
 	return nil
 }
 
 // marshaling the request body into bytes arrays the prepare a http request
-func (enc *encoding) EncodeRequest(req *openapi.Request) error {
+func (enc *encoding) EncodeRequest(req *sbi.Request) error {
 	return nil
 }
 
 // marshaling the response body into an byte array. No need to create an http
 // response since gin.Context will write the response
-func (enc *encoding) EncodeResponse(req *openapi.Response) error {
+func (enc *encoding) EncodeResponse(req *sbi.Response) error {
 	return nil
 }

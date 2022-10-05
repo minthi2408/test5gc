@@ -11,5 +11,3 @@ API version: 2.1.7
 
 package models
 
-type AuthType struct {
-}

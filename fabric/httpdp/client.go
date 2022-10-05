@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"etri5gc/fabric/common"
-	"etri5gc/openapi"
+	"etri5gc/sbi"
 )
 
 type remoteAgent struct {
@@ -16,29 +16,29 @@ type remoteAgent struct {
 
 func (c *remoteAgent) Send(req common.Request) (resp common.Response, err error) {
 	if req.MsgType() != common.SERVICE_MSG_TYPE_OPENAPI {
-		return nil, errors.New("only openapi request format is supported")
+		return nil, errors.New("only sbi request format is supported")
 	}
-	openapiReq := req.(*openapi.Request)
+	sbiReq := req.(*sbi.Request)
 	var httpreq *http.Request
 	var httpresp *http.Response
-	//now turn an openapi request into a http request
-	if httpreq, err = c.prepareHttpRequest(openapiReq); err != nil {
+	//now turn an sbi request into a http request
+	if httpreq, err = c.prepareHttpRequest(sbiReq); err != nil {
 		return
 	}
 	//send the request and get a response
 	if httpresp, err = c.client.Do(httpreq); err != nil {
 		return
 	} else {
-		//read body of the response and prepare the openapi response
-		openapiResp := &openapi.Response{
+		//read body of the response and prepare the sbi response
+		sbiResp := &sbi.Response{
 			Response:   httpresp,
 			StatusCode: httpresp.StatusCode,
 			Status:     httpresp.Status,
 		}
-		openapiResp.BodyBytes, err = ioutil.ReadAll(httpresp.Body)
+		sbiResp.BodyBytes, err = ioutil.ReadAll(httpresp.Body)
 		httpresp.Body.Close()
 		if err == nil {
-			resp = openapiResp
+			resp = sbiResp
 		}
 		return
 	}
@@ -56,10 +56,10 @@ func NewHttpRemoteAgent(addr common.AgentAddr) *remoteAgent {
 	return ret
 }
 
-// build an http request from openapi request
-func (c *remoteAgent) prepareHttpRequest(req *openapi.Request) (httpreq *http.Request, err error) {
+// build an http request from sbi request
+func (c *remoteAgent) prepareHttpRequest(req *sbi.Request) (httpreq *http.Request, err error) {
 	//netvision should implement this method (refer to the
-	//free5gc/openapi/client.go)
+	//free5gc/sbi/client.go)
 	//1. inject the ipaddr:port into the request path
 	//2. encode the request
 	if err = Encoding().EncodeRequest(req); err == nil {

@@ -11,7 +11,7 @@ import (
 	//	libngap "github.com/free5gc/ngap"
 	//	"github.com/free5gc/ngap/ngapConvert"
 	"github.com/free5gc/ngap/ngapType"
-	// "github.com/free5gc/openapi/models"
+	// "github.com/free5gc/sbi/models"
 )
 
 func printAndGetCause(ran *context.AmfRan, cause *ngapType.Cause) (present int, value aper.Enumerated) {

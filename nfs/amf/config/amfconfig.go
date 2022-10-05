@@ -2,7 +2,7 @@ package config
 
 import (
 	fabric_config "etri5gc/fabric/config"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 	"fmt"
 	"io/ioutil"
 	"strconv"

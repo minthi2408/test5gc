@@ -11,23 +11,23 @@ API version: 1.1.6
 
 package models
 
-type RatTypeAnyOf string
+type RatType string
 
-// List of RatTypeAnyOf
+// List of RatType
 const (
-	RATTYPEANYOF_NR             RatTypeAnyOf = "NR"
-	RATTYPEANYOF_EUTRA          RatTypeAnyOf = "EUTRA"
-	RATTYPEANYOF_WLAN           RatTypeAnyOf = "WLAN"
-	RATTYPEANYOF_VIRTUAL        RatTypeAnyOf = "VIRTUAL"
-	RATTYPEANYOF_NBIOT          RatTypeAnyOf = "NBIOT"
-	RATTYPEANYOF_WIRELINE       RatTypeAnyOf = "WIRELINE"
-	RATTYPEANYOF_WIRELINE_CABLE RatTypeAnyOf = "WIRELINE_CABLE"
-	RATTYPEANYOF_WIRELINE_BBF   RatTypeAnyOf = "WIRELINE_BBF"
-	RATTYPEANYOF_LTE_M          RatTypeAnyOf = "LTE-M"
-	RATTYPEANYOF_NR_U           RatTypeAnyOf = "NR_U"
-	RATTYPEANYOF_EUTRA_U        RatTypeAnyOf = "EUTRA_U"
-	RATTYPEANYOF_TRUSTED_N3_GA  RatTypeAnyOf = "TRUSTED_N3GA"
-	RATTYPEANYOF_TRUSTED_WLAN   RatTypeAnyOf = "TRUSTED_WLAN"
-	RATTYPEANYOF_UTRA           RatTypeAnyOf = "UTRA"
-	RATTYPEANYOF_GERA           RatTypeAnyOf = "GERA"
+	RATTYPE_NR             RatType = "NR"
+	RATTYPE_EUTRA          RatType = "EUTRA"
+	RATTYPE_WLAN           RatType = "WLAN"
+	RATTYPE_VIRTUAL        RatType = "VIRTUAL"
+	RATTYPE_NBIOT          RatType = "NBIOT"
+	RATTYPE_WIRELINE       RatType = "WIRELINE"
+	RATTYPE_WIRELINE_CABLE RatType = "WIRELINE_CABLE"
+	RATTYPE_WIRELINE_BBF   RatType = "WIRELINE_BBF"
+	RATTYPE_LTE_M          RatType = "LTE-M"
+	RATTYPE_NR_U           RatType = "NR_U"
+	RATTYPE_EUTRA_U        RatType = "EUTRA_U"
+	RATTYPE_TRUSTED_N3_GA  RatType = "TRUSTED_N3GA"
+	RATTYPE_TRUSTED_WLAN   RatType = "TRUSTED_WLAN"
+	RATTYPE_UTRA           RatType = "UTRA"
+	RATTYPE_GERA           RatType = "GERA"
 )

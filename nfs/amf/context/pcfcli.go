@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 )
 
 type PcfInfo struct {
@@ -15,31 +15,33 @@ type PcfInfo struct {
 }
 
 func (info *PcfInfo) copy(ueContext *models.UeContext) {
-	if ueContext.PcfId != "" {
-		info.PcfId = ueContext.PcfId
-	}
-
-	if ueContext.PcfAmPolicyUri != "" {
-		info.AmPolicyUri = ueContext.PcfAmPolicyUri
-	}
-
-	if len(ueContext.AmPolicyReqTriggerList) > 0 {
-		if info.AmPolicyAssociation == nil {
-			info.AmPolicyAssociation = new(models.PolicyAssociation)
+	/*
+		if ueContext.PcfId != "" {
+			info.PcfId = ueContext.PcfId
 		}
-		for _, trigger := range ueContext.AmPolicyReqTriggerList {
-			switch trigger {
-			case models.AmPolicyReqTrigger_LOCATION_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
-			case models.AmPolicyReqTrigger_PRA_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
-			case models.AmPolicyReqTrigger_SARI_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
-			case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
-				info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
+
+		if ueContext.PcfAmPolicyUri != "" {
+			info.AmPolicyUri = ueContext.PcfAmPolicyUri
+		}
+
+		if len(ueContext.AmPolicyReqTriggerList) > 0 {
+			if info.AmPolicyAssociation == nil {
+				info.AmPolicyAssociation = new(models.PolicyAssociation)
+			}
+			for _, trigger := range ueContext.AmPolicyReqTriggerList {
+				switch trigger {
+				case models.AmPolicyReqTrigger_LOCATION_CHANGE:
+					info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_LOC_CH)
+				case models.AmPolicyReqTrigger_PRA_CHANGE:
+					info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_PRA_CH)
+				case models.AmPolicyReqTrigger_SARI_CHANGE:
+					info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_SERV_AREA_CH)
+				case models.AmPolicyReqTrigger_RFSP_INDEX_CHANGE:
+					info.AmPolicyAssociation.Triggers = append(info.AmPolicyAssociation.Triggers, models.RequestTrigger_RFSP_CH)
+				}
 			}
 		}
-	}
+	*/
 }
 
 type pcfClient struct {
@@ -107,10 +109,10 @@ func (c *pcfClient) AMPolicyControlCreate(anType models.AccessType) (*models.Pro
 			if httpResp.Status != localErr.Error() {
 				return nil, localErr
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			return &problem, nil
 		} else {
-			return nil, openapi.ReportError("server no response")
+			return nil, sbi.ReportError("server no response")
 		}
 	*/
 	return nil, nil
@@ -147,10 +149,10 @@ func (c *pcfClient) AMPolicyControlUpdate(updateRequest models.PolicyAssociation
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 		return problemDetails, err
 	*/
@@ -170,10 +172,10 @@ func (c *pcfClient) AMPolicyControlDelete() (problemDetails *models.ProblemDetai
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("server no response")
+			err = sbi.ReportError("server no response")
 		}
 	*/
 	return

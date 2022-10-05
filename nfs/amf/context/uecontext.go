@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"sync"
 
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
@@ -47,9 +47,9 @@ const (
 )
 
 type NssfInfo struct {
-	NssfId                            string
-	NssfUri                           string
-	NetworkSliceInfo                  *models.AuthorizedNetworkSliceInfo
+	NssfId  string
+	NssfUri string
+	//	NetworkSliceInfo                  *models.AuthorizedNetworkSliceInfo
 	AllowedNssai                      map[models.AccessType][]models.AllowedSnssai
 	ConfiguredNssai                   []models.ConfiguredSnssai
 	NetworkSlicingSubscriptionChanged bool
@@ -112,8 +112,8 @@ type AmfUe struct {
 	RetransmissionOfInitialNASMsg      bool
 	RequestIdentityType                uint8
 	/* Used for AMF relocation */
-	TargetAmfProfile *models.NfProfile
-	TargetAmfUri     string
+	//TargetAmfProfile *models.NfProfile
+	TargetAmfUri string
 	/* Ue Identity*/
 	PlmnId              models.PlmnId
 	Suci                string
@@ -221,8 +221,8 @@ type NGRANCGI struct {
 func (ue *AmfUe) init(amf *AmfContext) {
 	ue.amf = amf
 	ue.State = make(map[models.AccessType]*fsm.State)
-	ue.State[models.AccessType__3_GPP_ACCESS] = fsm.NewState(Deregistered)
-	ue.State[models.AccessType_NON_3_GPP_ACCESS] = fsm.NewState(Deregistered)
+	ue.State[models.ACCESSTYPE__3_GPP_ACCESS] = fsm.NewState(Deregistered)
+	ue.State[models.ACCESSTYPE_NON_3_GPP_ACCESS] = fsm.NewState(Deregistered)
 	ue.UnauthenticatedSupi = true
 	ue.EventSubscriptionsInfo = make(map[string]*AmfUeEventSubscription)
 	ue.RanUe = make(map[models.AccessType]*RanUe)
@@ -231,10 +231,10 @@ func (ue *AmfUe) init(amf *AmfContext) {
 	ue.N1N2MessageIDGenerator = idgenerator.NewGenerator(1, 2147483647)
 	ue.N1N2MessageSubscribeIDGenerator = idgenerator.NewGenerator(1, 2147483647)
 	ue.onGoing = make(map[models.AccessType]*OnGoing)
-	ue.onGoing[models.AccessType_NON_3_GPP_ACCESS] = new(OnGoing)
-	ue.onGoing[models.AccessType_NON_3_GPP_ACCESS].Procedure = OnGoingProcedureNothing
-	ue.onGoing[models.AccessType__3_GPP_ACCESS] = new(OnGoing)
-	ue.onGoing[models.AccessType__3_GPP_ACCESS].Procedure = OnGoingProcedureNothing
+	ue.onGoing[models.ACCESSTYPE_NON_3_GPP_ACCESS] = new(OnGoing)
+	ue.onGoing[models.ACCESSTYPE_NON_3_GPP_ACCESS].Procedure = OnGoingProcedureNothing
+	ue.onGoing[models.ACCESSTYPE__3_GPP_ACCESS] = new(OnGoing)
+	ue.onGoing[models.ACCESSTYPE__3_GPP_ACCESS].Procedure = OnGoingProcedureNothing
 	ue.ReleaseCause = make(map[models.AccessType]*CauseAll)
 }
 
@@ -308,28 +308,28 @@ func (ue *AmfUe) AttachRanUe(ranUe *RanUe) {
 }
 
 func (ue *AmfUe) GetAnType() models.AccessType {
-	if ue.CmConnect(models.AccessType__3_GPP_ACCESS) {
-		return models.AccessType__3_GPP_ACCESS
-	} else if ue.CmConnect(models.AccessType_NON_3_GPP_ACCESS) {
-		return models.AccessType_NON_3_GPP_ACCESS
+	if ue.CmConnect(models.ACCESSTYPE__3_GPP_ACCESS) {
+		return models.ACCESSTYPE__3_GPP_ACCESS
+	} else if ue.CmConnect(models.ACCESSTYPE_NON_3_GPP_ACCESS) {
+		return models.ACCESSTYPE_NON_3_GPP_ACCESS
 	}
 	return ""
 }
 
 func (ue *AmfUe) GetCmInfo() (cmInfos []models.CmInfo) {
 	var cmInfo models.CmInfo
-	cmInfo.AccessType = models.AccessType__3_GPP_ACCESS
+	cmInfo.AccessType = models.ACCESSTYPE__3_GPP_ACCESS
 	if ue.CmConnect(cmInfo.AccessType) {
-		cmInfo.CmState = models.CmState_CONNECTED
+		cmInfo.CmState = models.CMSTATE_CONNECTED
 	} else {
-		cmInfo.CmState = models.CmState_IDLE
+		cmInfo.CmState = models.CMSTATE_IDLE
 	}
 	cmInfos = append(cmInfos, cmInfo)
-	cmInfo.AccessType = models.AccessType_NON_3_GPP_ACCESS
+	cmInfo.AccessType = models.ACCESSTYPE_NON_3_GPP_ACCESS
 	if ue.CmConnect(cmInfo.AccessType) {
-		cmInfo.CmState = models.CmState_CONNECTED
+		cmInfo.CmState = models.CMSTATE_CONNECTED
 	} else {
-		cmInfo.CmState = models.CmState_IDLE
+		cmInfo.CmState = models.CMSTATE_IDLE
 	}
 	cmInfos = append(cmInfos, cmInfo)
 	return
@@ -337,7 +337,7 @@ func (ue *AmfUe) GetCmInfo() (cmInfos []models.CmInfo) {
 
 func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.AccessType) bool {
 	for _, allowedSnssai := range ue.nssf.AllowedNssai[anType] {
-		if reflect.DeepEqual(*allowedSnssai.AllowedSnssai, targetSNssai) {
+		if reflect.DeepEqual(allowedSnssai.AllowedSnssai, targetSNssai) {
 			return true
 		}
 	}
@@ -346,23 +346,27 @@ func (ue *AmfUe) InAllowedNssai(targetSNssai models.Snssai, anType models.Access
 
 // TODO: tqtung - need cleaning the long chained object reference
 func (ue *AmfUe) InSubscribedNssai(targetSNssai models.Snssai) bool {
-	for _, sNssai := range ue.udmcli.info.SubscribedNssai {
-		if reflect.DeepEqual(*sNssai.SubscribedSnssai, targetSNssai) {
-			return true
+	/*
+		for _, sNssai := range ue.udmcli.info.SubscribedNssai {
+			if reflect.DeepEqual(sNssai.SubscribedSnssai, targetSNssai) {
+				return true
+			}
 		}
-	}
+	*/
 	return false
 }
 
 func (ue *AmfUe) GetNsiInformationFromSnssai(anType models.AccessType, snssai models.Snssai) *models.NsiInformation {
-	for _, allowedSnssai := range ue.nssf.AllowedNssai[anType] {
-		if reflect.DeepEqual(*allowedSnssai.AllowedSnssai, snssai) {
-			// TODO: select NsiInformation based on operator policy
-			if len(allowedSnssai.NsiInformationList) != 0 {
-				return &allowedSnssai.NsiInformationList[0]
+	/*
+		for _, allowedSnssai := range ue.nssf.AllowedNssai[anType] {
+			if reflect.DeepEqual(allowedSnssai.AllowedSnssai, snssai) {
+				// TODO: select NsiInformation based on operator policy
+				if len(allowedSnssai.NsiInformationList) != 0 {
+					return &allowedSnssai.NsiInformationList[0]
+				}
 			}
 		}
-	}
+	*/
 	return nil
 }
 
@@ -377,13 +381,15 @@ func (ue *AmfUe) TaiListInRegistrationArea(taiList []models.Tai, accessType mode
 
 // TODO: tqtung need cleaning the long chained object reference
 func (ue *AmfUe) HasWildCardSubscribedDNN() bool {
-	for _, snssaiInfo := range ue.udmcli.info.SmfSelectionData.SubscribedSnssaiInfos {
-		for _, dnnInfo := range snssaiInfo.DnnInfos {
-			if dnnInfo.Dnn == "*" {
-				return true
+	/*
+		for _, snssaiInfo := range ue.udmcli.info.SmfSelectionData.SubscribedSnssaiInfos {
+			for _, dnnInfo := range snssaiInfo.DnnInfos {
+				if dnnInfo.Dnn == "*" {
+					return true
+				}
 			}
 		}
-	}
+	*/
 	return false
 }
 
@@ -476,7 +482,7 @@ func (ue *AmfUe) CopyDataFromUeContextModel(ueContext models.UeContext) {
 
 		if len(ueContext.MmContextList) > 0 {
 			for _, mmContext := range ueContext.MmContextList {
-				if mmContext.AccessType == models.AccessType__3_GPP_ACCESS {
+				if mmContext.AccessType == models.ACCESSTYPE__3_GPP_ACCESS {
 					if nasSecurityMode := mmContext.NasSecurityMode; nasSecurityMode != nil {
 						switch nasSecurityMode.IntegrityAlgorithm {
 						case models.IntegrityAlgorithm_NIA0:
@@ -560,52 +566,54 @@ func (ue *AmfUe) DeleteSmContext(pduId int32) {
 // /sbi/producer/location
 
 func (ue *AmfUe) BuildLocInfo(req *models.RequestLocInfo) *models.ProvideLocInfo {
-	anType := ue.GetAnType()
+	/*
+		anType := ue.GetAnType()
 
-	if anType == "" {
-		return nil
-	}
+		if anType == "" {
+			return nil
+		}
 
-	locinfo := new(models.ProvideLocInfo)
+		locinfo := new(models.ProvideLocInfo)
 
-	ranUe := ue.RanUe[anType]
-	if req.Req5gsLoc || req.ReqCurrentLoc {
-		locinfo.CurrentLoc = true
-		locinfo.Location = &ue.loc.Location
-	}
+		ranUe := ue.RanUe[anType]
+		if req.Req5gsLoc || req.ReqCurrentLoc {
+			locinfo.CurrentLoc = true
+			locinfo.Location = &ue.loc.Location
+		}
 
-	if req.ReqRatType {
-		locinfo.RatType = ue.loc.RatType
-	}
+		if req.ReqRatType {
+			locinfo.RatType = ue.loc.RatType
+		}
 
-	if req.ReqTimeZone {
-		locinfo.Timezone = ue.loc.TimeZone
-	}
+		if req.ReqTimeZone {
+			locinfo.Timezone = ue.loc.TimeZone
+		}
 
-	if req.SupportedFeatures != "" {
-		locinfo.SupportedFeatures = ranUe.supportedFeatures
-	}
-	return locinfo
-
+		if req.SupportedFeatures != "" {
+			locinfo.SupportedFeatures = ranUe.supportedFeatures
+		}
+		return locinfo
+	*/
+	return nil
 }
 
 // /sbi/producer/mt
 
 func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextInfo {
 	info := &models.UeContextInfo{}
-
-	// TODO: Error Status 307, 403 in TS29.518 Table 6.3.3.3.3.1-3
-	anType := ue.GetAnType()
-	if anType != "" && class != "" {
-		ranUe := ue.RanUe[anType]
-		info.AccessType = anType
-		info.RatType = ue.loc.RatType
-		info.LastActTime = ranUe.lastActTime
-		info.SupportedFeatures = ranUe.supportedFeatures
-		info.SupportVoPS = ranUe.supportVoPS
-		info.SupportVoPSn3gpp = ranUe.supportVoPSn3gpp
-	}
-
+	/*
+		// TODO: Error Status 307, 403 in TS29.518 Table 6.3.3.3.3.1-3
+		anType := ue.GetAnType()
+		if anType != "" && class != "" {
+			ranUe := ue.RanUe[anType]
+			info.AccessType = anType
+			info.RatType = ue.loc.RatType
+			info.LastActTime = ranUe.lastActTime
+			info.SupportedFeatures = ranUe.supportedFeatures
+			info.SupportVoPS = ranUe.supportVoPS
+			info.SupportVoPSn3gpp = ranUe.supportVoPSn3gpp
+		}
+	*/
 	return info
 }
 
@@ -614,124 +622,129 @@ func (ue *AmfUe) GetContextInfo(class string, feature string) *models.UeContextI
 //
 
 func (ue *AmfUe) BuildCreateSmContextData(sm *SmContext, reqtype *models.RequestType) (dat models.SmContextCreateData) {
-	dat.Supi = ue.Supi
-	dat.UnauthenticatedSupi = ue.UnauthenticatedSupi
-	dat.Pei = ue.Pei
-	dat.Gpsi = ue.Gpsi
-	dat.PduSessionId = sm.PduSessionID()
-	snssai := sm.Snssai()
-	dat.SNssai = &snssai
-	dat.Dnn = sm.Dnn()
-	dat.ServingNfId = ue.amf.id
-	dat.Guami = &ue.amf.cfg.GuamiList[0]
-	dat.ServingNetwork = ue.amf.cfg.GuamiList[0].PlmnId
-	if reqtype != nil {
-		dat.RequestType = *reqtype
-	}
-	dat.N1SmMsg = new(models.RefToBinaryData)
-	dat.N1SmMsg.ContentId = "n1SmMsg"
-	dat.AnType = sm.AccessType()
-	if ue.loc.RatType != "" {
-		dat.RatType = ue.loc.RatType
-	}
-	// TODO: location is used in roaming scenerio
-	// if ue.Location != nil {
-	// 	dat.UeLocation = ue.Location
-	// }
-	dat.UeTimeZone = ue.loc.TimeZone
-	dat.SmContextStatusUri = ue.amf.GetIPv4Uri() + "/namf-callback/v1/smContextStatus/" +
-		ue.Guti + "/" + strconv.Itoa(int(sm.PduSessionID()))
-
+	/*
+		dat.Supi = ue.Supi
+		dat.UnauthenticatedSupi = ue.UnauthenticatedSupi
+		dat.Pei = ue.Pei
+		dat.Gpsi = ue.Gpsi
+		dat.PduSessionId = sm.PduSessionID()
+		snssai := sm.Snssai()
+		dat.SNssai = &snssai
+		dat.Dnn = sm.Dnn()
+		dat.ServingNfId = ue.amf.id
+		dat.Guami = &ue.amf.cfg.GuamiList[0]
+		dat.ServingNetwork = ue.amf.cfg.GuamiList[0].PlmnId
+		if reqtype != nil {
+			dat.RequestType = *reqtype
+		}
+		dat.N1SmMsg = new(models.RefToBinaryData)
+		dat.N1SmMsg.ContentId = "n1SmMsg"
+		dat.AnType = sm.AccessType()
+		if ue.loc.RatType != "" {
+			dat.RatType = ue.loc.RatType
+		}
+		// TODO: location is used in roaming scenerio
+		// if ue.Location != nil {
+		// 	dat.UeLocation = ue.Location
+		// }
+		dat.UeTimeZone = ue.loc.TimeZone
+		dat.SmContextStatusUri = ue.amf.GetIPv4Uri() + "/namf-callback/v1/smContextStatus/" +
+			ue.Guti + "/" + strconv.Itoa(int(sm.PduSessionID()))
+	*/
 	return dat
 }
 
 func (ue *AmfUe) BuildReleaseSmContextData(cause *CauseAll, n2SmInfoType models.N2SmInfoType, n2Info []byte) (
 	releaseData models.SmContextReleaseData) {
-	if cause != nil {
-		if cause.Cause != nil {
-			releaseData.Cause = *cause.Cause
+	/*
+		if cause != nil {
+			if cause.Cause != nil {
+				releaseData.Cause = *cause.Cause
+			}
+			if cause.NgapCause != nil {
+				releaseData.NgApCause = cause.NgapCause
+			}
+			if cause.Var5GmmCause != nil {
+				releaseData.Var5gMmCauseValue = *cause.Var5GmmCause
+			}
 		}
-		if cause.NgapCause != nil {
-			releaseData.NgApCause = cause.NgapCause
+		if ue.loc.TimeZone != "" {
+			releaseData.UeTimeZone = ue.loc.TimeZone
 		}
-		if cause.Var5GmmCause != nil {
-			releaseData.Var5gMmCauseValue = *cause.Var5GmmCause
+		if n2Info != nil {
+			releaseData.N2SmInfoType = n2SmInfoType
+			releaseData.N2SmInfo = &models.RefToBinaryData{
+				ContentId: "n2SmInfo",
+			}
 		}
-	}
-	if ue.loc.TimeZone != "" {
-		releaseData.UeTimeZone = ue.loc.TimeZone
-	}
-	if n2Info != nil {
-		releaseData.N2SmInfoType = n2SmInfoType
-		releaseData.N2SmInfo = &models.RefToBinaryData{
-			ContentId: "n2SmInfo",
-		}
-	}
-	// TODO: other param(ueLocation...)
+		// TODO: other param(ueLocation...)
+	*/
 	return
 }
-func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferReqData, res *models.UeContextTransferResponse) *models.ProblemDetails {
-	resdat := res.JsonData
-	//if ue.GetAnType() != UeContextTransferReqData.AccessType {
-	//for _, tai := range ue.RegistrationArea[ue.GetAnType()] {
-	//if UeContextTransferReqData.PlmnId == tai.PlmnId {
-	// TODO : generate N2 signalling
-	//}
-	//}
-	//}
-	fn := func() {
-		resdat.UeContext = ue.buildContextModel()
-		clist := &resdat.UeContext.SessionContextList
-		ue.SmContextList.Range(func(key, value interface{}) bool {
-			smContext := value.(*SmContext)
-			snssai := smContext.Snssai()
-			pduSessionContext := models.PduSessionContext{
-				PduSessionId: smContext.PduSessionID(),
-				SmContextRef: smContext.SmContextRef(),
-				SNssai:       &snssai,
-				Dnn:          smContext.Dnn(),
-				AccessType:   smContext.AccessType(),
-				HsmfId:       smContext.HSmfID(),
-				VsmfId:       smContext.VSmfID(),
-				NsInstance:   smContext.NsInstance(),
-			}
-			*clist = append(*clist, pduSessionContext)
-			return true
-		})
-		resdat.UeRadioCapability = &models.N2InfoContent{
-			NgapMessageType: 0,
-			NgapIeType:      models.NgapIeType_UE_RADIO_CAPABILITY,
-			NgapData: &models.RefToBinaryData{
-				ContentId: "n2Info",
-			},
-		}
-		b := []byte(ue.UeRadioCapability)
-		copy(res.BinaryDataN2Information, b)
-
-	}
-
-	switch reqdat.Reason {
-	case models.TransferReason_INIT_REG:
-		// TODO: check integrity of the registration request included in ueContextTransferRequest
-		// TODO: handle condition of TS 29.518 5.2.2.2.1.1 step 2a case b
-		resdat.UeContext = ue.buildContextModel()
-	case models.TransferReason_MOBI_REG:
-		// TODO: check integrity of the registration request included in ueContextTransferRequest
-		fn()
-	case models.TransferReason_MOBI_REG_UE_VALIDATED:
-		fn()
-	default:
-		//	logger.ProducerLog.Warnf("Invalid Transfer Reason: %+v", UeContextTransferReqData.Reason)
-		return &models.ProblemDetails{
-			Status: http.StatusForbidden,
-			Cause:  "MANDATORY_IE_INCORRECT",
-			InvalidParams: []models.InvalidParam{
-				{
-					Param: "reason",
+func (ue *AmfUe) BuildContextTransferResponse(reqdat *models.UeContextTransferReqData, res *models.UEContextTransferResponse) *models.ProblemDetails {
+	/*
+		resdat := res.JsonData
+		//if ue.GetAnType() != UeContextTransferReqData.AccessType {
+		//for _, tai := range ue.RegistrationArea[ue.GetAnType()] {
+		//if UeContextTransferReqData.PlmnId == tai.PlmnId {
+		// TODO : generate N2 signalling
+		//}
+		//}
+		//}
+		fn := func() {
+			resdat.UeContext = ue.buildContextModel()
+			clist := &resdat.UeContext.SessionContextList
+			ue.SmContextList.Range(func(key, value interface{}) bool {
+				smContext := value.(*SmContext)
+				snssai := smContext.Snssai()
+				pduSessionContext := models.PduSessionContext{
+					PduSessionId: smContext.PduSessionID(),
+					SmContextRef: smContext.SmContextRef(),
+					SNssai:       &snssai,
+					Dnn:          smContext.Dnn(),
+					AccessType:   smContext.AccessType(),
+					HsmfId:       smContext.HSmfID(),
+					VsmfId:       smContext.VSmfID(),
+					NsInstance:   smContext.NsInstance(),
+				}
+				*clist = append(*clist, pduSessionContext)
+				return true
+			})
+			resdat.UeRadioCapability = &models.N2InfoContent{
+				NgapMessageType: 0,
+				NgapIeType:      models.NgapIeType_UE_RADIO_CAPABILITY,
+				NgapData: &models.RefToBinaryData{
+					ContentId: "n2Info",
 				},
-			},
+			}
+			b := []byte(ue.UeRadioCapability)
+			copy(res.BinaryDataN2Information, b)
+
 		}
-	}
+
+		switch reqdat.Reason {
+		case models.TransferReason_INIT_REG:
+			// TODO: check integrity of the registration request included in ueContextTransferRequest
+			// TODO: handle condition of TS 29.518 5.2.2.2.1.1 step 2a case b
+			resdat.UeContext = ue.buildContextModel()
+		case models.TransferReason_MOBI_REG:
+			// TODO: check integrity of the registration request included in ueContextTransferRequest
+			fn()
+		case models.TransferReason_MOBI_REG_UE_VALIDATED:
+			fn()
+		default:
+			//	logger.ProducerLog.Warnf("Invalid Transfer Reason: %+v", UeContextTransferReqData.Reason)
+			return &models.ProblemDetails{
+				Status: http.StatusForbidden,
+				Cause:  "MANDATORY_IE_INCORRECT",
+				InvalidParams: []models.InvalidParam{
+					{
+						Param: "reason",
+					},
+				},
+			}
+		}
+	*/
 	return nil
 }
 
@@ -800,6 +813,7 @@ func (ue *AmfUe) buildContextModel() *models.UeContext {
 	return ueContext
 }
 
+/*
 func buildAmPolicyReqTriggers(triggers []models.RequestTrigger) (amPolicyReqTriggers []models.AmPolicyReqTrigger) {
 	for _, trigger := range triggers {
 		switch trigger {
@@ -815,7 +829,7 @@ func buildAmPolicyReqTriggers(triggers []models.RequestTrigger) (amPolicyReqTrig
 	}
 	return
 }
-
+*/
 func (ue *AmfUe) N1N2InfoSubscribe(dat *models.UeN1N2InfoSubscriptionCreateData) (string, *models.ProblemDetails) {
 	if id, err := ue.N1N2MessageSubscribeIDGenerator.Allocate(); err != nil {
 		return "", &models.ProblemDetails{
@@ -837,8 +851,10 @@ func (ue *AmfUe) N1N2MessageUnsubscribe(subId string) {
 }
 
 func (ue *AmfUe) N1N2MessageStatus(uri string) (models.N1N2MessageTransferCause, bool) {
-	if ue.N1N2Message == nil || ue.N1N2Message.ResourceUri != uri {
-		return "", false
-	}
+	/*
+		if ue.N1N2Message == nil || ue.N1N2Message.ResourceUri != uri {
+			return "", false
+		}
+	*/
 	return ue.N1N2Message.Status, true
 }

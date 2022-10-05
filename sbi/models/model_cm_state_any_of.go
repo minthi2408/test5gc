@@ -11,10 +11,10 @@ API version: 1.1.6
 
 package models
 
-type CmStateAnyOf string
+type CmState string
 
 // List of CmStateAnyOf
 const (
-	CMSTATEANYOF_IDLE      CmStateAnyOf = "IDLE"
-	CMSTATEANYOF_CONNECTED CmStateAnyOf = "CONNECTED"
+	CMSTATE_IDLE      CmState = "IDLE"
+	CMSTATE_CONNECTED CmState = "CONNECTED"
 )

@@ -2,7 +2,7 @@ package nas
 
 import (
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasConvert"

@@ -16,7 +16,7 @@ import (
 )
 
 type SmContextUpdateError struct {
-	Error ExtProblemDetails `json:"error"`
+	Error *ExtProblemDetails `json:"error"`
 
 	N1SmMsg RefToBinaryData `json:"n1SmMsg,omitempty"`
 

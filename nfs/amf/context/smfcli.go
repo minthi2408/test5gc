@@ -3,7 +3,7 @@ package context
 import (
 	"etri5gc/fabric"
 	"etri5gc/fabric/common"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 )
 
 type smfClient struct {
@@ -41,14 +41,14 @@ func (c *smfClient) SendCreateSmContextRequest(rtype *models.RequestType, naspdu
 			}
 			switch httpResponse.StatusCode {
 			case 400, 403, 404, 500, 503, 504:
-				errResponse := err.(openapi.GenericOpenAPIError).Model().(models.PostSmContextsErrorResponse)
+				errResponse := err.(sbi.GenericOpenAPIError).Model().(models.PostSmContextsErrorResponse)
 				errRes = &errResponse
 			case 411, 413, 415, 429:
-				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := err.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				prob = &problem
 			}
 		} else {
-			err1 = openapi.ReportError("server no response")
+			err1 = sbi.ReportError("server no response")
 		}
 	*/
 	return
@@ -297,14 +297,14 @@ func (c *smfClient) SendUpdateSmContextRequest(dat models.SmContextUpdateData, n
 			}
 			switch httpResponse.StatusCode {
 			case 400, 403, 404, 500, 503:
-				errResponse := err.(openapi.GenericOpenAPIError).Model().(models.UpdateSmContextErrorResponse)
+				errResponse := err.(sbi.GenericOpenAPIError).Model().(models.UpdateSmContextErrorResponse)
 				errorResponse = &errResponse
 			case 411, 413, 415, 429:
-				problem := err.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+				problem := err.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 				problemDetail = &problem
 			}
 		} else {
-			err1 = openapi.ReportError("server no response")
+			err1 = sbi.ReportError("server no response")
 		}
 		return response, errorResponse, problemDetail, err1
 	*/
@@ -330,7 +330,7 @@ func (c *smfClient) SendReleaseSmContextRequest(cause *CauseAll, n2SmInfoType mo
 		if err1 == nil {
 			ue.SmContextList.Delete(sm.PduSessionID())
 		} else if response != nil && response.Status == err1.Error() {
-			problem := err1.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := err1.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			detail = &problem
 		} else {
 			err = err1

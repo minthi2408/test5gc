@@ -1,11 +1,9 @@
 package context
 
 import (
-	"errors"
 	"sync"
 
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/nasConvert"
+	"etri5gc/sbi/models"
 
 	"github.com/free5gc/nas/nasMessage"
 )
@@ -223,53 +221,54 @@ func (c *SmContext) DeleteULNASTransport() {
 // create a session management context and populate its attributes with the information from an input NAS message
 // the session is not attached to the AmfUe yet
 func (ue *AmfUe) CreateSmContext(msg *nasMessage.ULNASTransport, pduSessionId int32, anType models.AccessType) (smc *SmContext, err error) {
-	//1. identity the contexts of the target SMF
-	var (
-		snssai models.Snssai
-		dnn    string
-	)
-	// A) AMF shall select an SMF
+	/*
+		//1. identity the contexts of the target SMF
+		var (
+			snssai models.Snssai
+			dnn    string
+		)
+		// A) AMF shall select an SMF
 
-	// If the S-NSSAI IE is not included and the user's subscription context obtained from UDM. AMF shall
-	// select a default snssai
-	if msg.SNSSAI != nil {
-		snssai = nasConvert.SnssaiToModels(msg.SNSSAI)
-	} else {
-		if allowedNssai, ok := ue.GetNssfInfo().AllowedNssai[anType]; ok {
-			snssai = *allowedNssai[0].AllowedSnssai
+		// If the S-NSSAI IE is not included and the user's subscription context obtained from UDM. AMF shall
+		// select a default snssai
+		if msg.SNSSAI != nil {
+			snssai = nasConvert.SnssaiToModels(msg.SNSSAI)
 		} else {
-			return nil, errors.New("Ue doesn't have allowedNssai")
+			if allowedNssai, ok := ue.GetNssfInfo().AllowedNssai[anType]; ok {
+				snssai = allowedNssai[0].AllowedSnssai
+			} else {
+				return nil, errors.New("Ue doesn't have allowedNssai")
+			}
 		}
-	}
 
-	if msg.DNN != nil {
-		dnn = msg.DNN.GetDNN()
-	} else {
-		// if user's subscription context obtained from UDM does not contain the default DNN for the,
-		// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
-		udminfo := ue.udmcli.Info()
-		dnn = ue.amf.SupportDnnList()[0]
-		if udminfo.SmfSelectionData != nil {
-			snssaiStr := SnssaiModelsToHex(snssai)
-			if snssaiInfo, ok := udminfo.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
-				for _, dnnInfo := range snssaiInfo.DnnInfos {
-					if dnnInfo.DefaultDnnIndicator {
-						dnn = dnnInfo.Dnn
+		if msg.DNN != nil {
+			dnn = msg.DNN.GetDNN()
+		} else {
+			// if user's subscription context obtained from UDM does not contain the default DNN for the,
+			// S-NSSAI, the AMF shall use a locally configured DNN as the DNN
+			udminfo := ue.udmcli.Info()
+			dnn = ue.amf.SupportDnnList()[0]
+			if udminfo.SmfSelectionData != nil {
+				snssaiStr := SnssaiModelsToHex(snssai)
+				if snssaiInfo, ok := udminfo.SmfSelectionData.SubscribedSnssaiInfos[snssaiStr]; ok {
+					for _, dnnInfo := range snssaiInfo.DnnInfos {
+						if dnnInfo.DefaultDnnIndicator {
+							dnn = dnnInfo.Dnn
+						}
 					}
 				}
 			}
 		}
-	}
 
-	//2. create the session management context (and populate SMF discovery
-	//query)
+		//2. create the session management context (and populate SMF discovery
+		//query)
 
-	//TODO tqtung - session creattion is incompleted
-	//also, we need to populate an SMF discoery query
-	smc = NewSmContext(pduSessionId)
-	smc.SetSnssai(snssai)
-	smc.SetDnn(dnn)
-	smc.SetAccessType(anType)
-
+		//TODO tqtung - session creattion is incompleted
+		//also, we need to populate an SMF discoery query
+		smc = NewSmContext(pduSessionId)
+		smc.SetSnssai(snssai)
+		smc.SetDnn(dnn)
+		smc.SetAccessType(anType)
+	*/
 	return
 }

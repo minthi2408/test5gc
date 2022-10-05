@@ -11,11 +11,11 @@ API version: 1.1.3
 
 package models
 
-type AuthTypeAnyOf string
+type AuthType string
 
 // List of AuthTypeAnyOf
 const (
-	AUTHTYPEANYOF__5_G_AKA      AuthTypeAnyOf = "5G_AKA"
-	AUTHTYPEANYOF_EAP_AKA_PRIME AuthTypeAnyOf = "EAP_AKA_PRIME"
-	AUTHTYPEANYOF_EAP_TLS       AuthTypeAnyOf = "EAP_TLS"
+	AUTHTYPE__5_G_AKA      AuthType = "5G_AKA"
+	AUTHTYPE_EAP_AKA_PRIME AuthType = "EAP_AKA_PRIME"
+	AUTHTYPE_EAP_TLS       AuthType = "EAP_TLS"
 )

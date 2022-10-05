@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 )
 
 type amfClient struct {
@@ -26,10 +26,10 @@ func (c *amfClient) CreateUEContextRequest(ueContextCreateData models.UeContextC
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+			err = sbi.ReportError("%s: server no response", ue.TargetAmfUri)
 		}
 	*/
 	return
@@ -65,10 +65,10 @@ func (c *amfClient) ReleaseUEContextRequest(ngapCause models.NgApCause) (
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+			err = sbi.ReportError("%s: server no response", ue.TargetAmfUri)
 		}
 		return problemDetails, err
 	*/
@@ -111,10 +111,10 @@ func (c *amfClient) UEContextTransferRequest(accessType models.AccessType, trans
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+			err = sbi.ReportError("%s: server no response", ue.TargetAmfUri)
 		}
 		return ueContextTransferRspData, problemDetails, err
 	*/
@@ -137,10 +137,10 @@ func (c *amfClient) RegistrationStatusUpdate(request models.UeRegStatusUpdateReq
 				err = localErr
 				return
 			}
-			problem := localErr.(openapi.GenericOpenAPIError).Model().(models.ProblemDetails)
+			problem := localErr.(sbi.GenericOpenAPIError).Model().(models.ProblemDetails)
 			problemDetails = &problem
 		} else {
-			err = openapi.ReportError("%s: server no response", ue.TargetAmfUri)
+			err = sbi.ReportError("%s: server no response", ue.TargetAmfUri)
 		}
 	*/
 	return

@@ -6,7 +6,7 @@ import (
 
 	"etri5gc/nfs/amf"
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	"github.com/free5gc/aper"
 	libnas "github.com/free5gc/nas"

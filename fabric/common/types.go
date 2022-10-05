@@ -42,7 +42,7 @@ type AgentAddr interface {
 	String() string //identity in string format
 }
 
-// the abstraction of a service supported by an NF
+// the abstraction of a group of services supported by an NF
 // it should be created and registered to the service agent and lives there
 type Service interface {
 	// name of the service. Prefixing it with a protocol transport address of

@@ -95,10 +95,6 @@ type RequestContext interface {
 	RequestBody() interface{}
 }
 
-// abstraction for application handlers where signaling procedures are
-// implemented
-type AppProducerHandler func(RequestContext) *Response
-
 // abstraction for openapi producer handlers where correct expected
 // data structures should be populated for being ready to decode from a received response
-type OpenApiProducerHandler func(RequestContext, interface{}) Response
+type SbiProducerHandler func(RequestContext, interface{}) Response

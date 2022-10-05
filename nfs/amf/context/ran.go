@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/ngapConvert"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/ngapConvert"
 
 	"github.com/free5gc/ngap/ngapType"
 )
@@ -113,20 +113,20 @@ func (ran *AmfRan) SetRanId(ranNodeId *ngapType.GlobalRANNodeID) {
 	ran.present = ranNodeId.Present
 	ran.id = &ranId
 	if ranNodeId.Present == ngapType.GlobalRANNodeIDPresentGlobalN3IWFID {
-		ran.atype = models.AccessType_NON_3_GPP_ACCESS
+		ran.atype = models.ACCESSTYPE_NON_3_GPP_ACCESS
 	} else {
-		ran.atype = models.AccessType__3_GPP_ACCESS
+		ran.atype = models.ACCESSTYPE__3_GPP_ACCESS
 	}
 }
 
 func (ran *AmfRan) RanID() string {
 	switch ran.present {
 	case RanPresentGNbId:
-		return fmt.Sprintf("<PlmnID: %+v, GNbID: %s>", *ran.id.PlmnId, ran.id.GNbId.GNBValue)
+		return fmt.Sprintf("<PlmnID: %+v, GNbID: %s>", ran.id.PlmnId, ran.id.GNbId.GNBValue)
 	case RanPresentN3IwfId:
-		return fmt.Sprintf("<PlmnID: %+v, N3IwfID: %s>", *ran.id.PlmnId, ran.id.N3IwfId)
+		return fmt.Sprintf("<PlmnID: %+v, N3IwfID: %s>", ran.id.PlmnId, ran.id.N3IwfId)
 	case RanPresentNgeNbId:
-		return fmt.Sprintf("<PlmnID: %+v, NgeNbID: %s>", *ran.id.PlmnId, ran.id.NgeNbId)
+		return fmt.Sprintf("<PlmnID: %+v, NgeNbID: %s>", ran.id.PlmnId, ran.id.NgeNbId)
 	default:
 		return ""
 	}

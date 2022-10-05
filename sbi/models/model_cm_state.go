@@ -11,5 +11,3 @@ API version: 1.1.6
 
 package models
 
-type CmState struct {
-}

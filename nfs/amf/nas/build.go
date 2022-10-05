@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 
 	"etri5gc/nfs/amf/context"
-	"etri5gc/openapi/models"
-	"etri5gc/openapi/utils/nasConvert"
+	"etri5gc/sbi/models"
+	"etri5gc/sbi/utils/nasConvert"
 
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasMessage"
@@ -68,7 +68,7 @@ func (builder *Nas) BuildNotification(ue *context.AmfUe, accessType models.Acces
 	notification.SetSecurityHeaderType(libnas.SecurityHeaderTypePlainNas)
 	notification.ExtendedProtocolDiscriminator.SetExtendedProtocolDiscriminator(nasMessage.Epd5GSMobilityManagementMessage)
 	notification.SetMessageType(libnas.MsgTypeNotification)
-	if accessType == models.AccessType__3_GPP_ACCESS {
+	if accessType == models.ACCESSTYPE__3_GPP_ACCESS {
 		notification.SetAccessType(nasMessage.AccessType3GPP)
 	} else {
 		notification.SetAccessType(nasMessage.AccessTypeNon3GPP)
@@ -319,9 +319,9 @@ func (builder *Nas) BuildDeregistrationRequest(ue *context.RanUe, accessType uin
 		}
 		var anType models.AccessType
 		if accessType == 0x01 {
-			anType = models.AccessType__3_GPP_ACCESS
+			anType = models.ACCESSTYPE__3_GPP_ACCESS
 		} else if accessType == 0x02 {
-			anType = models.AccessType_NON_3_GPP_ACCESS
+			anType = models.ACCESSTYPE_NON_3_GPP_ACCESS
 		}
 		return ue.AmfUe().AusfClient().NasEncode(m, anType)
 	}
@@ -371,7 +371,7 @@ func (builder *Nas) BuildRegistrationAccept(
 		registrationAccept.NetworkFeatureSupport5GS =
 			nasType.NewNetworkFeatureSupport5GS(nasMessage.RegistrationAcceptNetworkFeatureSupport5GSType)
 		registrationAccept.NetworkFeatureSupport5GS.SetLen(2)
-		if anType == models.AccessType__3_GPP_ACCESS {
+		if anType == models.ACCESSTYPE__3_GPP_ACCESS {
 			registrationAccept.SetIMSVoPS3GPP(cfg.Get5gsNwFeatSuppImsVoPS())
 		} else {
 			registrationAccept.SetIMSVoPSN3GPP(cfg.Get5gsNwFeatSuppImsVoPS())

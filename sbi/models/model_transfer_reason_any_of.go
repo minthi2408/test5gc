@@ -11,11 +11,11 @@ API version: 1.1.8
 
 package models
 
-type TransferReasonAnyOf string
+type TransferReason string
 
-// List of TransferReasonAnyOf
+// List of TransferReason
 const (
-	TRANSFERREASONANYOF_INIT_REG              TransferReasonAnyOf = "INIT_REG"
-	TRANSFERREASONANYOF_MOBI_REG              TransferReasonAnyOf = "MOBI_REG"
-	TRANSFERREASONANYOF_MOBI_REG_UE_VALIDATED TransferReasonAnyOf = "MOBI_REG_UE_VALIDATED"
+	TRANSFERREASON_INIT_REG              TransferReason = "INIT_REG"
+	TRANSFERREASON_MOBI_REG              TransferReason = "MOBI_REG"
+	TRANSFERREASON_MOBI_REG_UE_VALIDATED TransferReason = "MOBI_REG_UE_VALIDATED"
 )

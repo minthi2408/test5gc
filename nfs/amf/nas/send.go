@@ -3,7 +3,7 @@ package nas
 import (
 	"etri5gc/nfs/amf/context"
 	"etri5gc/nfs/amf/ngap/util"
-	"etri5gc/openapi/models"
+	"etri5gc/sbi/models"
 
 	//	"github.com/free5gc/nas/nasMessage"
 	"github.com/free5gc/nas/nasType"
@@ -43,7 +43,7 @@ func (sender *Nas) SendNotification(ue *context.RanUe, nasMsg []byte) {
 				sender.ngap.SendDownlinkNasTransport(ue, nasMsg, nil)
 			}, func() {
 		log.Warnf("T3565 Expires %d times, abort notification procedure", cfg.MaxRetryTimes)
-				if amfUe.OnGoing(models.AccessType__3_GPP_ACCESS).Procedure != context.OnGoingProcedureN2Handover {
+				if amfUe.OnGoing(models.ACCESSTYPE__3_GPP_ACCESS).Procedure != context.OnGoingProcedureN2Handover {
 					callback.SendN1N2TransferFailureNotification(amfUe, models.N1N2MessageTransferCause_UE_NOT_RESPONDING)
 				}
 				amfUe.T3565 = nil // clear the timer
@@ -251,15 +251,15 @@ func (sender *Nas) SendDeregistrationRequest(ue *context.RanUe, accessType uint8
 				amfUe.T3522 = nil // clear the timer
 				if accessType == nasMessage.AccessType3GPP {
 					amfUe.GmmLog.Warnln("UE accessType[3GPP] transfer to Deregistered state")
-					amfUe.State[models.AccessType__3_GPP_ACCESS].Set(context.Deregistered)
+					amfUe.State[models.ACCESSTYPE__3_GPP_ACCESS].Set(context.Deregistered)
 				} else if accessType == nasMessage.AccessTypeNon3GPP {
 					amfUe.GmmLog.Warnln("UE accessType[Non3GPP] transfer to Deregistered state")
-					amfUe.State[models.AccessType_NON_3_GPP_ACCESS].Set(context.Deregistered)
+					amfUe.State[models.ACCESSTYPE_NON_3_GPP_ACCESS].Set(context.Deregistered)
 				} else {
 					amfUe.GmmLog.Warnln("UE accessType[3GPP] transfer to Deregistered state")
-					amfUe.State[models.AccessType__3_GPP_ACCESS].Set(context.Deregistered)
+					amfUe.State[models.ACCESSTYPE__3_GPP_ACCESS].Set(context.Deregistered)
 					amfUe.GmmLog.Warnln("UE accessType[Non3GPP] transfer to Deregistered state")
-					amfUe.State[models.AccessType_NON_3_GPP_ACCESS].Set(context.Deregistered)
+					amfUe.State[models.ACCESSTYPE_NON_3_GPP_ACCESS].Set(context.Deregistered)
 				}
 			})
 		}
@@ -297,7 +297,7 @@ func (sender *Nas) SendRegistrationAccept(
 	if amfUe.RanUe[anType].UeContextRequest() {
 		sender.ngap.SendInitialContextSetupRequest(amfUe, anType, nasMsg, pduSessionResourceSetupList, nil, nil, nil)
 	} else {
-		sender.ngap.SendDownlinkNasTransport(amfUe.RanUe[models.AccessType__3_GPP_ACCESS], nasMsg, nil)
+		sender.ngap.SendDownlinkNasTransport(amfUe.RanUe[models.ACCESSTYPE__3_GPP_ACCESS], nasMsg, nil)
 	}
 	/*
 		TODO: tungtq do it later

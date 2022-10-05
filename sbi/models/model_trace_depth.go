@@ -11,5 +11,3 @@ API version: 1.1.8
 
 package models
 
-type TraceDepth struct {
-}
