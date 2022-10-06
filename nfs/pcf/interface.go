@@ -1,11 +1,11 @@
 package amf
 
 import (
-	"etri5gc/nfs/udm/config"
-	"etri5gc/nfs/udm/context"
+	"etri5gc/nfs/pcf/config"
+	"etri5gc/nfs/pcf/context"
 )
 
 type Backend interface {
-	Context() *context.UdmContext
-	Config() *config.UdmConfig
+	Context() *context.PcfContext
+	Config() *config.PcfConfig
 }

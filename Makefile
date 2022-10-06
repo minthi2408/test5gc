@@ -6,9 +6,11 @@ ausf:
 	go build -o bin/ausf nfs/ausf/cmd/main.go	
 smf:
 	go build -o bin/smf nfs/smf/cmd/main.go	
+pcf:
+	go build -o bin/pcf nfs/pcf/cmd/main.go	
 test_compile:
 	go build -o bin/test test_compiling/main.go	
 
 clean:
 	rm bin/*
-all: amf udm ausf smf
+all: amf udm ausf smf pcf
