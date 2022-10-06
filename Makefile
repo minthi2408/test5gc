@@ -10,9 +10,12 @@ pcf:
 	go build -o bin/pcf nfs/pcf/cmd/main.go	
 udr:
 	go build -o bin/udr nfs/udr/cmd/main.go	
+
 test_compile:
 	go build -o bin/test test_compiling/main.go	
 
 clean:
 	rm bin/*
+
+.DEFAULT_GOAL := all
 all: amf udm ausf smf pcf udr

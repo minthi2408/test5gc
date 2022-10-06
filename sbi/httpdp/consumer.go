@@ -15,9 +15,10 @@ type requestSender struct {
 	addr  common.AgentAddr
 }
 
-func NewClient(fw fabric.Forwarder) *requestSender {
+func NewClient(fw fabric.Forwarder, query common.NfQuery) *requestSender {
 	return &requestSender{
-		fw: fw,
+		fw:    fw,
+		query: query,
 	}
 }
 

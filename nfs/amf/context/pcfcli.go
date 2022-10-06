@@ -51,6 +51,7 @@ type pcfClient struct {
 
 // build a PCF discovery query
 func (c *pcfClient) Select(locality string) {
+	//TODO
 }
 
 func (c *pcfClient) Info() *PcfInfo {
