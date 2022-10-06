@@ -72,7 +72,6 @@ func (nf *AMF) Profile() fabric_common.NfProfile {
 	return nil
 }
 func (nf *AMF) Start() (err error) {
-	check_sbi_compile()
 	// start ngap server
 	log.Info("Starting NGAP server")
 	nf.ngap.Run(nf.config.NgapIpList, 38412)

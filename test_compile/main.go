@@ -1,4 +1,4 @@
-package service
+package main
 
 import (
 	amfcomm "etri5gc/sbi/amf/comm"
@@ -29,6 +29,10 @@ import (
 	udrdr "etri5gc/sbi/udr/dr"
 	udrgroup "etri5gc/sbi/udr/group"
 )
+
+func main() {
+	check_sbi_compile()
+}
 
 func check_sbi_compile() {
 	body := sbimodels.SubscriptionData{}
