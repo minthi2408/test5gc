@@ -4,15 +4,10 @@ import (
 	//	"fmt"
 	"etri5gc/fabric/common"
 	"etri5gc/fabric/httpdp"
-	"etri5gc/nfs/udm/context"
+	"etri5gc/nfs/udr/context"
 	sbi_httpdp "etri5gc/sbi/httpdp"
-	udmee "etri5gc/sbi/udm/ee"
-	udmmt "etri5gc/sbi/udm/mt"
-	udmniddau "etri5gc/sbi/udm/niddau"
-	udmpp "etri5gc/sbi/udm/pp"
-	udmsdm "etri5gc/sbi/udm/sdm"
-	udmueau "etri5gc/sbi/udm/ueau"
-	udmuecm "etri5gc/sbi/udm/uecm"
+	udrdr "etri5gc/sbi/udr/dr"
+	udrgroup "etri5gc/sbi/udr/group"
 
 	"github.com/sirupsen/logrus"
 )
@@ -24,7 +19,7 @@ func init() {
 }
 
 type Backend interface {
-	Context() *context.UdmContext
+	Context() *context.UdrContext
 }
 
 type Producer struct {
@@ -40,39 +35,19 @@ func New(b Backend) *Producer {
 // build services to register to the underlying server (http server in service
 // agent)
 func (prod *Producer) Services() []common.Service {
-	services := make([]common.Service, 7, 7)
+	services := make([]common.Service, 2, 2)
 	services[0] = httpdp.HttpService{
-		Group:  "ee",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmee.Routes, prod),
+		Group:  "dr",
+		Routes: sbi_httpdp.MakeHttpRoutes(udrdr.Routes, prod),
 	}
 	services[1] = httpdp.HttpService{
-		Group:  "pp",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmpp.Routes, prod),
-	}
-	services[2] = httpdp.HttpService{
-		Group:  "mt",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmmt.Routes, prod),
-	}
-	services[3] = httpdp.HttpService{
-		Group:  "sdm",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmsdm.Routes, prod),
-	}
-	services[4] = httpdp.HttpService{
-		Group:  "ueau",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmueau.Routes, prod),
-	}
-	services[5] = httpdp.HttpService{
-		Group:  "uecm",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmuecm.Routes, prod),
-	}
-	services[6] = httpdp.HttpService{
-		Group:  "niddau",
-		Routes: sbi_httpdp.MakeHttpRoutes(udmniddau.Routes, prod),
+		Group:  "group",
+		Routes: sbi_httpdp.MakeHttpRoutes(udrgroup.Routes, prod),
 	}
 	return services
 }
 
 // access to the internal data structures of the AMF
-func (prod *Producer) udm() *context.UdmContext {
+func (prod *Producer) udr() *context.UdrContext {
 	return prod.backend.Context()
 }

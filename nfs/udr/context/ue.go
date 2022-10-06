@@ -1,6 +1,6 @@
 package context
 
-type UdmUe struct {
+type UdrUe struct {
 }
 
-type UdmUeList []UdmUe
+type UdrUeList []UdrUe

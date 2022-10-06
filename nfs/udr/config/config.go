@@ -9,18 +9,18 @@ import (
 	//	"time"
 )
 
-type UdmConfig struct {
+type UdrConfig struct {
 	Agent   *fabric_config.AgentConfig
-	UdmName string
+	UdrName string
 }
 
-func LoadConfig(f string) (*UdmConfig, error) {
+func LoadConfig(f string) (*UdrConfig, error) {
 	if _, err := ioutil.ReadFile(f); err != nil {
 		return nil, err
 	} else {
 
-		var udmconf UdmConfig
-		udmconf.UdmName = "udm"
+		var udrconf UdrConfig
+		udrconf.UdrName = "udr"
 		/*
 			if err := yaml.Unmarshal(content, &amfconf); err != nil {
 				return nil, err
@@ -31,6 +31,6 @@ func LoadConfig(f string) (*UdmConfig, error) {
 				return &amfconf, nil
 			}
 		*/
-		return &udmconf, nil
+		return &udrconf, nil
 	}
 }
