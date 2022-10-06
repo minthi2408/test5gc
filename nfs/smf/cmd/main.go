@@ -1,8 +1,8 @@
 package main
 
 import (
-	"etri5gc/nfs/udm/config"
-	"etri5gc/nfs/udm/service"
+	"etri5gc/nfs/smf/config"
+	"etri5gc/nfs/smf/service"
 	"os"
 	"os/signal"
 	"syscall"
@@ -22,14 +22,14 @@ var flags = []cli.Flag{
 	},
 }
 
-var nf *service.UDM
+var nf *service.SMF
 
 func main() {
 	log.Println("Hello beautiful world")
 
 	app := cli.NewApp()
-	app.Name = "udm"
-	app.Usage = "Etri 5G UDM"
+	app.Name = "smf"
+	app.Usage = "Etri 5G SMF"
 	app.Action = action
 	app.Flags = flags
 
@@ -56,21 +56,21 @@ func main() {
 func action(c *cli.Context) (err error) {
 	log.SetLevel(log.InfoLevel)
 	//read config
-	var cfg *config.UdmConfig
+	var cfg *config.SmfConfig
 	filename := c.String("config")
 	if cfg, err = config.LoadConfig(filename); err != nil {
-		log.Errorf("Fail to parse UDM configuration", err)
+		log.Errorf("Fail to parse SMF configuration", err)
 		return
 	}
 
 	//create the AMF
 	if nf, err = service.New(cfg); err != nil {
-		log.Errorf("Fail to create UDM", err)
+		log.Errorf("Fail to create SMF", err)
 		return
 	}
 
 	if err = nf.Start(); err != nil {
-		log.Errorf("Fail to start UDM", err)
+		log.Errorf("Fail to start SMF", err)
 		return err
 	}
 

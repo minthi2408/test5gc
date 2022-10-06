@@ -1,16 +1,16 @@
 package context
 
 import (
-	"etri5gc/nfs/udm/config"
+	"etri5gc/nfs/smf/config"
 )
 
-type UdmContext struct {
-	conf   *config.UdmConfig
-	uelist UdmUeList
+type SmfContext struct {
+	conf   *config.SmfConfig
+	uelist SmfUeList
 }
 
-func New(conf *config.UdmConfig) *UdmContext {
-	ret := &UdmContext{
+func New(conf *config.SmfConfig) *SmfContext {
+	ret := &SmfContext{
 		conf: conf,
 	}
 	return ret

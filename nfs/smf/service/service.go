@@ -5,10 +5,10 @@ import (
 	fabric_common "etri5gc/fabric/common"
 	fabric_config "etri5gc/fabric/config"
 
-	udm_config "etri5gc/nfs/udm/config"
-	"etri5gc/nfs/udm/context"
+	smf_config "etri5gc/nfs/smf/config"
+	"etri5gc/nfs/smf/context"
 
-	"etri5gc/nfs/udm/sbi/producer"
+	"etri5gc/nfs/smf/sbi/producer"
 	"fmt"
 
 	"github.com/sirupsen/logrus"
@@ -20,16 +20,16 @@ func init() {
 	log = logrus.WithFields(logrus.Fields{"mod": "service"})
 }
 
-type UDM struct {
+type SMF struct {
 	producer *producer.Producer    //handling Sbi requests received at the server
-	context  *context.UdmContext   // UDM context
-	config   *udm_config.UdmConfig // loaded UDM config
+	context  *context.SmfContext   // SMF context
+	config   *smf_config.SmfConfig // loaded SMF config
 	agent    fabric.ServiceAgent
 	sender   fabric.Forwarder
 }
 
-func New(config *udm_config.UdmConfig) (nf *UDM, err error) {
-	nf = &UDM{
+func New(config *smf_config.SmfConfig) (nf *SMF, err error) {
+	nf = &SMF{
 		config: config,
 	}
 
@@ -41,36 +41,36 @@ func New(config *udm_config.UdmConfig) (nf *UDM, err error) {
 	nf.agent, err = fabric.NewAgent(nf)
 	nf.sender = nf.agent.Forwarder()
 
-	// initialize UDM context
-	//	nf.context = context.NewUdmContext(config, nf.sender)
+	// initialize SMF context
+	//	nf.context = context.NewSmfContext(config, nf.sender)
 	return
 }
 
-func (nf *UDM) AgentConfig() *fabric_config.AgentConfig {
+func (nf *SMF) AgentConfig() *fabric_config.AgentConfig {
 	//TODO: get it from the nf config
 	return nil
 }
 
-func (nf *UDM) Services() []fabric_common.Service {
+func (nf *SMF) Services() []fabric_common.Service {
 	return nf.producer.Services()
 }
 
-func (nf *UDM) Context() *context.UdmContext {
+func (nf *SMF) Context() *context.SmfContext {
 	return nf.context
 }
 
-func (nf *UDM) Config() *udm_config.UdmConfig {
+func (nf *SMF) Config() *smf_config.SmfConfig {
 	return nf.config
 }
-func (nf *UDM) Profile() fabric_common.NfProfile {
+func (nf *SMF) Profile() fabric_common.NfProfile {
 	return nil
 }
-func (nf *UDM) Start() (err error) {
+func (nf *SMF) Start() (err error) {
 	err = nf.agent.Start()
 	return
 }
 
-func (nf *UDM) Terminate() {
+func (nf *SMF) Terminate() {
 	//stop sbi server
 	nf.agent.Terminate()
 
