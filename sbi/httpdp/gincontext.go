@@ -1,9 +1,9 @@
 package httpdp
 
 import (
-	fabricdp "etri5gc/fabric/httpdp"
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	fabricdp "etrib5gc/fabric/httpdp"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -3,8 +3,8 @@ package ngap
 import (
 	//	"encoding/hex"
 	//	"strconv"
-	"etri5gc/nfs/amf/context"
-	//	"etri5gc/nfs/amf/nas"
+	"etrib5gc/nfs/amf/context"
+	//	"etrib5gc/nfs/amf/nas"
 
 	"github.com/free5gc/aper"
 	//	"github.com/free5gc/nas/nasMessage"

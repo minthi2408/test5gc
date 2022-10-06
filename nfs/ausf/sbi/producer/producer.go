@@ -2,13 +2,13 @@ package producer
 
 import (
 	//	"fmt"
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp"
-	"etri5gc/nfs/ausf/context"
-	ausfsor "etri5gc/sbi/ausf/sor"
-	ausfuea "etri5gc/sbi/ausf/uea"
-	ausfupu "etri5gc/sbi/ausf/upu"
-	sbi_httpdp "etri5gc/sbi/httpdp"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/httpdp"
+	"etrib5gc/nfs/ausf/context"
+	ausfsor "etrib5gc/sbi/ausf/sor"
+	ausfuea "etrib5gc/sbi/ausf/uea"
+	ausfupu "etrib5gc/sbi/ausf/upu"
+	sbi_httpdp "etrib5gc/sbi/httpdp"
 
 	"github.com/sirupsen/logrus"
 )

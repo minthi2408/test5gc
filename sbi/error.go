@@ -1,7 +1,7 @@
 package sbi
 
 import (
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 )
 
 type ApiError struct {

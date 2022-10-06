@@ -12,8 +12,8 @@ API version: 1.0.2
 package nidd
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 	"net/http"
 )
 

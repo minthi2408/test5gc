@@ -2,7 +2,7 @@ package registrydb
 
 import (
 	"errors"
-	"etri5gc/fabric/common"
+	"etrib5gc/fabric/common"
 )
 
 const (

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"syscall"
 
-	"etri5gc/nfs/amf"
-	"etri5gc/nfs/amf/nas"
+	"etrib5gc/nfs/amf"
+	"etrib5gc/nfs/amf/nas"
 
 	"git.cs.nctu.edu.tw/calee/sctp"
 

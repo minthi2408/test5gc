@@ -1,6 +1,6 @@
 package registrydb
 
-import "etri5gc/fabric/common"
+import "etrib5gc/fabric/common"
 
 // centralized registry
 type centralizedRegistryClient struct {

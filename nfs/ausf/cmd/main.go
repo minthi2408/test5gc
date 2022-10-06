@@ -1,8 +1,8 @@
 package main
 
 import (
-	"etri5gc/nfs/ausf/config"
-	"etri5gc/nfs/ausf/service"
+	"etrib5gc/nfs/ausf/config"
+	"etrib5gc/nfs/ausf/service"
 	"os"
 	"os/signal"
 	"syscall"

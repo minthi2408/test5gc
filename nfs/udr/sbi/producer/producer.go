@@ -2,12 +2,12 @@ package producer
 
 import (
 	//	"fmt"
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp"
-	"etri5gc/nfs/udr/context"
-	sbi_httpdp "etri5gc/sbi/httpdp"
-	udrdr "etri5gc/sbi/udr/dr"
-	udrgroup "etri5gc/sbi/udr/group"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/httpdp"
+	"etrib5gc/nfs/udr/context"
+	sbi_httpdp "etrib5gc/sbi/httpdp"
+	udrdr "etrib5gc/sbi/udr/dr"
+	udrgroup "etrib5gc/sbi/udr/group"
 
 	"github.com/sirupsen/logrus"
 )

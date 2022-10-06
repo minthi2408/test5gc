@@ -1,8 +1,8 @@
 package config
 
 import (
-	fabric_config "etri5gc/fabric/config"
-	//	"etri5gc/openapi/models"
+	fabric_config "etrib5gc/fabric/config"
+	//	"etrib5gc/openapi/models"
 	//	"fmt"
 	"io/ioutil"
 	//	"strconv"

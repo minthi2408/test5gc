@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils/ngapConvert"
+	"etrib5gc/sbi/models"
+	"etrib5gc/sbi/utils/ngapConvert"
 
 	"github.com/free5gc/ngap/ngapType"
 )

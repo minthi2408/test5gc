@@ -1,8 +1,8 @@
 package producer
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 )
 
 func (p *Producer) LOC_HandleCancelLocation(ueContextId string, body models.CancelPosInfo) (successCode int32, err *sbi.ApiError) {

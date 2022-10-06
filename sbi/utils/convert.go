@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 	"fmt"
 )
 

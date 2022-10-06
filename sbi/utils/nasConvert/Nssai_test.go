@@ -3,7 +3,7 @@ package nasConvert_test
 import (
 	"testing"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/smartystreets/goconvey/convey"
 

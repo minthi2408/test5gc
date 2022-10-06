@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/ngap/ngapType"
 )

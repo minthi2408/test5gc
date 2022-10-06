@@ -1,7 +1,7 @@
 package nasConvert
 
 import (
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 )
 
 func LadnToModels(buf []uint8) (dnnValues []string) {

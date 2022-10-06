@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/nfs/pcf/config"
+	"etrib5gc/nfs/pcf/config"
 )
 
 type PcfContext struct {

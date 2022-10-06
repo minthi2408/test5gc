@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/nfs/ausf/config"
+	"etrib5gc/nfs/ausf/config"
 )
 
 type AusfContext struct {

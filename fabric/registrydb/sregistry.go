@@ -1,6 +1,6 @@
 package registrydb
 
-import "etri5gc/fabric/common"
+import "etrib5gc/fabric/common"
 
 //static registry
 //list of profiles are loaded from a config file

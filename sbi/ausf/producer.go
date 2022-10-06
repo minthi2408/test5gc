@@ -1,9 +1,9 @@
 package ausf
 
 import (
-	"etri5gc/sbi/ausf/sor"
-	"etri5gc/sbi/ausf/uea"
-	"etri5gc/sbi/ausf/upu"
+	"etrib5gc/sbi/ausf/sor"
+	"etrib5gc/sbi/ausf/uea"
+	"etrib5gc/sbi/ausf/upu"
 )
 
 type Producer interface {

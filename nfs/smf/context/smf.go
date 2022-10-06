@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/nfs/smf/config"
+	"etrib5gc/nfs/smf/config"
 )
 
 type SmfContext struct {

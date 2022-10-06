@@ -1,7 +1,7 @@
 package ngapConvert
 
 import (
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/aper"
 	"github.com/free5gc/ngap/ngapType"

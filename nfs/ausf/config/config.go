@@ -1,7 +1,7 @@
 package config
 
 import (
-	fabric_config "etri5gc/fabric/config"
+	fabric_config "etrib5gc/fabric/config"
 	"io/ioutil"
 )
 

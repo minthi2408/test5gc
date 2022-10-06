@@ -12,10 +12,10 @@ import (
 	//	"strings"
 	//	"time"
 
-	"etri5gc/nfs/amf/context"
-	"etri5gc/nfs/amf/ngap/util"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils/nasConvert"
+	"etrib5gc/nfs/amf/context"
+	"etrib5gc/nfs/amf/ngap/util"
+	"etrib5gc/sbi/models"
+	"etrib5gc/sbi/utils/nasConvert"
 
 	//	"github.com/antihax/optional"
 	"github.com/mitchellh/mapstructure"

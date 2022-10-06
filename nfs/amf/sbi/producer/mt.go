@@ -1,8 +1,8 @@
 package producer
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 )
 
 func (p *Producer) MT_HandleProvideDomainSelectionInfo(ueContextId string, infoClass *models.UeContextInfoClass, supportedFeatures string, oldGuami *models.Guami) (successCode int32, result models.UeContextInfo, err *sbi.ApiError) {

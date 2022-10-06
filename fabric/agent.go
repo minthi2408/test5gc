@@ -2,13 +2,13 @@ package fabric
 
 import (
 	"errors"
-	"etri5gc/fabric/common"
-	fabric_config "etri5gc/fabric/config"
-	"etri5gc/fabric/conman"
-	fwimpl "etri5gc/fabric/forwarder"
-	"etri5gc/fabric/httpdp"
-	"etri5gc/fabric/registrydb"
-	"etri5gc/fabric/telemetry"
+	"etrib5gc/fabric/common"
+	fabric_config "etrib5gc/fabric/config"
+	"etrib5gc/fabric/conman"
+	fwimpl "etrib5gc/fabric/forwarder"
+	"etrib5gc/fabric/httpdp"
+	"etrib5gc/fabric/registrydb"
+	"etrib5gc/fabric/telemetry"
 )
 
 type serviceAgent struct {

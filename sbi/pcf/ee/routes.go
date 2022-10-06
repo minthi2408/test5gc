@@ -12,7 +12,7 @@ API version: 1.1.2
 package ee
 
 import (
-	"etri5gc/sbi"
+	"etrib5gc/sbi"
 	"net/http"
 )
 

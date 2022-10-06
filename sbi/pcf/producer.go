@@ -1,12 +1,12 @@
 package pcf
 
 import (
-	"etri5gc/sbi/pcf/ampc"
-	"etri5gc/sbi/pcf/btdpc"
-	"etri5gc/sbi/pcf/ee"
-	"etri5gc/sbi/pcf/pa"
-	"etri5gc/sbi/pcf/smpc"
-	"etri5gc/sbi/pcf/uepc"
+	"etrib5gc/sbi/pcf/ampc"
+	"etrib5gc/sbi/pcf/btdpc"
+	"etrib5gc/sbi/pcf/ee"
+	"etrib5gc/sbi/pcf/pa"
+	"etrib5gc/sbi/pcf/smpc"
+	"etrib5gc/sbi/pcf/uepc"
 )
 
 type Producer interface {

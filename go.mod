@@ -1,4 +1,4 @@
-module etri5gc
+module etrib5gc
 
 go 1.18
 

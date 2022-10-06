@@ -2,17 +2,17 @@ package producer
 
 import (
 	//	"fmt"
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp"
-	"etri5gc/nfs/udm/context"
-	sbi_httpdp "etri5gc/sbi/httpdp"
-	udmee "etri5gc/sbi/udm/ee"
-	udmmt "etri5gc/sbi/udm/mt"
-	udmniddau "etri5gc/sbi/udm/niddau"
-	udmpp "etri5gc/sbi/udm/pp"
-	udmsdm "etri5gc/sbi/udm/sdm"
-	udmueau "etri5gc/sbi/udm/ueau"
-	udmuecm "etri5gc/sbi/udm/uecm"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/httpdp"
+	"etrib5gc/nfs/udm/context"
+	sbi_httpdp "etrib5gc/sbi/httpdp"
+	udmee "etrib5gc/sbi/udm/ee"
+	udmmt "etrib5gc/sbi/udm/mt"
+	udmniddau "etrib5gc/sbi/udm/niddau"
+	udmpp "etrib5gc/sbi/udm/pp"
+	udmsdm "etrib5gc/sbi/udm/sdm"
+	udmueau "etrib5gc/sbi/udm/ueau"
+	udmuecm "etrib5gc/sbi/udm/uecm"
 
 	"github.com/sirupsen/logrus"
 )

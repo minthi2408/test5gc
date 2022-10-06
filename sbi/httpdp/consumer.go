@@ -2,10 +2,10 @@ package httpdp
 
 import (
 	"errors"
-	"etri5gc/fabric"
-	"etri5gc/fabric/common"
-	fabricdp "etri5gc/fabric/httpdp"
-	"etri5gc/sbi"
+	"etrib5gc/fabric"
+	"etrib5gc/fabric/common"
+	fabricdp "etrib5gc/fabric/httpdp"
+	"etrib5gc/sbi"
 )
 
 // implement the sbi consumer client abstraction

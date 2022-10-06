@@ -2,17 +2,17 @@ package producer
 
 import (
 	//	"fmt"
-	"etri5gc/nfs/amf/context"
-	amfcomm "etri5gc/sbi/amf/comm"
-	amfee "etri5gc/sbi/amf/ee"
-	amfloc "etri5gc/sbi/amf/loc"
-	amfmt "etri5gc/sbi/amf/mt"
+	"etrib5gc/nfs/amf/context"
+	amfcomm "etrib5gc/sbi/amf/comm"
+	amfee "etrib5gc/sbi/amf/ee"
+	amfloc "etrib5gc/sbi/amf/loc"
+	amfmt "etrib5gc/sbi/amf/mt"
 
-	"etri5gc/fabric/common"
-	"etri5gc/sbi/models"
+	"etrib5gc/fabric/common"
+	"etrib5gc/sbi/models"
 
-	"etri5gc/fabric/httpdp"
-	sbi_httpdp "etri5gc/sbi/httpdp"
+	"etrib5gc/fabric/httpdp"
+	sbi_httpdp "etrib5gc/sbi/httpdp"
 
 	"github.com/free5gc/nas/nasType"
 	"github.com/free5gc/ngap/ngapType"

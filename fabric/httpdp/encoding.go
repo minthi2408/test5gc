@@ -1,7 +1,7 @@
 package httpdp
 
 import (
-	"etri5gc/sbi"
+	"etrib5gc/sbi"
 )
 
 // a singleton

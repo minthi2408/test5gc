@@ -1,8 +1,8 @@
 package conman
 
 import (
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/httpdp"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/httpdp"
 )
 
 // abstraction of protocol-specific service clients

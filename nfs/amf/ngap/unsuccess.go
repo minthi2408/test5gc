@@ -1,8 +1,8 @@
 package ngap
 
 import (
-	"etri5gc/nfs/amf/context"
-	"etri5gc/sbi/models"
+	"etrib5gc/nfs/amf/context"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/ngap/ngapType"
 )

@@ -1,9 +1,9 @@
 package context
 
 import (
-	"etri5gc/fabric"
-	"etri5gc/fabric/common"
-	"etri5gc/sbi/models"
+	"etrib5gc/fabric"
+	"etrib5gc/fabric/common"
+	"etrib5gc/sbi/models"
 )
 
 type smfClient struct {

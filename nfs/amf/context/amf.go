@@ -11,9 +11,9 @@ import (
 
 	//	"time"
 
-	"etri5gc/fabric"
-	"etri5gc/nfs/amf/config"
-	"etri5gc/sbi/models"
+	"etrib5gc/fabric"
+	"etrib5gc/nfs/amf/config"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/util/idgenerator"
 	"github.com/google/uuid"

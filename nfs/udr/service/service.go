@@ -1,14 +1,14 @@
 package service
 
 import (
-	"etri5gc/fabric"
-	fabric_common "etri5gc/fabric/common"
-	fabric_config "etri5gc/fabric/config"
+	"etrib5gc/fabric"
+	fabric_common "etrib5gc/fabric/common"
+	fabric_config "etrib5gc/fabric/config"
 
-	udr_config "etri5gc/nfs/udr/config"
-	"etri5gc/nfs/udr/context"
+	udr_config "etrib5gc/nfs/udr/config"
+	"etrib5gc/nfs/udr/context"
 
-	"etri5gc/nfs/udr/sbi/producer"
+	"etrib5gc/nfs/udr/sbi/producer"
 	"fmt"
 
 	"github.com/sirupsen/logrus"

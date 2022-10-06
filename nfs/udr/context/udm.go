@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/nfs/udr/config"
+	"etrib5gc/nfs/udr/config"
 )
 
 type UdrContext struct {

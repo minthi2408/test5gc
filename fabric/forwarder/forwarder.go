@@ -2,9 +2,9 @@ package fabric
 
 import (
 	"errors"
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/conman"
-	"etri5gc/fabric/registrydb"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/conman"
+	"etrib5gc/fabric/registrydb"
 )
 
 const (

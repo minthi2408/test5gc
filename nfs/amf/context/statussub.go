@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 )
 
 func (amf *AmfContext) AMFStatusChangeSubscribe(datreq models.SubscriptionData) (

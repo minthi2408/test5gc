@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"reflect"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/nas/logger"
 )

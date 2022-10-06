@@ -3,7 +3,7 @@ package ngapConvert
 import (
 	"encoding/hex"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/ngap/logger"
 	"github.com/free5gc/ngap/ngapType"

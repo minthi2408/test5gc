@@ -2,12 +2,12 @@ package ngap
 
 import (
 	"encoding/hex"
-	"etri5gc/nfs/amf/context"
+	"etrib5gc/nfs/amf/context"
 	"strconv"
 
-	"etri5gc/nfs/amf/ngap/util"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils/ngapConvert"
+	"etrib5gc/nfs/amf/ngap/util"
+	"etrib5gc/sbi/models"
+	"etrib5gc/sbi/utils/ngapConvert"
 
 	//	"github.com/free5gc/aper"
 	"github.com/free5gc/nas/nasMessage"

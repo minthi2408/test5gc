@@ -3,9 +3,9 @@ package nas
 import (
 	"encoding/base64"
 
-	"etri5gc/nfs/amf/context"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils/nasConvert"
+	"etrib5gc/nfs/amf/context"
+	"etrib5gc/sbi/models"
+	"etrib5gc/sbi/utils/nasConvert"
 
 	libnas "github.com/free5gc/nas"
 	"github.com/free5gc/nas/nasMessage"

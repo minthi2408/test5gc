@@ -1,8 +1,8 @@
 package producer
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 )
 
 func (p *Producer) MT_HandleProvideLocationInfo(supi string, body models.LocationInfoRequest) (successCode int32, result models.LocationInfoResult, err *sbi.ApiError) {

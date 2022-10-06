@@ -1,8 +1,8 @@
 package main
 
 import (
-	"etri5gc/nfs/amf/config"
-	"etri5gc/nfs/amf/service"
+	"etrib5gc/nfs/amf/config"
+	"etrib5gc/nfs/amf/service"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"os"

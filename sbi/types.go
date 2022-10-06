@@ -1,8 +1,8 @@
 package sbi
 
 import (
-	"etri5gc/fabric/common"
-	"etri5gc/sbi/models"
+	"etrib5gc/fabric/common"
+	"etrib5gc/sbi/models"
 	"net/url"
 )
 

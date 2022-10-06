@@ -12,8 +12,8 @@ API version: 1.1.4
 package upu
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 	"fmt"
 	"net/http"
 	"net/url"

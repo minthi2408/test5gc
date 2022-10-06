@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"etri5gc/fabric/common"
-	"etri5gc/sbi"
+	"etrib5gc/fabric/common"
+	"etrib5gc/sbi"
 )
 
 type remoteAgent struct {

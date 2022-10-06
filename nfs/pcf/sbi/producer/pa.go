@@ -1,8 +1,8 @@
 package producer
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 )
 
 func (p *Producer) PA_HandlePostAppSessions(body models.AppSessionContext) (successCode int32, result models.AppSessionContext, err *sbi.ApiError) {

@@ -1,7 +1,7 @@
 package telemetry
 
 import (
-	"etri5gc/fabric/common"
+	"etrib5gc/fabric/common"
 	"time"
 )
 

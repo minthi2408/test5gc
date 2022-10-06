@@ -1,9 +1,9 @@
 package smf
 
 import (
-	"etri5gc/sbi/smf/ee"
-	"etri5gc/sbi/smf/nidd"
-	"etri5gc/sbi/smf/pdu"
+	"etrib5gc/sbi/smf/ee"
+	"etrib5gc/sbi/smf/nidd"
+	"etrib5gc/sbi/smf/pdu"
 )
 
 type Producer interface {

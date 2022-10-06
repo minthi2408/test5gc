@@ -12,7 +12,7 @@ API version: 2.1.7
 package sdm
 
 import (
-	"etri5gc/sbi"
+	"etrib5gc/sbi"
 	"net/http"
 )
 

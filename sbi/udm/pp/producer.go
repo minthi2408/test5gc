@@ -12,9 +12,9 @@ API version: 1.1.3
 package pp
 
 import (
-	"etri5gc/sbi"
-	"etri5gc/sbi/models"
-	"etri5gc/sbi/utils"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
+	"etrib5gc/sbi/utils"
 	"net/http"
 )
 

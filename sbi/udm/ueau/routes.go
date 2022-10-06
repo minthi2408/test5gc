@@ -12,7 +12,7 @@ API version: 1.1.3
 package ueau
 
 import (
-	"etri5gc/sbi"
+	"etrib5gc/sbi"
 	"net/http"
 )
 

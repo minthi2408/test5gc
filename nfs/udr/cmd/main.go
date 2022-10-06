@@ -1,8 +1,8 @@
 package main
 
 import (
-	"etri5gc/nfs/udr/config"
-	"etri5gc/nfs/udr/service"
+	"etrib5gc/nfs/udr/config"
+	"etrib5gc/nfs/udr/service"
 	"os"
 	"os/signal"
 	"syscall"

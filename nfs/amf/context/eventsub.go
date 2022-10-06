@@ -1,7 +1,7 @@
 package context
 
 import (
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 	"net/http"
 	"strconv"
 	"time"

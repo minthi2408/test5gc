@@ -2,7 +2,7 @@ package httpdp
 
 import (
 	"errors"
-	"etri5gc/fabric/common"
+	"etrib5gc/fabric/common"
 	"fmt"
 	"net/http"
 	"sync"

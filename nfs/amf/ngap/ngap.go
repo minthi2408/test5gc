@@ -1,8 +1,8 @@
 package ngap
 
 import (
-	"etri5gc/nfs/amf"
-	"etri5gc/nfs/amf/nas"
+	"etrib5gc/nfs/amf"
+	"etrib5gc/nfs/amf/nas"
 	"net"
 
 	"git.cs.nctu.edu.tw/calee/sctp"

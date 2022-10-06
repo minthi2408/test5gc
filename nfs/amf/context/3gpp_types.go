@@ -3,7 +3,7 @@ package context
 import (
 	"time"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 )
 
 const (

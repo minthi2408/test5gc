@@ -12,7 +12,7 @@ API version: 1.0.1
 package group
 
 import (
-	"etri5gc/sbi"
+	"etrib5gc/sbi"
 	"net/http"
 )
 

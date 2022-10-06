@@ -1,8 +1,8 @@
 package fabric
 
 import (
-	"etri5gc/fabric/common"
-	"etri5gc/fabric/config"
+	"etrib5gc/fabric/common"
+	"etrib5gc/fabric/config"
 )
 
 type Application interface {

@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"sync"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"

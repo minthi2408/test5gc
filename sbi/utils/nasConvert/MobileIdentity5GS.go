@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"etri5gc/sbi/models"
+	"etrib5gc/sbi/models"
 
 	"github.com/free5gc/nas/logger"
 	"github.com/free5gc/nas/nasMessage"

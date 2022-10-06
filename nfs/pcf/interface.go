@@ -1,8 +1,8 @@
 package amf
 
 import (
-	"etri5gc/nfs/pcf/config"
-	"etri5gc/nfs/pcf/context"
+	"etrib5gc/nfs/pcf/config"
+	"etrib5gc/nfs/pcf/context"
 )
 
 type Backend interface {
