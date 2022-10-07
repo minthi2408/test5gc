@@ -13,7 +13,7 @@ package models
 
 type SessionRuleFailureCode string
 
-// List of SessionRuleFailureCodeAnyOf
+// List of SessionRuleFailureCode
 const (
 	SESSIONRULEFAILURECODEANYOF_NF_MAL         SessionRuleFailureCode = "NF_MAL"
 	SESSIONRULEFAILURECODEANYOF_RES_LIM        SessionRuleFailureCode = "RES_LIM"

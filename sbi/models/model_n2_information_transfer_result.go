@@ -13,7 +13,7 @@ package models
 
 type N2InformationTransferResult string
 
-// List of N2InformationTransferResultAnyOf
+// List of N2InformationTransferResult
 const (
 	N2INFORMATIONTRANSFERRESULTANYOF_N2_INFO_TRANSFER_INITIATED N2InformationTransferResult = "N2_INFO_TRANSFER_INITIATED"
 )

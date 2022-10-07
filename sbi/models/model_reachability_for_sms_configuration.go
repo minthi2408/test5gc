@@ -13,7 +13,7 @@ package models
 
 type ReachabilityForSmsConfiguration string
 
-// List of ReachabilityForSmsConfigurationAnyOf
+// List of ReachabilityForSmsConfiguration
 const (
 	REACHABILITYFORSMSCONFIGURATIONANYOF_NAS ReachabilityForSmsConfiguration = "REACHABILITY_FOR_SMS_OVER_NAS"
 	REACHABILITYFORSMSCONFIGURATIONANYOF_IP  ReachabilityForSmsConfiguration = "REACHABILITY_FOR_SMS_OVER_IP"

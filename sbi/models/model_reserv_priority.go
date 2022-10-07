@@ -13,7 +13,7 @@ package models
 
 type ReservPriority string
 
-// List of ReservPriorityAnyOf
+// List of ReservPriority
 const (
 	RESERVPRIORITYANYOF__1  ReservPriority = "PRIO_1"
 	RESERVPRIORITYANYOF__2  ReservPriority = "PRIO_2"

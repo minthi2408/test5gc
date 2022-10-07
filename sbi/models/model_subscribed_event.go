@@ -13,7 +13,7 @@ package models
 
 type SubscribedEvent string
 
-// List of SubscribedEventAnyOf
+// List of SubscribedEvent
 const (
 	SUBSCRIBEDEVENTANYOF_UP_PATH_CHANGE SubscribedEvent = "UP_PATH_CHANGE"
 )

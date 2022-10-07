@@ -13,7 +13,7 @@ package models
 
 type MdtUserConsent string
 
-// List of MdtUserConsentAnyOf
+// List of MdtUserConsent
 const (
 	MDTUSERCONSENTANYOF_NOT_GIVEN MdtUserConsent = "CONSENT_NOT_GIVEN"
 	MDTUSERCONSENTANYOF_GIVEN     MdtUserConsent = "CONSENT_GIVEN"

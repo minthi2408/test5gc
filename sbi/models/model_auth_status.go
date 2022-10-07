@@ -13,7 +13,7 @@ package models
 
 type AuthStatus string
 
-// List of AuthStatusAnyOf
+// List of AuthStatus
 const (
 	AUTHSTATUSANYOF_EAP_SUCCESS AuthStatus = "EAP_SUCCESS"
 	AUTHSTATUSANYOF_EAP_FAILURE AuthStatus = "EAP_FAILURE"

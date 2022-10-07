@@ -13,7 +13,7 @@ package models
 
 type PduSessionContinuityInd string
 
-// List of PduSessionContinuityIndAnyOf
+// List of PduSessionContinuityInd
 const (
 	PDUSESSIONCONTINUITYINDANYOF_MAINTAIN_PDUSESSION  PduSessionContinuityInd = "MAINTAIN_PDUSESSION"
 	PDUSESSIONCONTINUITYINDANYOF_RECONNECT_PDUSESSION PduSessionContinuityInd = "RECONNECT_PDUSESSION"

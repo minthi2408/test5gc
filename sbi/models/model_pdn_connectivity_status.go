@@ -13,7 +13,7 @@ package models
 
 type PdnConnectivityStatus string
 
-// List of PdnConnectivityStatusAnyOf
+// List of PdnConnectivityStatus
 const (
 	PDNCONNECTIVITYSTATUSANYOF_ESTABLISHED PdnConnectivityStatus = "ESTABLISHED"
 	PDNCONNECTIVITYSTATUSANYOF_RELEASED    PdnConnectivityStatus = "RELEASED"

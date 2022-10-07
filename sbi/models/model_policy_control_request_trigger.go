@@ -13,7 +13,7 @@ package models
 
 type PolicyControlRequestTrigger string
 
-// List of PolicyControlRequestTriggerAnyOf
+// List of PolicyControlRequestTrigger
 const (
 	POLICYCONTROLREQUESTTRIGGERANYOF_PLMN_CH                          PolicyControlRequestTrigger = "PLMN_CH"
 	POLICYCONTROLREQUESTTRIGGERANYOF_RES_MO_RE                        PolicyControlRequestTrigger = "RES_MO_RE"

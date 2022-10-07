@@ -13,7 +13,7 @@ package models
 
 type TrafficProfile string
 
-// List of TrafficProfileAnyOf
+// List of TrafficProfile
 const (
 	TRAFFICPROFILEANYOF_SINGLE_TRANS_UL     TrafficProfile = "SINGLE_TRANS_UL"
 	TRAFFICPROFILEANYOF_SINGLE_TRANS_DL     TrafficProfile = "SINGLE_TRANS_DL"

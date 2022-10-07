@@ -13,7 +13,7 @@ package models
 
 type DnnSelectionMode string
 
-// List of DnnSelectionModeAnyOf
+// List of DnnSelectionMode
 const (
 	DNNSELECTIONMODEANYOF_VERIFIED            DnnSelectionMode = "VERIFIED"
 	DNNSELECTIONMODEANYOF_UE_DNN_NOT_VERIFIED DnnSelectionMode = "UE_DNN_NOT_VERIFIED"

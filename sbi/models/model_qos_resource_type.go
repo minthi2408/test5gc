@@ -13,7 +13,7 @@ package models
 
 type QosResourceType string
 
-// List of QosResourceTypeAnyOf
+// List of QosResourceType
 const (
 	QOSRESOURCETYPEANYOF_NON_GBR          QosResourceType = "NON_GBR"
 	QOSRESOURCETYPEANYOF_NON_CRITICAL_GBR QosResourceType = "NON_CRITICAL_GBR"

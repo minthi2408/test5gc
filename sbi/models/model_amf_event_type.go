@@ -13,7 +13,7 @@ package models
 
 type AmfEventType string
 
-// List of AmfEventTypeAnyOf
+// List of AmfEventType
 const (
 	AMFEVENTTYPEANYOF_LOCATION_REPORT                       AmfEventType = "LOCATION_REPORT"
 	AMFEVENTTYPEANYOF_PRESENCE_IN_AOI_REPORT                AmfEventType = "PRESENCE_IN_AOI_REPORT"

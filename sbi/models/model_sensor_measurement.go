@@ -13,7 +13,7 @@ package models
 
 type SensorMeasurement string
 
-// List of SensorMeasurementAnyOf
+// List of SensorMeasurement
 const (
 	SENSORMEASUREMENTANYOF_BAROMETRIC_PRESSURE SensorMeasurement = "BAROMETRIC_PRESSURE"
 	SENSORMEASUREMENTANYOF_UE_SPEED            SensorMeasurement = "UE_SPEED"

@@ -13,7 +13,7 @@ package models
 
 type QosNotifType string
 
-// List of QosNotifTypeAnyOf
+// List of QosNotifType
 const (
 	QOSNOTIFTYPEANYOF_GUARANTEED     QosNotifType = "GUARANTEED"
 	QOSNOTIFTYPEANYOF_NOT_GUARANTEED QosNotifType = "NOT_GUARANTEED"

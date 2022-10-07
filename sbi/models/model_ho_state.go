@@ -13,7 +13,7 @@ package models
 
 type HoState string
 
-// List of HoStateAnyOf
+// List of HoState
 const (
 	HOSTATEANYOF_NONE      HoState = "NONE"
 	HOSTATEANYOF_PREPARING HoState = "PREPARING"

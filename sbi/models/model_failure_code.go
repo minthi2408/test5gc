@@ -13,7 +13,7 @@ package models
 
 type FailureCode string
 
-// List of FailureCodeAnyOf
+// List of FailureCode
 const (
 	FAILURECODEANYOF_UNK_RULE_ID            FailureCode = "UNK_RULE_ID"
 	FAILURECODEANYOF_RA_GR_ERR              FailureCode = "RA_GR_ERR"

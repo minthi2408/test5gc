@@ -13,7 +13,7 @@ package models
 
 type CoreNetworkType string
 
-// List of CoreNetworkTypeAnyOf
+// List of CoreNetworkType
 const (
 	CORENETWORKTYPEANYOF__5_GC CoreNetworkType = "5GC"
 	CORENETWORKTYPEANYOF_EPC   CoreNetworkType = "EPC"

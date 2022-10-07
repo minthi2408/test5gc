@@ -13,7 +13,7 @@ package models
 
 type DataInd string
 
-// List of DataIndAnyOf
+// List of DataInd
 const (
 	DATAINDANYOF_PFD       DataInd = "PFD"
 	DATAINDANYOF_IPTV      DataInd = "IPTV"

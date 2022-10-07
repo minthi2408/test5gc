@@ -13,7 +13,7 @@ package models
 
 type AssociationType string
 
-// List of AssociationTypeAnyOf
+// List of AssociationType
 const (
 	ASSOCIATIONTYPEANYOF_IMEI_CHANGE   AssociationType = "IMEI_CHANGE"
 	ASSOCIATIONTYPEANYOF_IMEISV_CHANGE AssociationType = "IMEISV_CHANGE"

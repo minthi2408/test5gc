@@ -13,7 +13,7 @@ package models
 
 type FlowDirection string
 
-// List of FlowDirectionAnyOf
+// List of FlowDirection
 const (
 	FLOWDIRECTIONANYOF_DOWNLINK      FlowDirection = "DOWNLINK"
 	FLOWDIRECTIONANYOF_UPLINK        FlowDirection = "UPLINK"

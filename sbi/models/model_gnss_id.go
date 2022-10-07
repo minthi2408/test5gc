@@ -13,7 +13,7 @@ package models
 
 type GnssId string
 
-// List of GnssIdAnyOf
+// List of GnssId
 const (
 	GNSSIDANYOF_GPS            GnssId = "GPS"
 	GNSSIDANYOF_GALILEO        GnssId = "GALILEO"

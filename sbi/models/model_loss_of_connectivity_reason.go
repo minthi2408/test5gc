@@ -13,7 +13,7 @@ package models
 
 type LossOfConnectivityReason string
 
-// List of LossOfConnectivityReasonAnyOf
+// List of LossOfConnectivityReason
 const (
 	LOSSOFCONNECTIVITYREASONANYOF_DEREGISTERED               LossOfConnectivityReason = "DEREGISTERED"
 	LOSSOFCONNECTIVITYREASONANYOF_MAX_DETECTION_TIME_EXPIRED LossOfConnectivityReason = "MAX_DETECTION_TIME_EXPIRED"

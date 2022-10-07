@@ -13,7 +13,7 @@ package models
 
 type Rsn string
 
-// List of RsnAnyOf
+// List of Rsn
 const (
 	RSNANYOF_V1 Rsn = "V1"
 	RSNANYOF_V2 Rsn = "V2"

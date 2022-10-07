@@ -13,7 +13,7 @@ package models
 
 type LineType string
 
-// List of LineTypeAnyOf
+// List of LineType
 const (
 	LINETYPEANYOF_DSL LineType = "DSL"
 	LINETYPEANYOF_PON LineType = "PON"

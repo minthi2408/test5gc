@@ -13,7 +13,7 @@ package models
 
 type NetLocAccessSupport string
 
-// List of NetLocAccessSupportAnyOf
+// List of NetLocAccessSupport
 const (
 	NETLOCACCESSSUPPORTANYOF_ANR_NOT_SUPPORTED NetLocAccessSupport = "ANR_NOT_SUPPORTED"
 	NETLOCACCESSSUPPORTANYOF_TZR_NOT_SUPPORTED NetLocAccessSupport = "TZR_NOT_SUPPORTED"

@@ -13,7 +13,7 @@ package models
 
 type AfEvent string
 
-// List of AfEventAnyOf
+// List of AfEvent
 const (
 	AFEVENTANYOF_ACCESS_TYPE_CHANGE              AfEvent = "ACCESS_TYPE_CHANGE"
 	AFEVENTANYOF_ANI_REPORT                      AfEvent = "ANI_REPORT"

@@ -13,7 +13,7 @@ package models
 
 type NodeType string
 
-// List of NodeTypeAnyOf
+// List of NodeType
 const (
 	NODETYPEANYOF_AUSF            NodeType = "AUSF"
 	NODETYPEANYOF_VLR             NodeType = "VLR"

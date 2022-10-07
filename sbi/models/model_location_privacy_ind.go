@@ -13,7 +13,7 @@ package models
 
 type LocationPrivacyInd string
 
-// List of LocationPrivacyIndAnyOf
+// List of LocationPrivacyInd
 const (
 	LOCATIONPRIVACYINDANYOF_DISALLOWED LocationPrivacyInd = "LOCATION_DISALLOWED"
 	LOCATIONPRIVACYINDANYOF_ALLOWED    LocationPrivacyInd = "LOCATION_ALLOWED"

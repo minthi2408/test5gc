@@ -13,7 +13,7 @@ package models
 
 type UpCnxState string
 
-// List of UpCnxStateAnyOf
+// List of UpCnxState
 const (
 	UPCNXSTATEANYOF_ACTIVATED   UpCnxState = "ACTIVATED"
 	UPCNXSTATEANYOF_DEACTIVATED UpCnxState = "DEACTIVATED"

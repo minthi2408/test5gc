@@ -13,7 +13,7 @@ package models
 
 type DomainNameProtocol string
 
-// List of DomainNameProtocolAnyOf
+// List of DomainNameProtocol
 const (
 	DOMAINNAMEPROTOCOLANYOF_DNS_QNAME DomainNameProtocol = "DNS_QNAME"
 	DOMAINNAMEPROTOCOLANYOF_TLS_SNI   DomainNameProtocol = "TLS_SNI"

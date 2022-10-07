@@ -13,7 +13,7 @@ package models
 
 type ReachabilityFilter string
 
-// List of ReachabilityFilterAnyOf
+// List of ReachabilityFilter
 const (
 	REACHABILITYFILTERANYOF_REACHABILITY_STATUS_CHANGE ReachabilityFilter = "UE_REACHABILITY_STATUS_CHANGE"
 	REACHABILITYFILTERANYOF_REACHABLE_DL_TRAFFIC       ReachabilityFilter = "UE_REACHABLE_DL_TRAFFIC"

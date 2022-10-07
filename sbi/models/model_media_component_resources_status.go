@@ -13,7 +13,7 @@ package models
 
 type MediaComponentResourcesStatus string
 
-// List of MediaComponentResourcesStatusAnyOf
+// List of MediaComponentResourcesStatus
 const (
 	MEDIACOMPONENTRESOURCESSTATUSANYOF_ACTIVE   MediaComponentResourcesStatus = "ACTIVE"
 	MEDIACOMPONENTRESOURCESSTATUSANYOF_INACTIVE MediaComponentResourcesStatus = "INACTIVE"

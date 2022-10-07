@@ -13,7 +13,7 @@ package models
 
 type AfRequestedData string
 
-// List of AfRequestedDataAnyOf
+// List of AfRequestedData
 const (
 	AFREQUESTEDDATAANYOF_UE_IDENTITY AfRequestedData = "UE_IDENTITY"
 )

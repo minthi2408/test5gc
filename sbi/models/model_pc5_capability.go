@@ -13,7 +13,7 @@ package models
 
 type Pc5Capability string
 
-// List of Pc5CapabilityAnyOf
+// List of Pc5Capability
 const (
 	PC5CAPABILITYANYOF_LTE_PC5    Pc5Capability = "LTE_PC5"
 	PC5CAPABILITYANYOF_NR_PC5     Pc5Capability = "NR_PC5"

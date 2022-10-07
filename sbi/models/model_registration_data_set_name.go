@@ -13,7 +13,7 @@ package models
 
 type RegistrationDataSetName string
 
-// List of RegistrationDataSetNameAnyOf
+// List of RegistrationDataSetName
 const (
 	REGISTRATIONDATASETNAMEANYOF_AMF_3_GPP        RegistrationDataSetName = "AMF_3GPP"
 	REGISTRATIONDATASETNAMEANYOF_AMF_NON_3_GPP    RegistrationDataSetName = "AMF_NON_3GPP"

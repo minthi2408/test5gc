@@ -13,7 +13,7 @@ package models
 
 type SscMode string
 
-// List of SscModeAnyOf
+// List of SscMode
 const (
 	SSCMODEANYOF__1 SscMode = "SSC_MODE_1"
 	SSCMODEANYOF__2 SscMode = "SSC_MODE_2"

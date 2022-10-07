@@ -13,7 +13,7 @@ package models
 
 type LcsClientClass string
 
-// List of LcsClientClassAnyOf
+// List of LcsClientClass
 const (
 	LCSCLIENTCLASSANYOF_BROADCAST_SERVICE          LcsClientClass = "BROADCAST_SERVICE"
 	LCSCLIENTCLASSANYOF_OM_IN_HPLMN                LcsClientClass = "OM_IN_HPLMN"

@@ -13,7 +13,7 @@ package models
 
 type AccessRightStatus string
 
-// List of AccessRightStatusAnyOf
+// List of AccessRightStatus
 const (
 	ACCESSRIGHTSTATUSANYOF_FULLY_ALLOWED   AccessRightStatus = "FULLY_ALLOWED"
 	ACCESSRIGHTSTATUSANYOF_PREVIEW_ALLOWED AccessRightStatus = "PREVIEW_ALLOWED"

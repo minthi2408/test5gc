@@ -13,7 +13,7 @@ package models
 
 type MaReleaseIndication string
 
-// List of MaReleaseIndicationAnyOf
+// List of MaReleaseIndication
 const (
 	MARELEASEINDICATIONANYOF__3_GPP MaReleaseIndication = "REL_MAPDU_OVER_3GPP"
 	MARELEASEINDICATIONANYOF_N3_GPP MaReleaseIndication = "REL_MAPDU_OVER_N3GPP"

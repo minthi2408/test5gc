@@ -13,7 +13,7 @@ package models
 
 type PositioningMode string
 
-// List of PositioningModeAnyOf
+// List of PositioningMode
 const (
 	POSITIONINGMODEANYOF_UE_BASED     PositioningMode = "UE_BASED"
 	POSITIONINGMODEANYOF_UE_ASSISTED  PositioningMode = "UE_ASSISTED"

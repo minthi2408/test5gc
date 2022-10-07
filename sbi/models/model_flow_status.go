@@ -13,7 +13,7 @@ package models
 
 type FlowStatus string
 
-// List of FlowStatusAnyOf
+// List of FlowStatus
 const (
 	FLOWSTATUSANYOF_ENABLED_UPLINK   FlowStatus = "ENABLED-UPLINK"
 	FLOWSTATUSANYOF_ENABLED_DOWNLINK FlowStatus = "ENABLED-DOWNLINK"

@@ -13,7 +13,7 @@ package models
 
 type FailureCause string
 
-// List of FailureCauseAnyOf
+// List of FailureCause
 const (
 	FAILURECAUSEANYOF_PCC_RULE_EVENT       FailureCause = "PCC_RULE_EVENT"
 	FAILURECAUSEANYOF_PCC_QOS_FLOW_EVENT   FailureCause = "PCC_QOS_FLOW_EVENT"

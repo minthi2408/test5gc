@@ -13,7 +13,7 @@ package models
 
 type TriggerType string
 
-// List of TriggerTypeAnyOf
+// List of TriggerType
 const (
 	TRIGGERTYPEANYOF_QUOTA_THRESHOLD                                  TriggerType = "QUOTA_THRESHOLD"
 	TRIGGERTYPEANYOF_QHT                                              TriggerType = "QHT"

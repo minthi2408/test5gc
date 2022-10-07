@@ -13,7 +13,7 @@ package models
 
 type ReportingAreaType string
 
-// List of ReportingAreaTypeAnyOf
+// List of ReportingAreaType
 const (
 	REPORTINGAREATYPEANYOF_EPS_TRACKING_AREA_IDENTITY         ReportingAreaType = "EPS_TRACKING_AREA_IDENTITY"
 	REPORTINGAREATYPEANYOF_E_UTRAN_CELL_GLOBAL_IDENTIFICATION ReportingAreaType = "E-UTRAN_CELL_GLOBAL_IDENTIFICATION"

@@ -13,7 +13,7 @@ package models
 
 type SipForkingIndication string
 
-// List of SipForkingIndicationAnyOf
+// List of SipForkingIndication
 const (
 	SIPFORKINGINDICATIONANYOF_SINGLE_DIALOGUE   SipForkingIndication = "SINGLE_DIALOGUE"
 	SIPFORKINGINDICATIONANYOF_SEVERAL_DIALOGUES SipForkingIndication = "SEVERAL_DIALOGUES"

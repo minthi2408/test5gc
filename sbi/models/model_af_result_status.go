@@ -13,7 +13,7 @@ package models
 
 type AfResultStatus string
 
-// List of AfResultStatusAnyOf
+// List of AfResultStatus
 const (
 	AFRESULTSTATUSANYOF_SUCCESS              AfResultStatus = "SUCCESS"
 	AFRESULTSTATUSANYOF_TEMPORARY_CONGESTION AfResultStatus = "TEMPORARY_CONGESTION"

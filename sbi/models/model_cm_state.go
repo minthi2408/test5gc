@@ -13,7 +13,7 @@ package models
 
 type CmState string
 
-// List of CmStateAnyOf
+// List of CmState
 const (
 	CMSTATE_IDLE      CmState = "IDLE"
 	CMSTATE_CONNECTED CmState = "CONNECTED"

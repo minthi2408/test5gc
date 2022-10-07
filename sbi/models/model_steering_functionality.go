@@ -13,7 +13,7 @@ package models
 
 type SteeringFunctionality string
 
-// List of SteeringFunctionalityAnyOf
+// List of SteeringFunctionality
 const (
 	STEERINGFUNCTIONALITYANYOF_MPTCP    SteeringFunctionality = "MPTCP"
 	STEERINGFUNCTIONALITYANYOF_ATSSS_LL SteeringFunctionality = "ATSSS_LL"

@@ -13,7 +13,7 @@ package models
 
 type ResourceStatus string
 
-// List of ResourceStatusAnyOf
+// List of ResourceStatus
 const (
 	RESOURCESTATUSANYOF_RELEASED       ResourceStatus = "RELEASED"
 	RESOURCESTATUSANYOF_UNCHANGED      ResourceStatus = "UNCHANGED"

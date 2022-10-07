@@ -13,7 +13,7 @@ package models
 
 type HssAuthTypeInUri string
 
-// List of HssAuthTypeInUriAnyOf
+// List of HssAuthTypeInUri
 const (
 	HSSAUTHTYPEINURIANYOF_EPS_AKA       HssAuthTypeInUri = "eps-aka"
 	HSSAUTHTYPEINURIANYOF_EAP_AKA       HssAuthTypeInUri = "eap-aka"

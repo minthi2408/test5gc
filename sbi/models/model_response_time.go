@@ -13,7 +13,7 @@ package models
 
 type ResponseTime string
 
-// List of ResponseTimeAnyOf
+// List of ResponseTime
 const (
 	RESPONSETIMEANYOF_LOW_DELAY      ResponseTime = "LOW_DELAY"
 	RESPONSETIMEANYOF_DELAY_TOLERANT ResponseTime = "DELAY_TOLERANT"

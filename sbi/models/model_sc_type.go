@@ -13,7 +13,7 @@ package models
 
 type ScType string
 
-// List of ScTypeAnyOf
+// List of ScType
 const (
 	SCTYPE_NATIVE ScType = "NATIVE"
 	SCTYPE_MAPPED ScType = "MAPPED"

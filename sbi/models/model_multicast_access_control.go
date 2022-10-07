@@ -13,7 +13,7 @@ package models
 
 type MulticastAccessControl string
 
-// List of MulticastAccessControlAnyOf
+// List of MulticastAccessControl
 const (
 	MULTICASTACCESSCONTROLANYOF_ALLOWED     MulticastAccessControl = "ALLOWED"
 	MULTICASTACCESSCONTROLANYOF_NOT_ALLOWED MulticastAccessControl = "NOT_ALLOWED"

@@ -13,7 +13,7 @@ package models
 
 type SmfEvent string
 
-// List of SmfEventAnyOf
+// List of SmfEvent
 const (
 	SMFEVENTANYOF_AC_TY_CH    SmfEvent = "AC_TY_CH"
 	SMFEVENTANYOF_UP_PATH_CH  SmfEvent = "UP_PATH_CH"

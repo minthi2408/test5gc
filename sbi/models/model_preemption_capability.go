@@ -13,7 +13,7 @@ package models
 
 type PreemptionCapability string
 
-// List of PreemptionCapabilityAnyOf
+// List of PreemptionCapability
 const (
 	PREEMPTIONCAPABILITYANYOF_NOT_PREEMPT PreemptionCapability = "NOT_PREEMPT"
 	PREEMPTIONCAPABILITYANYOF_MAY_PREEMPT PreemptionCapability = "MAY_PREEMPT"

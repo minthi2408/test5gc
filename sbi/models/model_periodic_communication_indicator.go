@@ -13,7 +13,7 @@ package models
 
 type PeriodicCommunicationIndicator string
 
-// List of PeriodicCommunicationIndicatorAnyOf
+// List of PeriodicCommunicationIndicator
 const (
 	PERIODICCOMMUNICATIONINDICATORANYOF_PIORIODICALLY PeriodicCommunicationIndicator = "PIORIODICALLY"
 	PERIODICCOMMUNICATIONINDICATORANYOF_ON_DEMAND     PeriodicCommunicationIndicator = "ON_DEMAND"

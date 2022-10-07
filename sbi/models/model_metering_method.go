@@ -13,7 +13,7 @@ package models
 
 type MeteringMethod string
 
-// List of MeteringMethodAnyOf
+// List of MeteringMethod
 const (
 	METERINGMETHODANYOF_DURATION        MeteringMethod = "DURATION"
 	METERINGMETHODANYOF_VOLUME          MeteringMethod = "VOLUME"

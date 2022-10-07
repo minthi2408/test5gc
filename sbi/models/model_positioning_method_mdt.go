@@ -13,7 +13,7 @@ package models
 
 type PositioningMethodMdt string
 
-// List of PositioningMethodMdtAnyOf
+// List of PositioningMethodMdt
 const (
 	POSITIONINGMETHODMDTANYOF_GNSS      PositioningMethodMdt = "GNSS"
 	POSITIONINGMETHODMDTANYOF_E_CELL_ID PositioningMethodMdt = "E_CELL_ID"

@@ -13,7 +13,7 @@ package models
 
 type EventType string
 
-// List of EventTypeAnyOf
+// List of EventType
 const (
 	EVENTTYPEANYOF_LOSS_OF_CONNECTIVITY           EventType = "LOSS_OF_CONNECTIVITY"
 	EVENTTYPEANYOF_UE_REACHABILITY_FOR_DATA       EventType = "UE_REACHABILITY_FOR_DATA"

@@ -13,7 +13,7 @@ package models
 
 type DataSetName string
 
-// List of DataSetNameAnyOf
+// List of DataSetName
 const (
 	DATASETNAMEANYOF_AM          DataSetName = "AM"
 	DATASETNAMEANYOF_SMF_SEL     DataSetName = "SMF_SEL"

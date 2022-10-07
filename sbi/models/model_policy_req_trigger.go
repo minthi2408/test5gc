@@ -13,7 +13,7 @@ package models
 
 type PolicyReqTrigger string
 
-// List of PolicyReqTriggerAnyOf
+// List of PolicyReqTrigger
 const (
 	POLICYREQTRIGGERANYOF_LOCATION_CHANGE      PolicyReqTrigger = "LOCATION_CHANGE"
 	POLICYREQTRIGGERANYOF_PRA_CHANGE           PolicyReqTrigger = "PRA_CHANGE"

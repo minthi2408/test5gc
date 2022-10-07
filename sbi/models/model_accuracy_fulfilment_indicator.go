@@ -13,7 +13,7 @@ package models
 
 type AccuracyFulfilmentIndicator string
 
-// List of AccuracyFulfilmentIndicatorAnyOf
+// List of AccuracyFulfilmentIndicator
 const (
 	ACCURACYFULFILMENTINDICATORANYOF_FULFILLED     AccuracyFulfilmentIndicator = "REQUESTED_ACCURACY_FULFILLED"
 	ACCURACYFULFILMENTINDICATORANYOF_NOT_FULFILLED AccuracyFulfilmentIndicator = "REQUESTED_ACCURACY_NOT_FULFILLED"

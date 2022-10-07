@@ -13,7 +13,7 @@ package models
 
 type ReportAmountMdt string
 
-// List of ReportAmountMdtAnyOf
+// List of ReportAmountMdt
 const (
 	REPORTAMOUNTMDTANYOF__1       ReportAmountMdt = "1"
 	REPORTAMOUNTMDTANYOF__2       ReportAmountMdt = "2"

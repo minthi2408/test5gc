@@ -13,7 +13,7 @@ package models
 
 type LocationEvent string
 
-// List of LocationEventAnyOf
+// List of LocationEvent
 const (
 	LOCATIONEVENTANYOF_EMERGENCY_CALL_ORIGINATION        LocationEvent = "EMERGENCY_CALL_ORIGINATION"
 	LOCATIONEVENTANYOF_EMERGENCY_CALL_RELEASE            LocationEvent = "EMERGENCY_CALL_RELEASE"

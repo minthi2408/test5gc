@@ -13,7 +13,7 @@ package models
 
 type NotificationCause string
 
-// List of NotificationCauseAnyOf
+// List of NotificationCause
 const (
 	NOTIFICATIONCAUSEANYOF_QOS_FULFILLED        NotificationCause = "QOS_FULFILLED"
 	NOTIFICATIONCAUSEANYOF_QOS_NOT_FULFILLED    NotificationCause = "QOS_NOT_FULFILLED"

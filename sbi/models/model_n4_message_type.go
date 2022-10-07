@@ -13,7 +13,7 @@ package models
 
 type N4MessageType string
 
-// List of N4MessageTypeAnyOf
+// List of N4MessageType
 const (
 	N4MESSAGETYPEANYOF_EST_REQ N4MessageType = "PFCP_SES_EST_REQ"
 	N4MESSAGETYPEANYOF_EST_RSP N4MessageType = "PFCP_SES_EST_RSP"

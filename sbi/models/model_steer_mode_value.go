@@ -13,7 +13,7 @@ package models
 
 type SteerModeValue string
 
-// List of SteerModeValueAnyOf
+// List of SteerModeValue
 const (
 	STEERMODEVALUEANYOF_ACTIVE_STANDBY SteerModeValue = "ACTIVE_STANDBY"
 	STEERMODEVALUEANYOF_LOAD_BALANCING SteerModeValue = "LOAD_BALANCING"

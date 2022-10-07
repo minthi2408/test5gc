@@ -13,7 +13,7 @@ package models
 
 type MaPduIndication string
 
-// List of MaPduIndicationAnyOf
+// List of MaPduIndication
 const (
 	MAPDUINDICATIONANYOF_REQUEST                 MaPduIndication = "MA_PDU_REQUEST"
 	MAPDUINDICATIONANYOF_NETWORK_UPGRADE_ALLOWED MaPduIndication = "MA_PDU_NETWORK_UPGRADE_ALLOWED"

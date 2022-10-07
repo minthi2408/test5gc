@@ -13,7 +13,7 @@ package models
 
 type LocationType string
 
-// List of LocationTypeAnyOf
+// List of LocationType
 const (
 	LOCATIONTYPEANYOF_CURRENT_LOCATION               LocationType = "CURRENT_LOCATION"
 	LOCATIONTYPEANYOF_CURRENT_OR_LAST_KNOWN_LOCATION LocationType = "CURRENT_OR_LAST_KNOWN_LOCATION"

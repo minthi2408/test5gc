@@ -13,7 +13,7 @@ package models
 
 type ChangeType string
 
-// List of ChangeTypeAnyOf
+// List of ChangeType
 const (
 	CHANGETYPEANYOF_ADD     ChangeType = "ADD"
 	CHANGETYPEANYOF_MOVE    ChangeType = "MOVE"

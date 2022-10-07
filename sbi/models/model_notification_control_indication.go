@@ -13,7 +13,7 @@ package models
 
 type NotificationControlIndication string
 
-// List of NotificationControlIndicationAnyOf
+// List of NotificationControlIndication
 const (
 	NOTIFICATIONCONTROLINDICATIONANYOF_DDN_FAILURE NotificationControlIndication = "DDN_FAILURE"
 	NOTIFICATIONCONTROLINDICATIONANYOF_DDD_STATUS  NotificationControlIndication = "DDD_STATUS"

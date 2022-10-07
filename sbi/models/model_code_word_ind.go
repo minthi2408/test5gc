@@ -13,7 +13,7 @@ package models
 
 type CodeWordInd string
 
-// List of CodeWordIndAnyOf
+// List of CodeWordInd
 const (
 	CODEWORDINDANYOF_UE   CodeWordInd = "CODEWORD_CHECK_IN_UE"
 	CODEWORDINDANYOF_GMLC CodeWordInd = "CODEWORD_CHECK_IN_GMLC"

@@ -13,7 +13,7 @@ package models
 
 type RegistrationReason string
 
-// List of RegistrationReasonAnyOf
+// List of RegistrationReason
 const (
 	REGISTRATIONREASONANYOF_SMF_CONTEXT_TRANSFERRED RegistrationReason = "SMF_CONTEXT_TRANSFERRED"
 )

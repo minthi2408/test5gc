@@ -13,7 +13,7 @@ package models
 
 type RequestedRuleDataType string
 
-// List of RequestedRuleDataTypeAnyOf
+// List of RequestedRuleDataType
 const (
 	REQUESTEDRULEDATATYPEANYOF_CH_ID         RequestedRuleDataType = "CH_ID"
 	REQUESTEDRULEDATATYPEANYOF_MS_TIME_ZONE  RequestedRuleDataType = "MS_TIME_ZONE"

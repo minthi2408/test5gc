@@ -13,7 +13,7 @@ package models
 
 type SponsoringStatus string
 
-// List of SponsoringStatusAnyOf
+// List of SponsoringStatus
 const (
 	SPONSORINGSTATUSANYOF_DISABLED SponsoringStatus = "SPONSOR_DISABLED"
 	SPONSORINGSTATUSANYOF_ENABLED  SponsoringStatus = "SPONSOR_ENABLED"

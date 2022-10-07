@@ -13,7 +13,7 @@ package models
 
 type ServiceName string
 
-// List of ServiceNameAnyOf
+// List of ServiceName
 const (
 	SERVICENAMEANYOF_NNRF_NFM                          ServiceName = "nnrf-nfm"
 	SERVICENAMEANYOF_NNRF_DISC                         ServiceName = "nnrf-disc"

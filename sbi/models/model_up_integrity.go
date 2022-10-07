@@ -13,7 +13,7 @@ package models
 
 type UpIntegrity string
 
-// List of UpIntegrityAnyOf
+// List of UpIntegrity
 const (
 	UPINTEGRITYANYOF_REQUIRED   UpIntegrity = "REQUIRED"
 	UPINTEGRITYANYOF_PREFERRED  UpIntegrity = "PREFERRED"

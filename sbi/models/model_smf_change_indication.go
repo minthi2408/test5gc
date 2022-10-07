@@ -13,7 +13,7 @@ package models
 
 type SmfChangeIndication string
 
-// List of SmfChangeIndicationAnyOf
+// List of SmfChangeIndication
 const (
 	SMFCHANGEINDICATIONANYOF_CHANGED SmfChangeIndication = "CHANGED"
 	SMFCHANGEINDICATIONANYOF_REMOVED SmfChangeIndication = "REMOVED"

@@ -13,7 +13,7 @@ package models
 
 type LoggingIntervalNrMdt string
 
-// List of LoggingIntervalNrMdtAnyOf
+// List of LoggingIntervalNrMdt
 const (
 	LOGGINGINTERVALNRMDTANYOF__128     LoggingIntervalNrMdt = "128"
 	LOGGINGINTERVALNRMDTANYOF__256     LoggingIntervalNrMdt = "256"

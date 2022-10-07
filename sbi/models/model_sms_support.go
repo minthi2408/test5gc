@@ -13,7 +13,7 @@ package models
 
 type SmsSupport string
 
-// List of SmsSupportAnyOf
+// List of SmsSupport
 const (
 	SMSSUPPORTANYOF__3_GPP    SmsSupport = "3GPP"
 	SMSSUPPORTANYOF_NON_3_GPP SmsSupport = "NON_3GPP"

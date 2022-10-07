@@ -13,7 +13,7 @@ package models
 
 type ExternalClientType string
 
-// List of ExternalClientTypeAnyOf
+// List of ExternalClientType
 const (
 	EXTERNALCLIENTTYPEANYOF_EMERGENCY_SERVICES                      ExternalClientType = "EMERGENCY_SERVICES"
 	EXTERNALCLIENTTYPEANYOF_VALUE_ADDED_SERVICES                    ExternalClientType = "VALUE_ADDED_SERVICES"

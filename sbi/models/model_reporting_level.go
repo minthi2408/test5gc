@@ -13,7 +13,7 @@ package models
 
 type ReportingLevel string
 
-// List of ReportingLevelAnyOf
+// List of ReportingLevel
 const (
 	REPORTINGLEVELANYOF_SER_ID_LEVEL   ReportingLevel = "SER_ID_LEVEL"
 	REPORTINGLEVELANYOF_RAT_GR_LEVEL   ReportingLevel = "RAT_GR_LEVEL"

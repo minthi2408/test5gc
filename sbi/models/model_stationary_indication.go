@@ -13,7 +13,7 @@ package models
 
 type StationaryIndication string
 
-// List of StationaryIndicationAnyOf
+// List of StationaryIndication
 const (
 	STATIONARYINDICATIONANYOF_STATIONARY StationaryIndication = "STATIONARY"
 	STATIONARYINDICATIONANYOF_MOBILE     StationaryIndication = "MOBILE"

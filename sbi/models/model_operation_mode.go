@@ -13,7 +13,7 @@ package models
 
 type OperationMode string
 
-// List of OperationModeAnyOf
+// List of OperationMode
 const (
 	OPERATIONMODEANYOF_WB_S1 OperationMode = "WB_S1"
 	OPERATIONMODEANYOF_NB_S1 OperationMode = "NB_S1"

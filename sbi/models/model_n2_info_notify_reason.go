@@ -13,7 +13,7 @@ package models
 
 type N2InfoNotifyReason string
 
-// List of N2InfoNotifyReasonAnyOf
+// List of N2InfoNotifyReason
 const (
 	N2INFONOTIFYREASONANYOF_HANDOVER_COMPLETED N2InfoNotifyReason = "HANDOVER_COMPLETED"
 )

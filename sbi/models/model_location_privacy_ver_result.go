@@ -13,7 +13,7 @@ package models
 
 type LocationPrivacyVerResult string
 
-// List of LocationPrivacyVerResultAnyOf
+// List of LocationPrivacyVerResult
 const (
 	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_ALLOWED     LocationPrivacyVerResult = "LOCATION_ALLOWED"
 	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_NOT_ALLOWED LocationPrivacyVerResult = "LOCATION_NOT_ALLOWED"

@@ -13,7 +13,7 @@ package models
 
 type EpsInterworkingIndication string
 
-// List of EpsInterworkingIndicationAnyOf
+// List of EpsInterworkingIndication
 const (
 	EPSINTERWORKINGINDICATIONANYOF_NONE          EpsInterworkingIndication = "NONE"
 	EPSINTERWORKINGINDICATIONANYOF_WITH_N26      EpsInterworkingIndication = "WITH_N26"

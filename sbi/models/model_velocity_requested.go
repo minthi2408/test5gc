@@ -13,7 +13,7 @@ package models
 
 type VelocityRequested string
 
-// List of VelocityRequestedAnyOf
+// List of VelocityRequested
 const (
 	VELOCITYREQUESTEDANYOF_NOT_REQUESTED VelocityRequested = "VELOCITY_IS_NOT_REQUESTED"
 	VELOCITYREQUESTEDANYOF_REQUESTED     VelocityRequested = "VELOCITY_IS_REQUESTED"

@@ -13,7 +13,7 @@ package models
 
 type MediaType string
 
-// List of MediaTypeAnyOf
+// List of MediaType
 const (
 	MEDIATYPEANYOF_AUDIO       MediaType = "AUDIO"
 	MEDIATYPEANYOF_VIDEO       MediaType = "VIDEO"

@@ -13,7 +13,7 @@ package models
 
 type RuleStatus string
 
-// List of RuleStatusAnyOf
+// List of RuleStatus
 const (
 	RULESTATUSANYOF_ACTIVE   RuleStatus = "ACTIVE"
 	RULESTATUSANYOF_INACTIVE RuleStatus = "INACTIVE"

@@ -13,7 +13,7 @@ package models
 
 type LocationFilter string
 
-// List of LocationFilterAnyOf
+// List of LocationFilter
 const (
 	LOCATIONFILTERANYOF_TAI      LocationFilter = "TAI"
 	LOCATIONFILTERANYOF_CELL_ID  LocationFilter = "CELL_ID"

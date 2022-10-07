@@ -13,7 +13,7 @@ package models
 
 type CnType string
 
-// List of CnTypeAnyOf
+// List of CnType
 const (
 	CNTYPEANYOF_SINGLE_4_G  CnType = "SINGLE_4G"
 	CNTYPEANYOF_SINGLE_5_G  CnType = "SINGLE_5G"

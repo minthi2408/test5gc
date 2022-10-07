@@ -13,7 +13,7 @@ package models
 
 type LcsMoServiceClass string
 
-// List of LcsMoServiceClassAnyOf
+// List of LcsMoServiceClass
 const (
 	LCSMOSERVICECLASSANYOF_BASIC_SELF_LOCATION      LcsMoServiceClass = "BASIC_SELF_LOCATION"
 	LCSMOSERVICECLASSANYOF_AUTONOMOUS_SELF_LOCATION LcsMoServiceClass = "AUTONOMOUS_SELF_LOCATION"

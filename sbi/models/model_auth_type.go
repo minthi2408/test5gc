@@ -13,7 +13,7 @@ package models
 
 type AuthType string
 
-// List of AuthTypeAnyOf
+// List of AuthType
 const (
 	AUTHTYPE__5_G_AKA      AuthType = "5G_AKA"
 	AUTHTYPE_EAP_AKA_PRIME AuthType = "EAP_AKA_PRIME"

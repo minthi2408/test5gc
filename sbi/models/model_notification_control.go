@@ -13,7 +13,7 @@ package models
 
 type NotificationControl string
 
-// List of NotificationControlAnyOf
+// List of NotificationControl
 const (
 	NOTIFICATIONCONTROLANYOF_REQUESTED     NotificationControl = "REQUESTED"
 	NOTIFICATIONCONTROLANYOF_NOT_REQUESTED NotificationControl = "NOT_REQUESTED"

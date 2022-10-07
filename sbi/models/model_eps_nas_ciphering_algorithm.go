@@ -13,7 +13,7 @@ package models
 
 type EpsNasCipheringAlgorithm string
 
-// List of EpsNasCipheringAlgorithmAnyOf
+// List of EpsNasCipheringAlgorithm
 const (
 	EPSNASCIPHERINGALGORITHMANYOF_EEA0 EpsNasCipheringAlgorithm = "EEA0"
 	EPSNASCIPHERINGALGORITHMANYOF_EEA1 EpsNasCipheringAlgorithm = "EEA1"

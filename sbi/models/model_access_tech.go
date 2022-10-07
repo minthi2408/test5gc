@@ -13,7 +13,7 @@ package models
 
 type AccessTech string
 
-// List of AccessTechAnyOf
+// List of AccessTech
 const (
 	ACCESSTECHANYOF_NR                                AccessTech = "NR"
 	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE AccessTech = "EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE"

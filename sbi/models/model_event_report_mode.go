@@ -13,7 +13,7 @@ package models
 
 type EventReportMode string
 
-// List of EventReportModeAnyOf
+// List of EventReportMode
 const (
 	EVENTREPORTMODEANYOF_PERIODIC           EventReportMode = "PERIODIC"
 	EVENTREPORTMODEANYOF_ON_EVENT_DETECTION EventReportMode = "ON_EVENT_DETECTION"

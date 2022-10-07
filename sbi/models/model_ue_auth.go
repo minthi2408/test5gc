@@ -13,7 +13,7 @@ package models
 
 type UeAuth string
 
-// List of UeAuthAnyOf
+// List of UeAuth
 const (
 	UEAUTHANYOF_AUTHORIZED     UeAuth = "AUTHORIZED"
 	UEAUTHANYOF_NOT_AUTHORIZED UeAuth = "NOT_AUTHORIZED"

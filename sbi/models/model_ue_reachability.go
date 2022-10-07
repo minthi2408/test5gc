@@ -13,7 +13,7 @@ package models
 
 type UeReachability string
 
-// List of UeReachabilityAnyOf
+// List of UeReachability
 const (
 	UEREACHABILITYANYOF_UNREACHABLE     UeReachability = "UNREACHABLE"
 	UEREACHABILITYANYOF_REACHABLE       UeReachability = "REACHABLE"

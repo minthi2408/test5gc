@@ -13,7 +13,7 @@ package models
 
 type CipheringAlgorithm string
 
-// List of CipheringAlgorithmAnyOf
+// List of CipheringAlgorithm
 const (
 	CIPHERINGALGORITHMANYOF_NEA0 CipheringAlgorithm = "NEA0"
 	CIPHERINGALGORITHMANYOF_NEA1 CipheringAlgorithm = "NEA1"

@@ -13,7 +13,7 @@ package models
 
 type AmfEventTrigger string
 
-// List of AmfEventTriggerAnyOf
+// List of AmfEventTrigger
 const (
 	AMFEVENTTRIGGERANYOF_ONE_TIME   AmfEventTrigger = "ONE_TIME"
 	AMFEVENTTRIGGERANYOF_CONTINUOUS AmfEventTrigger = "CONTINUOUS"

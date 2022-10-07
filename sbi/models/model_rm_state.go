@@ -13,7 +13,7 @@ package models
 
 type RmState string
 
-// List of RmStateAnyOf
+// List of RmState
 const (
 	RMSTATEANYOF_REGISTERED   RmState = "REGISTERED"
 	RMSTATEANYOF_DEREGISTERED RmState = "DEREGISTERED"

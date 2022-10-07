@@ -13,7 +13,7 @@ package models
 
 type PositioningMethod string
 
-// List of PositioningMethodAnyOf
+// List of PositioningMethod
 const (
 	POSITIONINGMETHODANYOF_CELLID              PositioningMethod = "CELLID"
 	POSITIONINGMETHODANYOF_ECID                PositioningMethod = "ECID"

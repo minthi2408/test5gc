@@ -13,7 +13,7 @@ package models
 
 type ReportingTrigger string
 
-// List of ReportingTriggerAnyOf
+// List of ReportingTrigger
 const (
 	REPORTINGTRIGGERANYOF_PERIODICAL             ReportingTrigger = "PERIODICAL"
 	REPORTINGTRIGGERANYOF_EVENT_A2               ReportingTrigger = "EVENT_A2"

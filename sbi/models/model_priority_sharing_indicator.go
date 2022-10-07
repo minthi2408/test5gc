@@ -13,7 +13,7 @@ package models
 
 type PrioritySharingIndicator string
 
-// List of PrioritySharingIndicatorAnyOf
+// List of PrioritySharingIndicator
 const (
 	PRIORITYSHARINGINDICATORANYOF_ENABLED  PrioritySharingIndicator = "ENABLED"
 	PRIORITYSHARINGINDICATORANYOF_DISABLED PrioritySharingIndicator = "DISABLED"

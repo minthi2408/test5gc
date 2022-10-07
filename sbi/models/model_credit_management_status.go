@@ -13,7 +13,7 @@ package models
 
 type CreditManagementStatus string
 
-// List of CreditManagementStatusAnyOf
+// List of CreditManagementStatus
 const (
 	CREDITMANAGEMENTSTATUSANYOF_END_USER_SER_DENIED CreditManagementStatus = "END_USER_SER_DENIED"
 	CREDITMANAGEMENTSTATUSANYOF_CREDIT_CTRL_NOT_APP CreditManagementStatus = "CREDIT_CTRL_NOT_APP"

@@ -13,7 +13,7 @@ package models
 
 type QosFlowUsage string
 
-// List of QosFlowUsageAnyOf
+// List of QosFlowUsage
 const (
 	QOSFLOWUSAGEANYOF_GENERAL QosFlowUsage = "GENERAL"
 	QOSFLOWUSAGEANYOF_IMS_SIG QosFlowUsage = "IMS_SIG"

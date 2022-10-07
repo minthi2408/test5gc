@@ -13,7 +13,7 @@ package models
 
 type Periodicity string
 
-// List of PeriodicityAnyOf
+// List of Periodicity
 const (
 	PERIODICITYANYOF_YEARLY  Periodicity = "YEARLY"
 	PERIODICITYANYOF_MONTHLY Periodicity = "MONTHLY"

@@ -13,7 +13,7 @@ package models
 
 type RequestedQosMonitoringParameter string
 
-// List of RequestedQosMonitoringParameterAnyOf
+// List of RequestedQosMonitoringParameter
 const (
 	REQUESTEDQOSMONITORINGPARAMETERANYOF_DOWNLINK   RequestedQosMonitoringParameter = "DOWNLINK"
 	REQUESTEDQOSMONITORINGPARAMETERANYOF_UPLINK     RequestedQosMonitoringParameter = "UPLINK"

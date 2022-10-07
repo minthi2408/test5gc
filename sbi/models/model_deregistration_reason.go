@@ -13,7 +13,7 @@ package models
 
 type DeregistrationReason string
 
-// List of DeregistrationReasonAnyOf
+// List of DeregistrationReason
 const (
 	DEREGISTRATIONREASONANYOF_UE_INITIAL_REGISTRATION                       DeregistrationReason = "UE_INITIAL_REGISTRATION"
 	DEREGISTRATIONREASONANYOF_UE_REGISTRATION_AREA_CHANGE                   DeregistrationReason = "UE_REGISTRATION_AREA_CHANGE"

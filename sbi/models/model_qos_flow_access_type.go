@@ -13,7 +13,7 @@ package models
 
 type QosFlowAccessType string
 
-// List of QosFlowAccessTypeAnyOf
+// List of QosFlowAccessType
 const (
 	QOSFLOWACCESSTYPEANYOF__3_GPP               QosFlowAccessType = "3GPP"
 	QOSFLOWACCESSTYPEANYOF_NON_3_GPP            QosFlowAccessType = "NON_3GPP"

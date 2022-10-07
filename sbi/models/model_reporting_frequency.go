@@ -13,7 +13,7 @@ package models
 
 type ReportingFrequency string
 
-// List of ReportingFrequencyAnyOf
+// List of ReportingFrequency
 const (
 	REPORTINGFREQUENCYANYOF_EVENT_TRIGGERED ReportingFrequency = "EVENT_TRIGGERED"
 	REPORTINGFREQUENCYANYOF_PERIODIC        ReportingFrequency = "PERIODIC"

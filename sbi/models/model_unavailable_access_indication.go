@@ -13,7 +13,7 @@ package models
 
 type UnavailableAccessIndication string
 
-// List of UnavailableAccessIndicationAnyOf
+// List of UnavailableAccessIndication
 const (
 	UNAVAILABLEACCESSINDICATIONANYOF__3_GA_UNAVAILABLE UnavailableAccessIndication = "3GA_UNAVAILABLE"
 	UNAVAILABLEACCESSINDICATIONANYOF_N3_GA_UNAVAILABLE UnavailableAccessIndication = "N3GA_UNAVAILABLE"

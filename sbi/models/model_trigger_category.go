@@ -13,7 +13,7 @@ package models
 
 type TriggerCategory string
 
-// List of TriggerCategoryAnyOf
+// List of TriggerCategory
 const (
 	TRIGGERCATEGORYANYOF_IMMEDIATE_REPORT TriggerCategory = "IMMEDIATE_REPORT"
 	TRIGGERCATEGORYANYOF_DEFERRED_REPORT  TriggerCategory = "DEFERRED_REPORT"

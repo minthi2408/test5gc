@@ -13,7 +13,7 @@ package models
 
 type Usage string
 
-// List of UsageAnyOf
+// List of Usage
 const (
 	USAGEANYOF_UNSUCCESS                                 Usage = "UNSUCCESS"
 	USAGEANYOF_SUCCESS_RESULTS_NOT_USED                  Usage = "SUCCESS_RESULTS_NOT_USED"

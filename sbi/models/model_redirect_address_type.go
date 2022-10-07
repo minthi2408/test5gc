@@ -13,7 +13,7 @@ package models
 
 type RedirectAddressType string
 
-// List of RedirectAddressTypeAnyOf
+// List of RedirectAddressType
 const (
 	REDIRECTADDRESSTYPEANYOF_IPV4_ADDR RedirectAddressType = "IPV4_ADDR"
 	REDIRECTADDRESSTYPEANYOF_IPV6_ADDR RedirectAddressType = "IPV6_ADDR"

@@ -13,7 +13,7 @@ package models
 
 type PreemptionControlInformation string
 
-// List of PreemptionControlInformationAnyOf
+// List of PreemptionControlInformation
 const (
 	PREEMPTIONCONTROLINFORMATIONANYOF_MOST_RECENT  PreemptionControlInformation = "MOST_RECENT"
 	PREEMPTIONCONTROLINFORMATIONANYOF_LEAST_RECENT PreemptionControlInformation = "LEAST_RECENT"

@@ -13,7 +13,7 @@ package models
 
 type PsaIndication string
 
-// List of PsaIndicationAnyOf
+// List of PsaIndication
 const (
 	PSAINDICATIONANYOF_INSERTED      PsaIndication = "PSA_INSERTED"
 	PSAINDICATIONANYOF_REMOVED       PsaIndication = "PSA_REMOVED"

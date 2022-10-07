@@ -13,7 +13,7 @@ package models
 
 type UeContextInfoClass string
 
-// List of UeContextInfoClassAnyOf
+// List of UeContextInfoClass
 const (
 	UECONTEXTINFOCLASSANYOF_TADS UeContextInfoClass = "TADS"
 )

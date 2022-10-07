@@ -13,7 +13,7 @@ package models
 
 type PduSessionStatus string
 
-// List of PduSessionStatusAnyOf
+// List of PduSessionStatus
 const (
 	PDUSESSIONSTATUSANYOF_ACTIVE   PduSessionStatus = "ACTIVE"
 	PDUSESSIONSTATUSANYOF_RELEASED PduSessionStatus = "RELEASED"

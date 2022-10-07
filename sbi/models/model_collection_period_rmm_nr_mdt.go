@@ -13,7 +13,7 @@ package models
 
 type CollectionPeriodRmmNrMdt string
 
-// List of CollectionPeriodRmmNrMdtAnyOf
+// List of CollectionPeriodRmmNrMdt
 const (
 	COLLECTIONPERIODRMMNRMDTANYOF__1024  CollectionPeriodRmmNrMdt = "1024"
 	COLLECTIONPERIODRMMNRMDTANYOF__2048  CollectionPeriodRmmNrMdt = "2048"

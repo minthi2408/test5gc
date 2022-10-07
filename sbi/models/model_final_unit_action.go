@@ -13,7 +13,7 @@ package models
 
 type FinalUnitAction string
 
-// List of FinalUnitActionAnyOf
+// List of FinalUnitAction
 const (
 	FINALUNITACTIONANYOF_TERMINATE       FinalUnitAction = "TERMINATE"
 	FINALUNITACTIONANYOF_REDIRECT        FinalUnitAction = "REDIRECT"

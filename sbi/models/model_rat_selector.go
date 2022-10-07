@@ -13,7 +13,7 @@ package models
 
 type RatSelector string
 
-// List of RatSelectorAnyOf
+// List of RatSelector
 const (
 	RATSELECTORANYOF_E_UTRA RatSelector = "E-UTRA"
 	RATSELECTORANYOF_NR     RatSelector = "NR"

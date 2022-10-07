@@ -13,7 +13,7 @@ package models
 
 type EpsNasIntegrityAlgorithm string
 
-// List of EpsNasIntegrityAlgorithmAnyOf
+// List of EpsNasIntegrityAlgorithm
 const (
 	EPSNASINTEGRITYALGORITHMANYOF_EIA0 EpsNasIntegrityAlgorithm = "EIA0"
 	EPSNASINTEGRITYALGORITHMANYOF_EIA1 EpsNasIntegrityAlgorithm = "EIA1"

@@ -13,7 +13,7 @@ package models
 
 type SmPolicyAssociationReleaseCause string
 
-// List of SmPolicyAssociationReleaseCauseAnyOf
+// List of SmPolicyAssociationReleaseCause
 const (
 	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED                  SmPolicyAssociationReleaseCause = "UNSPECIFIED"
 	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION              SmPolicyAssociationReleaseCause = "UE_SUBSCRIPTION"

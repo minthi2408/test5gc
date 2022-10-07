@@ -13,7 +13,7 @@ package models
 
 type KeyAmfType string
 
-// List of KeyAmfTypeAnyOf
+// List of KeyAmfType
 const (
 	KEYAMFTYPEANYOF_KAMF      KeyAmfType = "KAMF"
 	KEYAMFTYPEANYOF_KPRIMEAMF KeyAmfType = "KPRIMEAMF"

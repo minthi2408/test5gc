@@ -13,7 +13,7 @@ package models
 
 type TransportProtocol string
 
-// List of TransportProtocolAnyOf
+// List of TransportProtocol
 const (
 	TRANSPORTPROTOCOLANYOF_UDP TransportProtocol = "UDP"
 	TRANSPORTPROTOCOLANYOF_TCP TransportProtocol = "TCP"

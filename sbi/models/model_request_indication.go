@@ -13,7 +13,7 @@ package models
 
 type RequestIndication string
 
-// List of RequestIndicationAnyOf
+// List of RequestIndication
 const (
 	REQUESTINDICATIONANYOF_UE_REQ_PDU_SES_MOD        RequestIndication = "UE_REQ_PDU_SES_MOD"
 	REQUESTINDICATIONANYOF_UE_REQ_PDU_SES_REL        RequestIndication = "UE_REQ_PDU_SES_REL"

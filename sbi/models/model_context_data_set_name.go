@@ -13,7 +13,7 @@ package models
 
 type ContextDataSetName string
 
-// List of ContextDataSetNameAnyOf
+// List of ContextDataSetName
 const (
 	CONTEXTDATASETNAMEANYOF_AMF_3_GPP         ContextDataSetName = "AMF_3GPP"
 	CONTEXTDATASETNAMEANYOF_AMF_NON_3_GPP     ContextDataSetName = "AMF_NON_3GPP"

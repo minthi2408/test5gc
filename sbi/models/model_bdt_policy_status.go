@@ -13,7 +13,7 @@ package models
 
 type BdtPolicyStatus string
 
-// List of BdtPolicyStatusAnyOf
+// List of BdtPolicyStatus
 const (
 	BDTPOLICYSTATUSANYOF_INVALID BdtPolicyStatus = "INVALID"
 	BDTPOLICYSTATUSANYOF_VALID   BdtPolicyStatus = "VALID"

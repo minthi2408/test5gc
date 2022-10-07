@@ -13,7 +13,7 @@ package models
 
 type PartialRecordMethod string
 
-// List of PartialRecordMethodAnyOf
+// List of PartialRecordMethod
 const (
 	PARTIALRECORDMETHODANYOF_DEFAULT    PartialRecordMethod = "DEFAULT"
 	PARTIALRECORDMETHODANYOF_INDIVIDUAL PartialRecordMethod = "INDIVIDUAL"

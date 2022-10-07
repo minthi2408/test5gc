@@ -13,7 +13,7 @@ package models
 
 type ImsVoPs string
 
-// List of ImsVoPsAnyOf
+// List of ImsVoPs
 const (
 	IMSVOPSANYOF_HOMOGENEOUS_SUPPORT        ImsVoPs = "HOMOGENEOUS_SUPPORT"
 	IMSVOPSANYOF_HOMOGENEOUS_NON_SUPPORT    ImsVoPs = "HOMOGENEOUS_NON_SUPPORT"

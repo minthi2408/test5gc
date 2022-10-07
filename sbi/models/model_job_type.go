@@ -13,7 +13,7 @@ package models
 
 type JobType string
 
-// List of JobTypeAnyOf
+// List of JobType
 const (
 	JOBTYPEANYOF_IMMEDIATE_MDT_ONLY      JobType = "IMMEDIATE_MDT_ONLY"
 	JOBTYPEANYOF_LOGGED_MDT_ONLY         JobType = "LOGGED_MDT_ONLY"

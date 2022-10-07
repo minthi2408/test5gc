@@ -13,7 +13,7 @@ package models
 
 type LcsPriority string
 
-// List of LcsPriorityAnyOf
+// List of LcsPriority
 const (
 	LCSPRIORITYANYOF_HIGHEST_PRIORITY LcsPriority = "HIGHEST_PRIORITY"
 	LCSPRIORITYANYOF_NORMAL_PRIORITY  LcsPriority = "NORMAL_PRIORITY"

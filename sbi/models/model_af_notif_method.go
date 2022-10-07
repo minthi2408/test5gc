@@ -13,7 +13,7 @@ package models
 
 type AfNotifMethod string
 
-// List of AfNotifMethodAnyOf
+// List of AfNotifMethod
 const (
 	AFNOTIFMETHODANYOF_EVENT_DETECTION     AfNotifMethod = "EVENT_DETECTION"
 	AFNOTIFMETHODANYOF_ONE_TIME            AfNotifMethod = "ONE_TIME"

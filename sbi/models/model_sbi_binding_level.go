@@ -13,7 +13,7 @@ package models
 
 type SbiBindingLevel string
 
-// List of SbiBindingLevelAnyOf
+// List of SbiBindingLevel
 const (
 	SBIBINDINGLEVELANYOF_INSTANCE_BINDING         SbiBindingLevel = "NF_INSTANCE_BINDING"
 	SBIBINDINGLEVELANYOF_SET_BINDING              SbiBindingLevel = "NF_SET_BINDING"

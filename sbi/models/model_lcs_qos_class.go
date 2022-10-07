@@ -13,7 +13,7 @@ package models
 
 type LcsQosClass string
 
-// List of LcsQosClassAnyOf
+// List of LcsQosClass
 const (
 	LCSQOSCLASSANYOF_BEST_EFFORT LcsQosClass = "BEST_EFFORT"
 	LCSQOSCLASSANYOF_ASSURED     LcsQosClass = "ASSURED"

@@ -13,7 +13,7 @@ package models
 
 type ReflectiveQoSAttribute string
 
-// List of ReflectiveQoSAttributeAnyOf
+// List of ReflectiveQoSAttribute
 const (
 	REFLECTIVEQOSATTRIBUTEANYOF_RQOS    ReflectiveQoSAttribute = "RQOS"
 	REFLECTIVEQOSATTRIBUTEANYOF_NO_RQOS ReflectiveQoSAttribute = "NO_RQOS"

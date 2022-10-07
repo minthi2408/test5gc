@@ -13,7 +13,7 @@ package models
 
 type ReportTypeMdt string
 
-// List of ReportTypeMdtAnyOf
+// List of ReportTypeMdt
 const (
 	REPORTTYPEMDTANYOF_PERIODICAL    ReportTypeMdt = "PERIODICAL"
 	REPORTTYPEMDTANYOF_EVENT_TRIGGED ReportTypeMdt = "EVENT_TRIGGED"

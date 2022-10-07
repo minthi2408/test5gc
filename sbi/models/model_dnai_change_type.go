@@ -13,7 +13,7 @@ package models
 
 type DnaiChangeType string
 
-// List of DnaiChangeTypeAnyOf
+// List of DnaiChangeType
 const (
 	DNAICHANGETYPEANYOF_EARLY      DnaiChangeType = "EARLY"
 	DNAICHANGETYPEANYOF_EARLY_LATE DnaiChangeType = "EARLY_LATE"

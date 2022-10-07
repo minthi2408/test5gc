@@ -13,7 +13,7 @@ package models
 
 type PduSessionType string
 
-// List of PduSessionTypeAnyOf
+// List of PduSessionType
 const (
 	PDUSESSIONTYPEANYOF_IPV4         PduSessionType = "IPV4"
 	PDUSESSIONTYPEANYOF_IPV6         PduSessionType = "IPV6"

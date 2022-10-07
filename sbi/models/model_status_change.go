@@ -13,7 +13,7 @@ package models
 
 type StatusChange string
 
-// List of StatusChangeAnyOf
+// List of StatusChange
 const (
 	STATUSCHANGEANYOF_UNAVAILABLE StatusChange = "AMF_UNAVAILABLE"
 	STATUSCHANGEANYOF_AVAILABLE   StatusChange = "AMF_AVAILABLE"

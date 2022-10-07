@@ -13,7 +13,7 @@ package models
 
 type SupportedGADShapes string
 
-// List of SupportedGADShapesAnyOf
+// List of SupportedGADShapes
 const (
 	SUPPORTEDGADSHAPESANYOF_POINT                      SupportedGADShapes = "POINT"
 	SUPPORTEDGADSHAPESANYOF_POINT_UNCERTAINTY_CIRCLE   SupportedGADShapes = "POINT_UNCERTAINTY_CIRCLE"

@@ -13,7 +13,7 @@ package models
 
 type RoamingOdb string
 
-// List of RoamingOdbAnyOf
+// List of RoamingOdb
 const (
 	ROAMINGODBANYOF_PLMN         RoamingOdb = "OUTSIDE_HOME_PLMN"
 	ROAMINGODBANYOF_PLMN_COUNTRY RoamingOdb = "OUTSIDE_HOME_PLMN_COUNTRY"

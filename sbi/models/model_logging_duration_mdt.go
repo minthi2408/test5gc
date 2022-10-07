@@ -13,7 +13,7 @@ package models
 
 type LoggingDurationMdt string
 
-// List of LoggingDurationMdtAnyOf
+// List of LoggingDurationMdt
 const (
 	LOGGINGDURATIONMDTANYOF__600  LoggingDurationMdt = "600"
 	LOGGINGDURATIONMDTANYOF__1200 LoggingDurationMdt = "1200"

@@ -13,7 +13,7 @@ package models
 
 type AtsssCapability string
 
-// List of AtsssCapabilityAnyOf
+// List of AtsssCapability
 const (
 	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_UL             AtsssCapability = "MPTCP_ATSSS_LL_WITH_ASMODE_UL"
 	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL AtsssCapability = "MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL"

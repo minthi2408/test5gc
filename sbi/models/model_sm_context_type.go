@@ -13,7 +13,7 @@ package models
 
 type SmContextType string
 
-// List of SmContextTypeAnyOf
+// List of SmContextType
 const (
 	SMCONTEXTTYPEANYOF_EPS_PDN_CONNECTION SmContextType = "EPS_PDN_CONNECTION"
 	SMCONTEXTTYPEANYOF_SM_CONTEXT         SmContextType = "SM_CONTEXT"

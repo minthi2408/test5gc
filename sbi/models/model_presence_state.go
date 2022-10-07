@@ -13,7 +13,7 @@ package models
 
 type PresenceState string
 
-// List of PresenceStateAnyOf
+// List of PresenceState
 const (
 	PRESENCESTATEANYOF_IN_AREA     PresenceState = "IN_AREA"
 	PRESENCESTATEANYOF_OUT_OF_AREA PresenceState = "OUT_OF_AREA"

@@ -13,7 +13,7 @@ package models
 
 type RequestType string
 
-// List of RequestTypeAnyOf
+// List of RequestType
 const (
 	REQUESTTYPEANYOF_INITIAL_REQUEST                RequestType = "INITIAL_REQUEST"
 	REQUESTTYPEANYOF_EXISTING_PDU_SESSION           RequestType = "EXISTING_PDU_SESSION"

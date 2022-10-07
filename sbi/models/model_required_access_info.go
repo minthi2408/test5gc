@@ -13,7 +13,7 @@ package models
 
 type RequiredAccessInfo string
 
-// List of RequiredAccessInfoAnyOf
+// List of RequiredAccessInfo
 const (
 	REQUIREDACCESSINFOANYOF_USER_LOCATION RequiredAccessInfo = "USER_LOCATION"
 	REQUIREDACCESSINFOANYOF_UE_TIME_ZONE  RequiredAccessInfo = "UE_TIME_ZONE"

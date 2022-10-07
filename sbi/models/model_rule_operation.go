@@ -13,7 +13,7 @@ package models
 
 type RuleOperation string
 
-// List of RuleOperationAnyOf
+// List of RuleOperation
 const (
 	RULEOPERATIONANYOF_CREATE_PCC_RULE                               RuleOperation = "CREATE_PCC_RULE"
 	RULEOPERATIONANYOF_DELETE_PCC_RULE                               RuleOperation = "DELETE_PCC_RULE"

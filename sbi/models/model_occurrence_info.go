@@ -13,7 +13,7 @@ package models
 
 type OccurrenceInfo string
 
-// List of OccurrenceInfoAnyOf
+// List of OccurrenceInfo
 const (
 	OCCURRENCEINFOANYOF_ONE_TIME_EVENT      OccurrenceInfo = "ONE_TIME_EVENT"
 	OCCURRENCEINFOANYOF_MULTIPLE_TIME_EVENT OccurrenceInfo = "MULTIPLE_TIME_EVENT"

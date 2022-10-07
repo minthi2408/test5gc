@@ -13,7 +13,7 @@ package models
 
 type ScheduledCommunicationType string
 
-// List of ScheduledCommunicationTypeAnyOf
+// List of ScheduledCommunicationType
 const (
 	SCHEDULEDCOMMUNICATIONTYPEANYOF_DOWNLINK_ONLY ScheduledCommunicationType = "DOWNLINK_ONLY"
 	SCHEDULEDCOMMUNICATIONTYPEANYOF_UPLINK_ONLY   ScheduledCommunicationType = "UPLINK_ONLY"

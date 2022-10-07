@@ -13,7 +13,7 @@ package models
 
 type MeasurementLteForMdt string
 
-// List of MeasurementLteForMdtAnyOf
+// List of MeasurementLteForMdt
 const (
 	MEASUREMENTLTEFORMDTANYOF_M1    MeasurementLteForMdt = "M1"
 	MEASUREMENTLTEFORMDTANYOF_M2    MeasurementLteForMdt = "M2"

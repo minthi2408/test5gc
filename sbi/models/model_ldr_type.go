@@ -13,7 +13,7 @@ package models
 
 type LdrType string
 
-// List of LdrTypeAnyOf
+// List of LdrType
 const (
 	LDRTYPEANYOF_UE_AVAILABLE       LdrType = "UE_AVAILABLE"
 	LDRTYPEANYOF_PERIODIC           LdrType = "PERIODIC"

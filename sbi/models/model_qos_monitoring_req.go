@@ -13,7 +13,7 @@ package models
 
 type QosMonitoringReq string
 
-// List of QosMonitoringReqAnyOf
+// List of QosMonitoringReq
 const (
 	QOSMONITORINGREQANYOF_UL   QosMonitoringReq = "UL"
 	QOSMONITORINGREQANYOF_DL   QosMonitoringReq = "DL"

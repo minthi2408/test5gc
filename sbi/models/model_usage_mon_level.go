@@ -13,7 +13,7 @@ package models
 
 type UsageMonLevel string
 
-// List of UsageMonLevelAnyOf
+// List of UsageMonLevel
 const (
 	USAGEMONLEVELANYOF_SESSION_LEVEL UsageMonLevel = "SESSION_LEVEL"
 	USAGEMONLEVELANYOF_SERVICE_LEVEL UsageMonLevel = "SERVICE_LEVEL"

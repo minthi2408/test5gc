@@ -13,7 +13,7 @@ package models
 
 type AccessNetworkId string
 
-// List of AccessNetworkIdAnyOf
+// List of AccessNetworkId
 const (
 	ACCESSNETWORKIDANYOF_HRPD     AccessNetworkId = "HRPD"
 	ACCESSNETWORKIDANYOF_WIMAX    AccessNetworkId = "WIMAX"

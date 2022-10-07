@@ -13,7 +13,7 @@ package models
 
 type NFType string
 
-// List of NFTypeAnyOf
+// List of NFType
 const (
 	NFTYPEANYOF_NRF      NFType = "NRF"
 	NFTYPEANYOF_UDM      NFType = "UDM"

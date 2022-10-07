@@ -13,7 +13,7 @@ package models
 
 type FlowUsage string
 
-// List of FlowUsageAnyOf
+// List of FlowUsage
 const (
 	FLOWUSAGEANYOF_NO_INFO       FlowUsage = "NO_INFO"
 	FLOWUSAGEANYOF_RTCP          FlowUsage = "RTCP"

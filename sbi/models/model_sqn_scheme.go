@@ -13,7 +13,7 @@ package models
 
 type SqnScheme string
 
-// List of SqnSchemeAnyOf
+// List of SqnScheme
 const (
 	SQNSCHEMEANYOF_GENERAL        SqnScheme = "GENERAL"
 	SQNSCHEMEANYOF_NON_TIME_BASED SqnScheme = "NON_TIME_BASED"

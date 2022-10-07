@@ -13,7 +13,7 @@ package models
 
 type AuthMethod string
 
-// List of AuthMethodAnyOf
+// List of AuthMethod
 const (
 	AUTHMETHODANYOF__5_G_AKA      AuthMethod = "5G_AKA"
 	AUTHMETHODANYOF_EAP_AKA_PRIME AuthMethod = "EAP_AKA_PRIME"

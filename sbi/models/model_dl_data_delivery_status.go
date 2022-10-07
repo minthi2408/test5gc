@@ -13,7 +13,7 @@ package models
 
 type DlDataDeliveryStatus string
 
-// List of DlDataDeliveryStatusAnyOf
+// List of DlDataDeliveryStatus
 const (
 	DLDATADELIVERYSTATUSANYOF_BUFFERED    DlDataDeliveryStatus = "BUFFERED"
 	DLDATADELIVERYSTATUSANYOF_TRANSMITTED DlDataDeliveryStatus = "TRANSMITTED"

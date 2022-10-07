@@ -13,7 +13,7 @@ package models
 
 type HssAvType string
 
-// List of HssAvTypeAnyOf
+// List of HssAvType
 const (
 	HSSAVTYPEANYOF_EPS_AKA  HssAvType = "EPS_AKA"
 	HSSAVTYPEANYOF_EAP_AKA  HssAvType = "EAP_AKA"

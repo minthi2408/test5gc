@@ -13,7 +13,7 @@ package models
 
 type IntegrityAlgorithm string
 
-// List of IntegrityAlgorithmAnyOf
+// List of IntegrityAlgorithm
 const (
 	INTEGRITYALGORITHMANYOF_NIA0 IntegrityAlgorithm = "NIA0"
 	INTEGRITYALGORITHMANYOF_NIA1 IntegrityAlgorithm = "NIA1"

@@ -13,7 +13,7 @@ package models
 
 type EventForMdt string
 
-// List of EventForMdtAnyOf
+// List of EventForMdt
 const (
 	EVENTFORMDTANYOF_OUT_OF_COVERAG EventForMdt = "OUT_OF_COVERAG"
 	EVENTFORMDTANYOF_A2_EVENT       EventForMdt = "A2_EVENT"

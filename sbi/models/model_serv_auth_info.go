@@ -13,7 +13,7 @@ package models
 
 type ServAuthInfo string
 
-// List of ServAuthInfoAnyOf
+// List of ServAuthInfo
 const (
 	SERVAUTHINFOANYOF_NOT_KNOWN       ServAuthInfo = "TP_NOT_KNOWN"
 	SERVAUTHINFOANYOF_EXPIRED         ServAuthInfo = "TP_EXPIRED"

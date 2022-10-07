@@ -13,7 +13,7 @@ package models
 
 type PrivacyCheckRelatedAction string
 
-// List of PrivacyCheckRelatedActionAnyOf
+// List of PrivacyCheckRelatedAction
 const (
 	PRIVACYCHECKRELATEDACTIONANYOF_NOT_ALLOWED                  PrivacyCheckRelatedAction = "LOCATION_NOT_ALLOWED"
 	PRIVACYCHECKRELATEDACTIONANYOF_ALLOWED_WITH_NOTIFICATION    PrivacyCheckRelatedAction = "LOCATION_ALLOWED_WITH_NOTIFICATION"

@@ -13,7 +13,7 @@ package models
 
 type AfSigProtocol string
 
-// List of AfSigProtocolAnyOf
+// List of AfSigProtocol
 const (
 	AFSIGPROTOCOLANYOF_NO_INFORMATION AfSigProtocol = "NO_INFORMATION"
 	AFSIGPROTOCOLANYOF_SIP            AfSigProtocol = "SIP"

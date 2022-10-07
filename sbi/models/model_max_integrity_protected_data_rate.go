@@ -13,7 +13,7 @@ package models
 
 type MaxIntegrityProtectedDataRate string
 
-// List of MaxIntegrityProtectedDataRateAnyOf
+// List of MaxIntegrityProtectedDataRate
 const (
 	MAXINTEGRITYPROTECTEDDATARATEANYOF__64_KBPS    MaxIntegrityProtectedDataRate = "64_KBPS"
 	MAXINTEGRITYPROTECTEDDATARATEANYOF_MAX_UE_RATE MaxIntegrityProtectedDataRate = "MAX_UE_RATE"

@@ -13,7 +13,7 @@ package models
 
 type LocationAccuracy string
 
-// List of LocationAccuracyAnyOf
+// List of LocationAccuracy
 const (
 	LOCATIONACCURACYANYOF_CELL_LEVEL   LocationAccuracy = "CELL_LEVEL"
 	LOCATIONACCURACYANYOF_TA_LEVEL     LocationAccuracy = "TA_LEVEL"

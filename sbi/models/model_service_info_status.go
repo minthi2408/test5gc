@@ -13,7 +13,7 @@ package models
 
 type ServiceInfoStatus string
 
-// List of ServiceInfoStatusAnyOf
+// List of ServiceInfoStatus
 const (
 	SERVICEINFOSTATUSANYOF_FINAL       ServiceInfoStatus = "FINAL"
 	SERVICEINFOSTATUSANYOF_PRELIMINARY ServiceInfoStatus = "PRELIMINARY"

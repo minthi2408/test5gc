@@ -13,7 +13,7 @@ package models
 
 type ProtectionResult string
 
-// List of ProtectionResultAnyOf
+// List of ProtectionResult
 const (
 	PROTECTIONRESULTANYOF_PERFORMED     ProtectionResult = "PERFORMED"
 	PROTECTIONRESULTANYOF_NOT_PERFORMED ProtectionResult = "NOT_PERFORMED"

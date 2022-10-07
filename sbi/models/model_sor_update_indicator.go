@@ -13,7 +13,7 @@ package models
 
 type SorUpdateIndicator string
 
-// List of SorUpdateIndicatorAnyOf
+// List of SorUpdateIndicator
 const (
 	SORUPDATEINDICATORANYOF_INITIAL_REGISTRATION   SorUpdateIndicator = "INITIAL_REGISTRATION"
 	SORUPDATEINDICATORANYOF_EMERGENCY_REGISTRATION SorUpdateIndicator = "EMERGENCY_REGISTRATION"

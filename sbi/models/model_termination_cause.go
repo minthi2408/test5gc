@@ -13,7 +13,7 @@ package models
 
 type TerminationCause string
 
-// List of TerminationCauseAnyOf
+// List of TerminationCause
 const (
 	TERMINATIONCAUSEANYOF_ALL_SDF_DEACTIVATION    TerminationCause = "ALL_SDF_DEACTIVATION"
 	TERMINATIONCAUSEANYOF_PDU_SESSION_TERMINATION TerminationCause = "PDU_SESSION_TERMINATION"

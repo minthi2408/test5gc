@@ -13,7 +13,7 @@ package models
 
 type PatchOperation string
 
-// List of PatchOperationAnyOf
+// List of PatchOperation
 const (
 	PATCHOPERATIONANYOF_ADD     PatchOperation = "add"
 	PATCHOPERATIONANYOF_COPY    PatchOperation = "copy"

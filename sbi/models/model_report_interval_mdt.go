@@ -13,7 +13,7 @@ package models
 
 type ReportIntervalMdt string
 
-// List of ReportIntervalMdtAnyOf
+// List of ReportIntervalMdt
 const (
 	REPORTINTERVALMDTANYOF__120     ReportIntervalMdt = "120"
 	REPORTINTERVALMDTANYOF__240     ReportIntervalMdt = "240"

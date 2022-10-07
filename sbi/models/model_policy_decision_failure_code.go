@@ -13,7 +13,7 @@ package models
 
 type PolicyDecisionFailureCode string
 
-// List of PolicyDecisionFailureCodeAnyOf
+// List of PolicyDecisionFailureCode
 const (
 	POLICYDECISIONFAILURECODEANYOF_TRA_CTRL_DECS_ERR PolicyDecisionFailureCode = "TRA_CTRL_DECS_ERR"
 	POLICYDECISIONFAILURECODEANYOF_QOS_DECS_ERR      PolicyDecisionFailureCode = "QOS_DECS_ERR"
