@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// QosFlowUsage - Possible values are - GENERAL: Indicate no specific QoS flow usage information is available.  - IMS_SIG: Indicate that the QoS flow is used for IMS signalling only.
-type QosFlowUsage struct {
-}
+type QosFlowUsage string
+
+// List of QosFlowUsageAnyOf
+const (
+	QOSFLOWUSAGEANYOF_GENERAL QosFlowUsage = "GENERAL"
+	QOSFLOWUSAGEANYOF_IMS_SIG QosFlowUsage = "IMS_SIG"
+)

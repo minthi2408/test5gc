@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type RoamingOdb struct {
-}
+type RoamingOdb string
+
+// List of RoamingOdbAnyOf
+const (
+	ROAMINGODBANYOF_PLMN         RoamingOdb = "OUTSIDE_HOME_PLMN"
+	ROAMINGODBANYOF_PLMN_COUNTRY RoamingOdb = "OUTSIDE_HOME_PLMN_COUNTRY"
+)

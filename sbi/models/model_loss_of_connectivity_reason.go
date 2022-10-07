@@ -11,5 +11,11 @@ API version: 1.1.4
 
 package models
 
-type LossOfConnectivityReason struct {
-}
+type LossOfConnectivityReason string
+
+// List of LossOfConnectivityReasonAnyOf
+const (
+	LOSSOFCONNECTIVITYREASONANYOF_DEREGISTERED               LossOfConnectivityReason = "DEREGISTERED"
+	LOSSOFCONNECTIVITYREASONANYOF_MAX_DETECTION_TIME_EXPIRED LossOfConnectivityReason = "MAX_DETECTION_TIME_EXPIRED"
+	LOSSOFCONNECTIVITYREASONANYOF_PURGED                     LossOfConnectivityReason = "PURGED"
+)

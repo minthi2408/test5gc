@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// MeteringMethod - Possible values are - DURATION: Indicates that the duration of the service data flow traffic shall be metered. - VOLUME: Indicates that volume of the service data flow traffic shall be metered. - DURATION_VOLUME: Indicates that the duration and the volume of the service data flow traffic shall be metered. - EVENT: Indicates that events of the service data flow traffic shall be metered.
-type MeteringMethod struct {
-}
+type MeteringMethod string
+
+// List of MeteringMethodAnyOf
+const (
+	METERINGMETHODANYOF_DURATION        MeteringMethod = "DURATION"
+	METERINGMETHODANYOF_VOLUME          MeteringMethod = "VOLUME"
+	METERINGMETHODANYOF_DURATION_VOLUME MeteringMethod = "DURATION_VOLUME"
+	METERINGMETHODANYOF_EVENT           MeteringMethod = "EVENT"
+)

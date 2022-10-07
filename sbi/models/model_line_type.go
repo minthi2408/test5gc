@@ -11,6 +11,10 @@ API version: 1.1.6
 
 package models
 
-// LineType - Possible values are - DSL: Identifies a DSL line - PON: Identifies a PON line
-type LineType struct {
-}
+type LineType string
+
+// List of LineTypeAnyOf
+const (
+	LINETYPEANYOF_DSL LineType = "DSL"
+	LINETYPEANYOF_PON LineType = "PON"
+)

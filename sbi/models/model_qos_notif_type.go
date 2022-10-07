@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type QosNotifType struct {
-}
+type QosNotifType string
+
+// List of QosNotifTypeAnyOf
+const (
+	QOSNOTIFTYPEANYOF_GUARANTEED     QosNotifType = "GUARANTEED"
+	QOSNOTIFTYPEANYOF_NOT_GUARANTEED QosNotifType = "NOT_GUARANTEED"
+)

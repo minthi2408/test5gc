@@ -11,5 +11,10 @@ API version: 1.1.7
 
 package models
 
-type LcsQosClass struct {
-}
+type LcsQosClass string
+
+// List of LcsQosClassAnyOf
+const (
+	LCSQOSCLASSANYOF_BEST_EFFORT LcsQosClass = "BEST_EFFORT"
+	LCSQOSCLASSANYOF_ASSURED     LcsQosClass = "ASSURED"
+)

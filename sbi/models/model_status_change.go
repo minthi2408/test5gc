@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type StatusChange struct {
-}
+type StatusChange string
+
+// List of StatusChangeAnyOf
+const (
+	STATUSCHANGEANYOF_UNAVAILABLE StatusChange = "AMF_UNAVAILABLE"
+	STATUSCHANGEANYOF_AVAILABLE   StatusChange = "AMF_AVAILABLE"
+)

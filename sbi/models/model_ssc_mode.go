@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type SscMode struct {
-}
+type SscMode string
+
+// List of SscModeAnyOf
+const (
+	SSCMODEANYOF__1 SscMode = "SSC_MODE_1"
+	SSCMODEANYOF__2 SscMode = "SSC_MODE_2"
+	SSCMODEANYOF__3 SscMode = "SSC_MODE_3"
+)

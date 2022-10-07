@@ -11,5 +11,10 @@ API version: 1.1.4
 
 package models
 
-type PdnConnectivityStatus struct {
-}
+type PdnConnectivityStatus string
+
+// List of PdnConnectivityStatusAnyOf
+const (
+	PDNCONNECTIVITYSTATUSANYOF_ESTABLISHED PdnConnectivityStatus = "ESTABLISHED"
+	PDNCONNECTIVITYSTATUSANYOF_RELEASED    PdnConnectivityStatus = "RELEASED"
+)

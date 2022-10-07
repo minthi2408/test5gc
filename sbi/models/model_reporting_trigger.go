@@ -11,5 +11,12 @@ API version: 2.1.7
 
 package models
 
-type ReportingTrigger struct {
-}
+type ReportingTrigger string
+
+// List of ReportingTriggerAnyOf
+const (
+	REPORTINGTRIGGERANYOF_PERIODICAL             ReportingTrigger = "PERIODICAL"
+	REPORTINGTRIGGERANYOF_EVENT_A2               ReportingTrigger = "EVENT_A2"
+	REPORTINGTRIGGERANYOF_EVENT_A2_PERIODIC      ReportingTrigger = "EVENT_A2_PERIODIC"
+	REPORTINGTRIGGERANYOF_ALL_RRM_EVENT_TRIGGERS ReportingTrigger = "ALL_RRM_EVENT_TRIGGERS"
+)

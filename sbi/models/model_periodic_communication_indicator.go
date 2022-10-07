@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type PeriodicCommunicationIndicator struct {
-}
+type PeriodicCommunicationIndicator string
+
+// List of PeriodicCommunicationIndicatorAnyOf
+const (
+	PERIODICCOMMUNICATIONINDICATORANYOF_PIORIODICALLY PeriodicCommunicationIndicator = "PIORIODICALLY"
+	PERIODICCOMMUNICATIONINDICATORANYOF_ON_DEMAND     PeriodicCommunicationIndicator = "ON_DEMAND"
+)

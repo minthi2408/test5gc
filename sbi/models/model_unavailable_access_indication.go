@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// UnavailableAccessIndication - Possible values are   - 3GA_UNAVAILABLE   - N3GA_UNAVAILABLE
-type UnavailableAccessIndication struct {
-}
+type UnavailableAccessIndication string
+
+// List of UnavailableAccessIndicationAnyOf
+const (
+	UNAVAILABLEACCESSINDICATIONANYOF__3_GA_UNAVAILABLE UnavailableAccessIndication = "3GA_UNAVAILABLE"
+	UNAVAILABLEACCESSINDICATIONANYOF_N3_GA_UNAVAILABLE UnavailableAccessIndication = "N3GA_UNAVAILABLE"
+)

@@ -11,6 +11,11 @@ API version: 1.1.6
 
 package models
 
-// NetLocAccessSupport - Possible values are - ANR_NOT_SUPPORTED: Indicates that the access network does not support the report of access network information. - TZR_NOT_SUPPORTED: Indicates that the access network does not support the report of UE time zone. - LOC_NOT_SUPPORTED: Indicates that the access network does not support the report of UE Location (or PLMN Id).
-type NetLocAccessSupport struct {
-}
+type NetLocAccessSupport string
+
+// List of NetLocAccessSupportAnyOf
+const (
+	NETLOCACCESSSUPPORTANYOF_ANR_NOT_SUPPORTED NetLocAccessSupport = "ANR_NOT_SUPPORTED"
+	NETLOCACCESSSUPPORTANYOF_TZR_NOT_SUPPORTED NetLocAccessSupport = "TZR_NOT_SUPPORTED"
+	NETLOCACCESSSUPPORTANYOF_LOC_NOT_SUPPORTED NetLocAccessSupport = "LOC_NOT_SUPPORTED"
+)

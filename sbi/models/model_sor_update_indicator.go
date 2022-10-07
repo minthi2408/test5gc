@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type SorUpdateIndicator struct {
-}
+type SorUpdateIndicator string
+
+// List of SorUpdateIndicatorAnyOf
+const (
+	SORUPDATEINDICATORANYOF_INITIAL_REGISTRATION   SorUpdateIndicator = "INITIAL_REGISTRATION"
+	SORUPDATEINDICATORANYOF_EMERGENCY_REGISTRATION SorUpdateIndicator = "EMERGENCY_REGISTRATION"
+)

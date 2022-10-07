@@ -11,6 +11,10 @@ API version: 2.1.7
 
 package models
 
-// BdtPolicyStatus - Indicates the validation status of a negotiated BDT policy.
-type BdtPolicyStatus struct {
-}
+type BdtPolicyStatus string
+
+// List of BdtPolicyStatusAnyOf
+const (
+	BDTPOLICYSTATUSANYOF_INVALID BdtPolicyStatus = "INVALID"
+	BDTPOLICYSTATUSANYOF_VALID   BdtPolicyStatus = "VALID"
+)

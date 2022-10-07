@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// RedirectAddressType - Possible values are - IPV4_ADDR: Indicates that the address type is in the form of \"dotted-decimal\" IPv4 address. - IPV6_ADDR: Indicates that the address type is in the form of IPv6 address. - URL: Indicates that the address type is in the form of Uniform Resource Locator. - SIP_URI: Indicates that the address type is in the form of SIP Uniform Resource Identifier.
-type RedirectAddressType struct {
-}
+type RedirectAddressType string
+
+// List of RedirectAddressTypeAnyOf
+const (
+	REDIRECTADDRESSTYPEANYOF_IPV4_ADDR RedirectAddressType = "IPV4_ADDR"
+	REDIRECTADDRESSTYPEANYOF_IPV6_ADDR RedirectAddressType = "IPV6_ADDR"
+	REDIRECTADDRESSTYPEANYOF_URL       RedirectAddressType = "URL"
+	REDIRECTADDRESSTYPEANYOF_SIP_URI   RedirectAddressType = "SIP_URI"
+)

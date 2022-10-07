@@ -11,5 +11,15 @@ API version: 2.1.7
 
 package models
 
-type CollectionPeriodRmmLteMdt struct {
-}
+type CollectionPeriodRmmLteMdt string
+
+// List of CollectionPeriodRmmLteMdtAnyOf
+const (
+	COLLECTIONPERIODRMMLTEMDTANYOF__1024  CollectionPeriodRmmLteMdt = "1024"
+	COLLECTIONPERIODRMMLTEMDTANYOF__1280  CollectionPeriodRmmLteMdt = "1280"
+	COLLECTIONPERIODRMMLTEMDTANYOF__2048  CollectionPeriodRmmLteMdt = "2048"
+	COLLECTIONPERIODRMMLTEMDTANYOF__2560  CollectionPeriodRmmLteMdt = "2560"
+	COLLECTIONPERIODRMMLTEMDTANYOF__5120  CollectionPeriodRmmLteMdt = "5120"
+	COLLECTIONPERIODRMMLTEMDTANYOF__10240 CollectionPeriodRmmLteMdt = "10240"
+	COLLECTIONPERIODRMMLTEMDTANYOF__60000 CollectionPeriodRmmLteMdt = "60000"
+)

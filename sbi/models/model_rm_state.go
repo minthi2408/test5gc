@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type RmState struct {
-}
+type RmState string
+
+// List of RmStateAnyOf
+const (
+	RMSTATEANYOF_REGISTERED   RmState = "REGISTERED"
+	RMSTATEANYOF_DEREGISTERED RmState = "DEREGISTERED"
+)

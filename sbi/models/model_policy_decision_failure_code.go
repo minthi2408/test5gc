@@ -11,5 +11,14 @@ API version: 1.1.8
 
 package models
 
-type PolicyDecisionFailureCode struct {
-}
+type PolicyDecisionFailureCode string
+
+// List of PolicyDecisionFailureCodeAnyOf
+const (
+	POLICYDECISIONFAILURECODEANYOF_TRA_CTRL_DECS_ERR PolicyDecisionFailureCode = "TRA_CTRL_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_QOS_DECS_ERR      PolicyDecisionFailureCode = "QOS_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_CHG_DECS_ERR      PolicyDecisionFailureCode = "CHG_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_USA_MON_DECS_ERR  PolicyDecisionFailureCode = "USA_MON_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_QOS_MON_DECS_ERR  PolicyDecisionFailureCode = "QOS_MON_DECS_ERR"
+	POLICYDECISIONFAILURECODEANYOF_CON_DATA_ERR      PolicyDecisionFailureCode = "CON_DATA_ERR"
+)

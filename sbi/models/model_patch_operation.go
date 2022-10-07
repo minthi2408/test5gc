@@ -11,5 +11,14 @@ API version: 2.1.7
 
 package models
 
-type PatchOperation struct {
-}
+type PatchOperation string
+
+// List of PatchOperationAnyOf
+const (
+	PATCHOPERATIONANYOF_ADD     PatchOperation = "add"
+	PATCHOPERATIONANYOF_COPY    PatchOperation = "copy"
+	PATCHOPERATIONANYOF_MOVE    PatchOperation = "move"
+	PATCHOPERATIONANYOF_REMOVE  PatchOperation = "remove"
+	PATCHOPERATIONANYOF_REPLACE PatchOperation = "replace"
+	PATCHOPERATIONANYOF_TEST    PatchOperation = "test"
+)

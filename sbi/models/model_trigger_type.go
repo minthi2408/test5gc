@@ -11,5 +11,48 @@ API version: 1.1.8
 
 package models
 
-type TriggerType struct {
-}
+type TriggerType string
+
+// List of TriggerTypeAnyOf
+const (
+	TRIGGERTYPEANYOF_QUOTA_THRESHOLD                                  TriggerType = "QUOTA_THRESHOLD"
+	TRIGGERTYPEANYOF_QHT                                              TriggerType = "QHT"
+	TRIGGERTYPEANYOF_FINAL                                            TriggerType = "FINAL"
+	TRIGGERTYPEANYOF_QUOTA_EXHAUSTED                                  TriggerType = "QUOTA_EXHAUSTED"
+	TRIGGERTYPEANYOF_VALIDITY_TIME                                    TriggerType = "VALIDITY_TIME"
+	TRIGGERTYPEANYOF_OTHER_QUOTA_TYPE                                 TriggerType = "OTHER_QUOTA_TYPE"
+	TRIGGERTYPEANYOF_FORCED_REAUTHORISATION                           TriggerType = "FORCED_REAUTHORISATION"
+	TRIGGERTYPEANYOF_UNUSED_QUOTA_TIMER                               TriggerType = "UNUSED_QUOTA_TIMER"
+	TRIGGERTYPEANYOF_UNIT_COUNT_INACTIVITY_TIMER                      TriggerType = "UNIT_COUNT_INACTIVITY_TIMER"
+	TRIGGERTYPEANYOF_ABNORMAL_RELEASE                                 TriggerType = "ABNORMAL_RELEASE"
+	TRIGGERTYPEANYOF_QOS_CHANGE                                       TriggerType = "QOS_CHANGE"
+	TRIGGERTYPEANYOF_VOLUME_LIMIT                                     TriggerType = "VOLUME_LIMIT"
+	TRIGGERTYPEANYOF_TIME_LIMIT                                       TriggerType = "TIME_LIMIT"
+	TRIGGERTYPEANYOF_EVENT_LIMIT                                      TriggerType = "EVENT_LIMIT"
+	TRIGGERTYPEANYOF_PLMN_CHANGE                                      TriggerType = "PLMN_CHANGE"
+	TRIGGERTYPEANYOF_USER_LOCATION_CHANGE                             TriggerType = "USER_LOCATION_CHANGE"
+	TRIGGERTYPEANYOF_RAT_CHANGE                                       TriggerType = "RAT_CHANGE"
+	TRIGGERTYPEANYOF_SESSION_AMBR_CHANGE                              TriggerType = "SESSION_AMBR_CHANGE"
+	TRIGGERTYPEANYOF_UE_TIMEZONE_CHANGE                               TriggerType = "UE_TIMEZONE_CHANGE"
+	TRIGGERTYPEANYOF_TARIFF_TIME_CHANGE                               TriggerType = "TARIFF_TIME_CHANGE"
+	TRIGGERTYPEANYOF_MAX_NUMBER_OF_CHANGES_IN_CHARGING_CONDITIONS     TriggerType = "MAX_NUMBER_OF_CHANGES_IN_CHARGING_CONDITIONS"
+	TRIGGERTYPEANYOF_MANAGEMENT_INTERVENTION                          TriggerType = "MANAGEMENT_INTERVENTION"
+	TRIGGERTYPEANYOF_CHANGE_OF_UE_PRESENCE_IN_PRESENCE_REPORTING_AREA TriggerType = "CHANGE_OF_UE_PRESENCE_IN_PRESENCE_REPORTING_AREA"
+	TRIGGERTYPEANYOF_CHANGE_OF_3_GPP_PS_DATA_OFF_STATUS               TriggerType = "CHANGE_OF_3GPP_PS_DATA_OFF_STATUS"
+	TRIGGERTYPEANYOF_SERVING_NODE_CHANGE                              TriggerType = "SERVING_NODE_CHANGE"
+	TRIGGERTYPEANYOF_REMOVAL_OF_UPF                                   TriggerType = "REMOVAL_OF_UPF"
+	TRIGGERTYPEANYOF_ADDITION_OF_UPF                                  TriggerType = "ADDITION_OF_UPF"
+	TRIGGERTYPEANYOF_INSERTION_OF_ISMF                                TriggerType = "INSERTION_OF_ISMF"
+	TRIGGERTYPEANYOF_REMOVAL_OF_ISMF                                  TriggerType = "REMOVAL_OF_ISMF"
+	TRIGGERTYPEANYOF_CHANGE_OF_ISMF                                   TriggerType = "CHANGE_OF_ISMF"
+	TRIGGERTYPEANYOF_START_OF_SERVICE_DATA_FLOW                       TriggerType = "START_OF_SERVICE_DATA_FLOW"
+	TRIGGERTYPEANYOF_ECGI_CHANGE                                      TriggerType = "ECGI_CHANGE"
+	TRIGGERTYPEANYOF_TAI_CHANGE                                       TriggerType = "TAI_CHANGE"
+	TRIGGERTYPEANYOF_HANDOVER_CANCEL                                  TriggerType = "HANDOVER_CANCEL"
+	TRIGGERTYPEANYOF_HANDOVER_START                                   TriggerType = "HANDOVER_START"
+	TRIGGERTYPEANYOF_HANDOVER_COMPLETE                                TriggerType = "HANDOVER_COMPLETE"
+	TRIGGERTYPEANYOF_GFBR_GUARANTEED_STATUS_CHANGE                    TriggerType = "GFBR_GUARANTEED_STATUS_CHANGE"
+	TRIGGERTYPEANYOF_ADDITION_OF_ACCESS                               TriggerType = "ADDITION_OF_ACCESS"
+	TRIGGERTYPEANYOF_REMOVAL_OF_ACCESS                                TriggerType = "REMOVAL_OF_ACCESS"
+	TRIGGERTYPEANYOF_START_OF_SDF_ADDITIONAL_ACCESS                   TriggerType = "START_OF_SDF_ADDITIONAL_ACCESS"
+)

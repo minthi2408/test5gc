@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// UpCnxState - Possible values are - ACTIVATED - DEACTIVATED - ACTIVATING - SUSPENDED
-type UpCnxState struct {
-}
+type UpCnxState string
+
+// List of UpCnxStateAnyOf
+const (
+	UPCNXSTATEANYOF_ACTIVATED   UpCnxState = "ACTIVATED"
+	UPCNXSTATEANYOF_DEACTIVATED UpCnxState = "DEACTIVATED"
+	UPCNXSTATEANYOF_ACTIVATING  UpCnxState = "ACTIVATING"
+	UPCNXSTATEANYOF_SUSPENDED   UpCnxState = "SUSPENDED"
+)

@@ -11,5 +11,12 @@ API version: 2.1.7
 
 package models
 
-type SmsSupport struct {
-}
+type SmsSupport string
+
+// List of SmsSupportAnyOf
+const (
+	SMSSUPPORTANYOF__3_GPP    SmsSupport = "3GPP"
+	SMSSUPPORTANYOF_NON_3_GPP SmsSupport = "NON_3GPP"
+	SMSSUPPORTANYOF_BOTH      SmsSupport = "BOTH"
+	SMSSUPPORTANYOF_NONE      SmsSupport = "NONE"
+)

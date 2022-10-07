@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type MulticastAccessControl struct {
-}
+type MulticastAccessControl string
+
+// List of MulticastAccessControlAnyOf
+const (
+	MULTICASTACCESSCONTROLANYOF_ALLOWED     MulticastAccessControl = "ALLOWED"
+	MULTICASTACCESSCONTROLANYOF_NOT_ALLOWED MulticastAccessControl = "NOT_ALLOWED"
+)

@@ -11,5 +11,9 @@ API version: 1.1.8
 
 package models
 
-type N2InfoNotifyReason struct {
-}
+type N2InfoNotifyReason string
+
+// List of N2InfoNotifyReasonAnyOf
+const (
+	N2INFONOTIFYREASONANYOF_HANDOVER_COMPLETED N2InfoNotifyReason = "HANDOVER_COMPLETED"
+)

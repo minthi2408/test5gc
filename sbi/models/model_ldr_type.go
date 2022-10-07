@@ -11,5 +11,14 @@ API version: 1.1.7
 
 package models
 
-type LdrType struct {
-}
+type LdrType string
+
+// List of LdrTypeAnyOf
+const (
+	LDRTYPEANYOF_UE_AVAILABLE       LdrType = "UE_AVAILABLE"
+	LDRTYPEANYOF_PERIODIC           LdrType = "PERIODIC"
+	LDRTYPEANYOF_ENTERING_INTO_AREA LdrType = "ENTERING_INTO_AREA"
+	LDRTYPEANYOF_LEAVING_FROM_AREA  LdrType = "LEAVING_FROM_AREA"
+	LDRTYPEANYOF_BEING_INSIDE_AREA  LdrType = "BEING_INSIDE_AREA"
+	LDRTYPEANYOF_MOTION             LdrType = "MOTION"
+)

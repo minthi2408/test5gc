@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type CoreNetworkType struct {
-}
+type CoreNetworkType string
+
+// List of CoreNetworkTypeAnyOf
+const (
+	CORENETWORKTYPEANYOF__5_GC CoreNetworkType = "5GC"
+	CORENETWORKTYPEANYOF_EPC   CoreNetworkType = "EPC"
+)

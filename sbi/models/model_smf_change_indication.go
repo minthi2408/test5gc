@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type SmfChangeIndication struct {
-}
+type SmfChangeIndication string
+
+// List of SmfChangeIndicationAnyOf
+const (
+	SMFCHANGEINDICATIONANYOF_CHANGED SmfChangeIndication = "CHANGED"
+	SMFCHANGEINDICATIONANYOF_REMOVED SmfChangeIndication = "REMOVED"
+)

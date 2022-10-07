@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type UeAuth struct {
-}
+type UeAuth string
+
+// List of UeAuthAnyOf
+const (
+	UEAUTHANYOF_AUTHORIZED     UeAuth = "AUTHORIZED"
+	UEAUTHANYOF_NOT_AUTHORIZED UeAuth = "NOT_AUTHORIZED"
+)

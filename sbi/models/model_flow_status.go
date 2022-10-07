@@ -11,5 +11,13 @@ API version: 1.1.6
 
 package models
 
-type FlowStatus struct {
-}
+type FlowStatus string
+
+// List of FlowStatusAnyOf
+const (
+	FLOWSTATUSANYOF_ENABLED_UPLINK   FlowStatus = "ENABLED-UPLINK"
+	FLOWSTATUSANYOF_ENABLED_DOWNLINK FlowStatus = "ENABLED-DOWNLINK"
+	FLOWSTATUSANYOF_ENABLED          FlowStatus = "ENABLED"
+	FLOWSTATUSANYOF_DISABLED         FlowStatus = "DISABLED"
+	FLOWSTATUSANYOF_REMOVED          FlowStatus = "REMOVED"
+)

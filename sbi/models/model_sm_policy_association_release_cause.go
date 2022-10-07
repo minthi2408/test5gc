@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type SmPolicyAssociationReleaseCause struct {
-}
+type SmPolicyAssociationReleaseCause string
+
+// List of SmPolicyAssociationReleaseCauseAnyOf
+const (
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED                  SmPolicyAssociationReleaseCause = "UNSPECIFIED"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION              SmPolicyAssociationReleaseCause = "UE_SUBSCRIPTION"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_INSUFFICIENT_RES             SmPolicyAssociationReleaseCause = "INSUFFICIENT_RES"
+	SMPOLICYASSOCIATIONRELEASECAUSEANYOF_VALIDATION_CONDITION_NOT_MET SmPolicyAssociationReleaseCause = "VALIDATION_CONDITION_NOT_MET"
+)

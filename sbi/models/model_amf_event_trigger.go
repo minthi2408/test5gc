@@ -11,5 +11,11 @@ API version: 1.1.7
 
 package models
 
-type AmfEventTrigger struct {
-}
+type AmfEventTrigger string
+
+// List of AmfEventTriggerAnyOf
+const (
+	AMFEVENTTRIGGERANYOF_ONE_TIME   AmfEventTrigger = "ONE_TIME"
+	AMFEVENTTRIGGERANYOF_CONTINUOUS AmfEventTrigger = "CONTINUOUS"
+	AMFEVENTTRIGGERANYOF_PERIODIC   AmfEventTrigger = "PERIODIC"
+)

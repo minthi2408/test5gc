@@ -10,3 +10,11 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type UeContextTransferStatus string
+
+// List of UeContextTransferStatus
+const (
+	UECONTEXTTRANSFERSTATUS_TRANSFERRED     UeContextTransferStatus = "TRANSFERRED"
+	UECONTEXTTRANSFERSTATUS_NOT_TRANSFERRED UeContextTransferStatus = "NOT_TRANSFERRED"
+)

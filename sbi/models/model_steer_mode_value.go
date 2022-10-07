@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type SteerModeValue struct {
-}
+type SteerModeValue string
+
+// List of SteerModeValueAnyOf
+const (
+	STEERMODEVALUEANYOF_ACTIVE_STANDBY SteerModeValue = "ACTIVE_STANDBY"
+	STEERMODEVALUEANYOF_LOAD_BALANCING SteerModeValue = "LOAD_BALANCING"
+	STEERMODEVALUEANYOF_SMALLEST_DELAY SteerModeValue = "SMALLEST_DELAY"
+	STEERMODEVALUEANYOF_PRIORITY_BASED SteerModeValue = "PRIORITY_BASED"
+)

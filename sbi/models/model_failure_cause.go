@@ -11,5 +11,13 @@ API version: 1.1.8
 
 package models
 
-type FailureCause struct {
-}
+type FailureCause string
+
+// List of FailureCauseAnyOf
+const (
+	FAILURECAUSEANYOF_PCC_RULE_EVENT       FailureCause = "PCC_RULE_EVENT"
+	FAILURECAUSEANYOF_PCC_QOS_FLOW_EVENT   FailureCause = "PCC_QOS_FLOW_EVENT"
+	FAILURECAUSEANYOF_RULE_PERMANENT_ERROR FailureCause = "RULE_PERMANENT_ERROR"
+	FAILURECAUSEANYOF_RULE_TEMPORARY_ERROR FailureCause = "RULE_TEMPORARY_ERROR"
+	FAILURECAUSEANYOF_POL_DEC_ERROR        FailureCause = "POL_DEC_ERROR"
+)

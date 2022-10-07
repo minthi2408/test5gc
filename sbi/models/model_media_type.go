@@ -11,5 +11,16 @@ API version: 1.1.6
 
 package models
 
-type MediaType struct {
-}
+type MediaType string
+
+// List of MediaTypeAnyOf
+const (
+	MEDIATYPEANYOF_AUDIO       MediaType = "AUDIO"
+	MEDIATYPEANYOF_VIDEO       MediaType = "VIDEO"
+	MEDIATYPEANYOF_DATA        MediaType = "DATA"
+	MEDIATYPEANYOF_APPLICATION MediaType = "APPLICATION"
+	MEDIATYPEANYOF_CONTROL     MediaType = "CONTROL"
+	MEDIATYPEANYOF_TEXT        MediaType = "TEXT"
+	MEDIATYPEANYOF_MESSAGE     MediaType = "MESSAGE"
+	MEDIATYPEANYOF_OTHER       MediaType = "OTHER"
+)

@@ -11,6 +11,50 @@ API version: 1.1.8
 
 package models
 
-// PolicyControlRequestTrigger - Possible values are - PLMN_CH: PLMN Change - RES_MO_RE: A request for resource modification has been received by the SMF. The SMF always reports to the PCF. - AC_TY_CH: Access Type Change - UE_IP_CH: UE IP address change. The SMF always reports to the PCF. - UE_MAC_CH: A new UE MAC address is detected or a used UE MAC address is inactive for a specific period - AN_CH_COR: Access Network Charging Correlation Information - US_RE: The PDU Session or the Monitoring key specific resources consumed by a UE either reached the threshold or needs to be reported for other reasons. - APP_STA: The start of application traffic has been detected. - APP_STO: The stop of application traffic has been detected. - AN_INFO: Access Network Information report - CM_SES_FAIL: Credit management session failure - PS_DA_OFF: The SMF reports when the 3GPP PS Data Off status changes. The SMF always reports to the PCF. - DEF_QOS_CH: Default QoS Change. The SMF always reports to the PCF. - SE_AMBR_CH: Session AMBR Change. The SMF always reports to the PCF. - QOS_NOTIF: The SMF notify the PCF when receiving notification from RAN that QoS targets of the QoS Flow cannot be guranteed or gurateed again. - NO_CREDIT: Out of credit - REALLO_OF_CREDIT: Reallocation of credit - PRA_CH: Change of UE presence in Presence Reporting Area - SAREA_CH: Location Change with respect to the Serving Area - SCNN_CH: Location Change with respect to the Serving CN node - RE_TIMEOUT: Indicates the SMF generated the request because there has been a PCC revalidation timeout - RES_RELEASE: Indicate that the SMF can inform the PCF of the outcome of the release of resources for those rules that require so. - SUCC_RES_ALLO: Indicates that the requested rule data is the successful resource allocation. - RAT_TY_CH: RAT Type Change. - REF_QOS_IND_CH: Reflective QoS indication Change - NUM_OF_PACKET_FILTER: Indicates that the SMF shall report the number of supported packet filter for signalled QoS rules - UE_STATUS_RESUME: Indicates that the UE’s status is resumed. - UE_TZ_CH: UE Time Zone Change - AUTH_PROF_CH: The DN-AAA authorization profile index has changed - QOS_MONITORING: Indicate that the SMF notifies the PCF of the QoS Monitoring information. - SCELL_CH: Location Change with respect to the Serving Cell. - EPS_FALLBACK: EPS Fallback report is enabled in the SMF. - MA_PDU: UE Indicates that the SMF notifies the PCF of the MA PDU session request - TSN_BRIDGE_INFO: 5GS Bridge information available - 5G_RG_JOIN: The 5G-RG has joined to an IP Multicast Group. - 5G_RG_LEAVE: The 5G-RG has left an IP Multicast Group. - DDN_FAILURE: Event subscription for DDN Failure event received. - DDN_DELIVERY_STATUS: Event subscription for DDN Delivery Status received. - GROUP_ID_LIST_CHG: UE Internal Group Identifier(s) has changed: the SMF reports that UDM provided list of group Ids has changed. - DDN_FAILURE_CANCELLATION: The event subscription for DDN Failure event is cancelled. - DDN_DELIVERY_STATUS_CANCELLATION: The event subscription for DDD STATUS is cancelled. - VPLMN_QOS_CH: Change of the QoS supported in the VPLMN.
-type PolicyControlRequestTrigger struct {
-}
+type PolicyControlRequestTrigger string
+
+// List of PolicyControlRequestTriggerAnyOf
+const (
+	POLICYCONTROLREQUESTTRIGGERANYOF_PLMN_CH                          PolicyControlRequestTrigger = "PLMN_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_RES_MO_RE                        PolicyControlRequestTrigger = "RES_MO_RE"
+	POLICYCONTROLREQUESTTRIGGERANYOF_AC_TY_CH                         PolicyControlRequestTrigger = "AC_TY_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_UE_IP_CH                         PolicyControlRequestTrigger = "UE_IP_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_UE_MAC_CH                        PolicyControlRequestTrigger = "UE_MAC_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_AN_CH_COR                        PolicyControlRequestTrigger = "AN_CH_COR"
+	POLICYCONTROLREQUESTTRIGGERANYOF_US_RE                            PolicyControlRequestTrigger = "US_RE"
+	POLICYCONTROLREQUESTTRIGGERANYOF_APP_STA                          PolicyControlRequestTrigger = "APP_STA"
+	POLICYCONTROLREQUESTTRIGGERANYOF_APP_STO                          PolicyControlRequestTrigger = "APP_STO"
+	POLICYCONTROLREQUESTTRIGGERANYOF_AN_INFO                          PolicyControlRequestTrigger = "AN_INFO"
+	POLICYCONTROLREQUESTTRIGGERANYOF_CM_SES_FAIL                      PolicyControlRequestTrigger = "CM_SES_FAIL"
+	POLICYCONTROLREQUESTTRIGGERANYOF_PS_DA_OFF                        PolicyControlRequestTrigger = "PS_DA_OFF"
+	POLICYCONTROLREQUESTTRIGGERANYOF_DEF_QOS_CH                       PolicyControlRequestTrigger = "DEF_QOS_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_SE_AMBR_CH                       PolicyControlRequestTrigger = "SE_AMBR_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_QOS_NOTIF                        PolicyControlRequestTrigger = "QOS_NOTIF"
+	POLICYCONTROLREQUESTTRIGGERANYOF_NO_CREDIT                        PolicyControlRequestTrigger = "NO_CREDIT"
+	POLICYCONTROLREQUESTTRIGGERANYOF_REALLO_OF_CREDIT                 PolicyControlRequestTrigger = "REALLO_OF_CREDIT"
+	POLICYCONTROLREQUESTTRIGGERANYOF_PRA_CH                           PolicyControlRequestTrigger = "PRA_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_SAREA_CH                         PolicyControlRequestTrigger = "SAREA_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_SCNN_CH                          PolicyControlRequestTrigger = "SCNN_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_RE_TIMEOUT                       PolicyControlRequestTrigger = "RE_TIMEOUT"
+	POLICYCONTROLREQUESTTRIGGERANYOF_RES_RELEASE                      PolicyControlRequestTrigger = "RES_RELEASE"
+	POLICYCONTROLREQUESTTRIGGERANYOF_SUCC_RES_ALLO                    PolicyControlRequestTrigger = "SUCC_RES_ALLO"
+	POLICYCONTROLREQUESTTRIGGERANYOF_RAT_TY_CH                        PolicyControlRequestTrigger = "RAT_TY_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_REF_QOS_IND_CH                   PolicyControlRequestTrigger = "REF_QOS_IND_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_NUM_OF_PACKET_FILTER             PolicyControlRequestTrigger = "NUM_OF_PACKET_FILTER"
+	POLICYCONTROLREQUESTTRIGGERANYOF_UE_STATUS_RESUME                 PolicyControlRequestTrigger = "UE_STATUS_RESUME"
+	POLICYCONTROLREQUESTTRIGGERANYOF_UE_TZ_CH                         PolicyControlRequestTrigger = "UE_TZ_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_AUTH_PROF_CH                     PolicyControlRequestTrigger = "AUTH_PROF_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_QOS_MONITORING                   PolicyControlRequestTrigger = "QOS_MONITORING"
+	POLICYCONTROLREQUESTTRIGGERANYOF_SCELL_CH                         PolicyControlRequestTrigger = "SCELL_CH"
+	POLICYCONTROLREQUESTTRIGGERANYOF_EPS_FALLBACK                     PolicyControlRequestTrigger = "EPS_FALLBACK"
+	POLICYCONTROLREQUESTTRIGGERANYOF_MA_PDU                           PolicyControlRequestTrigger = "MA_PDU"
+	POLICYCONTROLREQUESTTRIGGERANYOF_TSN_BRIDGE_INFO                  PolicyControlRequestTrigger = "TSN_BRIDGE_INFO"
+	POLICYCONTROLREQUESTTRIGGERANYOF__5_G_RG_JOIN                     PolicyControlRequestTrigger = "5G_RG_JOIN"
+	POLICYCONTROLREQUESTTRIGGERANYOF__5_G_RG_LEAVE                    PolicyControlRequestTrigger = "5G_RG_LEAVE"
+	POLICYCONTROLREQUESTTRIGGERANYOF_DDN_FAILURE                      PolicyControlRequestTrigger = "DDN_FAILURE"
+	POLICYCONTROLREQUESTTRIGGERANYOF_DDN_DELIVERY_STATUS              PolicyControlRequestTrigger = "DDN_DELIVERY_STATUS"
+	POLICYCONTROLREQUESTTRIGGERANYOF_GROUP_ID_LIST_CHG                PolicyControlRequestTrigger = "GROUP_ID_LIST_CHG"
+	POLICYCONTROLREQUESTTRIGGERANYOF_DDN_FAILURE_CANCELLATION         PolicyControlRequestTrigger = "DDN_FAILURE_CANCELLATION"
+	POLICYCONTROLREQUESTTRIGGERANYOF_DDN_DELIVERY_STATUS_CANCELLATION PolicyControlRequestTrigger = "DDN_DELIVERY_STATUS_CANCELLATION"
+	POLICYCONTROLREQUESTTRIGGERANYOF_VPLMN_QOS_CH                     PolicyControlRequestTrigger = "VPLMN_QOS_CH"
+)

@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type AssociationType struct {
-}
+type AssociationType string
+
+// List of AssociationTypeAnyOf
+const (
+	ASSOCIATIONTYPEANYOF_IMEI_CHANGE   AssociationType = "IMEI_CHANGE"
+	ASSOCIATIONTYPEANYOF_IMEISV_CHANGE AssociationType = "IMEISV_CHANGE"
+)

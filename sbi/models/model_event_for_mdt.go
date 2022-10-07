@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type EventForMdt struct {
-}
+type EventForMdt string
+
+// List of EventForMdtAnyOf
+const (
+	EVENTFORMDTANYOF_OUT_OF_COVERAG EventForMdt = "OUT_OF_COVERAG"
+	EVENTFORMDTANYOF_A2_EVENT       EventForMdt = "A2_EVENT"
+)

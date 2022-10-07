@@ -11,6 +11,10 @@ API version: 2.1.7
 
 package models
 
-// PduSessionStatus - Possible values are - \"ACTIVE\" - \"RELEASED\"
-type PduSessionStatus struct {
-}
+type PduSessionStatus string
+
+// List of PduSessionStatusAnyOf
+const (
+	PDUSESSIONSTATUSANYOF_ACTIVE   PduSessionStatus = "ACTIVE"
+	PDUSESSIONSTATUSANYOF_RELEASED PduSessionStatus = "RELEASED"
+)

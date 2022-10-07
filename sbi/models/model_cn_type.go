@@ -11,5 +11,11 @@ API version: 1.1.4
 
 package models
 
-type CnType struct {
-}
+type CnType string
+
+// List of CnTypeAnyOf
+const (
+	CNTYPEANYOF_SINGLE_4_G  CnType = "SINGLE_4G"
+	CNTYPEANYOF_SINGLE_5_G  CnType = "SINGLE_5G"
+	CNTYPEANYOF_DUAL_4_G5_G CnType = "DUAL_4G5G"
+)

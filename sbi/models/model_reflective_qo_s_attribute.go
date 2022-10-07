@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type ReflectiveQoSAttribute struct {
-}
+type ReflectiveQoSAttribute string
+
+// List of ReflectiveQoSAttributeAnyOf
+const (
+	REFLECTIVEQOSATTRIBUTEANYOF_RQOS    ReflectiveQoSAttribute = "RQOS"
+	REFLECTIVEQOSATTRIBUTEANYOF_NO_RQOS ReflectiveQoSAttribute = "NO_RQOS"
+)

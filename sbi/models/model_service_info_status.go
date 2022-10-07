@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type ServiceInfoStatus struct {
-}
+type ServiceInfoStatus string
+
+// List of ServiceInfoStatusAnyOf
+const (
+	SERVICEINFOSTATUSANYOF_FINAL       ServiceInfoStatus = "FINAL"
+	SERVICEINFOSTATUSANYOF_PRELIMINARY ServiceInfoStatus = "PRELIMINARY"
+)

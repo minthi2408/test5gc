@@ -11,5 +11,11 @@ API version: 1.1.8
 
 package models
 
-type QosResourceType struct {
-}
+type QosResourceType string
+
+// List of QosResourceTypeAnyOf
+const (
+	QOSRESOURCETYPEANYOF_NON_GBR          QosResourceType = "NON_GBR"
+	QOSRESOURCETYPEANYOF_NON_CRITICAL_GBR QosResourceType = "NON_CRITICAL_GBR"
+	QOSRESOURCETYPEANYOF_CRITICAL_GBR     QosResourceType = "CRITICAL_GBR"
+)

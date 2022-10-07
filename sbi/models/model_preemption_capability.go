@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type PreemptionCapability struct {
-}
+type PreemptionCapability string
+
+// List of PreemptionCapabilityAnyOf
+const (
+	PREEMPTIONCAPABILITYANYOF_NOT_PREEMPT PreemptionCapability = "NOT_PREEMPT"
+	PREEMPTIONCAPABILITYANYOF_MAY_PREEMPT PreemptionCapability = "MAY_PREEMPT"
+)

@@ -10,3 +10,12 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type TransferReason string
+
+// List of TransferReason
+const (
+	TRANSFERREASON_INIT_REG              TransferReason = "INIT_REG"
+	TRANSFERREASON_MOBI_REG              TransferReason = "MOBI_REG"
+	TRANSFERREASON_MOBI_REG_UE_VALIDATED TransferReason = "MOBI_REG_UE_VALIDATED"
+)

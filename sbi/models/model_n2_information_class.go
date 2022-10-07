@@ -10,3 +10,16 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type N2InformationClass string
+
+// List of N2InformationClass
+const (
+	N2INFORMATIONCLASS_SM       N2InformationClass = "SM"
+	N2INFORMATIONCLASS_NRPPA    N2InformationClass = "NRPPa"
+	N2INFORMATIONCLASS_PWS      N2InformationClass = "PWS"
+	N2INFORMATIONCLASS_PWS_BCAL N2InformationClass = "PWS-BCAL"
+	N2INFORMATIONCLASS_PWS_RF   N2InformationClass = "PWS-RF"
+	N2INFORMATIONCLASS_RAN      N2InformationClass = "RAN"
+	N2INFORMATIONCLASS_V2_X     N2InformationClass = "V2X"
+)

@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type EpsNasCipheringAlgorithm struct {
-}
+type EpsNasCipheringAlgorithm string
+
+// List of EpsNasCipheringAlgorithmAnyOf
+const (
+	EPSNASCIPHERINGALGORITHMANYOF_EEA0 EpsNasCipheringAlgorithm = "EEA0"
+	EPSNASCIPHERINGALGORITHMANYOF_EEA1 EpsNasCipheringAlgorithm = "EEA1"
+	EPSNASCIPHERINGALGORITHMANYOF_EEA2 EpsNasCipheringAlgorithm = "EEA2"
+	EPSNASCIPHERINGALGORITHMANYOF_EEA3 EpsNasCipheringAlgorithm = "EEA3"
+)

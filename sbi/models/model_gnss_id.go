@@ -11,5 +11,16 @@ API version: 1.1.7
 
 package models
 
-type GnssId struct {
-}
+type GnssId string
+
+// List of GnssIdAnyOf
+const (
+	GNSSIDANYOF_GPS            GnssId = "GPS"
+	GNSSIDANYOF_GALILEO        GnssId = "GALILEO"
+	GNSSIDANYOF_SBAS           GnssId = "SBAS"
+	GNSSIDANYOF_MODERNIZED_GPS GnssId = "MODERNIZED_GPS"
+	GNSSIDANYOF_QZSS           GnssId = "QZSS"
+	GNSSIDANYOF_GLONASS        GnssId = "GLONASS"
+	GNSSIDANYOF_BDS            GnssId = "BDS"
+	GNSSIDANYOF_NAVIC          GnssId = "NAVIC"
+)

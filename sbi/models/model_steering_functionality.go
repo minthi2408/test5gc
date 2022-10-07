@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// SteeringFunctionality - Possible values are   - MPTCP: Indicates that PCF authorizes the MPTCP functionality to support traffic steering, switching and splitting.   - ATSSS_LL: Indicates that PCF authorizes the ATSSS-LL functionality to support traffic steering, switching and splitting.
-type SteeringFunctionality struct {
-}
+type SteeringFunctionality string
+
+// List of SteeringFunctionalityAnyOf
+const (
+	STEERINGFUNCTIONALITYANYOF_MPTCP    SteeringFunctionality = "MPTCP"
+	STEERINGFUNCTIONALITYANYOF_ATSSS_LL SteeringFunctionality = "ATSSS_LL"
+)

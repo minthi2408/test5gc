@@ -11,6 +11,14 @@ API version: 1.1.8
 
 package models
 
-// RequestedRuleDataType - Possible values are - CH_ID: Indicates that the requested rule data is the charging identifier.  - MS_TIME_ZONE: Indicates that the requested access network info type is the UE's timezone. - USER_LOC_INFO: Indicates that the requested access network info type is the UE's location. - RES_RELEASE: Indicates that the requested rule data is the result of the release of resource. - SUCC_RES_ALLO: Indicates that the requested rule data is the successful resource allocation. - EPS_FALLBACK: Indicates that the requested rule data is the report of QoS flow rejection due to EPS fallback.
-type RequestedRuleDataType struct {
-}
+type RequestedRuleDataType string
+
+// List of RequestedRuleDataTypeAnyOf
+const (
+	REQUESTEDRULEDATATYPEANYOF_CH_ID         RequestedRuleDataType = "CH_ID"
+	REQUESTEDRULEDATATYPEANYOF_MS_TIME_ZONE  RequestedRuleDataType = "MS_TIME_ZONE"
+	REQUESTEDRULEDATATYPEANYOF_USER_LOC_INFO RequestedRuleDataType = "USER_LOC_INFO"
+	REQUESTEDRULEDATATYPEANYOF_RES_RELEASE   RequestedRuleDataType = "RES_RELEASE"
+	REQUESTEDRULEDATATYPEANYOF_SUCC_RES_ALLO RequestedRuleDataType = "SUCC_RES_ALLO"
+	REQUESTEDRULEDATATYPEANYOF_EPS_FALLBACK  RequestedRuleDataType = "EPS_FALLBACK"
+)

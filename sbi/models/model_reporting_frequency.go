@@ -11,5 +11,11 @@ API version: 1.1.8
 
 package models
 
-type ReportingFrequency struct {
-}
+type ReportingFrequency string
+
+// List of ReportingFrequencyAnyOf
+const (
+	REPORTINGFREQUENCYANYOF_EVENT_TRIGGERED ReportingFrequency = "EVENT_TRIGGERED"
+	REPORTINGFREQUENCYANYOF_PERIODIC        ReportingFrequency = "PERIODIC"
+	REPORTINGFREQUENCYANYOF_SESSION_RELEASE ReportingFrequency = "SESSION_RELEASE"
+)

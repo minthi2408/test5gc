@@ -11,5 +11,10 @@ API version: 1.1.7
 
 package models
 
-type LcsPriority struct {
-}
+type LcsPriority string
+
+// List of LcsPriorityAnyOf
+const (
+	LCSPRIORITYANYOF_HIGHEST_PRIORITY LcsPriority = "HIGHEST_PRIORITY"
+	LCSPRIORITYANYOF_NORMAL_PRIORITY  LcsPriority = "NORMAL_PRIORITY"
+)

@@ -11,6 +11,12 @@ API version: 1.1.6
 
 package models
 
-// FlowDirection - Possible values are - DOWNLINK: The corresponding filter applies for traffic to the UE. - UPLINK: The corresponding filter applies for traffic from the UE. - BIDIRECTIONAL: The corresponding filter applies for traffic both to and from the UE. - UNSPECIFIED: The corresponding filter applies for traffic to the UE (downlink), but has no specific direction declared. The service data flow detection shall apply the filter for uplink traffic as if the filter was bidirectional. The PCF shall not use the value UNSPECIFIED in filters created by the network in NW-initiated procedures. The PCF shall only include the value UNSPECIFIED in filters in UE-initiated procedures if the same value is received from the SMF.
-type FlowDirection struct {
-}
+type FlowDirection string
+
+// List of FlowDirectionAnyOf
+const (
+	FLOWDIRECTIONANYOF_DOWNLINK      FlowDirection = "DOWNLINK"
+	FLOWDIRECTIONANYOF_UPLINK        FlowDirection = "UPLINK"
+	FLOWDIRECTIONANYOF_BIDIRECTIONAL FlowDirection = "BIDIRECTIONAL"
+	FLOWDIRECTIONANYOF_UNSPECIFIED   FlowDirection = "UNSPECIFIED"
+)

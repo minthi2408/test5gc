@@ -11,6 +11,11 @@ API version: 1.1.6
 
 package models
 
-// PolicyAssociationReleaseCause - Possible values are - UNSPECIFIED: This value is used for unspecified reasons. - UE_SUBSCRIPTION: This value is used to indicate that the policy association needs to be terminated because the subscription of UE has changed (e.g. was removed). - INSUFFICIENT_RES: This value is used to indicate that the server is overloaded and needs to abort the policy association.
-type PolicyAssociationReleaseCause struct {
-}
+type PolicyAssociationReleaseCause string
+
+// List of PolicyAssociationReleaseCauseAnyOf
+const (
+	POLICYASSOCIATIONRELEASECAUSEANYOF_UNSPECIFIED      PolicyAssociationReleaseCause = "UNSPECIFIED"
+	POLICYASSOCIATIONRELEASECAUSEANYOF_UE_SUBSCRIPTION  PolicyAssociationReleaseCause = "UE_SUBSCRIPTION"
+	POLICYASSOCIATIONRELEASECAUSEANYOF_INSUFFICIENT_RES PolicyAssociationReleaseCause = "INSUFFICIENT_RES"
+)

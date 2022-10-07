@@ -11,6 +11,10 @@ API version: 1.1.6
 
 package models
 
-// AfSigProtocol - Possible values are - NO_INFORMATION: Indicate that no information about the AF signalling protocol is being provided.  - SIP: Indicate that the signalling protocol is Session Initiation Protocol.
-type AfSigProtocol struct {
-}
+type AfSigProtocol string
+
+// List of AfSigProtocolAnyOf
+const (
+	AFSIGPROTOCOLANYOF_NO_INFORMATION AfSigProtocol = "NO_INFORMATION"
+	AFSIGPROTOCOLANYOF_SIP            AfSigProtocol = "SIP"
+)

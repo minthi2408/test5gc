@@ -11,5 +11,13 @@ API version: 2.1.7
 
 package models
 
-type LcsClientClass struct {
-}
+type LcsClientClass string
+
+// List of LcsClientClassAnyOf
+const (
+	LCSCLIENTCLASSANYOF_BROADCAST_SERVICE          LcsClientClass = "BROADCAST_SERVICE"
+	LCSCLIENTCLASSANYOF_OM_IN_HPLMN                LcsClientClass = "OM_IN_HPLMN"
+	LCSCLIENTCLASSANYOF_OM_IN_VPLMN                LcsClientClass = "OM_IN_VPLMN"
+	LCSCLIENTCLASSANYOF_ANONYMOUS_LOCATION_SERVICE LcsClientClass = "ANONYMOUS_LOCATION_SERVICE"
+	LCSCLIENTCLASSANYOF_SPECIFIC_SERVICE           LcsClientClass = "SPECIFIC_SERVICE"
+)

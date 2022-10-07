@@ -10,3 +10,15 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type N1MessageClass string
+
+// List of N1MessageClass
+const (
+	N1MESSAGECLASS__5_GMM N1MessageClass = "5GMM"
+	N1MESSAGECLASS_SM     N1MessageClass = "SM"
+	N1MESSAGECLASS_LPP    N1MessageClass = "LPP"
+	N1MESSAGECLASS_SMS    N1MessageClass = "SMS"
+	N1MESSAGECLASS_UPDP   N1MessageClass = "UPDP"
+	N1MESSAGECLASS_LCS    N1MessageClass = "LCS"
+)

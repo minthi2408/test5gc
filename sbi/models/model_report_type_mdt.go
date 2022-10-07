@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type ReportTypeMdt struct {
-}
+type ReportTypeMdt string
+
+// List of ReportTypeMdtAnyOf
+const (
+	REPORTTYPEMDTANYOF_PERIODICAL    ReportTypeMdt = "PERIODICAL"
+	REPORTTYPEMDTANYOF_EVENT_TRIGGED ReportTypeMdt = "EVENT_TRIGGED"
+)

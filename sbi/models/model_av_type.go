@@ -11,5 +11,10 @@ API version: 1.1.3
 
 package models
 
-type AvType struct {
-}
+type AvType string
+
+// List of AvTypeAnyOf
+const (
+	AVTYPEANYOF__5_G_HE_AKA   AvType = "5G_HE_AKA"
+	AVTYPEANYOF_EAP_AKA_PRIME AvType = "EAP_AKA_PRIME"
+)

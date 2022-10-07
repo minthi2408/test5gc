@@ -11,5 +11,13 @@ API version: 1.1.8
 
 package models
 
-type AtsssCapability struct {
-}
+type AtsssCapability string
+
+// List of AtsssCapabilityAnyOf
+const (
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_UL             AtsssCapability = "MPTCP_ATSSS_LL_WITH_ASMODE_UL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL AtsssCapability = "MPTCP_ATSSS_LL_WITH_EXSDMODE_DL_ASMODE_UL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL_WITH_ASMODE_DLUL           AtsssCapability = "MPTCP_ATSSS_LL_WITH_ASMODE_DLUL"
+	ATSSSCAPABILITYANYOF_ATSSS_LL                                  AtsssCapability = "ATSSS_LL"
+	ATSSSCAPABILITYANYOF_MPTCP_ATSSS_LL                            AtsssCapability = "MPTCP_ATSSS_LL"
+)

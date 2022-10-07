@@ -11,5 +11,9 @@ API version: 1.1.8
 
 package models
 
-type N2InformationTransferResult struct {
-}
+type N2InformationTransferResult string
+
+// List of N2InformationTransferResultAnyOf
+const (
+	N2INFORMATIONTRANSFERRESULTANYOF_N2_INFO_TRANSFER_INITIATED N2InformationTransferResult = "N2_INFO_TRANSFER_INITIATED"
+)

@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type ServAuthInfo struct {
-}
+type ServAuthInfo string
+
+// List of ServAuthInfoAnyOf
+const (
+	SERVAUTHINFOANYOF_NOT_KNOWN       ServAuthInfo = "TP_NOT_KNOWN"
+	SERVAUTHINFOANYOF_EXPIRED         ServAuthInfo = "TP_EXPIRED"
+	SERVAUTHINFOANYOF_NOT_YET_OCURRED ServAuthInfo = "TP_NOT_YET_OCURRED"
+)

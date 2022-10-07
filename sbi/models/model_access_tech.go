@@ -11,5 +11,19 @@ API version: 2.1.7
 
 package models
 
-type AccessTech struct {
-}
+type AccessTech string
+
+// List of AccessTechAnyOf
+const (
+	ACCESSTECHANYOF_NR                                AccessTech = "NR"
+	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE AccessTech = "EUTRAN_IN_WBS1_MODE_AND_NBS1_MODE"
+	ACCESSTECHANYOF_EUTRAN_IN_NBS1_MODE_ONLY          AccessTech = "EUTRAN_IN_NBS1_MODE_ONLY"
+	ACCESSTECHANYOF_EUTRAN_IN_WBS1_MODE_ONLY          AccessTech = "EUTRAN_IN_WBS1_MODE_ONLY"
+	ACCESSTECHANYOF_UTRAN                             AccessTech = "UTRAN"
+	ACCESSTECHANYOF_GSM_AND_ECGSM_IO_T                AccessTech = "GSM_AND_ECGSM_IoT"
+	ACCESSTECHANYOF_GSM_WITHOUT_ECGSM_IO_T            AccessTech = "GSM_WITHOUT_ECGSM_IoT"
+	ACCESSTECHANYOF_ECGSM_IO_T_ONLY                   AccessTech = "ECGSM_IoT_ONLY"
+	ACCESSTECHANYOF_CDMA_1X_RTT                       AccessTech = "CDMA_1xRTT"
+	ACCESSTECHANYOF_CDMA_HRPD                         AccessTech = "CDMA_HRPD"
+	ACCESSTECHANYOF_GSM_COMPACT                       AccessTech = "GSM_COMPACT"
+)

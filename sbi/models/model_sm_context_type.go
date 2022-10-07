@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// SmContextType - Possible values are   - EPS_PDN_CONNECTION   - SM_CONTEXT
-type SmContextType struct {
-}
+type SmContextType string
+
+// List of SmContextTypeAnyOf
+const (
+	SMCONTEXTTYPEANYOF_EPS_PDN_CONNECTION SmContextType = "EPS_PDN_CONNECTION"
+	SMCONTEXTTYPEANYOF_SM_CONTEXT         SmContextType = "SM_CONTEXT"
+)

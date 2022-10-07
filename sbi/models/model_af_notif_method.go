@@ -11,5 +11,12 @@ API version: 1.1.6
 
 package models
 
-type AfNotifMethod struct {
-}
+type AfNotifMethod string
+
+// List of AfNotifMethodAnyOf
+const (
+	AFNOTIFMETHODANYOF_EVENT_DETECTION     AfNotifMethod = "EVENT_DETECTION"
+	AFNOTIFMETHODANYOF_ONE_TIME            AfNotifMethod = "ONE_TIME"
+	AFNOTIFMETHODANYOF_PERIODIC            AfNotifMethod = "PERIODIC"
+	AFNOTIFMETHODANYOF_PDU_SESSION_RELEASE AfNotifMethod = "PDU_SESSION_RELEASE"
+)

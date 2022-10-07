@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type CodeWordInd struct {
-}
+type CodeWordInd string
+
+// List of CodeWordIndAnyOf
+const (
+	CODEWORDINDANYOF_UE   CodeWordInd = "CODEWORD_CHECK_IN_UE"
+	CODEWORDINDANYOF_GMLC CodeWordInd = "CODEWORD_CHECK_IN_GMLC"
+)

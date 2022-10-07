@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type IntegrityAlgorithm struct {
-}
+type IntegrityAlgorithm string
+
+// List of IntegrityAlgorithmAnyOf
+const (
+	INTEGRITYALGORITHMANYOF_NIA0 IntegrityAlgorithm = "NIA0"
+	INTEGRITYALGORITHMANYOF_NIA1 IntegrityAlgorithm = "NIA1"
+	INTEGRITYALGORITHMANYOF_NIA2 IntegrityAlgorithm = "NIA2"
+	INTEGRITYALGORITHMANYOF_NIA3 IntegrityAlgorithm = "NIA3"
+)

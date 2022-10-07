@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type LcsMoServiceClass struct {
-}
+type LcsMoServiceClass string
+
+// List of LcsMoServiceClassAnyOf
+const (
+	LCSMOSERVICECLASSANYOF_BASIC_SELF_LOCATION      LcsMoServiceClass = "BASIC_SELF_LOCATION"
+	LCSMOSERVICECLASSANYOF_AUTONOMOUS_SELF_LOCATION LcsMoServiceClass = "AUTONOMOUS_SELF_LOCATION"
+	LCSMOSERVICECLASSANYOF_TRANSFER_TO_THIRD_PARTY  LcsMoServiceClass = "TRANSFER_TO_THIRD_PARTY"
+)

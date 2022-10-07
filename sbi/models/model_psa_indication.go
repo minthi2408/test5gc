@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// PsaIndication - Possible values are   - PSA_INSERTED   - PSA_REMOVED   - PSA_INSERTED_ONLY   - PSA_REMOVED_ONLY
-type PsaIndication struct {
-}
+type PsaIndication string
+
+// List of PsaIndicationAnyOf
+const (
+	PSAINDICATIONANYOF_INSERTED      PsaIndication = "PSA_INSERTED"
+	PSAINDICATIONANYOF_REMOVED       PsaIndication = "PSA_REMOVED"
+	PSAINDICATIONANYOF_INSERTED_ONLY PsaIndication = "PSA_INSERTED_ONLY"
+	PSAINDICATIONANYOF_REMOVED_ONLY  PsaIndication = "PSA_REMOVED_ONLY"
+)

@@ -11,5 +11,13 @@ API version: 1.1.3
 
 package models
 
-type HssAvType struct {
-}
+type HssAvType string
+
+// List of HssAvTypeAnyOf
+const (
+	HSSAVTYPEANYOF_EPS_AKA  HssAvType = "EPS_AKA"
+	HSSAVTYPEANYOF_EAP_AKA  HssAvType = "EAP_AKA"
+	HSSAVTYPEANYOF_IMS_AKA  HssAvType = "IMS_AKA"
+	HSSAVTYPEANYOF_GBA_AKA  HssAvType = "GBA_AKA"
+	HSSAVTYPEANYOF_UMTS_AKA HssAvType = "UMTS_AKA"
+)

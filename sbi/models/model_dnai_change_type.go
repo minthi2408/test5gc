@@ -11,6 +11,11 @@ API version: 1.1.6
 
 package models
 
-// DnaiChangeType - Possible values are - EARLY: Early notification of UP path reconfiguration. - EARLY_LATE: Early and late notification of UP path reconfiguration. This value shall only be present in the subscription to the DNAI change event. - LATE: Late notification of UP path reconfiguration.
-type DnaiChangeType struct {
-}
+type DnaiChangeType string
+
+// List of DnaiChangeTypeAnyOf
+const (
+	DNAICHANGETYPEANYOF_EARLY      DnaiChangeType = "EARLY"
+	DNAICHANGETYPEANYOF_EARLY_LATE DnaiChangeType = "EARLY_LATE"
+	DNAICHANGETYPEANYOF_LATE       DnaiChangeType = "LATE"
+)

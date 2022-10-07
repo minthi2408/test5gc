@@ -11,5 +11,12 @@ API version: 1.1.3
 
 package models
 
-type AccessNetworkId struct {
-}
+type AccessNetworkId string
+
+// List of AccessNetworkIdAnyOf
+const (
+	ACCESSNETWORKIDANYOF_HRPD     AccessNetworkId = "HRPD"
+	ACCESSNETWORKIDANYOF_WIMAX    AccessNetworkId = "WIMAX"
+	ACCESSNETWORKIDANYOF_WLAN     AccessNetworkId = "WLAN"
+	ACCESSNETWORKIDANYOF_ETHERNET AccessNetworkId = "ETHERNET"
+)

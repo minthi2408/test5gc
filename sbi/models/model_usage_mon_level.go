@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type UsageMonLevel struct {
-}
+type UsageMonLevel string
+
+// List of UsageMonLevelAnyOf
+const (
+	USAGEMONLEVELANYOF_SESSION_LEVEL UsageMonLevel = "SESSION_LEVEL"
+	USAGEMONLEVELANYOF_SERVICE_LEVEL UsageMonLevel = "SERVICE_LEVEL"
+)

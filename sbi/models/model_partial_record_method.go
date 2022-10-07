@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type PartialRecordMethod struct {
-}
+type PartialRecordMethod string
+
+// List of PartialRecordMethodAnyOf
+const (
+	PARTIALRECORDMETHODANYOF_DEFAULT    PartialRecordMethod = "DEFAULT"
+	PARTIALRECORDMETHODANYOF_INDIVIDUAL PartialRecordMethod = "INDIVIDUAL"
+)

@@ -11,5 +11,10 @@ API version: 1.1.7
 
 package models
 
-type VelocityRequested struct {
-}
+type VelocityRequested string
+
+// List of VelocityRequestedAnyOf
+const (
+	VELOCITYREQUESTEDANYOF_NOT_REQUESTED VelocityRequested = "VELOCITY_IS_NOT_REQUESTED"
+	VELOCITYREQUESTEDANYOF_REQUESTED     VelocityRequested = "VELOCITY_IS_REQUESTED"
+)

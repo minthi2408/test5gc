@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type AuthMethod struct {
-}
+type AuthMethod string
+
+// List of AuthMethodAnyOf
+const (
+	AUTHMETHODANYOF__5_G_AKA      AuthMethod = "5G_AKA"
+	AUTHMETHODANYOF_EAP_AKA_PRIME AuthMethod = "EAP_AKA_PRIME"
+	AUTHMETHODANYOF_EAP_TLS       AuthMethod = "EAP_TLS"
+)

@@ -11,5 +11,14 @@ API version: 1.1.3
 
 package models
 
-type HssAuthType struct {
-}
+type HssAuthType string
+
+// List of HssAuthTypeAnyOf
+const (
+	HSSAUTHTYPEANYOF_EPS_AKA       HssAuthType = "EPS_AKA"
+	HSSAUTHTYPEANYOF_EAP_AKA       HssAuthType = "EAP_AKA"
+	HSSAUTHTYPEANYOF_EAP_AKA_PRIME HssAuthType = "EAP_AKA_PRIME"
+	HSSAUTHTYPEANYOF_IMS_AKA       HssAuthType = "IMS_AKA"
+	HSSAUTHTYPEANYOF_GBA_AKA       HssAuthType = "GBA_AKA"
+	HSSAUTHTYPEANYOF_UMTS_AKA      HssAuthType = "UMTS_AKA"
+)

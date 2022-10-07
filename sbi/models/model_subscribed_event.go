@@ -11,6 +11,9 @@ API version: 2.1.7
 
 package models
 
-// SubscribedEvent - Possible values are - UP_PATH_CHANGE: The AF requests to be notified when the UP path changes for the PDU session.
-type SubscribedEvent struct {
-}
+type SubscribedEvent string
+
+// List of SubscribedEventAnyOf
+const (
+	SUBSCRIBEDEVENTANYOF_UP_PATH_CHANGE SubscribedEvent = "UP_PATH_CHANGE"
+)

@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type UeReachability struct {
-}
+type UeReachability string
+
+// List of UeReachabilityAnyOf
+const (
+	UEREACHABILITYANYOF_UNREACHABLE     UeReachability = "UNREACHABLE"
+	UEREACHABILITYANYOF_REACHABLE       UeReachability = "REACHABLE"
+	UEREACHABILITYANYOF_REGULATORY_ONLY UeReachability = "REGULATORY_ONLY"
+)

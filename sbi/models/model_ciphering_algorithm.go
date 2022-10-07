@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type CipheringAlgorithm struct {
-}
+type CipheringAlgorithm string
+
+// List of CipheringAlgorithmAnyOf
+const (
+	CIPHERINGALGORITHMANYOF_NEA0 CipheringAlgorithm = "NEA0"
+	CIPHERINGALGORITHMANYOF_NEA1 CipheringAlgorithm = "NEA1"
+	CIPHERINGALGORITHMANYOF_NEA2 CipheringAlgorithm = "NEA2"
+	CIPHERINGALGORITHMANYOF_NEA3 CipheringAlgorithm = "NEA3"
+)

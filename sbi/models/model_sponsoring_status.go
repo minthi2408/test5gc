@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type SponsoringStatus struct {
-}
+type SponsoringStatus string
+
+// List of SponsoringStatusAnyOf
+const (
+	SPONSORINGSTATUSANYOF_DISABLED SponsoringStatus = "SPONSOR_DISABLED"
+	SPONSORINGSTATUSANYOF_ENABLED  SponsoringStatus = "SPONSOR_ENABLED"
+)

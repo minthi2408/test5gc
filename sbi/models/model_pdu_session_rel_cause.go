@@ -11,5 +11,9 @@ API version: 1.1.8
 
 package models
 
-type PduSessionRelCause struct {
-}
+type PduSessionRelCause string
+
+// List of PduSessionRelCauseAnyOf
+const (
+	PDUSESSIONRELCAUSEANYOF_PS_TO_CS_HO PduSessionRelCause = "PS_TO_CS_HO"
+)

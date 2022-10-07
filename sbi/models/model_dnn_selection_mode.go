@@ -11,6 +11,11 @@ API version: 1.1.8
 
 package models
 
-// DnnSelectionMode - Possible values are - VERIFIED - UE_DNN_NOT_VERIFIED - NW_DNN_NOT_VERIFIED
-type DnnSelectionMode struct {
-}
+type DnnSelectionMode string
+
+// List of DnnSelectionModeAnyOf
+const (
+	DNNSELECTIONMODEANYOF_VERIFIED            DnnSelectionMode = "VERIFIED"
+	DNNSELECTIONMODEANYOF_UE_DNN_NOT_VERIFIED DnnSelectionMode = "UE_DNN_NOT_VERIFIED"
+	DNNSELECTIONMODEANYOF_NW_DNN_NOT_VERIFIED DnnSelectionMode = "NW_DNN_NOT_VERIFIED"
+)

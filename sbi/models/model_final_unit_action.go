@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type FinalUnitAction struct {
-}
+type FinalUnitAction string
+
+// List of FinalUnitActionAnyOf
+const (
+	FINALUNITACTIONANYOF_TERMINATE       FinalUnitAction = "TERMINATE"
+	FINALUNITACTIONANYOF_REDIRECT        FinalUnitAction = "REDIRECT"
+	FINALUNITACTIONANYOF_RESTRICT_ACCESS FinalUnitAction = "RESTRICT_ACCESS"
+)

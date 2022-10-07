@@ -11,6 +11,14 @@ API version: 1.1.8
 
 package models
 
-// RuleOperation - Possible values are - CREATE_PCC_RULE: Indicates to create a new PCC rule to reserve the resource requested by the UE.  - DELETE_PCC_RULE: Indicates to delete a PCC rule corresponding to reserve the resource requested by the UE. - MODIFY_PCC_RULE_AND_ADD_PACKET_FILTERS: Indicates to modify the PCC rule by adding new packet filter(s). - MODIFY_ PCC_RULE_AND_REPLACE_PACKET_FILTERS: Indicates to modify the PCC rule by replacing the existing packet filter(s). - MODIFY_ PCC_RULE_AND_DELETE_PACKET_FILTERS: Indicates to modify the PCC rule by deleting the existing packet filter(s). - MODIFY_PCC_RULE_WITHOUT_MODIFY_PACKET_FILTERS: Indicates to modify the PCC rule by modifying the QoS of the PCC rule.
-type RuleOperation struct {
-}
+type RuleOperation string
+
+// List of RuleOperationAnyOf
+const (
+	RULEOPERATIONANYOF_CREATE_PCC_RULE                               RuleOperation = "CREATE_PCC_RULE"
+	RULEOPERATIONANYOF_DELETE_PCC_RULE                               RuleOperation = "DELETE_PCC_RULE"
+	RULEOPERATIONANYOF_MODIFY_PCC_RULE_AND_ADD_PACKET_FILTERS        RuleOperation = "MODIFY_PCC_RULE_AND_ADD_PACKET_FILTERS"
+	RULEOPERATIONANYOF_MODIFY__PCC_RULE_AND_REPLACE_PACKET_FILTERS   RuleOperation = "MODIFY_ PCC_RULE_AND_REPLACE_PACKET_FILTERS"
+	RULEOPERATIONANYOF_MODIFY__PCC_RULE_AND_DELETE_PACKET_FILTERS    RuleOperation = "MODIFY_ PCC_RULE_AND_DELETE_PACKET_FILTERS"
+	RULEOPERATIONANYOF_MODIFY_PCC_RULE_WITHOUT_MODIFY_PACKET_FILTERS RuleOperation = "MODIFY_PCC_RULE_WITHOUT_MODIFY_PACKET_FILTERS"
+)

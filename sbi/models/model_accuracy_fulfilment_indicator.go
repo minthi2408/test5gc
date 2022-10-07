@@ -11,5 +11,10 @@ API version: 1.1.7
 
 package models
 
-type AccuracyFulfilmentIndicator struct {
-}
+type AccuracyFulfilmentIndicator string
+
+// List of AccuracyFulfilmentIndicatorAnyOf
+const (
+	ACCURACYFULFILMENTINDICATORANYOF_FULFILLED     AccuracyFulfilmentIndicator = "REQUESTED_ACCURACY_FULFILLED"
+	ACCURACYFULFILMENTINDICATORANYOF_NOT_FULFILLED AccuracyFulfilmentIndicator = "REQUESTED_ACCURACY_NOT_FULFILLED"
+)

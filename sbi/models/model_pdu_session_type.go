@@ -11,5 +11,13 @@ API version: 1.1.8
 
 package models
 
-type PduSessionType struct {
-}
+type PduSessionType string
+
+// List of PduSessionTypeAnyOf
+const (
+	PDUSESSIONTYPEANYOF_IPV4         PduSessionType = "IPV4"
+	PDUSESSIONTYPEANYOF_IPV6         PduSessionType = "IPV6"
+	PDUSESSIONTYPEANYOF_IPV4_V6      PduSessionType = "IPV4V6"
+	PDUSESSIONTYPEANYOF_UNSTRUCTURED PduSessionType = "UNSTRUCTURED"
+	PDUSESSIONTYPEANYOF_ETHERNET     PduSessionType = "ETHERNET"
+)

@@ -10,3 +10,11 @@ API version: 1.1.6
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type CmState string
+
+// List of CmStateAnyOf
+const (
+	CMSTATE_IDLE      CmState = "IDLE"
+	CMSTATE_CONNECTED CmState = "CONNECTED"
+)

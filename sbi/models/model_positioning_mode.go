@@ -11,5 +11,11 @@ API version: 1.1.7
 
 package models
 
-type PositioningMode struct {
-}
+type PositioningMode string
+
+// List of PositioningModeAnyOf
+const (
+	POSITIONINGMODEANYOF_UE_BASED     PositioningMode = "UE_BASED"
+	POSITIONINGMODEANYOF_UE_ASSISTED  PositioningMode = "UE_ASSISTED"
+	POSITIONINGMODEANYOF_CONVENTIONAL PositioningMode = "CONVENTIONAL"
+)

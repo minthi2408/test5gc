@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// StationaryIndication - Possible values are - STATIONARY: Identifies the UE is stationary - MOBILE: Identifies the UE is mobile
-type StationaryIndication struct {
-}
+type StationaryIndication string
+
+// List of StationaryIndicationAnyOf
+const (
+	STATIONARYINDICATIONANYOF_STATIONARY StationaryIndication = "STATIONARY"
+	STATIONARYINDICATIONANYOF_MOBILE     StationaryIndication = "MOBILE"
+)

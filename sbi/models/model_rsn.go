@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// Rsn - Redundancy Sequence Number. Possible values are   - V1   - V2
-type Rsn struct {
-}
+type Rsn string
+
+// List of RsnAnyOf
+const (
+	RSNANYOF_V1 Rsn = "V1"
+	RSNANYOF_V2 Rsn = "V2"
+)

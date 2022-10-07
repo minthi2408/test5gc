@@ -11,5 +11,24 @@ API version: 1.1.6
 
 package models
 
-type ReservPriority struct {
-}
+type ReservPriority string
+
+// List of ReservPriorityAnyOf
+const (
+	RESERVPRIORITYANYOF__1  ReservPriority = "PRIO_1"
+	RESERVPRIORITYANYOF__2  ReservPriority = "PRIO_2"
+	RESERVPRIORITYANYOF__3  ReservPriority = "PRIO_3"
+	RESERVPRIORITYANYOF__4  ReservPriority = "PRIO_4"
+	RESERVPRIORITYANYOF__5  ReservPriority = "PRIO_5"
+	RESERVPRIORITYANYOF__6  ReservPriority = "PRIO_6"
+	RESERVPRIORITYANYOF__7  ReservPriority = "PRIO_7"
+	RESERVPRIORITYANYOF__8  ReservPriority = "PRIO_8"
+	RESERVPRIORITYANYOF__9  ReservPriority = "PRIO_9"
+	RESERVPRIORITYANYOF__10 ReservPriority = "PRIO_10"
+	RESERVPRIORITYANYOF__11 ReservPriority = "PRIO_11"
+	RESERVPRIORITYANYOF__12 ReservPriority = "PRIO_12"
+	RESERVPRIORITYANYOF__13 ReservPriority = "PRIO_13"
+	RESERVPRIORITYANYOF__14 ReservPriority = "PRIO_14"
+	RESERVPRIORITYANYOF__15 ReservPriority = "PRIO_15"
+	RESERVPRIORITYANYOF__16 ReservPriority = "PRIO_16"
+)

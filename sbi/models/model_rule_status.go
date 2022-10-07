@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// RuleStatus - Possible values are - ACTIVE: Indicates that the PCC rule(s) are successfully installed (for those provisioned from PCF) or activated (for those pre-defined in SMF), or the session rule(s) are successfully installed  - INACTIVE: Indicates that the PCC rule(s) are removed (for those provisioned from PCF) or inactive (for those pre-defined in SMF) or the session rule(s) are removed.
-type RuleStatus struct {
-}
+type RuleStatus string
+
+// List of RuleStatusAnyOf
+const (
+	RULESTATUSANYOF_ACTIVE   RuleStatus = "ACTIVE"
+	RULESTATUSANYOF_INACTIVE RuleStatus = "INACTIVE"
+)

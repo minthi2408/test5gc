@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// QosMonitoringReq - Possible values are   - UL   - DL   - BOTH   - NONE
-type QosMonitoringReq struct {
-}
+type QosMonitoringReq string
+
+// List of QosMonitoringReqAnyOf
+const (
+	QOSMONITORINGREQANYOF_UL   QosMonitoringReq = "UL"
+	QOSMONITORINGREQANYOF_DL   QosMonitoringReq = "DL"
+	QOSMONITORINGREQANYOF_BOTH QosMonitoringReq = "BOTH"
+	QOSMONITORINGREQANYOF_NONE QosMonitoringReq = "NONE"
+)

@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type PduSessionContinuityInd struct {
-}
+type PduSessionContinuityInd string
+
+// List of PduSessionContinuityIndAnyOf
+const (
+	PDUSESSIONCONTINUITYINDANYOF_MAINTAIN_PDUSESSION  PduSessionContinuityInd = "MAINTAIN_PDUSESSION"
+	PDUSESSIONCONTINUITYINDANYOF_RECONNECT_PDUSESSION PduSessionContinuityInd = "RECONNECT_PDUSESSION"
+	PDUSESSIONCONTINUITYINDANYOF_RELEASE_PDUSESSION   PduSessionContinuityInd = "RELEASE_PDUSESSION"
+)

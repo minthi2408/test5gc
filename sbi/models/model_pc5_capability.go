@@ -11,6 +11,11 @@ API version: 1.1.6
 
 package models
 
-// Pc5Capability - Possible values are - LTE_PC5: This value is used to indicate that UE supports PC5 LTE RAT for V2X communication over PC5 reference point. - NR_PC5: This value is used to indicate that UE supports PC5 NR RAT for V2X communication over PC5 reference point. - LTE_NR_PC5: This value is used to indicate that UE supports both PC5 LTE and NR RAT for V2X communication over PC5 reference point..
-type Pc5Capability struct {
-}
+type Pc5Capability string
+
+// List of Pc5CapabilityAnyOf
+const (
+	PC5CAPABILITYANYOF_LTE_PC5    Pc5Capability = "LTE_PC5"
+	PC5CAPABILITYANYOF_NR_PC5     Pc5Capability = "NR_PC5"
+	PC5CAPABILITYANYOF_LTE_NR_PC5 Pc5Capability = "LTE_NR_PC5"
+)

@@ -11,5 +11,11 @@ API version: 1.1.7
 
 package models
 
-type LocationPrivacyVerResult struct {
-}
+type LocationPrivacyVerResult string
+
+// List of LocationPrivacyVerResultAnyOf
+const (
+	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_ALLOWED     LocationPrivacyVerResult = "LOCATION_ALLOWED"
+	LOCATIONPRIVACYVERRESULTANYOF_LOCATION_NOT_ALLOWED LocationPrivacyVerResult = "LOCATION_NOT_ALLOWED"
+	LOCATIONPRIVACYVERRESULTANYOF_RESPONSE_TIME_OUT    LocationPrivacyVerResult = "RESPONSE_TIME_OUT"
+)

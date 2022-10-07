@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type SipForkingIndication struct {
-}
+type SipForkingIndication string
+
+// List of SipForkingIndicationAnyOf
+const (
+	SIPFORKINGINDICATIONANYOF_SINGLE_DIALOGUE   SipForkingIndication = "SINGLE_DIALOGUE"
+	SIPFORKINGINDICATIONANYOF_SEVERAL_DIALOGUES SipForkingIndication = "SEVERAL_DIALOGUES"
+)

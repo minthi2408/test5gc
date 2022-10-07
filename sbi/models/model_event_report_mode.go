@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type EventReportMode struct {
-}
+type EventReportMode string
+
+// List of EventReportModeAnyOf
+const (
+	EVENTREPORTMODEANYOF_PERIODIC           EventReportMode = "PERIODIC"
+	EVENTREPORTMODEANYOF_ON_EVENT_DETECTION EventReportMode = "ON_EVENT_DETECTION"
+)

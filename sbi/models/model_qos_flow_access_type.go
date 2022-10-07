@@ -11,6 +11,11 @@ API version: 1.1.8
 
 package models
 
-// QosFlowAccessType - Possible values are   - 3GPP   - NON_3GPP   - 3GPP_AND_NON_3GPP
-type QosFlowAccessType struct {
-}
+type QosFlowAccessType string
+
+// List of QosFlowAccessTypeAnyOf
+const (
+	QOSFLOWACCESSTYPEANYOF__3_GPP               QosFlowAccessType = "3GPP"
+	QOSFLOWACCESSTYPEANYOF_NON_3_GPP            QosFlowAccessType = "NON_3GPP"
+	QOSFLOWACCESSTYPEANYOF__3_GPP_AND_NON_3_GPP QosFlowAccessType = "3GPP_AND_NON_3GPP"
+)

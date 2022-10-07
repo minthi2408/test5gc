@@ -10,3 +10,11 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type ScType string
+
+// List of ScTypeAnyOf
+const (
+	SCTYPE_NATIVE ScType = "NATIVE"
+	SCTYPE_MAPPED ScType = "MAPPED"
+)

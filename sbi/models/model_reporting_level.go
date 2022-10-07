@@ -11,6 +11,11 @@ API version: 1.1.8
 
 package models
 
-// ReportingLevel - Possible values are - SER_ID_LEVEL: Indicates that the usage shall be reported on service id and rating group combination level. - RAT_GR_LEVEL: Indicates that the usage shall be reported on rating group level. - SPON_CON_LEVEL: Indicates that the usage shall be reported on sponsor identity and rating group combination level.
-type ReportingLevel struct {
-}
+type ReportingLevel string
+
+// List of ReportingLevelAnyOf
+const (
+	REPORTINGLEVELANYOF_SER_ID_LEVEL   ReportingLevel = "SER_ID_LEVEL"
+	REPORTINGLEVELANYOF_RAT_GR_LEVEL   ReportingLevel = "RAT_GR_LEVEL"
+	REPORTINGLEVELANYOF_SPON_CON_LEVEL ReportingLevel = "SPON_CON_LEVEL"
+)

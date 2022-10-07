@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// NotificationCause - Possible values are - QOS_FULFILLED - QOS_NOT_FULFILLED - UP_SEC_FULFILLED - UP_SEC_NOT_FULFILLED
-type NotificationCause struct {
-}
+type NotificationCause string
+
+// List of NotificationCauseAnyOf
+const (
+	NOTIFICATIONCAUSEANYOF_QOS_FULFILLED        NotificationCause = "QOS_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_QOS_NOT_FULFILLED    NotificationCause = "QOS_NOT_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_UP_SEC_FULFILLED     NotificationCause = "UP_SEC_FULFILLED"
+	NOTIFICATIONCAUSEANYOF_UP_SEC_NOT_FULFILLED NotificationCause = "UP_SEC_NOT_FULFILLED"
+)

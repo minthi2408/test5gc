@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type MediaComponentResourcesStatus struct {
-}
+type MediaComponentResourcesStatus string
+
+// List of MediaComponentResourcesStatusAnyOf
+const (
+	MEDIACOMPONENTRESOURCESSTATUSANYOF_ACTIVE   MediaComponentResourcesStatus = "ACTIVE"
+	MEDIACOMPONENTRESOURCESSTATUSANYOF_INACTIVE MediaComponentResourcesStatus = "INACTIVE"
+)

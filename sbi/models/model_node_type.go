@@ -11,5 +11,16 @@ API version: 1.1.3
 
 package models
 
-type NodeType struct {
-}
+type NodeType string
+
+// List of NodeTypeAnyOf
+const (
+	NODETYPEANYOF_AUSF            NodeType = "AUSF"
+	NODETYPEANYOF_VLR             NodeType = "VLR"
+	NODETYPEANYOF_SGSN            NodeType = "SGSN"
+	NODETYPEANYOF_S_CSCF          NodeType = "S_CSCF"
+	NODETYPEANYOF_BSF             NodeType = "BSF"
+	NODETYPEANYOF_GAN_AAA_SERVER  NodeType = "GAN_AAA_SERVER"
+	NODETYPEANYOF_WLAN_AAA_SERVER NodeType = "WLAN_AAA_SERVER"
+	NODETYPEANYOF_MME             NodeType = "MME"
+)

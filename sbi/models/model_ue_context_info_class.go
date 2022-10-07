@@ -11,5 +11,9 @@ API version: 1.1.3
 
 package models
 
-type UeContextInfoClass struct {
-}
+type UeContextInfoClass string
+
+// List of UeContextInfoClassAnyOf
+const (
+	UECONTEXTINFOCLASSANYOF_TADS UeContextInfoClass = "TADS"
+)

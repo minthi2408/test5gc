@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type RequestedQosMonitoringParameter struct {
-}
+type RequestedQosMonitoringParameter string
+
+// List of RequestedQosMonitoringParameterAnyOf
+const (
+	REQUESTEDQOSMONITORINGPARAMETERANYOF_DOWNLINK   RequestedQosMonitoringParameter = "DOWNLINK"
+	REQUESTEDQOSMONITORINGPARAMETERANYOF_UPLINK     RequestedQosMonitoringParameter = "UPLINK"
+	REQUESTEDQOSMONITORINGPARAMETERANYOF_ROUND_TRIP RequestedQosMonitoringParameter = "ROUND_TRIP"
+)

@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// MaReleaseIndication - Possible values are   - REL_MAPDU_OVER_3GPP   - REL_MAPDU_OVER_N3GPP
-type MaReleaseIndication struct {
-}
+type MaReleaseIndication string
+
+// List of MaReleaseIndicationAnyOf
+const (
+	MARELEASEINDICATIONANYOF__3_GPP MaReleaseIndication = "REL_MAPDU_OVER_3GPP"
+	MARELEASEINDICATIONANYOF_N3_GPP MaReleaseIndication = "REL_MAPDU_OVER_N3GPP"
+)

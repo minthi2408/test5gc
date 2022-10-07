@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type NotificationControl struct {
-}
+type NotificationControl string
+
+// List of NotificationControlAnyOf
+const (
+	NOTIFICATIONCONTROLANYOF_REQUESTED     NotificationControl = "REQUESTED"
+	NOTIFICATIONCONTROLANYOF_NOT_REQUESTED NotificationControl = "NOT_REQUESTED"
+)

@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type RequiredAccessInfo struct {
-}
+type RequiredAccessInfo string
+
+// List of RequiredAccessInfoAnyOf
+const (
+	REQUIREDACCESSINFOANYOF_USER_LOCATION RequiredAccessInfo = "USER_LOCATION"
+	REQUIREDACCESSINFOANYOF_UE_TIME_ZONE  RequiredAccessInfo = "UE_TIME_ZONE"
+)

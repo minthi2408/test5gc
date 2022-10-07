@@ -10,3 +10,15 @@ API version: 1.1.8
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type TraceDepth string
+
+// List of TraceDepth
+const (
+	TRACEDEPTH_MINIMUM                     TraceDepth = "MINIMUM"
+	TRACEDEPTH_MEDIUM                      TraceDepth = "MEDIUM"
+	TRACEDEPTH_MAXIMUM                     TraceDepth = "MAXIMUM"
+	TRACEDEPTH_MINIMUM_WO_VENDOR_EXTENSION TraceDepth = "MINIMUM_WO_VENDOR_EXTENSION"
+	TRACEDEPTH_MEDIUM_WO_VENDOR_EXTENSION  TraceDepth = "MEDIUM_WO_VENDOR_EXTENSION"
+	TRACEDEPTH_MAXIMUM_WO_VENDOR_EXTENSION TraceDepth = "MAXIMUM_WO_VENDOR_EXTENSION"
+)

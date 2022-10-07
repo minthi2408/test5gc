@@ -11,6 +11,11 @@ API version: 1.1.8
 
 package models
 
-// AuthStatus - Possible values are - \"EAP_SUCCESS\": The NSSAA status is EAP-Success. - \"EAP_FAILURE\": The NSSAA status is EAP-Failure. - \"PENDING\": The NSSAA status is Pending.
-type AuthStatus struct {
-}
+type AuthStatus string
+
+// List of AuthStatusAnyOf
+const (
+	AUTHSTATUSANYOF_EAP_SUCCESS AuthStatus = "EAP_SUCCESS"
+	AUTHSTATUSANYOF_EAP_FAILURE AuthStatus = "EAP_FAILURE"
+	AUTHSTATUSANYOF_PENDING     AuthStatus = "PENDING"
+)

@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type MdtUserConsent struct {
-}
+type MdtUserConsent string
+
+// List of MdtUserConsentAnyOf
+const (
+	MDTUSERCONSENTANYOF_NOT_GIVEN MdtUserConsent = "CONSENT_NOT_GIVEN"
+	MDTUSERCONSENTANYOF_GIVEN     MdtUserConsent = "CONSENT_GIVEN"
+)

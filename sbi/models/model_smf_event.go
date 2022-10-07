@@ -11,6 +11,18 @@ API version: 1.1.3
 
 package models
 
-// SmfEvent - Possible values are - AC_TY_CH: Access Type Change - UP_PATH_CH: UP Path Change - PDU_SES_REL: PDU Session Release - PLMN_CH: PLMN Change - UE_IP_CH: UE IP address change - DDDS: Downlink data delivery status - COMM_FAIL: Communication Failure - PDU_SES_EST: PDU Session Establishment - QFI_ALLOC: QFI allocation - QOS_MON: QoS Monitoring
-type SmfEvent struct {
-}
+type SmfEvent string
+
+// List of SmfEventAnyOf
+const (
+	SMFEVENTANYOF_AC_TY_CH    SmfEvent = "AC_TY_CH"
+	SMFEVENTANYOF_UP_PATH_CH  SmfEvent = "UP_PATH_CH"
+	SMFEVENTANYOF_PDU_SES_REL SmfEvent = "PDU_SES_REL"
+	SMFEVENTANYOF_PLMN_CH     SmfEvent = "PLMN_CH"
+	SMFEVENTANYOF_UE_IP_CH    SmfEvent = "UE_IP_CH"
+	SMFEVENTANYOF_DDDS        SmfEvent = "DDDS"
+	SMFEVENTANYOF_COMM_FAIL   SmfEvent = "COMM_FAIL"
+	SMFEVENTANYOF_PDU_SES_EST SmfEvent = "PDU_SES_EST"
+	SMFEVENTANYOF_QFI_ALLOC   SmfEvent = "QFI_ALLOC"
+	SMFEVENTANYOF_QOS_MON     SmfEvent = "QOS_MON"
+)

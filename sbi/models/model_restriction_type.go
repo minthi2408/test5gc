@@ -10,3 +10,11 @@ API version: 1.1.6
 // Templates and customized generator are developed by Quang Tung Thai (tqtung@etri.re.kr)
 
 package models
+
+type RestrictionType string
+
+// List of RestrictionTypeAnyOf
+const (
+	RESTRICTIONTYPE_ALLOWED_AREAS     RestrictionType = "ALLOWED_AREAS"
+	RESTRICTIONTYPE_NOT_ALLOWED_AREAS RestrictionType = "NOT_ALLOWED_AREAS"
+)

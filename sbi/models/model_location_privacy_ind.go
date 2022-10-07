@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type LocationPrivacyInd struct {
-}
+type LocationPrivacyInd string
+
+// List of LocationPrivacyIndAnyOf
+const (
+	LOCATIONPRIVACYINDANYOF_DISALLOWED LocationPrivacyInd = "LOCATION_DISALLOWED"
+	LOCATIONPRIVACYINDANYOF_ALLOWED    LocationPrivacyInd = "LOCATION_ALLOWED"
+)

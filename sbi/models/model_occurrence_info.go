@@ -11,5 +11,10 @@ API version: 1.1.7
 
 package models
 
-type OccurrenceInfo struct {
-}
+type OccurrenceInfo string
+
+// List of OccurrenceInfoAnyOf
+const (
+	OCCURRENCEINFOANYOF_ONE_TIME_EVENT      OccurrenceInfo = "ONE_TIME_EVENT"
+	OCCURRENCEINFOANYOF_MULTIPLE_TIME_EVENT OccurrenceInfo = "MULTIPLE_TIME_EVENT"
+)

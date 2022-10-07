@@ -11,6 +11,12 @@ API version: 1.1.3
 
 package models
 
-// AfResultStatus - Possible values are - SUCCESS: The application layer is ready or the relocation is completed. - TEMPORARY_CONGESTION: The application relocation fails due to temporary congestion. - RELOC_NO_ALLOWED: The application relocation fails because application relocation is not allowed. - OTHER: The application relocation fails due to other reason.
-type AfResultStatus struct {
-}
+type AfResultStatus string
+
+// List of AfResultStatusAnyOf
+const (
+	AFRESULTSTATUSANYOF_SUCCESS              AfResultStatus = "SUCCESS"
+	AFRESULTSTATUSANYOF_TEMPORARY_CONGESTION AfResultStatus = "TEMPORARY_CONGESTION"
+	AFRESULTSTATUSANYOF_RELOC_NO_ALLOWED     AfResultStatus = "RELOC_NO_ALLOWED"
+	AFRESULTSTATUSANYOF_OTHER                AfResultStatus = "OTHER"
+)

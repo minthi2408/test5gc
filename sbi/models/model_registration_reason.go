@@ -11,5 +11,9 @@ API version: 2.1.7
 
 package models
 
-type RegistrationReason struct {
-}
+type RegistrationReason string
+
+// List of RegistrationReasonAnyOf
+const (
+	REGISTRATIONREASONANYOF_SMF_CONTEXT_TRANSFERRED RegistrationReason = "SMF_CONTEXT_TRANSFERRED"
+)

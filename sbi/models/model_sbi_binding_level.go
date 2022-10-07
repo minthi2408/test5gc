@@ -11,5 +11,12 @@ API version: 1.1.8
 
 package models
 
-type SbiBindingLevel struct {
-}
+type SbiBindingLevel string
+
+// List of SbiBindingLevelAnyOf
+const (
+	SBIBINDINGLEVELANYOF_INSTANCE_BINDING         SbiBindingLevel = "NF_INSTANCE_BINDING"
+	SBIBINDINGLEVELANYOF_SET_BINDING              SbiBindingLevel = "NF_SET_BINDING"
+	SBIBINDINGLEVELANYOF_SERVICE_SET_BINDING      SbiBindingLevel = "NF_SERVICE_SET_BINDING"
+	SBIBINDINGLEVELANYOF_SERVICE_INSTANCE_BINDING SbiBindingLevel = "NF_SERVICE_INSTANCE_BINDING"
+)

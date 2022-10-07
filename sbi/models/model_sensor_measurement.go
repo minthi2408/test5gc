@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type SensorMeasurement struct {
-}
+type SensorMeasurement string
+
+// List of SensorMeasurementAnyOf
+const (
+	SENSORMEASUREMENTANYOF_BAROMETRIC_PRESSURE SensorMeasurement = "BAROMETRIC_PRESSURE"
+	SENSORMEASUREMENTANYOF_UE_SPEED            SensorMeasurement = "UE_SPEED"
+	SENSORMEASUREMENTANYOF_UE_ORIENTATION      SensorMeasurement = "UE_ORIENTATION"
+)

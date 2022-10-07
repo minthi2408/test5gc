@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type TerminationCause struct {
-}
+type TerminationCause string
+
+// List of TerminationCauseAnyOf
+const (
+	TERMINATIONCAUSEANYOF_ALL_SDF_DEACTIVATION    TerminationCause = "ALL_SDF_DEACTIVATION"
+	TERMINATIONCAUSEANYOF_PDU_SESSION_TERMINATION TerminationCause = "PDU_SESSION_TERMINATION"
+	TERMINATIONCAUSEANYOF_PS_TO_CS_HO             TerminationCause = "PS_TO_CS_HO"
+)

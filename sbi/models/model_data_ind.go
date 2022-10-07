@@ -11,6 +11,12 @@ API version: 2.1.7
 
 package models
 
-// DataInd - Possible values are - PFD - IPTV - BDT - SVC_PARAM
-type DataInd struct {
-}
+type DataInd string
+
+// List of DataIndAnyOf
+const (
+	DATAINDANYOF_PFD       DataInd = "PFD"
+	DATAINDANYOF_IPTV      DataInd = "IPTV"
+	DATAINDANYOF_BDT       DataInd = "BDT"
+	DATAINDANYOF_SVC_PARAM DataInd = "SVC_PARAM"
+)

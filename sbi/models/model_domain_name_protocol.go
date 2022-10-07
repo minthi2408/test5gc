@@ -11,6 +11,12 @@ API version: 2.1.7
 
 package models
 
-// DomainNameProtocol - Possible values are - DNS_QNAME: Identifies the DNS protocol and the question name in DNS query. - TLS_SNI: Identifies the Server Name Indication in TLS ClientHello message. - TLS_SAN: Identifies the Subject Alternative Name in TLS ServerCertificate message. - TLS_SCN: Identifies the Subject Common Name in TLS ServerCertificate message.
-type DomainNameProtocol struct {
-}
+type DomainNameProtocol string
+
+// List of DomainNameProtocolAnyOf
+const (
+	DOMAINNAMEPROTOCOLANYOF_DNS_QNAME DomainNameProtocol = "DNS_QNAME"
+	DOMAINNAMEPROTOCOLANYOF_TLS_SNI   DomainNameProtocol = "TLS_SNI"
+	DOMAINNAMEPROTOCOLANYOF_TLS_SAN   DomainNameProtocol = "TLS_SAN"
+	DOMAINNAMEPROTOCOLANYOF_TSL_SCN   DomainNameProtocol = "TSL_SCN"
+)

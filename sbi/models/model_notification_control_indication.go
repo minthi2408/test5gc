@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type NotificationControlIndication struct {
-}
+type NotificationControlIndication string
+
+// List of NotificationControlIndicationAnyOf
+const (
+	NOTIFICATIONCONTROLINDICATIONANYOF_DDN_FAILURE NotificationControlIndication = "DDN_FAILURE"
+	NOTIFICATIONCONTROLINDICATIONANYOF_DDD_STATUS  NotificationControlIndication = "DDD_STATUS"
+)

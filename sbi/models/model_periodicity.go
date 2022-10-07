@@ -11,5 +11,13 @@ API version: 2.1.7
 
 package models
 
-type Periodicity struct {
-}
+type Periodicity string
+
+// List of PeriodicityAnyOf
+const (
+	PERIODICITYANYOF_YEARLY  Periodicity = "YEARLY"
+	PERIODICITYANYOF_MONTHLY Periodicity = "MONTHLY"
+	PERIODICITYANYOF_WEEKLY  Periodicity = "WEEKLY"
+	PERIODICITYANYOF_DAILY   Periodicity = "DAILY"
+	PERIODICITYANYOF_HOURLY  Periodicity = "HOURLY"
+)

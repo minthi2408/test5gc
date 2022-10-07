@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type RatSelector struct {
-}
+type RatSelector string
+
+// List of RatSelectorAnyOf
+const (
+	RATSELECTORANYOF_E_UTRA RatSelector = "E-UTRA"
+	RATSELECTORANYOF_NR     RatSelector = "NR"
+)

@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type KeyAmfType struct {
-}
+type KeyAmfType string
+
+// List of KeyAmfTypeAnyOf
+const (
+	KEYAMFTYPEANYOF_KAMF      KeyAmfType = "KAMF"
+	KEYAMFTYPEANYOF_KPRIMEAMF KeyAmfType = "KPRIMEAMF"
+)

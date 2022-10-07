@@ -11,5 +11,11 @@ API version: 1.1.8
 
 package models
 
-type UpIntegrity struct {
-}
+type UpIntegrity string
+
+// List of UpIntegrityAnyOf
+const (
+	UPINTEGRITYANYOF_REQUIRED   UpIntegrity = "REQUIRED"
+	UPINTEGRITYANYOF_PREFERRED  UpIntegrity = "PREFERRED"
+	UPINTEGRITYANYOF_NOT_NEEDED UpIntegrity = "NOT_NEEDED"
+)

@@ -11,5 +11,11 @@ API version: 1.1.8
 
 package models
 
-type ScheduledCommunicationType struct {
-}
+type ScheduledCommunicationType string
+
+// List of ScheduledCommunicationTypeAnyOf
+const (
+	SCHEDULEDCOMMUNICATIONTYPEANYOF_DOWNLINK_ONLY ScheduledCommunicationType = "DOWNLINK_ONLY"
+	SCHEDULEDCOMMUNICATIONTYPEANYOF_UPLINK_ONLY   ScheduledCommunicationType = "UPLINK_ONLY"
+	SCHEDULEDCOMMUNICATIONTYPEANYOF_BIDIRECTIONAL ScheduledCommunicationType = "BIDIRECTIONAL"
+)

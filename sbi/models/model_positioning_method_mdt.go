@@ -11,5 +11,10 @@ API version: 2.1.7
 
 package models
 
-type PositioningMethodMdt struct {
-}
+type PositioningMethodMdt string
+
+// List of PositioningMethodMdtAnyOf
+const (
+	POSITIONINGMETHODMDTANYOF_GNSS      PositioningMethodMdt = "GNSS"
+	POSITIONINGMETHODMDTANYOF_E_CELL_ID PositioningMethodMdt = "E_CELL_ID"
+)

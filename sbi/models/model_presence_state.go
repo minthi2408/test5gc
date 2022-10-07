@@ -11,5 +11,12 @@ API version: 1.1.6
 
 package models
 
-type PresenceState struct {
-}
+type PresenceState string
+
+// List of PresenceStateAnyOf
+const (
+	PRESENCESTATEANYOF_IN_AREA     PresenceState = "IN_AREA"
+	PRESENCESTATEANYOF_OUT_OF_AREA PresenceState = "OUT_OF_AREA"
+	PRESENCESTATEANYOF_UNKNOWN     PresenceState = "UNKNOWN"
+	PRESENCESTATEANYOF_INACTIVE    PresenceState = "INACTIVE"
+)

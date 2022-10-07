@@ -11,5 +11,23 @@ API version: 1.1.7
 
 package models
 
-type PositioningMethod struct {
-}
+type PositioningMethod string
+
+// List of PositioningMethodAnyOf
+const (
+	POSITIONINGMETHODANYOF_CELLID              PositioningMethod = "CELLID"
+	POSITIONINGMETHODANYOF_ECID                PositioningMethod = "ECID"
+	POSITIONINGMETHODANYOF_OTDOA               PositioningMethod = "OTDOA"
+	POSITIONINGMETHODANYOF_BAROMETRIC_PRESSURE PositioningMethod = "BAROMETRIC_PRESSURE"
+	POSITIONINGMETHODANYOF_WLAN                PositioningMethod = "WLAN"
+	POSITIONINGMETHODANYOF_BLUETOOTH           PositioningMethod = "BLUETOOTH"
+	POSITIONINGMETHODANYOF_MBS                 PositioningMethod = "MBS"
+	POSITIONINGMETHODANYOF_MOTION_SENSOR       PositioningMethod = "MOTION_SENSOR"
+	POSITIONINGMETHODANYOF_DL_TDOA             PositioningMethod = "DL_TDOA"
+	POSITIONINGMETHODANYOF_DL_AOD              PositioningMethod = "DL_AOD"
+	POSITIONINGMETHODANYOF_MULTI_RTT           PositioningMethod = "MULTI-RTT"
+	POSITIONINGMETHODANYOF_NR_ECID             PositioningMethod = "NR_ECID"
+	POSITIONINGMETHODANYOF_UL_TDOA             PositioningMethod = "UL_TDOA"
+	POSITIONINGMETHODANYOF_UL_AOA              PositioningMethod = "UL_AOA"
+	POSITIONINGMETHODANYOF_NETWORK_SPECIFIC    PositioningMethod = "NETWORK_SPECIFIC"
+)

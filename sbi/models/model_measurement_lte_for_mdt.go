@@ -11,5 +11,21 @@ API version: 2.1.7
 
 package models
 
-type MeasurementLteForMdt struct {
-}
+type MeasurementLteForMdt string
+
+// List of MeasurementLteForMdtAnyOf
+const (
+	MEASUREMENTLTEFORMDTANYOF_M1    MeasurementLteForMdt = "M1"
+	MEASUREMENTLTEFORMDTANYOF_M2    MeasurementLteForMdt = "M2"
+	MEASUREMENTLTEFORMDTANYOF_M3    MeasurementLteForMdt = "M3"
+	MEASUREMENTLTEFORMDTANYOF_M4_DL MeasurementLteForMdt = "M4_DL"
+	MEASUREMENTLTEFORMDTANYOF_M4_UL MeasurementLteForMdt = "M4_UL"
+	MEASUREMENTLTEFORMDTANYOF_M5_DL MeasurementLteForMdt = "M5_DL"
+	MEASUREMENTLTEFORMDTANYOF_M5_UL MeasurementLteForMdt = "M5_UL"
+	MEASUREMENTLTEFORMDTANYOF_M6_DL MeasurementLteForMdt = "M6_DL"
+	MEASUREMENTLTEFORMDTANYOF_M6_UL MeasurementLteForMdt = "M6_UL"
+	MEASUREMENTLTEFORMDTANYOF_M7_DL MeasurementLteForMdt = "M7_DL"
+	MEASUREMENTLTEFORMDTANYOF_M7_UL MeasurementLteForMdt = "M7_UL"
+	MEASUREMENTLTEFORMDTANYOF_M8    MeasurementLteForMdt = "M8"
+	MEASUREMENTLTEFORMDTANYOF_M9    MeasurementLteForMdt = "M9"
+)

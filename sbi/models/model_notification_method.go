@@ -11,6 +11,11 @@ API version: 1.1.2
 
 package models
 
-// NotificationMethod - Possible values are - PERIODIC - ONE_TIME - ON_EVENT_DETECTION
-type NotificationMethod struct {
-}
+type NotificationMethod string
+
+// List of NotificationMethodAnyOf
+const (
+	NOTIFICATIONMETHODANYOF_PERIODIC           NotificationMethod = "PERIODIC"
+	NOTIFICATIONMETHODANYOF_ONE_TIME           NotificationMethod = "ONE_TIME"
+	NOTIFICATIONMETHODANYOF_ON_EVENT_DETECTION NotificationMethod = "ON_EVENT_DETECTION"
+)

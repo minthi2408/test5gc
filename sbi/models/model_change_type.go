@@ -11,5 +11,12 @@ API version: 2.1.7
 
 package models
 
-type ChangeType struct {
-}
+type ChangeType string
+
+// List of ChangeTypeAnyOf
+const (
+	CHANGETYPEANYOF_ADD     ChangeType = "ADD"
+	CHANGETYPEANYOF_MOVE    ChangeType = "MOVE"
+	CHANGETYPEANYOF_REMOVE  ChangeType = "REMOVE"
+	CHANGETYPEANYOF_REPLACE ChangeType = "REPLACE"
+)

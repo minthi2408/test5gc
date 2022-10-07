@@ -11,5 +11,10 @@ API version: 1.1.8
 
 package models
 
-type TriggerCategory struct {
-}
+type TriggerCategory string
+
+// List of TriggerCategoryAnyOf
+const (
+	TRIGGERCATEGORYANYOF_IMMEDIATE_REPORT TriggerCategory = "IMMEDIATE_REPORT"
+	TRIGGERCATEGORYANYOF_DEFERRED_REPORT  TriggerCategory = "DEFERRED_REPORT"
+)

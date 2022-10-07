@@ -11,5 +11,11 @@ API version: 1.1.7
 
 package models
 
-type ResponseTime struct {
-}
+type ResponseTime string
+
+// List of ResponseTimeAnyOf
+const (
+	RESPONSETIMEANYOF_LOW_DELAY      ResponseTime = "LOW_DELAY"
+	RESPONSETIMEANYOF_DELAY_TOLERANT ResponseTime = "DELAY_TOLERANT"
+	RESPONSETIMEANYOF_NO_DELAY       ResponseTime = "NO_DELAY"
+)

@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// MaxIntegrityProtectedDataRate - Possible values are   - 64_KBPS   - MAX_UE_RATE
-type MaxIntegrityProtectedDataRate struct {
-}
+type MaxIntegrityProtectedDataRate string
+
+// List of MaxIntegrityProtectedDataRateAnyOf
+const (
+	MAXINTEGRITYPROTECTEDDATARATEANYOF__64_KBPS    MaxIntegrityProtectedDataRate = "64_KBPS"
+	MAXINTEGRITYPROTECTEDDATARATEANYOF_MAX_UE_RATE MaxIntegrityProtectedDataRate = "MAX_UE_RATE"
+)

@@ -11,6 +11,12 @@ API version: 1.1.8
 
 package models
 
-// SessionRuleFailureCode - Possible values are   - NF_MAL: Indicate that the PCC rule could not be successfully installed (for those provisioned from the PCF) or activated (for those pre-defined in SMF) or enforced (for those already successfully installed) due to SMF/UPF malfunction.   - RES_LIM: Indicate that the PCC rule could not be successfully installed (for those provisioned from PCF) or activated (for those pre-defined in SMF) or enforced (for those already successfully installed) due to a limitation of resources at the SMF/UPF.   - UNSUCC_QOS_VAL: indicate that the QoS validation has failed.   - UE_STA_SUSP: Indicates that the UE is in suspend state.
-type SessionRuleFailureCode struct {
-}
+type SessionRuleFailureCode string
+
+// List of SessionRuleFailureCodeAnyOf
+const (
+	SESSIONRULEFAILURECODEANYOF_NF_MAL         SessionRuleFailureCode = "NF_MAL"
+	SESSIONRULEFAILURECODEANYOF_RES_LIM        SessionRuleFailureCode = "RES_LIM"
+	SESSIONRULEFAILURECODEANYOF_UNSUCC_QOS_VAL SessionRuleFailureCode = "UNSUCC_QOS_VAL"
+	SESSIONRULEFAILURECODEANYOF_UE_STA_SUSP    SessionRuleFailureCode = "UE_STA_SUSP"
+)

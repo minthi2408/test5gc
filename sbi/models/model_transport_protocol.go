@@ -11,6 +11,10 @@ API version: 1.1.6
 
 package models
 
-// TransportProtocol - Possible values are - UDP: User Datagram Protocol. - TCP: Transmission Control Protocol.
-type TransportProtocol struct {
-}
+type TransportProtocol string
+
+// List of TransportProtocolAnyOf
+const (
+	TRANSPORTPROTOCOLANYOF_UDP TransportProtocol = "UDP"
+	TRANSPORTPROTOCOLANYOF_TCP TransportProtocol = "TCP"
+)

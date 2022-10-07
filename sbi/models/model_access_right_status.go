@@ -11,6 +11,11 @@ API version: 2.1.7
 
 package models
 
-// AccessRightStatus - Possible values are - FULLY_ALLOWED: The User is fully allowed to access to the channel. - PREVIEW_ALLOWED: The User is preview allowed to access to the channel. - NO_ALLOWED: The User is not allowed to access to the channel.
-type AccessRightStatus struct {
-}
+type AccessRightStatus string
+
+// List of AccessRightStatusAnyOf
+const (
+	ACCESSRIGHTSTATUSANYOF_FULLY_ALLOWED   AccessRightStatus = "FULLY_ALLOWED"
+	ACCESSRIGHTSTATUSANYOF_PREVIEW_ALLOWED AccessRightStatus = "PREVIEW_ALLOWED"
+	ACCESSRIGHTSTATUSANYOF_NO_ALLOWED      AccessRightStatus = "NO_ALLOWED"
+)

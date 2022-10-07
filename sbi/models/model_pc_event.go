@@ -11,5 +11,10 @@ API version: 1.1.2
 
 package models
 
-type PcEvent struct {
-}
+type PcEvent string
+
+// List of PcEventAnyOf
+const (
+	PCEVENTANYOF_AC_TY_CH PcEvent = "AC_TY_CH"
+	PCEVENTANYOF_PLMN_CH  PcEvent = "PLMN_CH"
+)

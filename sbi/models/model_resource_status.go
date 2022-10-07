@@ -11,6 +11,13 @@ API version: 1.1.8
 
 package models
 
-// ResourceStatus - Possible values are - RELEASED - UNCHANGED - TRANSFERRED - UPDATED - ALT_ANCHOR_SMF
-type ResourceStatus struct {
-}
+type ResourceStatus string
+
+// List of ResourceStatusAnyOf
+const (
+	RESOURCESTATUSANYOF_RELEASED       ResourceStatus = "RELEASED"
+	RESOURCESTATUSANYOF_UNCHANGED      ResourceStatus = "UNCHANGED"
+	RESOURCESTATUSANYOF_TRANSFERRED    ResourceStatus = "TRANSFERRED"
+	RESOURCESTATUSANYOF_UPDATED        ResourceStatus = "UPDATED"
+	RESOURCESTATUSANYOF_ALT_ANCHOR_SMF ResourceStatus = "ALT_ANCHOR_SMF"
+)

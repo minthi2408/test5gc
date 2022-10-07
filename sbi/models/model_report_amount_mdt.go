@@ -11,5 +11,16 @@ API version: 2.1.7
 
 package models
 
-type ReportAmountMdt struct {
-}
+type ReportAmountMdt string
+
+// List of ReportAmountMdtAnyOf
+const (
+	REPORTAMOUNTMDTANYOF__1       ReportAmountMdt = "1"
+	REPORTAMOUNTMDTANYOF__2       ReportAmountMdt = "2"
+	REPORTAMOUNTMDTANYOF__4       ReportAmountMdt = "4"
+	REPORTAMOUNTMDTANYOF__8       ReportAmountMdt = "8"
+	REPORTAMOUNTMDTANYOF__16      ReportAmountMdt = "16"
+	REPORTAMOUNTMDTANYOF__32      ReportAmountMdt = "32"
+	REPORTAMOUNTMDTANYOF__64      ReportAmountMdt = "64"
+	REPORTAMOUNTMDTANYOF_INFINITY ReportAmountMdt = "infinity"
+)

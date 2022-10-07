@@ -11,5 +11,9 @@ API version: 1.1.6
 
 package models
 
-type AfRequestedData struct {
-}
+type AfRequestedData string
+
+// List of AfRequestedDataAnyOf
+const (
+	AFREQUESTEDDATAANYOF_UE_IDENTITY AfRequestedData = "UE_IDENTITY"
+)

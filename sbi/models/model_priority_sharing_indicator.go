@@ -11,5 +11,10 @@ API version: 1.1.6
 
 package models
 
-type PrioritySharingIndicator struct {
-}
+type PrioritySharingIndicator string
+
+// List of PrioritySharingIndicatorAnyOf
+const (
+	PRIORITYSHARINGINDICATORANYOF_ENABLED  PrioritySharingIndicator = "ENABLED"
+	PRIORITYSHARINGINDICATORANYOF_DISABLED PrioritySharingIndicator = "DISABLED"
+)

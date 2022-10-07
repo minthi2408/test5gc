@@ -11,5 +11,11 @@ API version: 2.1.7
 
 package models
 
-type SqnScheme struct {
-}
+type SqnScheme string
+
+// List of SqnSchemeAnyOf
+const (
+	SQNSCHEMEANYOF_GENERAL        SqnScheme = "GENERAL"
+	SQNSCHEMEANYOF_NON_TIME_BASED SqnScheme = "NON_TIME_BASED"
+	SQNSCHEMEANYOF_TIME_BASED     SqnScheme = "TIME_BASED"
+)

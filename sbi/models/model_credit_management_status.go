@@ -11,5 +11,13 @@ API version: 1.1.8
 
 package models
 
-type CreditManagementStatus struct {
-}
+type CreditManagementStatus string
+
+// List of CreditManagementStatusAnyOf
+const (
+	CREDITMANAGEMENTSTATUSANYOF_END_USER_SER_DENIED CreditManagementStatus = "END_USER_SER_DENIED"
+	CREDITMANAGEMENTSTATUSANYOF_CREDIT_CTRL_NOT_APP CreditManagementStatus = "CREDIT_CTRL_NOT_APP"
+	CREDITMANAGEMENTSTATUSANYOF_AUTH_REJECTED       CreditManagementStatus = "AUTH_REJECTED"
+	CREDITMANAGEMENTSTATUSANYOF_USER_UNKNOWN        CreditManagementStatus = "USER_UNKNOWN"
+	CREDITMANAGEMENTSTATUSANYOF_RATING_FAILED       CreditManagementStatus = "RATING_FAILED"
+)

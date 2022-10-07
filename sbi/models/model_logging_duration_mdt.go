@@ -11,5 +11,14 @@ API version: 2.1.7
 
 package models
 
-type LoggingDurationMdt struct {
-}
+type LoggingDurationMdt string
+
+// List of LoggingDurationMdtAnyOf
+const (
+	LOGGINGDURATIONMDTANYOF__600  LoggingDurationMdt = "600"
+	LOGGINGDURATIONMDTANYOF__1200 LoggingDurationMdt = "1200"
+	LOGGINGDURATIONMDTANYOF__2400 LoggingDurationMdt = "2400"
+	LOGGINGDURATIONMDTANYOF__3600 LoggingDurationMdt = "3600"
+	LOGGINGDURATIONMDTANYOF__5400 LoggingDurationMdt = "5400"
+	LOGGINGDURATIONMDTANYOF__7200 LoggingDurationMdt = "7200"
+)

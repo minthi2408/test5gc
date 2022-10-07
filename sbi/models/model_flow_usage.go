@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type FlowUsage struct {
-}
+type FlowUsage string
+
+// List of FlowUsageAnyOf
+const (
+	FLOWUSAGEANYOF_NO_INFO       FlowUsage = "NO_INFO"
+	FLOWUSAGEANYOF_RTCP          FlowUsage = "RTCP"
+	FLOWUSAGEANYOF_AF_SIGNALLING FlowUsage = "AF_SIGNALLING"
+)

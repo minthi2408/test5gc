@@ -11,6 +11,14 @@ API version: 1.1.7
 
 package models
 
-// LcsServiceAuth - Possible values are - \"LOCATION_ALLOWED_WITH_NOTIFICATION\": Location allowed with notification - \"LOCATION_ALLOWED_WITHOUT_NOTIFICATION\": Location allowed without notification - \"LOCATION_ALLOWED_WITHOUT_RESPONSE\": Location with notification and privacy verification; location allowed if no response - \"LOCATION_RESTRICTED_WITHOUT_RESPONSE\": Location with notification and privacy verification; location restricted if no response - \"NOTIFICATION_ONLY\": Notification only - \"NOTIFICATION_AND_VERIFICATION_ONLY\": Notification and privacy verification only
-type LcsServiceAuth struct {
-}
+type LcsServiceAuth string
+
+// List of LcsServiceAuthAnyOf
+const (
+	LCSSERVICEAUTHANYOF_LOCATION_ALLOWED_WITH_NOTIFICATION    LcsServiceAuth = "LOCATION_ALLOWED_WITH_NOTIFICATION"
+	LCSSERVICEAUTHANYOF_LOCATION_ALLOWED_WITHOUT_NOTIFICATION LcsServiceAuth = "LOCATION_ALLOWED_WITHOUT_NOTIFICATION"
+	LCSSERVICEAUTHANYOF_LOCATION_ALLOWED_WITHOUT_RESPONSE     LcsServiceAuth = "LOCATION_ALLOWED_WITHOUT_RESPONSE"
+	LCSSERVICEAUTHANYOF_LOCATION_RESTRICTED_WITHOUT_RESPONSE  LcsServiceAuth = "LOCATION_RESTRICTED_WITHOUT_RESPONSE"
+	LCSSERVICEAUTHANYOF_NOTIFICATION_ONLY                     LcsServiceAuth = "NOTIFICATION_ONLY"
+	LCSSERVICEAUTHANYOF_NOTIFICATION_AND_VERIFICATION_ONLY    LcsServiceAuth = "NOTIFICATION_AND_VERIFICATION_ONLY"
+)

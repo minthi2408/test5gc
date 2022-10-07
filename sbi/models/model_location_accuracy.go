@@ -11,5 +11,13 @@ API version: 2.1.7
 
 package models
 
-type LocationAccuracy struct {
-}
+type LocationAccuracy string
+
+// List of LocationAccuracyAnyOf
+const (
+	LOCATIONACCURACYANYOF_CELL_LEVEL   LocationAccuracy = "CELL_LEVEL"
+	LOCATIONACCURACYANYOF_TA_LEVEL     LocationAccuracy = "TA_LEVEL"
+	LOCATIONACCURACYANYOF_N3_IWF_LEVEL LocationAccuracy = "N3IWF_LEVEL"
+	LOCATIONACCURACYANYOF_UE_IP        LocationAccuracy = "UE_IP"
+	LOCATIONACCURACYANYOF_UE_PORT      LocationAccuracy = "UE_PORT"
+)

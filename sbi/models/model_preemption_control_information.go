@@ -11,5 +11,11 @@ API version: 1.1.6
 
 package models
 
-type PreemptionControlInformation struct {
-}
+type PreemptionControlInformation string
+
+// List of PreemptionControlInformationAnyOf
+const (
+	PREEMPTIONCONTROLINFORMATIONANYOF_MOST_RECENT  PreemptionControlInformation = "MOST_RECENT"
+	PREEMPTIONCONTROLINFORMATIONANYOF_LEAST_RECENT PreemptionControlInformation = "LEAST_RECENT"
+	PREEMPTIONCONTROLINFORMATIONANYOF_HIGHEST_BW   PreemptionControlInformation = "HIGHEST_BW"
+)

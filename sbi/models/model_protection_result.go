@@ -11,6 +11,10 @@ API version: 1.1.8
 
 package models
 
-// ProtectionResult - Possible values are   - PERFORMED   - NOT_PERFORMED
-type ProtectionResult struct {
-}
+type ProtectionResult string
+
+// List of ProtectionResultAnyOf
+const (
+	PROTECTIONRESULTANYOF_PERFORMED     ProtectionResult = "PERFORMED"
+	PROTECTIONRESULTANYOF_NOT_PERFORMED ProtectionResult = "NOT_PERFORMED"
+)

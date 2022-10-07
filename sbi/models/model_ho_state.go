@@ -11,6 +11,13 @@ API version: 1.1.8
 
 package models
 
-// HoState - Possible values are - NONE - PREPARING - PREPARED - COMPLETED - CANCELLED
-type HoState struct {
-}
+type HoState string
+
+// List of HoStateAnyOf
+const (
+	HOSTATEANYOF_NONE      HoState = "NONE"
+	HOSTATEANYOF_PREPARING HoState = "PREPARING"
+	HOSTATEANYOF_PREPARED  HoState = "PREPARED"
+	HOSTATEANYOF_COMPLETED HoState = "COMPLETED"
+	HOSTATEANYOF_CANCELLED HoState = "CANCELLED"
+)
