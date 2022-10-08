@@ -15,7 +15,7 @@ type SscMode string
 
 // List of SscMode
 const (
-	SSCMODEANYOF__1 SscMode = "SSC_MODE_1"
-	SSCMODEANYOF__2 SscMode = "SSC_MODE_2"
-	SSCMODEANYOF__3 SscMode = "SSC_MODE_3"
+	SSCMODE__1 SscMode = "SSC_MODE_1"
+	SSCMODE__2 SscMode = "SSC_MODE_2"
+	SSCMODE__3 SscMode = "SSC_MODE_3"
 )

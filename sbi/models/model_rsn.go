@@ -15,6 +15,6 @@ type Rsn string
 
 // List of Rsn
 const (
-	RSNANYOF_V1 Rsn = "V1"
-	RSNANYOF_V2 Rsn = "V2"
+	RSN_V1 Rsn = "V1"
+	RSN_V2 Rsn = "V2"
 )

@@ -15,12 +15,12 @@ type GnssId string
 
 // List of GnssId
 const (
-	GNSSIDANYOF_GPS            GnssId = "GPS"
-	GNSSIDANYOF_GALILEO        GnssId = "GALILEO"
-	GNSSIDANYOF_SBAS           GnssId = "SBAS"
-	GNSSIDANYOF_MODERNIZED_GPS GnssId = "MODERNIZED_GPS"
-	GNSSIDANYOF_QZSS           GnssId = "QZSS"
-	GNSSIDANYOF_GLONASS        GnssId = "GLONASS"
-	GNSSIDANYOF_BDS            GnssId = "BDS"
-	GNSSIDANYOF_NAVIC          GnssId = "NAVIC"
+	GNSSID_GPS            GnssId = "GPS"
+	GNSSID_GALILEO        GnssId = "GALILEO"
+	GNSSID_SBAS           GnssId = "SBAS"
+	GNSSID_MODERNIZED_GPS GnssId = "MODERNIZED_GPS"
+	GNSSID_QZSS           GnssId = "QZSS"
+	GNSSID_GLONASS        GnssId = "GLONASS"
+	GNSSID_BDS            GnssId = "BDS"
+	GNSSID_NAVIC          GnssId = "NAVIC"
 )

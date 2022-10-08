@@ -15,8 +15,8 @@ type DomainNameProtocol string
 
 // List of DomainNameProtocol
 const (
-	DOMAINNAMEPROTOCOLANYOF_DNS_QNAME DomainNameProtocol = "DNS_QNAME"
-	DOMAINNAMEPROTOCOLANYOF_TLS_SNI   DomainNameProtocol = "TLS_SNI"
-	DOMAINNAMEPROTOCOLANYOF_TLS_SAN   DomainNameProtocol = "TLS_SAN"
-	DOMAINNAMEPROTOCOLANYOF_TSL_SCN   DomainNameProtocol = "TSL_SCN"
+	DOMAINNAMEPROTOCOL_DNS_QNAME DomainNameProtocol = "DNS_QNAME"
+	DOMAINNAMEPROTOCOL_TLS_SNI   DomainNameProtocol = "TLS_SNI"
+	DOMAINNAMEPROTOCOL_TLS_SAN   DomainNameProtocol = "TLS_SAN"
+	DOMAINNAMEPROTOCOL_TSL_SCN   DomainNameProtocol = "TSL_SCN"
 )

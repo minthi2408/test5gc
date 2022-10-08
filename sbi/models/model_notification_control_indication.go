@@ -15,6 +15,6 @@ type NotificationControlIndication string
 
 // List of NotificationControlIndication
 const (
-	NOTIFICATIONCONTROLINDICATIONANYOF_DDN_FAILURE NotificationControlIndication = "DDN_FAILURE"
-	NOTIFICATIONCONTROLINDICATIONANYOF_DDD_STATUS  NotificationControlIndication = "DDD_STATUS"
+	NOTIFICATIONCONTROLINDICATION_DDN_FAILURE NotificationControlIndication = "DDN_FAILURE"
+	NOTIFICATIONCONTROLINDICATION_DDD_STATUS  NotificationControlIndication = "DDD_STATUS"
 )

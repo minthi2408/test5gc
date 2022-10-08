@@ -15,6 +15,6 @@ type MdtUserConsent string
 
 // List of MdtUserConsent
 const (
-	MDTUSERCONSENTANYOF_NOT_GIVEN MdtUserConsent = "CONSENT_NOT_GIVEN"
-	MDTUSERCONSENTANYOF_GIVEN     MdtUserConsent = "CONSENT_GIVEN"
+	MDTUSERCONSENT_NOT_GIVEN MdtUserConsent = "CONSENT_NOT_GIVEN"
+	MDTUSERCONSENT_GIVEN     MdtUserConsent = "CONSENT_GIVEN"
 )

@@ -15,8 +15,8 @@ type PresenceState string
 
 // List of PresenceState
 const (
-	PRESENCESTATEANYOF_IN_AREA     PresenceState = "IN_AREA"
-	PRESENCESTATEANYOF_OUT_OF_AREA PresenceState = "OUT_OF_AREA"
-	PRESENCESTATEANYOF_UNKNOWN     PresenceState = "UNKNOWN"
-	PRESENCESTATEANYOF_INACTIVE    PresenceState = "INACTIVE"
+	PRESENCESTATE_IN_AREA     PresenceState = "IN_AREA"
+	PRESENCESTATE_OUT_OF_AREA PresenceState = "OUT_OF_AREA"
+	PRESENCESTATE_UNKNOWN     PresenceState = "UNKNOWN"
+	PRESENCESTATE_INACTIVE    PresenceState = "INACTIVE"
 )

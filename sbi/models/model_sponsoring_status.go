@@ -15,6 +15,6 @@ type SponsoringStatus string
 
 // List of SponsoringStatus
 const (
-	SPONSORINGSTATUSANYOF_DISABLED SponsoringStatus = "SPONSOR_DISABLED"
-	SPONSORINGSTATUSANYOF_ENABLED  SponsoringStatus = "SPONSOR_ENABLED"
+	SPONSORINGSTATUS_DISABLED SponsoringStatus = "SPONSOR_DISABLED"
+	SPONSORINGSTATUS_ENABLED  SponsoringStatus = "SPONSOR_ENABLED"
 )

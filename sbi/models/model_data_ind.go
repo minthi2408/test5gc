@@ -15,8 +15,8 @@ type DataInd string
 
 // List of DataInd
 const (
-	DATAINDANYOF_PFD       DataInd = "PFD"
-	DATAINDANYOF_IPTV      DataInd = "IPTV"
-	DATAINDANYOF_BDT       DataInd = "BDT"
-	DATAINDANYOF_SVC_PARAM DataInd = "SVC_PARAM"
+	DATAIND_PFD       DataInd = "PFD"
+	DATAIND_IPTV      DataInd = "IPTV"
+	DATAIND_BDT       DataInd = "BDT"
+	DATAIND_SVC_PARAM DataInd = "SVC_PARAM"
 )

@@ -15,6 +15,6 @@ type SmfChangeIndication string
 
 // List of SmfChangeIndication
 const (
-	SMFCHANGEINDICATIONANYOF_CHANGED SmfChangeIndication = "CHANGED"
-	SMFCHANGEINDICATIONANYOF_REMOVED SmfChangeIndication = "REMOVED"
+	SMFCHANGEINDICATION_CHANGED SmfChangeIndication = "CHANGED"
+	SMFCHANGEINDICATION_REMOVED SmfChangeIndication = "REMOVED"
 )

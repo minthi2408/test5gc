@@ -15,6 +15,6 @@ type SteeringFunctionality string
 
 // List of SteeringFunctionality
 const (
-	STEERINGFUNCTIONALITYANYOF_MPTCP    SteeringFunctionality = "MPTCP"
-	STEERINGFUNCTIONALITYANYOF_ATSSS_LL SteeringFunctionality = "ATSSS_LL"
+	STEERINGFUNCTIONALITY_MPTCP    SteeringFunctionality = "MPTCP"
+	STEERINGFUNCTIONALITY_ATSSS_LL SteeringFunctionality = "ATSSS_LL"
 )

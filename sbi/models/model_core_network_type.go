@@ -15,6 +15,6 @@ type CoreNetworkType string
 
 // List of CoreNetworkType
 const (
-	CORENETWORKTYPEANYOF__5_GC CoreNetworkType = "5GC"
-	CORENETWORKTYPEANYOF_EPC   CoreNetworkType = "EPC"
+	CORENETWORKTYPE__5_GC CoreNetworkType = "5GC"
+	CORENETWORKTYPE_EPC   CoreNetworkType = "EPC"
 )

@@ -15,6 +15,6 @@ type PartialRecordMethod string
 
 // List of PartialRecordMethod
 const (
-	PARTIALRECORDMETHODANYOF_DEFAULT    PartialRecordMethod = "DEFAULT"
-	PARTIALRECORDMETHODANYOF_INDIVIDUAL PartialRecordMethod = "INDIVIDUAL"
+	PARTIALRECORDMETHOD_DEFAULT    PartialRecordMethod = "DEFAULT"
+	PARTIALRECORDMETHOD_INDIVIDUAL PartialRecordMethod = "INDIVIDUAL"
 )

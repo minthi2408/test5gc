@@ -15,12 +15,12 @@ type ReportAmountMdt string
 
 // List of ReportAmountMdt
 const (
-	REPORTAMOUNTMDTANYOF__1       ReportAmountMdt = "1"
-	REPORTAMOUNTMDTANYOF__2       ReportAmountMdt = "2"
-	REPORTAMOUNTMDTANYOF__4       ReportAmountMdt = "4"
-	REPORTAMOUNTMDTANYOF__8       ReportAmountMdt = "8"
-	REPORTAMOUNTMDTANYOF__16      ReportAmountMdt = "16"
-	REPORTAMOUNTMDTANYOF__32      ReportAmountMdt = "32"
-	REPORTAMOUNTMDTANYOF__64      ReportAmountMdt = "64"
-	REPORTAMOUNTMDTANYOF_INFINITY ReportAmountMdt = "infinity"
+	REPORTAMOUNTMDT__1       ReportAmountMdt = "1"
+	REPORTAMOUNTMDT__2       ReportAmountMdt = "2"
+	REPORTAMOUNTMDT__4       ReportAmountMdt = "4"
+	REPORTAMOUNTMDT__8       ReportAmountMdt = "8"
+	REPORTAMOUNTMDT__16      ReportAmountMdt = "16"
+	REPORTAMOUNTMDT__32      ReportAmountMdt = "32"
+	REPORTAMOUNTMDT__64      ReportAmountMdt = "64"
+	REPORTAMOUNTMDT_INFINITY ReportAmountMdt = "infinity"
 )

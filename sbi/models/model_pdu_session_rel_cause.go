@@ -15,5 +15,5 @@ type PduSessionRelCause string
 
 // List of PduSessionRelCause
 const (
-	PDUSESSIONRELCAUSEANYOF_PS_TO_CS_HO PduSessionRelCause = "PS_TO_CS_HO"
+	PDUSESSIONRELCAUSE_PS_TO_CS_HO PduSessionRelCause = "PS_TO_CS_HO"
 )

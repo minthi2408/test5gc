@@ -15,7 +15,7 @@ type QosFlowAccessType string
 
 // List of QosFlowAccessType
 const (
-	QOSFLOWACCESSTYPEANYOF__3_GPP               QosFlowAccessType = "3GPP"
-	QOSFLOWACCESSTYPEANYOF_NON_3_GPP            QosFlowAccessType = "NON_3GPP"
-	QOSFLOWACCESSTYPEANYOF__3_GPP_AND_NON_3_GPP QosFlowAccessType = "3GPP_AND_NON_3GPP"
+	QOSFLOWACCESSTYPE__3_GPP               QosFlowAccessType = "3GPP"
+	QOSFLOWACCESSTYPE_NON_3_GPP            QosFlowAccessType = "NON_3GPP"
+	QOSFLOWACCESSTYPE__3_GPP_AND_NON_3_GPP QosFlowAccessType = "3GPP_AND_NON_3GPP"
 )

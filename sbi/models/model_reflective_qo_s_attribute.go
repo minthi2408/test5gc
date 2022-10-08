@@ -15,6 +15,6 @@ type ReflectiveQoSAttribute string
 
 // List of ReflectiveQoSAttribute
 const (
-	REFLECTIVEQOSATTRIBUTEANYOF_RQOS    ReflectiveQoSAttribute = "RQOS"
-	REFLECTIVEQOSATTRIBUTEANYOF_NO_RQOS ReflectiveQoSAttribute = "NO_RQOS"
+	REFLECTIVEQOSATTRIBUTE_RQOS    ReflectiveQoSAttribute = "RQOS"
+	REFLECTIVEQOSATTRIBUTE_NO_RQOS ReflectiveQoSAttribute = "NO_RQOS"
 )

@@ -15,8 +15,8 @@ type IntegrityAlgorithm string
 
 // List of IntegrityAlgorithm
 const (
-	INTEGRITYALGORITHMANYOF_NIA0 IntegrityAlgorithm = "NIA0"
-	INTEGRITYALGORITHMANYOF_NIA1 IntegrityAlgorithm = "NIA1"
-	INTEGRITYALGORITHMANYOF_NIA2 IntegrityAlgorithm = "NIA2"
-	INTEGRITYALGORITHMANYOF_NIA3 IntegrityAlgorithm = "NIA3"
+	INTEGRITYALGORITHM_NIA0 IntegrityAlgorithm = "NIA0"
+	INTEGRITYALGORITHM_NIA1 IntegrityAlgorithm = "NIA1"
+	INTEGRITYALGORITHM_NIA2 IntegrityAlgorithm = "NIA2"
+	INTEGRITYALGORITHM_NIA3 IntegrityAlgorithm = "NIA3"
 )

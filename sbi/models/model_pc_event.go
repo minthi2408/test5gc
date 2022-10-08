@@ -15,6 +15,6 @@ type PcEvent string
 
 // List of PcEvent
 const (
-	PCEVENTANYOF_AC_TY_CH PcEvent = "AC_TY_CH"
-	PCEVENTANYOF_PLMN_CH  PcEvent = "PLMN_CH"
+	PCEVENT_AC_TY_CH PcEvent = "AC_TY_CH"
+	PCEVENT_PLMN_CH  PcEvent = "PLMN_CH"
 )

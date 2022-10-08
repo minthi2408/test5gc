@@ -15,6 +15,6 @@ type StationaryIndication string
 
 // List of StationaryIndication
 const (
-	STATIONARYINDICATIONANYOF_STATIONARY StationaryIndication = "STATIONARY"
-	STATIONARYINDICATIONANYOF_MOBILE     StationaryIndication = "MOBILE"
+	STATIONARYINDICATION_STATIONARY StationaryIndication = "STATIONARY"
+	STATIONARYINDICATION_MOBILE     StationaryIndication = "MOBILE"
 )

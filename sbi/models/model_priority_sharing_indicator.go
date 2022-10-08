@@ -15,6 +15,6 @@ type PrioritySharingIndicator string
 
 // List of PrioritySharingIndicator
 const (
-	PRIORITYSHARINGINDICATORANYOF_ENABLED  PrioritySharingIndicator = "ENABLED"
-	PRIORITYSHARINGINDICATORANYOF_DISABLED PrioritySharingIndicator = "DISABLED"
+	PRIORITYSHARINGINDICATOR_ENABLED  PrioritySharingIndicator = "ENABLED"
+	PRIORITYSHARINGINDICATOR_DISABLED PrioritySharingIndicator = "DISABLED"
 )

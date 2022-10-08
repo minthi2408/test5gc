@@ -15,10 +15,10 @@ type LoggingDurationMdt string
 
 // List of LoggingDurationMdt
 const (
-	LOGGINGDURATIONMDTANYOF__600  LoggingDurationMdt = "600"
-	LOGGINGDURATIONMDTANYOF__1200 LoggingDurationMdt = "1200"
-	LOGGINGDURATIONMDTANYOF__2400 LoggingDurationMdt = "2400"
-	LOGGINGDURATIONMDTANYOF__3600 LoggingDurationMdt = "3600"
-	LOGGINGDURATIONMDTANYOF__5400 LoggingDurationMdt = "5400"
-	LOGGINGDURATIONMDTANYOF__7200 LoggingDurationMdt = "7200"
+	LOGGINGDURATIONMDT__600  LoggingDurationMdt = "600"
+	LOGGINGDURATIONMDT__1200 LoggingDurationMdt = "1200"
+	LOGGINGDURATIONMDT__2400 LoggingDurationMdt = "2400"
+	LOGGINGDURATIONMDT__3600 LoggingDurationMdt = "3600"
+	LOGGINGDURATIONMDT__5400 LoggingDurationMdt = "5400"
+	LOGGINGDURATIONMDT__7200 LoggingDurationMdt = "7200"
 )

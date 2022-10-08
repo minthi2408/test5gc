@@ -15,6 +15,6 @@ type ProtectionResult string
 
 // List of ProtectionResult
 const (
-	PROTECTIONRESULTANYOF_PERFORMED     ProtectionResult = "PERFORMED"
-	PROTECTIONRESULTANYOF_NOT_PERFORMED ProtectionResult = "NOT_PERFORMED"
+	PROTECTIONRESULT_PERFORMED     ProtectionResult = "PERFORMED"
+	PROTECTIONRESULT_NOT_PERFORMED ProtectionResult = "NOT_PERFORMED"
 )

@@ -15,6 +15,6 @@ type ServiceInfoStatus string
 
 // List of ServiceInfoStatus
 const (
-	SERVICEINFOSTATUSANYOF_FINAL       ServiceInfoStatus = "FINAL"
-	SERVICEINFOSTATUSANYOF_PRELIMINARY ServiceInfoStatus = "PRELIMINARY"
+	SERVICEINFOSTATUS_FINAL       ServiceInfoStatus = "FINAL"
+	SERVICEINFOSTATUS_PRELIMINARY ServiceInfoStatus = "PRELIMINARY"
 )

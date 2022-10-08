@@ -15,7 +15,7 @@ type NotificationMethod string
 
 // List of NotificationMethod
 const (
-	NOTIFICATIONMETHODANYOF_PERIODIC           NotificationMethod = "PERIODIC"
-	NOTIFICATIONMETHODANYOF_ONE_TIME           NotificationMethod = "ONE_TIME"
-	NOTIFICATIONMETHODANYOF_ON_EVENT_DETECTION NotificationMethod = "ON_EVENT_DETECTION"
+	NOTIFICATIONMETHOD_PERIODIC           NotificationMethod = "PERIODIC"
+	NOTIFICATIONMETHOD_ONE_TIME           NotificationMethod = "ONE_TIME"
+	NOTIFICATIONMETHOD_ON_EVENT_DETECTION NotificationMethod = "ON_EVENT_DETECTION"
 )

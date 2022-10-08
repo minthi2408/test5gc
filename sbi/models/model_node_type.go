@@ -15,12 +15,12 @@ type NodeType string
 
 // List of NodeType
 const (
-	NODETYPEANYOF_AUSF            NodeType = "AUSF"
-	NODETYPEANYOF_VLR             NodeType = "VLR"
-	NODETYPEANYOF_SGSN            NodeType = "SGSN"
-	NODETYPEANYOF_S_CSCF          NodeType = "S_CSCF"
-	NODETYPEANYOF_BSF             NodeType = "BSF"
-	NODETYPEANYOF_GAN_AAA_SERVER  NodeType = "GAN_AAA_SERVER"
-	NODETYPEANYOF_WLAN_AAA_SERVER NodeType = "WLAN_AAA_SERVER"
-	NODETYPEANYOF_MME             NodeType = "MME"
+	NODETYPE_AUSF            NodeType = "AUSF"
+	NODETYPE_VLR             NodeType = "VLR"
+	NODETYPE_SGSN            NodeType = "SGSN"
+	NODETYPE_S_CSCF          NodeType = "S_CSCF"
+	NODETYPE_BSF             NodeType = "BSF"
+	NODETYPE_GAN_AAA_SERVER  NodeType = "GAN_AAA_SERVER"
+	NODETYPE_WLAN_AAA_SERVER NodeType = "WLAN_AAA_SERVER"
+	NODETYPE_MME             NodeType = "MME"
 )

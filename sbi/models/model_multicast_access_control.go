@@ -15,6 +15,6 @@ type MulticastAccessControl string
 
 // List of MulticastAccessControl
 const (
-	MULTICASTACCESSCONTROLANYOF_ALLOWED     MulticastAccessControl = "ALLOWED"
-	MULTICASTACCESSCONTROLANYOF_NOT_ALLOWED MulticastAccessControl = "NOT_ALLOWED"
+	MULTICASTACCESSCONTROL_ALLOWED     MulticastAccessControl = "ALLOWED"
+	MULTICASTACCESSCONTROL_NOT_ALLOWED MulticastAccessControl = "NOT_ALLOWED"
 )

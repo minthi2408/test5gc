@@ -15,6 +15,6 @@ type AssociationType string
 
 // List of AssociationType
 const (
-	ASSOCIATIONTYPEANYOF_IMEI_CHANGE   AssociationType = "IMEI_CHANGE"
-	ASSOCIATIONTYPEANYOF_IMEISV_CHANGE AssociationType = "IMEISV_CHANGE"
+	ASSOCIATIONTYPE_IMEI_CHANGE   AssociationType = "IMEI_CHANGE"
+	ASSOCIATIONTYPE_IMEISV_CHANGE AssociationType = "IMEISV_CHANGE"
 )

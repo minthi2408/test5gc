@@ -15,9 +15,9 @@ type LocationAccuracy string
 
 // List of LocationAccuracy
 const (
-	LOCATIONACCURACYANYOF_CELL_LEVEL   LocationAccuracy = "CELL_LEVEL"
-	LOCATIONACCURACYANYOF_TA_LEVEL     LocationAccuracy = "TA_LEVEL"
-	LOCATIONACCURACYANYOF_N3_IWF_LEVEL LocationAccuracy = "N3IWF_LEVEL"
-	LOCATIONACCURACYANYOF_UE_IP        LocationAccuracy = "UE_IP"
-	LOCATIONACCURACYANYOF_UE_PORT      LocationAccuracy = "UE_PORT"
+	LOCATIONACCURACY_CELL_LEVEL   LocationAccuracy = "CELL_LEVEL"
+	LOCATIONACCURACY_TA_LEVEL     LocationAccuracy = "TA_LEVEL"
+	LOCATIONACCURACY_N3_IWF_LEVEL LocationAccuracy = "N3IWF_LEVEL"
+	LOCATIONACCURACY_UE_IP        LocationAccuracy = "UE_IP"
+	LOCATIONACCURACY_UE_PORT      LocationAccuracy = "UE_PORT"
 )

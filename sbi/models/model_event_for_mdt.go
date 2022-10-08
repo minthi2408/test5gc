@@ -15,6 +15,6 @@ type EventForMdt string
 
 // List of EventForMdt
 const (
-	EVENTFORMDTANYOF_OUT_OF_COVERAG EventForMdt = "OUT_OF_COVERAG"
-	EVENTFORMDTANYOF_A2_EVENT       EventForMdt = "A2_EVENT"
+	EVENTFORMDT_OUT_OF_COVERAG EventForMdt = "OUT_OF_COVERAG"
+	EVENTFORMDT_A2_EVENT       EventForMdt = "A2_EVENT"
 )

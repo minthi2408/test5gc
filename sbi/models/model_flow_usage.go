@@ -15,7 +15,7 @@ type FlowUsage string
 
 // List of FlowUsage
 const (
-	FLOWUSAGEANYOF_NO_INFO       FlowUsage = "NO_INFO"
-	FLOWUSAGEANYOF_RTCP          FlowUsage = "RTCP"
-	FLOWUSAGEANYOF_AF_SIGNALLING FlowUsage = "AF_SIGNALLING"
+	FLOWUSAGE_NO_INFO       FlowUsage = "NO_INFO"
+	FLOWUSAGE_RTCP          FlowUsage = "RTCP"
+	FLOWUSAGE_AF_SIGNALLING FlowUsage = "AF_SIGNALLING"
 )

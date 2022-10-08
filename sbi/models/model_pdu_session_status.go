@@ -15,6 +15,6 @@ type PduSessionStatus string
 
 // List of PduSessionStatus
 const (
-	PDUSESSIONSTATUSANYOF_ACTIVE   PduSessionStatus = "ACTIVE"
-	PDUSESSIONSTATUSANYOF_RELEASED PduSessionStatus = "RELEASED"
+	PDUSESSIONSTATUS_ACTIVE   PduSessionStatus = "ACTIVE"
+	PDUSESSIONSTATUS_RELEASED PduSessionStatus = "RELEASED"
 )

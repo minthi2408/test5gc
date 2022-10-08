@@ -15,5 +15,5 @@ type SubscribedEvent string
 
 // List of SubscribedEvent
 const (
-	SUBSCRIBEDEVENTANYOF_UP_PATH_CHANGE SubscribedEvent = "UP_PATH_CHANGE"
+	SUBSCRIBEDEVENT_UP_PATH_CHANGE SubscribedEvent = "UP_PATH_CHANGE"
 )

@@ -15,7 +15,7 @@ type AuthMethod string
 
 // List of AuthMethod
 const (
-	AUTHMETHODANYOF__5_G_AKA      AuthMethod = "5G_AKA"
-	AUTHMETHODANYOF_EAP_AKA_PRIME AuthMethod = "EAP_AKA_PRIME"
-	AUTHMETHODANYOF_EAP_TLS       AuthMethod = "EAP_TLS"
+	AUTHMETHOD__5_G_AKA      AuthMethod = "5G_AKA"
+	AUTHMETHOD_EAP_AKA_PRIME AuthMethod = "EAP_AKA_PRIME"
+	AUTHMETHOD_EAP_TLS       AuthMethod = "EAP_TLS"
 )

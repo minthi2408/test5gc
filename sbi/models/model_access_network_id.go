@@ -15,8 +15,8 @@ type AccessNetworkId string
 
 // List of AccessNetworkId
 const (
-	ACCESSNETWORKIDANYOF_HRPD     AccessNetworkId = "HRPD"
-	ACCESSNETWORKIDANYOF_WIMAX    AccessNetworkId = "WIMAX"
-	ACCESSNETWORKIDANYOF_WLAN     AccessNetworkId = "WLAN"
-	ACCESSNETWORKIDANYOF_ETHERNET AccessNetworkId = "ETHERNET"
+	ACCESSNETWORKID_HRPD     AccessNetworkId = "HRPD"
+	ACCESSNETWORKID_WIMAX    AccessNetworkId = "WIMAX"
+	ACCESSNETWORKID_WLAN     AccessNetworkId = "WLAN"
+	ACCESSNETWORKID_ETHERNET AccessNetworkId = "ETHERNET"
 )

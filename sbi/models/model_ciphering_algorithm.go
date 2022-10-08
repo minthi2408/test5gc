@@ -15,8 +15,8 @@ type CipheringAlgorithm string
 
 // List of CipheringAlgorithm
 const (
-	CIPHERINGALGORITHMANYOF_NEA0 CipheringAlgorithm = "NEA0"
-	CIPHERINGALGORITHMANYOF_NEA1 CipheringAlgorithm = "NEA1"
-	CIPHERINGALGORITHMANYOF_NEA2 CipheringAlgorithm = "NEA2"
-	CIPHERINGALGORITHMANYOF_NEA3 CipheringAlgorithm = "NEA3"
+	CIPHERINGALGORITHM_NEA0 CipheringAlgorithm = "NEA0"
+	CIPHERINGALGORITHM_NEA1 CipheringAlgorithm = "NEA1"
+	CIPHERINGALGORITHM_NEA2 CipheringAlgorithm = "NEA2"
+	CIPHERINGALGORITHM_NEA3 CipheringAlgorithm = "NEA3"
 )

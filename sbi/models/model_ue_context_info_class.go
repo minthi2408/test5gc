@@ -15,5 +15,5 @@ type UeContextInfoClass string
 
 // List of UeContextInfoClass
 const (
-	UECONTEXTINFOCLASSANYOF_TADS UeContextInfoClass = "TADS"
+	UECONTEXTINFOCLASS_TADS UeContextInfoClass = "TADS"
 )

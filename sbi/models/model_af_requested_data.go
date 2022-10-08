@@ -15,5 +15,5 @@ type AfRequestedData string
 
 // List of AfRequestedData
 const (
-	AFREQUESTEDDATAANYOF_UE_IDENTITY AfRequestedData = "UE_IDENTITY"
+	AFREQUESTEDDATA_UE_IDENTITY AfRequestedData = "UE_IDENTITY"
 )

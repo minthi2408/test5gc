@@ -15,8 +15,8 @@ type QosMonitoringReq string
 
 // List of QosMonitoringReq
 const (
-	QOSMONITORINGREQANYOF_UL   QosMonitoringReq = "UL"
-	QOSMONITORINGREQANYOF_DL   QosMonitoringReq = "DL"
-	QOSMONITORINGREQANYOF_BOTH QosMonitoringReq = "BOTH"
-	QOSMONITORINGREQANYOF_NONE QosMonitoringReq = "NONE"
+	QOSMONITORINGREQ_UL   QosMonitoringReq = "UL"
+	QOSMONITORINGREQ_DL   QosMonitoringReq = "DL"
+	QOSMONITORINGREQ_BOTH QosMonitoringReq = "BOTH"
+	QOSMONITORINGREQ_NONE QosMonitoringReq = "NONE"
 )

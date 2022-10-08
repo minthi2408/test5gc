@@ -15,6 +15,6 @@ type EventReportMode string
 
 // List of EventReportMode
 const (
-	EVENTREPORTMODEANYOF_PERIODIC           EventReportMode = "PERIODIC"
-	EVENTREPORTMODEANYOF_ON_EVENT_DETECTION EventReportMode = "ON_EVENT_DETECTION"
+	EVENTREPORTMODE_PERIODIC           EventReportMode = "PERIODIC"
+	EVENTREPORTMODE_ON_EVENT_DETECTION EventReportMode = "ON_EVENT_DETECTION"
 )

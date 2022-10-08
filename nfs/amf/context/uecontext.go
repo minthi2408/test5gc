@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"etrib5gc/sbi/models"
+	"etrib5gc/nfs/amf/sbi/consumer"
 
 	//	"github.com/mohae/deepcopy"
 	"github.com/free5gc/nas/nasMessage"
@@ -79,6 +80,8 @@ type LocInfo struct {
 	}
 */
 type AmfUe struct {
+	/*test udm*/
+	udm	consumer.UdmConsumer
 	/* the AMF which serving this AmfUe now */
 	amf *AmfContext // never nil
 

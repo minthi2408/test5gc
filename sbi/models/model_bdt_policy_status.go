@@ -15,6 +15,6 @@ type BdtPolicyStatus string
 
 // List of BdtPolicyStatus
 const (
-	BDTPOLICYSTATUSANYOF_INVALID BdtPolicyStatus = "INVALID"
-	BDTPOLICYSTATUSANYOF_VALID   BdtPolicyStatus = "VALID"
+	BDTPOLICYSTATUS_INVALID BdtPolicyStatus = "INVALID"
+	BDTPOLICYSTATUS_VALID   BdtPolicyStatus = "VALID"
 )

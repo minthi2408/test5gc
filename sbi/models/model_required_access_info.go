@@ -15,6 +15,6 @@ type RequiredAccessInfo string
 
 // List of RequiredAccessInfo
 const (
-	REQUIREDACCESSINFOANYOF_USER_LOCATION RequiredAccessInfo = "USER_LOCATION"
-	REQUIREDACCESSINFOANYOF_UE_TIME_ZONE  RequiredAccessInfo = "UE_TIME_ZONE"
+	REQUIREDACCESSINFO_USER_LOCATION RequiredAccessInfo = "USER_LOCATION"
+	REQUIREDACCESSINFO_UE_TIME_ZONE  RequiredAccessInfo = "UE_TIME_ZONE"
 )

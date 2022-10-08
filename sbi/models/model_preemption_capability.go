@@ -15,6 +15,6 @@ type PreemptionCapability string
 
 // List of PreemptionCapability
 const (
-	PREEMPTIONCAPABILITYANYOF_NOT_PREEMPT PreemptionCapability = "NOT_PREEMPT"
-	PREEMPTIONCAPABILITYANYOF_MAY_PREEMPT PreemptionCapability = "MAY_PREEMPT"
+	PREEMPTIONCAPABILITY_NOT_PREEMPT PreemptionCapability = "NOT_PREEMPT"
+	PREEMPTIONCAPABILITY_MAY_PREEMPT PreemptionCapability = "MAY_PREEMPT"
 )

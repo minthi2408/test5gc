@@ -15,8 +15,8 @@ type EpsNasIntegrityAlgorithm string
 
 // List of EpsNasIntegrityAlgorithm
 const (
-	EPSNASINTEGRITYALGORITHMANYOF_EIA0 EpsNasIntegrityAlgorithm = "EIA0"
-	EPSNASINTEGRITYALGORITHMANYOF_EIA1 EpsNasIntegrityAlgorithm = "EIA1"
-	EPSNASINTEGRITYALGORITHMANYOF_EIA2 EpsNasIntegrityAlgorithm = "EIA2"
-	EPSNASINTEGRITYALGORITHMANYOF_EIA3 EpsNasIntegrityAlgorithm = "EIA3"
+	EPSNASINTEGRITYALGORITHM_EIA0 EpsNasIntegrityAlgorithm = "EIA0"
+	EPSNASINTEGRITYALGORITHM_EIA1 EpsNasIntegrityAlgorithm = "EIA1"
+	EPSNASINTEGRITYALGORITHM_EIA2 EpsNasIntegrityAlgorithm = "EIA2"
+	EPSNASINTEGRITYALGORITHM_EIA3 EpsNasIntegrityAlgorithm = "EIA3"
 )

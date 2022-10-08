@@ -15,8 +15,8 @@ type MeteringMethod string
 
 // List of MeteringMethod
 const (
-	METERINGMETHODANYOF_DURATION        MeteringMethod = "DURATION"
-	METERINGMETHODANYOF_VOLUME          MeteringMethod = "VOLUME"
-	METERINGMETHODANYOF_DURATION_VOLUME MeteringMethod = "DURATION_VOLUME"
-	METERINGMETHODANYOF_EVENT           MeteringMethod = "EVENT"
+	METERINGMETHOD_DURATION        MeteringMethod = "DURATION"
+	METERINGMETHOD_VOLUME          MeteringMethod = "VOLUME"
+	METERINGMETHOD_DURATION_VOLUME MeteringMethod = "DURATION_VOLUME"
+	METERINGMETHOD_EVENT           MeteringMethod = "EVENT"
 )

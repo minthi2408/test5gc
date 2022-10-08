@@ -15,9 +15,9 @@ type Periodicity string
 
 // List of Periodicity
 const (
-	PERIODICITYANYOF_YEARLY  Periodicity = "YEARLY"
-	PERIODICITYANYOF_MONTHLY Periodicity = "MONTHLY"
-	PERIODICITYANYOF_WEEKLY  Periodicity = "WEEKLY"
-	PERIODICITYANYOF_DAILY   Periodicity = "DAILY"
-	PERIODICITYANYOF_HOURLY  Periodicity = "HOURLY"
+	PERIODICITY_YEARLY  Periodicity = "YEARLY"
+	PERIODICITY_MONTHLY Periodicity = "MONTHLY"
+	PERIODICITY_WEEKLY  Periodicity = "WEEKLY"
+	PERIODICITY_DAILY   Periodicity = "DAILY"
+	PERIODICITY_HOURLY  Periodicity = "HOURLY"
 )

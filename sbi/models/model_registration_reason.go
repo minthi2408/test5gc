@@ -15,5 +15,5 @@ type RegistrationReason string
 
 // List of RegistrationReason
 const (
-	REGISTRATIONREASONANYOF_SMF_CONTEXT_TRANSFERRED RegistrationReason = "SMF_CONTEXT_TRANSFERRED"
+	REGISTRATIONREASON_SMF_CONTEXT_TRANSFERRED RegistrationReason = "SMF_CONTEXT_TRANSFERRED"
 )

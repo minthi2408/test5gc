@@ -15,6 +15,6 @@ type PeriodicCommunicationIndicator string
 
 // List of PeriodicCommunicationIndicator
 const (
-	PERIODICCOMMUNICATIONINDICATORANYOF_PIORIODICALLY PeriodicCommunicationIndicator = "PIORIODICALLY"
-	PERIODICCOMMUNICATIONINDICATORANYOF_ON_DEMAND     PeriodicCommunicationIndicator = "ON_DEMAND"
+	PERIODICCOMMUNICATIONINDICATOR_PIORIODICALLY PeriodicCommunicationIndicator = "PIORIODICALLY"
+	PERIODICCOMMUNICATIONINDICATOR_ON_DEMAND     PeriodicCommunicationIndicator = "ON_DEMAND"
 )

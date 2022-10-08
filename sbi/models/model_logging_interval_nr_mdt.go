@@ -15,15 +15,15 @@ type LoggingIntervalNrMdt string
 
 // List of LoggingIntervalNrMdt
 const (
-	LOGGINGINTERVALNRMDTANYOF__128     LoggingIntervalNrMdt = "128"
-	LOGGINGINTERVALNRMDTANYOF__256     LoggingIntervalNrMdt = "256"
-	LOGGINGINTERVALNRMDTANYOF__512     LoggingIntervalNrMdt = "512"
-	LOGGINGINTERVALNRMDTANYOF__1024    LoggingIntervalNrMdt = "1024"
-	LOGGINGINTERVALNRMDTANYOF__2048    LoggingIntervalNrMdt = "2048"
-	LOGGINGINTERVALNRMDTANYOF__3072    LoggingIntervalNrMdt = "3072"
-	LOGGINGINTERVALNRMDTANYOF__4096    LoggingIntervalNrMdt = "4096"
-	LOGGINGINTERVALNRMDTANYOF__6144    LoggingIntervalNrMdt = "6144"
-	LOGGINGINTERVALNRMDTANYOF__320     LoggingIntervalNrMdt = "320"
-	LOGGINGINTERVALNRMDTANYOF__640     LoggingIntervalNrMdt = "640"
-	LOGGINGINTERVALNRMDTANYOF_INFINITY LoggingIntervalNrMdt = "infinity"
+	LOGGINGINTERVALNRMDT__128     LoggingIntervalNrMdt = "128"
+	LOGGINGINTERVALNRMDT__256     LoggingIntervalNrMdt = "256"
+	LOGGINGINTERVALNRMDT__512     LoggingIntervalNrMdt = "512"
+	LOGGINGINTERVALNRMDT__1024    LoggingIntervalNrMdt = "1024"
+	LOGGINGINTERVALNRMDT__2048    LoggingIntervalNrMdt = "2048"
+	LOGGINGINTERVALNRMDT__3072    LoggingIntervalNrMdt = "3072"
+	LOGGINGINTERVALNRMDT__4096    LoggingIntervalNrMdt = "4096"
+	LOGGINGINTERVALNRMDT__6144    LoggingIntervalNrMdt = "6144"
+	LOGGINGINTERVALNRMDT__320     LoggingIntervalNrMdt = "320"
+	LOGGINGINTERVALNRMDT__640     LoggingIntervalNrMdt = "640"
+	LOGGINGINTERVALNRMDT_INFINITY LoggingIntervalNrMdt = "infinity"
 )

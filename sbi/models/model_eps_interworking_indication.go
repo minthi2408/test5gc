@@ -15,8 +15,8 @@ type EpsInterworkingIndication string
 
 // List of EpsInterworkingIndication
 const (
-	EPSINTERWORKINGINDICATIONANYOF_NONE          EpsInterworkingIndication = "NONE"
-	EPSINTERWORKINGINDICATIONANYOF_WITH_N26      EpsInterworkingIndication = "WITH_N26"
-	EPSINTERWORKINGINDICATIONANYOF_WITHOUT_N26   EpsInterworkingIndication = "WITHOUT_N26"
-	EPSINTERWORKINGINDICATIONANYOF_IWK_NON_3_GPP EpsInterworkingIndication = "IWK_NON_3GPP"
+	EPSINTERWORKINGINDICATION_NONE          EpsInterworkingIndication = "NONE"
+	EPSINTERWORKINGINDICATION_WITH_N26      EpsInterworkingIndication = "WITH_N26"
+	EPSINTERWORKINGINDICATION_WITHOUT_N26   EpsInterworkingIndication = "WITHOUT_N26"
+	EPSINTERWORKINGINDICATION_IWK_NON_3_GPP EpsInterworkingIndication = "IWK_NON_3GPP"
 )

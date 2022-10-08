@@ -15,6 +15,6 @@ type AvType string
 
 // List of AvType
 const (
-	AVTYPEANYOF__5_G_HE_AKA   AvType = "5G_HE_AKA"
-	AVTYPEANYOF_EAP_AKA_PRIME AvType = "EAP_AKA_PRIME"
+	AVTYPE__5_G_HE_AKA   AvType = "5G_HE_AKA"
+	AVTYPE_EAP_AKA_PRIME AvType = "EAP_AKA_PRIME"
 )

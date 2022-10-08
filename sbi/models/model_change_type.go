@@ -15,8 +15,8 @@ type ChangeType string
 
 // List of ChangeType
 const (
-	CHANGETYPEANYOF_ADD     ChangeType = "ADD"
-	CHANGETYPEANYOF_MOVE    ChangeType = "MOVE"
-	CHANGETYPEANYOF_REMOVE  ChangeType = "REMOVE"
-	CHANGETYPEANYOF_REPLACE ChangeType = "REPLACE"
+	CHANGETYPE_ADD     ChangeType = "ADD"
+	CHANGETYPE_MOVE    ChangeType = "MOVE"
+	CHANGETYPE_REMOVE  ChangeType = "REMOVE"
+	CHANGETYPE_REPLACE ChangeType = "REPLACE"
 )

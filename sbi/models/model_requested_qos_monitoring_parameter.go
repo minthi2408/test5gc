@@ -15,7 +15,7 @@ type RequestedQosMonitoringParameter string
 
 // List of RequestedQosMonitoringParameter
 const (
-	REQUESTEDQOSMONITORINGPARAMETERANYOF_DOWNLINK   RequestedQosMonitoringParameter = "DOWNLINK"
-	REQUESTEDQOSMONITORINGPARAMETERANYOF_UPLINK     RequestedQosMonitoringParameter = "UPLINK"
-	REQUESTEDQOSMONITORINGPARAMETERANYOF_ROUND_TRIP RequestedQosMonitoringParameter = "ROUND_TRIP"
+	REQUESTEDQOSMONITORINGPARAMETER_DOWNLINK   RequestedQosMonitoringParameter = "DOWNLINK"
+	REQUESTEDQOSMONITORINGPARAMETER_UPLINK     RequestedQosMonitoringParameter = "UPLINK"
+	REQUESTEDQOSMONITORINGPARAMETER_ROUND_TRIP RequestedQosMonitoringParameter = "ROUND_TRIP"
 )

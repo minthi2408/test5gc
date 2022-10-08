@@ -15,10 +15,10 @@ type PatchOperation string
 
 // List of PatchOperation
 const (
-	PATCHOPERATIONANYOF_ADD     PatchOperation = "add"
-	PATCHOPERATIONANYOF_COPY    PatchOperation = "copy"
-	PATCHOPERATIONANYOF_MOVE    PatchOperation = "move"
-	PATCHOPERATIONANYOF_REMOVE  PatchOperation = "remove"
-	PATCHOPERATIONANYOF_REPLACE PatchOperation = "replace"
-	PATCHOPERATIONANYOF_TEST    PatchOperation = "test"
+	PATCHOPERATION_ADD     PatchOperation = "add"
+	PATCHOPERATION_COPY    PatchOperation = "copy"
+	PATCHOPERATION_MOVE    PatchOperation = "move"
+	PATCHOPERATION_REMOVE  PatchOperation = "remove"
+	PATCHOPERATION_REPLACE PatchOperation = "replace"
+	PATCHOPERATION_TEST    PatchOperation = "test"
 )

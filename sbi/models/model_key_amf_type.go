@@ -15,6 +15,6 @@ type KeyAmfType string
 
 // List of KeyAmfType
 const (
-	KEYAMFTYPEANYOF_KAMF      KeyAmfType = "KAMF"
-	KEYAMFTYPEANYOF_KPRIMEAMF KeyAmfType = "KPRIMEAMF"
+	KEYAMFTYPE_KAMF      KeyAmfType = "KAMF"
+	KEYAMFTYPE_KPRIMEAMF KeyAmfType = "KPRIMEAMF"
 )

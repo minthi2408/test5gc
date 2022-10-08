@@ -15,6 +15,6 @@ type LineType string
 
 // List of LineType
 const (
-	LINETYPEANYOF_DSL LineType = "DSL"
-	LINETYPEANYOF_PON LineType = "PON"
+	LINETYPE_DSL LineType = "DSL"
+	LINETYPE_PON LineType = "PON"
 )

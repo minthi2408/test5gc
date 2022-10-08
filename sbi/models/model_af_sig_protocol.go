@@ -15,6 +15,6 @@ type AfSigProtocol string
 
 // List of AfSigProtocol
 const (
-	AFSIGPROTOCOLANYOF_NO_INFORMATION AfSigProtocol = "NO_INFORMATION"
-	AFSIGPROTOCOLANYOF_SIP            AfSigProtocol = "SIP"
+	AFSIGPROTOCOL_NO_INFORMATION AfSigProtocol = "NO_INFORMATION"
+	AFSIGPROTOCOL_SIP            AfSigProtocol = "SIP"
 )

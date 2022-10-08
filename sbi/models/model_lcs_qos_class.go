@@ -15,6 +15,6 @@ type LcsQosClass string
 
 // List of LcsQosClass
 const (
-	LCSQOSCLASSANYOF_BEST_EFFORT LcsQosClass = "BEST_EFFORT"
-	LCSQOSCLASSANYOF_ASSURED     LcsQosClass = "ASSURED"
+	LCSQOSCLASS_BEST_EFFORT LcsQosClass = "BEST_EFFORT"
+	LCSQOSCLASS_ASSURED     LcsQosClass = "ASSURED"
 )

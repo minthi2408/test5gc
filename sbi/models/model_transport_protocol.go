@@ -15,6 +15,6 @@ type TransportProtocol string
 
 // List of TransportProtocol
 const (
-	TRANSPORTPROTOCOLANYOF_UDP TransportProtocol = "UDP"
-	TRANSPORTPROTOCOLANYOF_TCP TransportProtocol = "TCP"
+	TRANSPORTPROTOCOL_UDP TransportProtocol = "UDP"
+	TRANSPORTPROTOCOL_TCP TransportProtocol = "TCP"
 )

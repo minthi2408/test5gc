@@ -15,6 +15,6 @@ type RuleStatus string
 
 // List of RuleStatus
 const (
-	RULESTATUSANYOF_ACTIVE   RuleStatus = "ACTIVE"
-	RULESTATUSANYOF_INACTIVE RuleStatus = "INACTIVE"
+	RULESTATUS_ACTIVE   RuleStatus = "ACTIVE"
+	RULESTATUS_INACTIVE RuleStatus = "INACTIVE"
 )

@@ -15,6 +15,6 @@ type PdnConnectivityStatus string
 
 // List of PdnConnectivityStatus
 const (
-	PDNCONNECTIVITYSTATUSANYOF_ESTABLISHED PdnConnectivityStatus = "ESTABLISHED"
-	PDNCONNECTIVITYSTATUSANYOF_RELEASED    PdnConnectivityStatus = "RELEASED"
+	PDNCONNECTIVITYSTATUS_ESTABLISHED PdnConnectivityStatus = "ESTABLISHED"
+	PDNCONNECTIVITYSTATUS_RELEASED    PdnConnectivityStatus = "RELEASED"
 )

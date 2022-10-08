@@ -15,6 +15,6 @@ type QosFlowUsage string
 
 // List of QosFlowUsage
 const (
-	QOSFLOWUSAGEANYOF_GENERAL QosFlowUsage = "GENERAL"
-	QOSFLOWUSAGEANYOF_IMS_SIG QosFlowUsage = "IMS_SIG"
+	QOSFLOWUSAGE_GENERAL QosFlowUsage = "GENERAL"
+	QOSFLOWUSAGE_IMS_SIG QosFlowUsage = "IMS_SIG"
 )

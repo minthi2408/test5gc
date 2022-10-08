@@ -15,8 +15,8 @@ type SessionRuleFailureCode string
 
 // List of SessionRuleFailureCode
 const (
-	SESSIONRULEFAILURECODEANYOF_NF_MAL         SessionRuleFailureCode = "NF_MAL"
-	SESSIONRULEFAILURECODEANYOF_RES_LIM        SessionRuleFailureCode = "RES_LIM"
-	SESSIONRULEFAILURECODEANYOF_UNSUCC_QOS_VAL SessionRuleFailureCode = "UNSUCC_QOS_VAL"
-	SESSIONRULEFAILURECODEANYOF_UE_STA_SUSP    SessionRuleFailureCode = "UE_STA_SUSP"
+	SESSIONRULEFAILURECODE_NF_MAL         SessionRuleFailureCode = "NF_MAL"
+	SESSIONRULEFAILURECODE_RES_LIM        SessionRuleFailureCode = "RES_LIM"
+	SESSIONRULEFAILURECODE_UNSUCC_QOS_VAL SessionRuleFailureCode = "UNSUCC_QOS_VAL"
+	SESSIONRULEFAILURECODE_UE_STA_SUSP    SessionRuleFailureCode = "UE_STA_SUSP"
 )

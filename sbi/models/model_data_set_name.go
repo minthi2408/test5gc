@@ -15,14 +15,14 @@ type DataSetName string
 
 // List of DataSetName
 const (
-	DATASETNAMEANYOF_AM          DataSetName = "AM"
-	DATASETNAMEANYOF_SMF_SEL     DataSetName = "SMF_SEL"
-	DATASETNAMEANYOF_SMS_SUB     DataSetName = "SMS_SUB"
-	DATASETNAMEANYOF_SM          DataSetName = "SM"
-	DATASETNAMEANYOF_TRACE       DataSetName = "TRACE"
-	DATASETNAMEANYOF_SMS_MNG     DataSetName = "SMS_MNG"
-	DATASETNAMEANYOF_LCS_PRIVACY DataSetName = "LCS_PRIVACY"
-	DATASETNAMEANYOF_LCS_MO      DataSetName = "LCS_MO"
-	DATASETNAMEANYOF_LCS_BCA     DataSetName = "LCS_BCA"
-	DATASETNAMEANYOF_V2_X        DataSetName = "V2X"
+	DATASETNAME_AM          DataSetName = "AM"
+	DATASETNAME_SMF_SEL     DataSetName = "SMF_SEL"
+	DATASETNAME_SMS_SUB     DataSetName = "SMS_SUB"
+	DATASETNAME_SM          DataSetName = "SM"
+	DATASETNAME_TRACE       DataSetName = "TRACE"
+	DATASETNAME_SMS_MNG     DataSetName = "SMS_MNG"
+	DATASETNAME_LCS_PRIVACY DataSetName = "LCS_PRIVACY"
+	DATASETNAME_LCS_MO      DataSetName = "LCS_MO"
+	DATASETNAME_LCS_BCA     DataSetName = "LCS_BCA"
+	DATASETNAME_V2_X        DataSetName = "V2X"
 )

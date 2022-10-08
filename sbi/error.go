@@ -14,7 +14,7 @@ func NewApiError(code int, status string, data interface{}) *ApiError {
 	return &ApiError{
 		code:   code,
 		status: status,
-		data:   data,
+		data:   data, //either a ProblemDetails or an json-marshallable api-specific error
 	}
 }
 
@@ -32,4 +32,9 @@ func (e *ApiError) Data() interface{} {
 
 func ApiErrFromProb(prob *models.ProblemDetails) *ApiError {
 	return NewApiError(int(prob.Status), prob.Detail, prob)
+}
+
+func (e *ApiError) Problem() (prob *models.ProblemDetails, ok bool) {
+	prob, ok = e.data.(*models.ProblemDetails)
+	return
 }
