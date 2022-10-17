@@ -66,6 +66,7 @@ func New(b Backend, ngap NgapSender, nas NasInf) *Producer {
 // build services to register to the underlying server (http server in service
 // agent)
 func (prod *Producer) Services() []common.Service {
+	log.Info("build producer service");
 	services := make([]common.Service, 4, 4)
 	services[0] = httpdp.HttpService{
 		Group:  "comm",

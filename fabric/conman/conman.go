@@ -3,6 +3,8 @@ package conman
 import (
 	"etrib5gc/fabric/common"
 	"etrib5gc/fabric/httpdp"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // abstraction of protocol-specific service clients
@@ -27,6 +29,7 @@ type connectionManager struct {
 }
 
 func NewConnectionManager() *connectionManager {
+	log.Info("NewConnectionManager")
 	ret := &connectionManager{}
 	return ret
 }

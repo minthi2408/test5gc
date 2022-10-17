@@ -10,6 +10,7 @@ import (
 	"github.com/free5gc/util/httpwrapper"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 // Route is the information for every URI.
@@ -53,11 +54,8 @@ func (addr *HttpAddr) Protocol() common.DataPlaneProtocol {
 }
 
 type ServerConfig struct {
-	HttpAddr
-	//	BindingIPv4 string
-	//	Port        int
-	//
-	// TODO: add tls
+	IPv4 string
+	Port int
 }
 
 func NewHttpServer(config *ServerConfig, services []common.Service) (*httpServer, error) {
@@ -86,10 +84,11 @@ func (s *httpServer) register(services []common.Service) (err error) {
 		MaxAge:           86400,
 	}))
 
+	log.Info("register http server")
 	addr := fmt.Sprintf("%s:%d", s.config.IPv4, s.config.Port)
 
 	for _, sv := range services {
-		if httpservice, ok := sv.(*HttpService); !ok {
+		if httpservice, ok := sv.(HttpService); !ok {
 			panic(errors.New("Not a HttpService"))
 		} else {
 			addHttpRoutes(router, httpservice.Group, httpservice.Routes)

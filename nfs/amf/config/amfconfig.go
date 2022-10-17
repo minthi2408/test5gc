@@ -1,12 +1,16 @@
 package config
 
 import (
-	fabric_config "etrib5gc/fabric/config"
+	"encoding/json"
 	"etrib5gc/sbi/models"
 	"fmt"
 	"io/ioutil"
 	"strconv"
 	"time"
+
+	fabric_config "etrib5gc/fabric/config"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type NetworkFeatureSupport5GS struct {
@@ -34,7 +38,7 @@ type PlmnSupportItem struct {
 type AmfConfig struct {
 	Agent *fabric_config.AgentConfig
 
-	AmfName    string
+	AmfName    string 
 	NgapIpList []string //should be list of IP address
 
 	//should go to context?
@@ -77,12 +81,12 @@ type TimerValue struct {
 }
 
 func LoadConfig(f string) (*AmfConfig, error) {
-	if _, err := ioutil.ReadFile(f); err != nil {
+	if byteData, err := ioutil.ReadFile(f); err != nil {
 		return nil, err
 	} else {
 
 		var amfconf AmfConfig
-		amfconf.AmfName = "amf"
+		// amfconf.AmfName = "amf"
 		/*
 			if err := yaml.Unmarshal(content, &amfconf); err != nil {
 				return nil, err
@@ -93,7 +97,15 @@ func LoadConfig(f string) (*AmfConfig, error) {
 				return &amfconf, nil
 			}
 		*/
-		return &amfconf, nil
+		if err := json.Unmarshal(byteData, &amfconf); err != nil {
+			return nil, err
+		} else {
+			log.Info(amfconf.AmfName)
+			log.Info(amfconf.NgapIpList)
+			log.Info(amfconf.Agent.NfType)
+			log.Info(amfconf.Agent.RegistryConfig.Addr.IPv4)
+			return &amfconf, nil
+		}
 	}
 }
 

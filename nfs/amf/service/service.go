@@ -35,7 +35,7 @@ func New(config *amf_config.AmfConfig) (nf *AMF, err error) {
 	nf = &AMF{
 		config: config,
 	}
-
+	log.Info(nf.config.Agent.DProto)
 	//create NGAP server (including a NAS handler)
 	nf.ngap = ngap.NewServer(nf)
 
@@ -53,8 +53,7 @@ func New(config *amf_config.AmfConfig) (nf *AMF, err error) {
 }
 
 func (nf *AMF) AgentConfig() *fabric_config.AgentConfig {
-	//TODO: get it from the nf config
-	return nil
+	return nf.config.Agent
 }
 
 func (nf *AMF) Services() []fabric_common.Service {

@@ -9,6 +9,8 @@ import (
 	"etrib5gc/fabric/httpdp"
 	"etrib5gc/fabric/registrydb"
 	"etrib5gc/fabric/telemetry"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type serviceAgent struct {
@@ -66,14 +68,19 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 
 func NewAgent(nf Application) (ServiceAgent, error) {
 	config := nf.AgentConfig()
+	_ = config
+	log.Info("ThanhTT")
+	log.Info(config.NfType)
+	log.Info("ThanhTT")
 	profile := nf.Profile()
-	agent := &serviceAgent{
+	_ = profile
+	agent := &serviceAgent {
 		config:   config,
 		registry: registrydb.NewRegistry(profile, &config.RegistryConfig),
 		reporter: telemetry.NewWriter(),
 		conmngr:  conman.NewConnectionManager(),
 	}
-
+	_ = agent
 	if config.DProto == common.DATAPLANE_HTTP {
 		var err error
 		agent.forwarder = fwimpl.New(agent.registry, agent.lb, agent.conmngr)

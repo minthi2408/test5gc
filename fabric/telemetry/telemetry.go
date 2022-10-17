@@ -3,6 +3,8 @@ package telemetry
 import (
 	"etrib5gc/fabric/common"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 //TODO: telemetry module will be implemented later
@@ -17,6 +19,7 @@ type Writer interface {
 }
 
 func NewWriter() Writer {
+	log.Info("NewWriter")
 	return &dumpTelemetry{}
 }
 

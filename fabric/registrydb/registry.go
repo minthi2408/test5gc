@@ -3,6 +3,8 @@ package registrydb
 import (
 	"errors"
 	"etrib5gc/fabric/common"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -42,6 +44,7 @@ type Config struct {
 
 // factory method to create a registry
 func NewRegistry(profile common.NfProfile, config *Config) AgentRegistry {
+	log.Info("NewRegistry")
 	switch config.RegType {
 	case REGISTRY_STATIC:
 		return newStaticRegistry(profile, config.Others)

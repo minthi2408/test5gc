@@ -62,7 +62,6 @@ func action(c *cli.Context) (err error) {
 		log.Errorf("Fail to parse UDM configuration", err)
 		return
 	}
-
 	//create the AMF
 	if nf, err = service.New(cfg); err != nil {
 		log.Errorf("Fail to create UDM", err)

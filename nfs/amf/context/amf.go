@@ -71,6 +71,7 @@ func NewPlmnSupportItem() (item factory.PlmnSupportItem) {
 */
 
 func NewAmfContext(cfg *config.AmfConfig, fw fabric.Forwarder) *AmfContext {
+	log.Info("New amf context")
 	ret := &AmfContext{
 		cfg:            cfg,
 		tmsiIdGen:      idgenerator.NewGenerator(1, math.MaxInt32),

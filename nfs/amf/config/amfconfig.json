@@ -1,0 +1,22 @@
+{
+   "ngapiplist":[
+      "127.0.0.5",
+      "127.0.0.6"
+   ],
+   "amfname":"test-amf",
+   "agent":{
+      "nfype":"amf",
+      "dproto":0,
+      "httpServerConfig": {
+         "ipv4": "127.0.0.1",
+         "port": 8080
+      },
+      "registryconfig":{
+         "regtype":0,
+         "addr":{
+            "ipv4":"192.168.0.102",
+            "port":8001
+         }
+      }
+   }
+}
