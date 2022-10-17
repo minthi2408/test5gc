@@ -38,7 +38,7 @@ type PlmnSupportItem struct {
 type AmfConfig struct {
 	Agent *fabric_config.AgentConfig
 
-	AmfName    string 
+	AmfName    string
 	NgapIpList []string //should be list of IP address
 
 	//should go to context?
@@ -86,17 +86,7 @@ func LoadConfig(f string) (*AmfConfig, error) {
 	} else {
 
 		var amfconf AmfConfig
-		// amfconf.AmfName = "amf"
-		/*
-			if err := yaml.Unmarshal(content, &amfconf); err != nil {
-				return nil, err
-			}
-			if err := amfconf.setDefaults(); err != nil {
-				return nil, err
-			} else {
-				return &amfconf, nil
-			}
-		*/
+
 		if err := json.Unmarshal(byteData, &amfconf); err != nil {
 			return nil, err
 		} else {
@@ -104,6 +94,12 @@ func LoadConfig(f string) (*AmfConfig, error) {
 			log.Info(amfconf.NgapIpList)
 			log.Info(amfconf.Agent.NfType)
 			log.Info(amfconf.Agent.RegistryConfig.Addr.IPv4)
+
+			var rawData map[string]interface{}
+			json.Unmarshal([]byte(byteData), &rawData)
+			var others = rawData["agent"].(map[string]interface{})["registryconfig"].(map[string]interface{})["other"]
+			log.Info(others)
+
 			return &amfconf, nil
 		}
 	}
@@ -170,5 +166,22 @@ func convertTACConfigToModels(intString string) (string, error) {
 		return "", err
 	} else {
 		return fmt.Sprintf("%06x", tmp), nil
+	}
+}
+
+func walk(v interface{}) {
+	switch v := v.(type) {
+	case []interface{}:
+		for i, v := range v {
+			fmt.Println("index:", i)
+			walk(v)
+		}
+	case map[interface{}]interface{}:
+		for k, v := range v {
+			fmt.Println("key:", k)
+			walk(v)
+		}
+	default:
+		fmt.Println(v)
 	}
 }

@@ -1,7 +1,7 @@
 {
    "ngapiplist":[
-      "127.0.0.5",
-      "127.0.0.6"
+      "127.0.0.1",
+      "127.0.0.2"
    ],
    "amfname":"test-amf",
    "agent":{
@@ -14,9 +14,31 @@
       "registryconfig":{
          "regtype":0,
          "addr":{
-            "ipv4":"192.168.0.102",
+            "ipv4":"127.0.0.1",
             "port":8001
-         }
+         },
+         "other":[
+            {
+               "nftype": "amf",
+               "addr": "127.0.0.3",
+               "load": 1,
+               "context": {
+                  "region": "*",
+                  "plmn": "1980abef",
+                  "slice": ["x"]
+               }
+            },
+            {
+               "nftype": "smf",
+               "addr": "127.0.0.4",
+               "load": 2,
+               "context": {
+                  "region": "*",
+                  "plmn": "2000cdfe",
+                  "slice": ["y"]
+               }
+            }
+         ]
       }
    }
 }

@@ -19,7 +19,11 @@ func newStaticRegistry(profile common.NfProfile, others []common.NfProfile) *sta
 }
 
 func (r *staticRegistry) Search(query common.NfQuery) []common.NfProfile {
-	return nil
+	var results []common.NfProfile
+	var profile common.NfProfile
+
+	results = append(results, profile)
+	return results
 }
 
 func (r *staticRegistry) Drop(agent common.NfProfile) {

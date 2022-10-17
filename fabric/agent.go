@@ -68,19 +68,16 @@ func (agent *serviceAgent) Telemetry() telemetry.Writer {
 
 func NewAgent(nf Application) (ServiceAgent, error) {
 	config := nf.AgentConfig()
-	_ = config
-	log.Info("ThanhTT")
 	log.Info(config.NfType)
-	log.Info("ThanhTT")
 	profile := nf.Profile()
-	_ = profile
-	agent := &serviceAgent {
+
+	agent := &serviceAgent{
 		config:   config,
 		registry: registrydb.NewRegistry(profile, &config.RegistryConfig),
 		reporter: telemetry.NewWriter(),
 		conmngr:  conman.NewConnectionManager(),
 	}
-	_ = agent
+
 	if config.DProto == common.DATAPLANE_HTTP {
 		var err error
 		agent.forwarder = fwimpl.New(agent.registry, agent.lb, agent.conmngr)
