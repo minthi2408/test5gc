@@ -12,9 +12,12 @@ API version: 1.1.8
 package comm
 
 import (
+	"net/http"
+
+	log "github.com/sirupsen/logrus"
+
 	"etrib5gc/sbi"
 	"etrib5gc/sbi/models"
-	"net/http"
 )
 
 //sbi producer handler for AMFStatusChangeSubscribeModfy
@@ -526,6 +529,21 @@ func OnAMFStatusChangeSubscribe(ctx sbi.RequestContext, handler interface{}) (re
 	} else {
 		resp.SetBody(int(successCode), &result)
 	}
+	return
+}
+
+
+func OnDiscovery(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
+	log.Infof("ctx: %v", ctx.RequestBody())
+	successCode := 200
+	resp.SetBody(int(successCode), "retun from OnDiscovery")
+	return
+}
+
+func OnDiscoveryResult(ctx sbi.RequestContext, handler interface{}) (resp sbi.Response) {
+	log.Info("ctx: ", ctx)
+	successCode := 200
+	resp.SetBody(int(successCode), "retun from OnDiscoveryResult")
 	return
 }
 

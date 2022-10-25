@@ -2,6 +2,7 @@ package httpdp
 
 import (
 	"errors"
+
 	"etrib5gc/fabric"
 	"etrib5gc/fabric/common"
 	fabricdp "etrib5gc/fabric/httpdp"
@@ -12,7 +13,20 @@ import (
 type requestSender struct {
 	fw    fabric.Forwarder
 	query common.NfQuery
-	addr  common.AgentAddr
+	addr  common.AgentAddrStruct
+}
+
+type requestQuery struct {
+	NfType  common.NetworkFunctionType
+	Context common.NfContext
+}
+
+func (rq *requestQuery) GetNfType() common.NetworkFunctionType {
+	return rq.NfType
+}
+
+func (rq *requestQuery) Map2Context() (common.NfContext, error) {
+	return rq.Context, nil
 }
 
 func NewClient(fw fabric.Forwarder, query common.NfQuery) *requestSender {
@@ -30,7 +44,7 @@ func (s *requestSender) Send(request *sbi.Request) (response *sbi.Response, err 
 	if s.query == nil {
 		panic(errors.New("No destication to send"))
 	}
-	if s.addr == nil {
+	if (s.addr == common.AgentAddrStruct{}) {
 		commonResponse, s.addr, err = s.fw.DiscoveryThenSend(request, s.query)
 	} else {
 		commonResponse, err = s.fw.DirectSend(request, s.addr)

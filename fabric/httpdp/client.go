@@ -10,7 +10,7 @@ import (
 )
 
 type remoteAgent struct {
-	addr   common.AgentAddr
+	addr   common.AgentAddrStruct
 	client *http.Client
 }
 
@@ -45,7 +45,7 @@ func (c *remoteAgent) Send(req common.Request) (resp common.Response, err error)
 }
 
 // create a http client to send requests to a remote agent
-func NewHttpRemoteAgent(addr common.AgentAddr) *remoteAgent {
+func NewHttpRemoteAgent(addr common.AgentAddrStruct) *remoteAgent {
 	ret := &remoteAgent{
 		addr: addr,
 	}
@@ -68,6 +68,6 @@ func (c *remoteAgent) prepareHttpRequest(req *sbi.Request) (httpreq *http.Reques
 	return
 }
 
-func (c *remoteAgent) Addr() common.AgentAddr {
+func (c *remoteAgent) Addr() common.AgentAddrStruct {
 	return c.addr
 }

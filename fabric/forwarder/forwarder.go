@@ -2,6 +2,7 @@ package fabric
 
 import (
 	"errors"
+
 	"etrib5gc/fabric/common"
 	"etrib5gc/fabric/conman"
 	"etrib5gc/fabric/registrydb"
@@ -39,7 +40,7 @@ func New(reg registrydb.AgentRegistry, lb LoadBalancer, conman conman.Connection
 
 // discover and select a remote agent to send a request
 func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.NfQuery) (
-	response common.Response, addr common.AgentAddr, err error) {
+	response common.Response, addr common.AgentAddrStruct, err error) {
 
 	var sender conman.RemoteConnection
 	//TODO: add request timeout (requesting should be non-blocking -> need a
@@ -78,7 +79,7 @@ func (fw *forwarderImpl) DiscoveryThenSend(request common.Request, query common.
 }
 
 // send a request directly to a remote agent with given address
-func (fw *forwarderImpl) DirectSend(req common.Request, addr common.AgentAddr) (
+func (fw *forwarderImpl) DirectSend(req common.Request, addr common.AgentAddrStruct) (
 	common.Response, error) {
 
 	// NOTE: conman should return an existing sender (if available)

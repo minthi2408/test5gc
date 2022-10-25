@@ -2,15 +2,15 @@ package config
 
 import (
 	"encoding/json"
-	"etrib5gc/sbi/models"
 	"fmt"
 	"io/ioutil"
 	"strconv"
 	"time"
 
-	fabric_config "etrib5gc/fabric/config"
-
 	log "github.com/sirupsen/logrus"
+
+	fabric_config "etrib5gc/fabric/config"
+	"etrib5gc/sbi/models"
 )
 
 type NetworkFeatureSupport5GS struct {
@@ -90,16 +90,11 @@ func LoadConfig(f string) (*AmfConfig, error) {
 		if err := json.Unmarshal(byteData, &amfconf); err != nil {
 			return nil, err
 		} else {
-			log.Info(amfconf.AmfName)
-			log.Info(amfconf.NgapIpList)
-			log.Info(amfconf.Agent.NfType)
-			log.Info(amfconf.Agent.RegistryConfig.Addr.IPv4)
-
-			var rawData map[string]interface{}
-			json.Unmarshal([]byte(byteData), &rawData)
-			var others = rawData["agent"].(map[string]interface{})["registryconfig"].(map[string]interface{})["other"]
-			log.Info(others)
-
+			log.Info("amfconf's others: ", amfconf.Agent.RegistryConfig)
+			Others := amfconf.Agent.RegistryConfig.Others
+			for _, other := range Others {
+				log.Info("amfconf's other: ", other.Addr())
+			}
 			return &amfconf, nil
 		}
 	}

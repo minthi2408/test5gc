@@ -1,16 +1,16 @@
 package conman
 
 import (
+	log "github.com/sirupsen/logrus"
+
 	"etrib5gc/fabric/common"
 	"etrib5gc/fabric/httpdp"
-
-	log "github.com/sirupsen/logrus"
 )
 
 // abstraction of protocol-specific service clients
 type RemoteConnection interface {
 	Send(common.Request) (common.Response, error)
-	Addr() common.AgentAddr
+	Addr() common.AgentAddrStruct
 }
 
 type ConnectionManager interface {
@@ -18,10 +18,10 @@ type ConnectionManager interface {
 	// create a new connection or resuse an existing one
 	// add security layer if needs
 	// NOTE: it is just a connection preparation, no interaction is done now
-	Connect(common.AgentAddr) (RemoteConnection, error)
+	Connect(common.AgentAddrStruct) (RemoteConnection, error)
 
 	// drop an unresponsive connection
-	Drop(common.AgentAddr)
+	Drop(common.AgentAddrStruct)
 }
 
 type connectionManager struct {
@@ -35,7 +35,7 @@ func NewConnectionManager() *connectionManager {
 }
 
 // create a connection to a remote agent
-func (cm *connectionManager) Connect(addr common.AgentAddr) (RemoteConnection, error) {
+func (cm *connectionManager) Connect(addr common.AgentAddrStruct) (RemoteConnection, error) {
 	//TODO: this is very simplified implementation. Netvision should implement
 	//added features such as connection reuse, connection sercurity
 	id := addr.String()
@@ -47,7 +47,7 @@ func (cm *connectionManager) Connect(addr common.AgentAddr) (RemoteConnection, e
 	return conn, nil
 }
 
-func (cm *connectionManager) Drop(addr common.AgentAddr) {
+func (cm *connectionManager) Drop(addr common.AgentAddrStruct) {
 	delete(cm.connections, addr.String())
 }
 

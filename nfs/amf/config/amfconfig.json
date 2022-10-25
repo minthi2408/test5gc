@@ -1,7 +1,7 @@
 {
    "ngapiplist":[
       "127.0.0.1",
-      "127.0.0.2"
+      "192.168.3.181"
    ],
    "amfname":"test-amf",
    "agent":{
@@ -15,12 +15,17 @@
          "regtype":0,
          "addr":{
             "ipv4":"127.0.0.1",
-            "port":8001
+            "port":8090
          },
-         "other":[
+         "others":[
             {
                "nftype": "amf",
-               "addr": "127.0.0.3",
+               "addr": {
+                  "dproto":0,
+                  "ipaddress": "127.0.0.1",
+                  "port": 7080,
+                  "identity":"amf7080def"
+               },
                "load": 1,
                "context": {
                   "region": "*",
@@ -30,7 +35,12 @@
             },
             {
                "nftype": "smf",
-               "addr": "127.0.0.4",
+               "addr": {
+                  "dproto":0,
+                  "ipaddress": "127.0.0.1",
+                  "port": 7090,
+                  "identity":"smf7090abc"
+               },
                "load": 2,
                "context": {
                   "region": "*",
@@ -39,6 +49,11 @@
                }
             }
          ]
+      },
+      "context": {
+         "region": "*",
+         "plmn": "1980qwe",
+         "slice": ["x", "y"]
       }
    }
 }

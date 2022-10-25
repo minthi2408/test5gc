@@ -12,10 +12,11 @@ API version: 1.1.3
 package mt
 
 import (
+	"net/http"
+
 	"etrib5gc/sbi"
 	"etrib5gc/sbi/models"
 	"etrib5gc/sbi/utils"
-	"net/http"
 )
 
 //sbi producer handler for ProvideDomainSelectionInfo
@@ -105,6 +106,7 @@ func OnEnableUeReachability(ctx sbi.RequestContext, handler interface{}) (resp s
 	}
 	return
 }
+
 
 type Producer interface {
 	MT_HandleProvideDomainSelectionInfo(ueContextId string, infoClass *models.UeContextInfoClass, supportedFeatures string, oldGuami *models.Guami) (successCode int32, result models.UeContextInfo, err *sbi.ApiError)

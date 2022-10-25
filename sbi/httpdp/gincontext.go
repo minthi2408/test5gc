@@ -1,12 +1,13 @@
 package httpdp
 
 import (
-	fabricdp "etrib5gc/fabric/httpdp"
-	"etrib5gc/sbi"
-	"etrib5gc/sbi/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	fabricdp "etrib5gc/fabric/httpdp"
+	"etrib5gc/sbi"
+	"etrib5gc/sbi/models"
 )
 
 // a wrapper for gin.Context. It implements the sbi.RequestContext

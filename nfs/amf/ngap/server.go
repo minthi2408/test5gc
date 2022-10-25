@@ -7,12 +7,11 @@ import (
 	"sync"
 	"syscall"
 
+	"git.cs.nctu.edu.tw/calee/sctp"
+	libngap "github.com/free5gc/ngap"
+
 	"etrib5gc/nfs/amf"
 	"etrib5gc/nfs/amf/nas"
-
-	"git.cs.nctu.edu.tw/calee/sctp"
-
-	libngap "github.com/free5gc/ngap"
 )
 
 type Server struct {
@@ -76,6 +75,7 @@ func (s *Server) Run(addresses []string, port int) {
 
 func (s *Server) serve(addr *sctp.SCTPAddr) {
 	if listener, err := sctpConfig.Listen("sctp", addr); err != nil {
+		log.Errorf("listen address: %+v", addr)
 		log.Errorf("Failed to listen: %+v", err)
 		return
 	} else {

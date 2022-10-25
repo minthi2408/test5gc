@@ -38,8 +38,23 @@ type Response interface {
 }
 
 type AgentAddr interface {
-	Protocol() DataPlaneProtocol
+	Protocol() int
 	String() string //identity in string format
+}
+
+type AgentAddrStruct struct {
+	Dproto    int
+	IpAddress string
+	Port      int
+	Identity  string //identity in string format
+}
+
+func (a AgentAddrStruct) Protocol() int {
+	return a.Dproto
+}
+
+func (a AgentAddrStruct) String() string {
+	return a.Identity
 }
 
 // the abstraction of a group of services supported by an NF
@@ -52,8 +67,32 @@ type Service interface {
 
 type NfProfile interface {
 	NfType() NetworkFunctionType
-	Addr() AgentAddr //dataplane transport address
-	Load() int       //workload - for load balancer to make comparisons
+	Addr() AgentAddrStruct //dataplane transport address
+	Load() int             //workload - for load balancer to make comparisons
+	Context() NfContext
+}
+
+type NfProfileStruct struct {
+	NfType_  NetworkFunctionType `json:"nftype"`
+	Addr_    AgentAddrStruct     `json:"addr"` //dataplane transport address
+	Load_    int                 `json:"load"` //workload - for load balancer to make comparisons
+	Context_ NfContext           `json:"context"`
+}
+
+func (nf *NfProfileStruct) NfType() NetworkFunctionType {
+	return nf.NfType_
+}
+
+func (nf *NfProfileStruct) Addr() AgentAddrStruct {
+	return nf.Addr_
+}
+
+func (nf *NfProfileStruct) Load() int {
+	return nf.Load_
+}
+
+func (nf *NfProfileStruct) Context() NfContext {
+	return nf.Context_
 }
 
 // any service that runs within an agents; for easy initiation and clean

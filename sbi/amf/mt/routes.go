@@ -12,8 +12,9 @@ API version: 1.1.3
 package mt
 
 import (
-	"etrib5gc/sbi"
 	"net/http"
+
+	"etrib5gc/sbi"
 )
 
 var Routes = sbi.SbiRoutes{

@@ -2,7 +2,6 @@ package httpdp
 
 import (
 	"errors"
-	"etrib5gc/fabric/common"
 	"fmt"
 	"net/http"
 	"sync"
@@ -11,6 +10,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+
+	"etrib5gc/fabric/common"
 )
 
 // Route is the information for every URI.

@@ -2,6 +2,9 @@ package fabric
 
 import (
 	"errors"
+
+	log "github.com/sirupsen/logrus"
+
 	"etrib5gc/fabric/common"
 	fabric_config "etrib5gc/fabric/config"
 	"etrib5gc/fabric/conman"
@@ -9,8 +12,6 @@ import (
 	"etrib5gc/fabric/httpdp"
 	"etrib5gc/fabric/registrydb"
 	"etrib5gc/fabric/telemetry"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type serviceAgent struct {
@@ -83,8 +84,11 @@ func NewAgent(nf Application) (ServiceAgent, error) {
 		agent.forwarder = fwimpl.New(agent.registry, agent.lb, agent.conmngr)
 		if agent.server, err = httpdp.NewHttpServer(config.HttpServerConfig, nf.Services()); err != nil {
 			return nil, err
+		} else {
+			log.Info("NewHttpServer create success.")
+			return agent, nil
 		}
-		return agent, nil
+
 	} else {
 		return nil, errors.New("the input data plane protocol is not supported")
 	}

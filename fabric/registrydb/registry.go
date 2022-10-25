@@ -2,9 +2,10 @@ package registrydb
 
 import (
 	"errors"
-	"etrib5gc/fabric/common"
 
 	log "github.com/sirupsen/logrus"
+
+	"etrib5gc/fabric/common"
 )
 
 const (
@@ -37,9 +38,9 @@ type HttpAddr struct {
 
 // Registry configuration
 type Config struct {
-	RegType int                //static, centralized, or distributed
-	Addr    *HttpAddr          //address of the server (centralized registry)  or address of the controller (distributed registry)
-	Others  []common.NfProfile // for static registry
+	RegType int                       //static, centralized, or distributed
+	Addr    *HttpAddr                 //address of the server (centralized registry)  or address of the controller (distributed registry)
+	Others  []*common.NfProfileStruct // for static registry
 }
 
 // factory method to create a registry

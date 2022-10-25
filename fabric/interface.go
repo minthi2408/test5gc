@@ -18,8 +18,8 @@ type Application interface {
 type Forwarder interface {
 	common.InternalService
 	//select an producer; send a request to get a response; retry if selected producer is dead
-	DiscoveryThenSend(common.Request, common.NfQuery) (common.Response, common.AgentAddr, error)
-	DirectSend(common.Request, common.AgentAddr) (common.Response, error)
+	DiscoveryThenSend(common.Request, common.NfQuery) (common.Response, common.AgentAddrStruct, error)
+	DirectSend(common.Request, common.AgentAddrStruct) (common.Response, error)
 }
 
 // a server abstraction that listen to requests for registered services

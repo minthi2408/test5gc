@@ -7,10 +7,10 @@ import "etrib5gc/fabric/common"
 
 type staticRegistry struct {
 	profile common.NfProfile
-	others  []common.NfProfile
+	others  []*common.NfProfileStruct
 }
 
-func newStaticRegistry(profile common.NfProfile, others []common.NfProfile) *staticRegistry {
+func newStaticRegistry(profile common.NfProfile, others []*common.NfProfileStruct) *staticRegistry {
 	ret := &staticRegistry{
 		profile: profile,
 		others:  others,

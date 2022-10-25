@@ -1,19 +1,17 @@
 package service
 
 import (
-	"etrib5gc/fabric"
-	fabric_common "etrib5gc/fabric/common"
-	fabric_config "etrib5gc/fabric/config"
-
-	amf_config "etrib5gc/nfs/amf/config"
-	"etrib5gc/nfs/amf/context"
-
-	"etrib5gc/nfs/amf/ngap"
-
-	"etrib5gc/nfs/amf/sbi/producer"
 	"fmt"
 
 	"github.com/sirupsen/logrus"
+
+	"etrib5gc/fabric"
+	fabric_common "etrib5gc/fabric/common"
+	fabric_config "etrib5gc/fabric/config"
+	amf_config "etrib5gc/nfs/amf/config"
+	"etrib5gc/nfs/amf/context"
+	"etrib5gc/nfs/amf/ngap"
+	"etrib5gc/nfs/amf/sbi/producer"
 )
 
 var log *logrus.Entry
@@ -68,7 +66,15 @@ func (nf *AMF) Config() *amf_config.AmfConfig {
 	return nf.config
 }
 func (nf *AMF) Profile() fabric_common.NfProfile {
-	return nil
+	return &fabric_common.NfProfileStruct{
+		NfType_: nf.config.Agent.NfType,
+
+		Addr_: fabric_common.AgentAddrStruct{Dproto: int(nf.config.Agent.DProto),
+
+			IpAddress: nf.config.Agent.HttpServerConfig.IPv4,
+			Port:      nf.config.Agent.HttpServerConfig.Port},
+
+		Context_: nf.config.Agent.Context}
 }
 func (nf *AMF) Start() (err error) {
 	// start ngap server

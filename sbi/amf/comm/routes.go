@@ -12,8 +12,9 @@ API version: 1.1.8
 package comm
 
 import (
-	"etrib5gc/sbi"
 	"net/http"
+
+	"etrib5gc/sbi"
 )
 
 var Routes = sbi.SbiRoutes{
@@ -113,5 +114,17 @@ var Routes = sbi.SbiRoutes{
 		Method:  http.MethodPost,
 		Path:    "/namf-comm/v1/subscriptions",
 		Handler: OnAMFStatusChangeSubscribe,
+	},
+	{
+		Label:   "TestDiscovery",
+		Method:  http.MethodGet,
+		Path:    "/namf-comm/discovery",
+		Handler: OnDiscovery,
+	},
+	{
+		Label:   "TestDiscoveryResult",
+		Method:  http.MethodGet,
+		Path:    "/namf-comm/discovery/result",
+		Handler: OnDiscoveryResult,
 	},
 }

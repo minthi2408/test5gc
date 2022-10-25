@@ -10,7 +10,7 @@ type ContextFieldId string
 type ContextFieldValue interface{}
 type ContextFieldValues []ContextFieldValue
 
-type NfContext map[ContextFieldId]ContextFieldValues
+type NfContext map[ContextFieldId]ContextFieldValue
 
 // context dicrionaty that enumerate all available ContextFieldId values and
 // corresponding ContextFieldValue values
